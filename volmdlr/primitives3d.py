@@ -13,7 +13,7 @@ import plot_data
 
 import dessia_common.core as dc
 import matplotlib.pyplot as plt
-import numpy as npy
+import numpy as np
 from scipy.optimize import Bounds, NonlinearConstraint, minimize
 from scipy.stats import qmc
 
@@ -26,7 +26,7 @@ import volmdlr.wires
 from volmdlr import shells, surfaces, curves
 
 
-npy.seterr(divide='raise')
+np.seterr(divide='raise')
 
 
 class RoundedLineSegments3D(volmdlr.primitives.RoundedLineSegments):
@@ -54,6 +54,7 @@ class RoundedLineSegments3D(volmdlr.primitives.RoundedLineSegments):
         volmdlr.primitives.RoundedLineSegments.__init__(self, points, radius, adapt_radius=adapt_radius, name=name)
 
     def arc_features(self, point_index: int):
+        """Gets arc features."""
         radius = self.radius[point_index]
         point_1, point_i, point_2 = self.get_points(point_index)
         dist1 = (point_1 - point_i).norm()
@@ -164,7 +165,7 @@ class Block(shells.ClosedShell3D):
 
     def __init__(self, frame: volmdlr.Frame3D, *,
                  color: Tuple[float, float, float] = None, alpha: float = 1.,
-                 name: str = ''):
+                 reference_path: str = volmdlr.PATH_ROOT, name: str = ''):
         self.frame = frame
         self.size = (self.frame.u.norm(),
                      self.frame.v.norm(),
@@ -175,7 +176,7 @@ class Block(shells.ClosedShell3D):
         for face in faces:
             face.alpha = alpha
             face.color = color
-        shells.ClosedShell3D.__init__(self, faces, color=color, alpha=alpha, name=name)
+        shells.ClosedShell3D.__init__(self, faces, color=color, alpha=alpha, reference_path=reference_path, name=name)
 
     def __eq__(self, other):
         if self.__class__.__name__ != other.__class__.__name__:
@@ -195,7 +196,8 @@ class Block(shells.ClosedShell3D):
         dict_ = dc.DessiaObject.base_dict(self)
         dict_.update({'color': self.color,
                       'alpha': self.alpha,
-                      'frame': self.frame.to_dict()})
+                      'frame': self.frame.to_dict(),
+                      'reference_path': self.reference_path})
 
         return dict_
 
@@ -320,8 +322,7 @@ class Block(shells.ClosedShell3D):
         :return: a new rotated Block
         """
         new_frame = self.frame.rotation(center, axis, angle)
-        return Block(new_frame, color=self.color,
-                     alpha=self.alpha, name=self.name)
+        return Block(new_frame, color=self.color, alpha=self.alpha, reference_path=self.reference_path, name=self.name)
 
     def translation(self, offset: volmdlr.Vector3D):
         """
@@ -331,11 +332,13 @@ class Block(shells.ClosedShell3D):
         :return: A new translated Block.
         """
         new_frame = self.frame.translation(offset)
-        return Block(new_frame, color=self.color,
-                     alpha=self.alpha, name=self.name)
+        return Block(new_frame, color=self.color, alpha=self.alpha, reference_path=self.reference_path, name=self.name)
 
     def cut_by_orthogonal_plane(self, plane_3d: surfaces.Plane3D):
-        """Cuts Block with an orthogonal plane."""
+        """
+        Cuts Block by orthogonal plane, and return a plane face at this plane, bounded by the block volume.
+
+        """
         bouding_box = self.bounding_box
         if plane_3d.frame.w.dot(volmdlr.Vector3D(1, 0, 0)) == 0:
             pass
@@ -385,8 +388,7 @@ class Block(shells.ClosedShell3D):
         :param side: 'old' or 'new'
         """
         new_frame = self.frame_mapping_parametres(frame, side)
-        return Block(new_frame, color=self.color,
-                     alpha=self.alpha, name=self.name)
+        return Block(new_frame, color=self.color, alpha=self.alpha, reference_path=self.reference_path, name=self.name)
 
     def copy(self, deep=True, memo=None):
         """
@@ -398,8 +400,7 @@ class Block(shells.ClosedShell3D):
         new_v = self.frame.v.copy()
         new_w = self.frame.w.copy()
         new_frame = volmdlr.Frame3D(new_origin, new_u, new_v, new_w)
-        return Block(new_frame, color=self.color,
-                     alpha=self.alpha, name=self.name)
+        return Block(new_frame, color=self.color, alpha=self.alpha, reference_path=self.reference_path, name=self.name)
 
     def plot_data(self, x3d, y3d, edge_style=plot_data.EdgeStyle):
         """Plot the 2D projections of a block."""
@@ -474,7 +475,7 @@ class ExtrudedProfile(shells.ClosedShell3D):
                  inner_contours2d: List[volmdlr.wires.Contour2D],
                  extrusion_length: float,
                  color: Tuple[float, float, float] = None, alpha: float = 1.,
-                 name: str = ''):
+                 reference_path: str = volmdlr.PATH_ROOT, name: str = ''):
         self.frame = frame
 
         self.outer_contour2d = outer_contour2d
@@ -497,8 +498,7 @@ class ExtrudedProfile(shells.ClosedShell3D):
 
         faces = self.shell_faces()
 
-        shells.ClosedShell3D.__init__(self, faces, color=color,
-                                      alpha=alpha, name=name)
+        shells.ClosedShell3D.__init__(self, faces, color=color, alpha=alpha, reference_path=reference_path, name=name)
 
     def to_dict(self, *args, **kwargs):
         """
@@ -512,6 +512,7 @@ class ExtrudedProfile(shells.ClosedShell3D):
                       'outer_contour2d': self.outer_contour2d.to_dict(),
                       'inner_contours2d': [c.to_dict() for c in self.inner_contours2d],
                       'extrusion_length': self.extrusion_length,
+                      'reference_path': self.reference_path
                       })
 
         return dict_
@@ -528,6 +529,7 @@ class ExtrudedProfile(shells.ClosedShell3D):
             extrusion_length=self.extrusion_length,
             color=self.color,
             alpha=self.alpha,
+            reference_path=self.reference_path,
             name=self.name)
 
     def shell_faces(self):
@@ -559,6 +561,11 @@ class ExtrudedProfile(shells.ClosedShell3D):
         return areas
 
     def volume(self):
+        """
+        Gets the Volume of an extruded profile volume.
+
+        :return:
+        """
         z = self.frame.w
         return self.area() * self.extrusion_vector.dot(z)
 
@@ -569,9 +576,11 @@ class ExtrudedProfile(shells.ClosedShell3D):
         :param side: = 'old' or 'new'.
         """
         return ExtrudedProfile(
-            self.frame.frame_mapping(frame, side),
-            self.outer_contour2d, self.inner_contours2d,
-            self.extrusion_length)
+            frame=self.frame.frame_mapping(frame, side),
+            outer_contour2d=self.outer_contour2d, inner_contours2d=self.inner_contours2d,
+            extrusion_length=self.extrusion_length,
+            reference_path=self.reference_path
+        )
 
     def rotation(self, center: volmdlr.Point3D, axis: volmdlr.Vector3D,
                  angle: float):
@@ -588,7 +597,9 @@ class ExtrudedProfile(shells.ClosedShell3D):
             outer_contour2d=self.outer_contour2d,
             inner_contours2d=self.inner_contours2d,
             extrusion_length=self.extrusion_length,
-            color=self.color, alpha=self.alpha)
+            color=self.color, alpha=self.alpha,
+            reference_path=self.reference_path, name=self.name
+        )
 
     def translation(self, offset: volmdlr.Vector3D):
         """
@@ -602,7 +613,9 @@ class ExtrudedProfile(shells.ClosedShell3D):
             outer_contour2d=self.outer_contour2d,
             inner_contours2d=self.inner_contours2d,
             extrusion_length=self.extrusion_length,
-            color=self.color, alpha=self.alpha)
+            color=self.color, alpha=self.alpha,
+            reference_path=self.reference_path, name=self.name
+        )
 
 
 class RevolvedProfile(shells.ClosedShell3D):
@@ -617,7 +630,7 @@ class RevolvedProfile(shells.ClosedShell3D):
                  axis_point: volmdlr.Point3D, axis: volmdlr.Vector3D,
                  angle: float = 2 * math.pi, *,
                  color: Tuple[float, float, float] = None, alpha: float = 1,
-                 name: str = ''):
+                 reference_path: str = volmdlr.PATH_ROOT, name: str = ''):
         if frame.w.cross(axis).is_close(volmdlr.Vector3D(0.0, 0.0, 0.0)):
             raise ValueError(f"The normal vector of the Revolution's contour frame should not be parallel \n"
                              f"to revolution axis. frame.w: {frame.w}; revolution_axis: {axis}")
@@ -628,8 +641,7 @@ class RevolvedProfile(shells.ClosedShell3D):
         self.frame = frame
 
         faces = self.shell_faces()
-        shells.ClosedShell3D.__init__(self, faces, color=color,
-                                      alpha=alpha, name=name)
+        shells.ClosedShell3D.__init__(self, faces, color=color, alpha=alpha, reference_path=reference_path, name=name)
 
     def __hash__(self):
         """
@@ -670,7 +682,8 @@ class RevolvedProfile(shells.ClosedShell3D):
                       'contour2d': self.contour2d.to_dict(),
                       'axis_point': self.axis_point.to_dict(),
                       'angle': self.angle,
-                      'axis': self.axis.to_dict()
+                      'axis': self.axis.to_dict(),
+                      'reference_path': self.reference_path
                       })
 
         return dict_
@@ -685,7 +698,7 @@ class RevolvedProfile(shells.ClosedShell3D):
                               axis=self.axis.copy(), angle=self.angle,
                               axis_point=self.axis_point.copy(),
                               color=self.color, alpha=self.alpha,
-                              name=self.name)
+                              reference_path=self.reference_path, name=self.name)
 
     def shell_faces(self):
         """
@@ -745,7 +758,9 @@ class RevolvedProfile(shells.ClosedShell3D):
             axis=self.axis.rotation(center=volmdlr.O3D, axis=axis,
                                     angle=angle),
             angle=self.angle,
-            color=self.color, alpha=self.alpha)
+            color=self.color, alpha=self.alpha,
+            reference_path=self.reference_path, name=self.name
+        )
 
     def translation(self, offset: volmdlr.Vector3D):
         """
@@ -760,7 +775,9 @@ class RevolvedProfile(shells.ClosedShell3D):
             axis_point=self.axis_point.translation(offset),
             axis=self.axis,
             angle=self.angle,
-            color=self.color, alpha=self.alpha)
+            color=self.color, alpha=self.alpha,
+            reference_path=self.reference_path, name=self.name
+        )
 
     def frame_mapping_parameters(self, frame: volmdlr.Frame3D, side: str):
         """Apply transformation to object's parameters."""
@@ -785,7 +802,9 @@ class RevolvedProfile(shells.ClosedShell3D):
             self.frame.frame_mapping(frame, side),
             self.contour2d,
             self.axis_point.frame_mapping(frame, side),
-            axis=axis, angle=self.angle)
+            axis=axis, angle=self.angle,
+            reference_path=self.reference_path
+        )
 
 
 class Cylinder(shells.ClosedShell3D):
@@ -801,6 +820,7 @@ class Cylinder(shells.ClosedShell3D):
         length: float,
         color: Tuple[float, float, float] = None,
         alpha: float = 1.0,
+        reference_path: str = volmdlr.PATH_ROOT,
         name: str = "",
     ):
         """
@@ -820,6 +840,9 @@ class Cylinder(shells.ClosedShell3D):
         :type color: Tuple[float, float, float], optional
         :param alpha: The opacity of the cylinder (0.0 to 1.0). Default is 1.0.
         :type alpha: float, optional
+        :param reference_path: A path corresponding to the "location"
+            of the equivalent python object in the overall structure. "#/path/to/displayed_object"
+        :type reference_path: str
         :param name: The name of the cylinder. Default is an empty string.
         :type name: str, optional
         """
@@ -831,7 +854,8 @@ class Cylinder(shells.ClosedShell3D):
 
         faces = self.shell_faces()
 
-        shells.ClosedShell3D.__init__(self, faces=faces, color=color, alpha=alpha, name=name)
+        shells.ClosedShell3D.__init__(self, faces=faces, color=color, alpha=alpha,
+                                      reference_path=reference_path, name=name)
 
     def shell_faces(self):
         """
@@ -907,6 +931,7 @@ class Cylinder(shells.ClosedShell3D):
         radius: float,
         color: Tuple[float, float, float] = None,
         alpha: float = 1,
+        reference_path: str = volmdlr.PATH_ROOT,
         name: str = "",
     ):
         """
@@ -922,6 +947,9 @@ class Cylinder(shells.ClosedShell3D):
         :type color: Tuple[float, float, float], optional
         :param alpha: The opacity of the cylinder (0.0 to 1.0). Default is 1.0.
         :type alpha: float, optional
+        :param reference_path: A path corresponding to the "location"
+            of the equivalent python object in the overall structure. "#/path/to/displayed_object"
+        :type reference_path: str
         :param name: The name of the cylinder. Default is an empty string.
         :type name: str, optional
 
@@ -937,7 +965,8 @@ class Cylinder(shells.ClosedShell3D):
 
         frame = volmdlr.Frame3D(position, u_vector, v_vector, axis)
 
-        return cls(frame=frame, radius=radius, length=length, color=color, alpha=alpha, name=name)
+        return cls(frame=frame, radius=radius, length=length, color=color, alpha=alpha,
+                   reference_path=reference_path, name=name)
 
     @classmethod
     def from_extremal_points(
@@ -947,12 +976,13 @@ class Cylinder(shells.ClosedShell3D):
         radius: float,
         color: Tuple[float, float, float] = None,
         alpha: float = 1,
+        reference_path: str = volmdlr.PATH_ROOT,
         name: str = "",
     ):
         """Deprecated class method. Use 'from_end_points' instead."""
         warnings.warn("Deprecated classmethod. Use 'from_end_points' instead.", DeprecationWarning)
 
-        return cls.from_end_points(point1, point2, radius, color, alpha, name)
+        return cls.from_end_points(point1, point2, radius, color, alpha, reference_path, name)
 
     @classmethod
     def from_center_point_and_axis(
@@ -963,6 +993,7 @@ class Cylinder(shells.ClosedShell3D):
         length: float,
         color: Tuple[float, float, float] = None,
         alpha: float = 1,
+        reference_path: str = volmdlr.PATH_ROOT,
         name: str = "",
     ) -> 'Cylinder':
         """
@@ -980,6 +1011,9 @@ class Cylinder(shells.ClosedShell3D):
         :type color: Tuple[float, float, float], optional
         :param alpha: The opacity of the cylinder (0.0 to 1.0). Default is 1.0.
         :type alpha: float, optional
+        :param reference_path: A path corresponding to the "location"
+            of the equivalent python object in the overall structure. "#/path/to/displayed_object"
+        :type reference_path: str
         :param name: The name of the cylinder. Default is an empty string.
         :type name: str, optional
 
@@ -990,7 +1024,8 @@ class Cylinder(shells.ClosedShell3D):
         v_vector = axis.cross(u_vector)
         frame = volmdlr.Frame3D(center_point, u_vector, v_vector, axis)
 
-        return cls(frame=frame, radius=radius, length=length, color=color, alpha=alpha, name=name)
+        return cls(frame=frame, radius=radius, length=length, color=color, alpha=alpha,
+                   reference_path=reference_path, name=name)
 
     def rotation(self, center: volmdlr.Point3D, axis: volmdlr.Vector3D, angle: float) -> 'Cylinder':
         """
@@ -1012,6 +1047,7 @@ class Cylinder(shells.ClosedShell3D):
             radius=self.radius,
             color=self.color,
             alpha=self.alpha,
+            reference_path=self.reference_path,
             name=self.name,
         )
 
@@ -1031,6 +1067,7 @@ class Cylinder(shells.ClosedShell3D):
             radius=self.radius,
             color=self.color,
             alpha=self.alpha,
+            reference_path=self.reference_path,
             name=self.name,
         )
 
@@ -1046,6 +1083,7 @@ class Cylinder(shells.ClosedShell3D):
             length=self.length,
             color=self.color,
             alpha=self.alpha,
+            reference_path=self.reference_path,
             name=self.name,
         )
 
@@ -1062,6 +1100,7 @@ class Cylinder(shells.ClosedShell3D):
             length=self.length,
             color=self.color,
             alpha=self.alpha,
+            reference_path=self.reference_path,
             name=self.name,
         )
 
@@ -1144,7 +1183,7 @@ class Cylinder(shells.ClosedShell3D):
             ]
 
         # Initial vector
-        initial_guess = npy.zeros(6)
+        initial_guess = np.zeros(6)
 
         # Constraints
         def constraint_radius_0(x):
@@ -1344,6 +1383,7 @@ class Cone(shells.ClosedShell3D):
         length: float,
         color: Tuple[float, float, float] = None,
         alpha: float = 1.0,
+        reference_path: str = volmdlr.PATH_ROOT,
         name: str = "",
     ):
         """
@@ -1376,7 +1416,8 @@ class Cone(shells.ClosedShell3D):
 
         faces = self.shell_faces()
 
-        shells.ClosedShell3D.__init__(self, faces=faces, color=color, alpha=alpha, name=name)
+        shells.ClosedShell3D.__init__(self, faces=faces, color=color, alpha=alpha,
+                                      reference_path=reference_path, name=name)
 
     def shell_faces(self):
         """
@@ -1455,6 +1496,8 @@ class Cone(shells.ClosedShell3D):
             length=self.length,
             color=self.color,
             alpha=self.alpha,
+            reference_path=self.reference_path,
+            name=self.name
         )
 
     def translation(self, offset: volmdlr.Vector3D) -> 'Cone':
@@ -1473,6 +1516,8 @@ class Cone(shells.ClosedShell3D):
             length=self.length,
             color=self.color,
             alpha=self.alpha,
+            reference_path=self.reference_path,
+            name=self.name
         )
 
     def volume(self) -> float:
@@ -1493,6 +1538,7 @@ class Cone(shells.ClosedShell3D):
         length: float,
         color: Tuple[float, float, float] = None,
         alpha: float = 1,
+        reference_path: str = volmdlr.PATH_ROOT,
         name: str = "",
     ) -> 'Cone':
         """
@@ -1510,6 +1556,9 @@ class Cone(shells.ClosedShell3D):
         :type color: Tuple[float, float, float], optional
         :param alpha: The opacity of the cone (0.0 to 1.0). Default is 1.0.
         :type alpha: float, optional
+        :param reference_path: A path corresponding to the "location"
+            of the equivalent python object in the overall structure. "#/path/to/displayed_object"
+        :type reference_path: str
         :param name: The name of the cone. Default is an empty string.
         :type name: str, optional
 
@@ -1519,8 +1568,8 @@ class Cone(shells.ClosedShell3D):
         u_vector = axis.deterministic_unit_normal_vector()
         v_vector = axis.cross(u_vector)
         frame = volmdlr.Frame3D(center_point, u_vector, v_vector, axis)
-
-        return cls(frame=frame, radius=radius, length=length, color=color, alpha=alpha, name=name)
+        return cls(frame=frame, radius=radius, length=length, color=color, alpha=alpha,
+                   reference_path=reference_path, name=name)
 
 
 class HollowCylinder(shells.ClosedShell3D):
@@ -1537,6 +1586,7 @@ class HollowCylinder(shells.ClosedShell3D):
         length: float,
         color: Tuple[float, float, float] = None,
         alpha: float = 1,
+        reference_path: str = volmdlr.PATH_ROOT,
         name: str = "",
     ):
         """
@@ -1559,6 +1609,9 @@ class HollowCylinder(shells.ClosedShell3D):
         :type color: Tuple[float, float, float], optional
         :param alpha: The opacity of the hollow cylinder (0.0 to 1.0). Default is 1.0.
         :type alpha: float, optional
+        :param reference_path: A path corresponding to the "location"
+            of the equivalent python object in the overall structure. "#/path/to/displayed_object"
+        :type reference_path: str
         :param name: The name of the hollow cylinder. Default is an empty string.
         :type name: str, optional
         """
@@ -1570,7 +1623,8 @@ class HollowCylinder(shells.ClosedShell3D):
         self.length = length
 
         faces = self.shell_faces()
-        shells.ClosedShell3D.__init__(self, faces=faces, color=color, alpha=alpha, name=name)
+        shells.ClosedShell3D.__init__(self, faces=faces, color=color, alpha=alpha,
+                                      reference_path=reference_path, name=name)
 
     def shell_faces(self):
         """
@@ -1660,6 +1714,7 @@ class HollowCylinder(shells.ClosedShell3D):
         outer_radius: float,
         color: Tuple[float, float, float] = None,
         alpha: float = 1,
+        reference_path: str = volmdlr.PATH_ROOT,
         name: str = "",
     ):
         """
@@ -1677,6 +1732,9 @@ class HollowCylinder(shells.ClosedShell3D):
         :type color: Tuple[float, float, float], optional
         :param alpha: The opacity of the hollow cylinder (0.0 to 1.0). Default is 1.0.
         :type alpha: float, optional
+        :param reference_path: A path corresponding to the "location"
+            of the equivalent python object in the overall structure. "#/path/to/displayed_object"
+        :type reference_path: str
         :param name: The name of the hollow cylinder. Default is an empty string.
         :type name: str, optional
 
@@ -1699,7 +1757,8 @@ class HollowCylinder(shells.ClosedShell3D):
             length=length,
             color=color,
             alpha=alpha,
-            name=name,
+            reference_path=reference_path,
+            name=name
         )
 
     @classmethod
@@ -1711,12 +1770,13 @@ class HollowCylinder(shells.ClosedShell3D):
         outer_radius: float,
         color: Tuple[float, float, float] = None,
         alpha: float = 1,
+        reference_path: str = volmdlr.PATH_ROOT,
         name: str = "",
     ):
         """Deprecated class method. Use 'from_end_points' instead."""
         warnings.warn("Deprecated classmethod. Use 'from_end_points' instead.", DeprecationWarning)
 
-        return cls.from_end_points(point1, point2, inner_radius, outer_radius, color, alpha, name)
+        return cls.from_end_points(point1, point2, inner_radius, outer_radius, color, alpha, reference_path, name)
 
     @classmethod
     def from_center_point_and_axis(
@@ -1728,6 +1788,7 @@ class HollowCylinder(shells.ClosedShell3D):
         length: float,
         color: Tuple[float, float, float] = None,
         alpha: float = 1,
+        reference_path: str = volmdlr.PATH_ROOT,
         name: str = "",
     ) -> 'HollowCylinder':
         """
@@ -1748,6 +1809,9 @@ class HollowCylinder(shells.ClosedShell3D):
         :type color: Tuple[float, float, float], optional
         :param alpha: The opacity of the hollow cylinder (0.0 to 1.0). Default is 1.0.
         :type alpha: float, optional
+        :param reference_path: A path corresponding to the "location"
+            of the equivalent python object in the overall structure. "#/path/to/displayed_object"
+        :type reference_path: str
         :param name: The name of the hollow cylinder. Default is an empty string.
         :type name: str, optional
 
@@ -1765,6 +1829,7 @@ class HollowCylinder(shells.ClosedShell3D):
             length=length,
             color=color,
             alpha=alpha,
+            reference_path=reference_path,
             name=name,
         )
 
@@ -1789,7 +1854,8 @@ class HollowCylinder(shells.ClosedShell3D):
             outer_radius=self.outer_radius,
             color=self.color,
             alpha=self.alpha,
-            name=self.name,
+            reference_path=self.reference_path,
+            name=self.name
         )
 
     def translation(self, offset: volmdlr.Vector3D) -> 'HollowCylinder':
@@ -1809,7 +1875,8 @@ class HollowCylinder(shells.ClosedShell3D):
             outer_radius=self.outer_radius,
             color=self.color,
             alpha=self.alpha,
-            name=self.name,
+            reference_path=self.reference_path,
+            name=self.name
         )
 
     def frame_mapping(self, frame: volmdlr.Frame3D, side: str) -> 'HollowCylinder':
@@ -1825,7 +1892,8 @@ class HollowCylinder(shells.ClosedShell3D):
             length=self.length,
             color=self.color,
             alpha=self.alpha,
-            name=self.name,
+            reference_path=self.reference_path,
+            name=self.name
         )
 
     def copy(self, *args, **kwargs) -> 'HollowCylinder':
@@ -1842,7 +1910,8 @@ class HollowCylinder(shells.ClosedShell3D):
             length=self.length,
             color=self.color,
             alpha=self.alpha,
-            name=self.name,
+            reference_path=self.reference_path,
+            name=self.name
         )
 
 
@@ -1874,6 +1943,7 @@ class Sweep(shells.ClosedShell3D):
                  wire3d: volmdlr.wires.Wire3D,
                  starting_frame=None, *,
                  color: Tuple[float, float, float] = None, alpha: float = 1,
+                 reference_path: str = volmdlr.PATH_ROOT,
                  name: str = ''):
         self.contour2d = contour2d
         self.wire3d = wire3d
@@ -1887,8 +1957,7 @@ class Sweep(shells.ClosedShell3D):
             v = w.cross(u)
             self.starting_frame = volmdlr.Frame3D(origin, u, v, w)
         faces = self.shell_faces()
-        shells.ClosedShell3D.__init__(self, faces, color=color,
-                                      alpha=alpha, name=name)
+        shells.ClosedShell3D.__init__(self, faces, color=color, alpha=alpha, reference_path=reference_path, name=name)
 
     def to_dict(self, *args, **kwargs):
         """Custom serialization for performance."""
@@ -1896,7 +1965,8 @@ class Sweep(shells.ClosedShell3D):
         dict_.update({'color': self.color,
                       'alpha': self.alpha,
                       'wire3d': self.wire3d.to_dict(),
-                      'contour2d': self.contour2d.to_dict()
+                      'contour2d': self.contour2d.to_dict(),
+                      'reference_path': self.reference_path
                       })
 
         return dict_
@@ -1944,14 +2014,14 @@ class Sweep(shells.ClosedShell3D):
         """
         new_wire = self.wire3d.frame_mapping(frame, side)
         return Sweep(self.contour2d, new_wire, color=self.color,
-                     alpha=self.alpha, name=self.name)
+                     alpha=self.alpha, reference_path=self.reference_path, name=self.name)
 
     def copy(self, deep=True, memo=None):
         """Creates a copy of the Sweep."""
         new_contour2d = self.contour2d.copy()
         new_wire3d = self.wire3d.copy()
         return Sweep(new_contour2d, new_wire3d, color=self.color,
-                     alpha=self.alpha, name=self.name)
+                     alpha=self.alpha, reference_path=self.reference_path, name=self.name)
 
 
 class Sphere(shells.ClosedShell3D):
@@ -1961,7 +2031,7 @@ class Sphere(shells.ClosedShell3D):
 
     def __init__(self, center: volmdlr.Point3D, radius: float,
                  color: Tuple[float, float, float] = None, alpha: float = 1.,
-                 name: str = ''):
+                 reference_path: str = volmdlr.PATH_ROOT, name: str = ''):
         self.center = center
         self.radius = radius
         self.position = center
@@ -1969,7 +2039,8 @@ class Sphere(shells.ClosedShell3D):
         self.frame = volmdlr.Frame3D(center, volmdlr.X3D, volmdlr.Y3D, volmdlr.Z3D)
         spherical_surface = surfaces.SphericalSurface3D(self.frame, self.radius)
         spherical_face = volmdlr.faces.SphericalFace3D.from_surface_rectangular_cut(spherical_surface)
-        shells.ClosedShell3D.__init__(self, faces=[spherical_face], color=color, alpha=alpha, name=name)
+        shells.ClosedShell3D.__init__(self, faces=[spherical_face], color=color, alpha=alpha,
+                                      reference_path=reference_path, name=name)
 
     def volume(self):
         """
@@ -1994,7 +2065,8 @@ class Sphere(shells.ClosedShell3D):
 
         :param side: 'old' or 'new'
         """
-        return Sphere(self.center.frame_mapping(frame, side), self.radius)
+        return Sphere(self.center.frame_mapping(frame, side), self.radius,
+                      reference_path=self.reference_path, name=self.name)
 
     def skin_points(self, resolution: float = 1e-3):
         """Gives points on the skin with respect to a resolution."""
@@ -2078,7 +2150,7 @@ class BSplineExtrusion(volmdlr.core.Primitive3D):
     :param vectorextru: extrusion vector.
     """
 
-    def __init__(self, obj, vectorextru: volmdlr.Vector3D, name: str = ''):
+    def __init__(self, obj, vectorextru: volmdlr.Vector3D, reference_path: str = volmdlr.PATH_ROOT, name: str = ""):
         self.obj = obj
         vectorextru = vectorextru.unit_vector()
         self.vectorextru = vectorextru
@@ -2087,7 +2159,7 @@ class BSplineExtrusion(volmdlr.core.Primitive3D):
         else:
             self.points = obj.points
 
-        volmdlr.core.Primitive3D.__init__(self, name=name)
+        volmdlr.core.Primitive3D.__init__(self, reference_path=reference_path, name=name)
 
     @classmethod
     def from_step(cls, arguments, object_dict, **kwargs):
