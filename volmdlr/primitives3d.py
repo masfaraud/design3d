@@ -54,6 +54,7 @@ class RoundedLineSegments3D(volmdlr.primitives.RoundedLineSegments):
         volmdlr.primitives.RoundedLineSegments.__init__(self, points, radius, adapt_radius=adapt_radius, name=name)
 
     def arc_features(self, point_index: int):
+        """Gets arc features."""
         radius = self.radius[point_index]
         point_1, point_i, point_2 = self.get_points(point_index)
         dist1 = (point_1 - point_i).norm()
