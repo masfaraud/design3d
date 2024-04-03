@@ -224,10 +224,12 @@ class TestBSplineCurve3D(unittest.TestCase):
             w=volmdlr.Vector3D(0.9855700414821559, 0.15112432732120784, 0.076243891719756))
         self.assertEqual(bspline_curve3d.move_frame_along(frame),
                          volmdlr.Frame3D(origin=volmdlr.Point3D(-0.3, 0.4, 0.1),
-                                         u=volmdlr.Vector3D(0.9632101019095523, 0.22376214189648538, 0.14885161548766362),
-                                         v=volmdlr.Vector3D(2.7755575615628914e-17, 0.553867484333956, -0.8326048341185484),
-                                         w=volmdlr.Vector3D(-0.26874951084493176, 0.8019733871217126, 0.5334907560296971)))
-
+                                         u=volmdlr.Vector3D(0.9632101019095523, 0.22376214189648538,
+                                                            0.14885161548766362),
+                                         v=volmdlr.Vector3D(2.7755575615628914e-17, 0.553867484333956,
+                                                            -0.8326048341185484),
+                                         w=volmdlr.Vector3D(-0.26874951084493176, 0.8019733871217126,
+                                                            0.5334907560296971)))
 
 if __name__ == '__main__':
     unittest.main()

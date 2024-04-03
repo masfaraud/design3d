@@ -261,6 +261,7 @@ class Block(shells.ClosedShell3D):
                 volmdlr.edges.LineSegment3D(point4.copy(), point8.copy())]
 
     def face_contours3d(self):
+        """Get face contours."""
         edges = self.edges()
         switched_edges = [edge.reverse() for edge in edges[4:]]
         contours = [

@@ -101,6 +101,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Toroidalface ConicalFace intersections.
 - Avoid showing babylonjs in unit tests / ci_scripts
 
+## v0.16.1
+### fixes
+- Contour2D - point_belongs
+- BSplineCurve3D: move_frame_along
+- BezierCurve: trim.
 
 ## v0.16.0
 
