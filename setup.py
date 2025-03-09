@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Setup install script for volmdlr
+Setup install script for design3d
 
 """
 
@@ -106,22 +106,22 @@ def get_version():
 
 
 setup(
-    name="volmdlr",
+    name="design3d",
     version=get_version(),
     description=" A volume modeler computation-oriented. Include rendering bindings.",
     long_description=readme(),
     long_description_content_type="text/markdown",
     keywords="volume, modeler, CAD",
-    url="https://github.com/Dessia-tech/volmdlr",
+    url="https://github.com/masfaraud/design3d",
     author="DessiA Technologies",
     author_email="root@dessia.tech",
     license="Creative Commons Attribution-Share Alike license",
     packages=[
-        "volmdlr",
-        "volmdlr.models",
-        "volmdlr.utils",
-        "volmdlr.nurbs"
-    ],  # ,'volmdlr.primitives2D','volmdlr.primitives3D','volmdlr.geometry'],
+        "design3d",
+        "design3d.models",
+        "design3d.utils",
+        "design3d.nurbs"
+    ],
     package_dir={},
     include_package_data=True,
     install_requires=[
@@ -151,12 +151,12 @@ setup(
                  "Topic :: Multimedia :: Graphics :: 3D Modeling",
                  "Development Status :: 5 - Production/Stable"],
 
-    ext_modules=cythonize(["volmdlr/core_compiled.pyx",
-                           "volmdlr/discrete_representation_compiled.py",
-                           "volmdlr/nurbs/core.pyx",
-                           "volmdlr/nurbs/helpers.pyx",
-                           "volmdlr/nurbs/fitting.py",
-                           "volmdlr/nurbs/operations.py"]),
+    ext_modules=cythonize(["design3d/core_compiled.pyx",
+                           "design3d/discrete_representation_compiled.py",
+                           "design3d/nurbs/core.pyx",
+                           "design3d/nurbs/helpers.pyx",
+                           "design3d/nurbs/fitting.py",
+                           "design3d/nurbs/operations.py"]),
     include_dirs=[np.get_include()],
     python_requires=">=3.9",
 )
