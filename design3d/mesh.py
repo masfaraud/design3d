@@ -14,11 +14,11 @@ import numpy as np
 
 from dessia_common.core import DessiaObject  # isort: skip
 
-import volmdlr as vm
-import volmdlr.edges as vme
-import volmdlr.gmsh_vm
-import volmdlr.wires as vmw
-from volmdlr.core import EdgeStyle
+import design3d as vm
+import design3d.edges as vme
+import design3d.gmsh_vm
+import design3d.wires as vmw
+from design3d.core import EdgeStyle
 
 
 class FlatElementError(Exception):
@@ -152,7 +152,7 @@ class TriangularElement(vmw.Triangle):
     _non_data_hash_attributes = ['name']
     _generic_eq = True
 
-    def __init__(self, points: List[volmdlr.Point2D]):
+    def __init__(self, points: List[design3d.Point2D]):
         # super().__init__(*points)
         self.points = points
         # self.linear_elements = self._to_linear_elements()
@@ -247,7 +247,7 @@ class TriangularElement(vmw.Triangle):
         return abs(u_vect.cross(v_vect)) / 2
 
     # def point_belongs(self, point):
-    #     polygon = volmdlr.wires.ClosedPolygon2D(self.points)
+    #     polygon = design3d.wires.ClosedPolygon2D(self.points)
     #     point_belongs = polygon.point_belongs(point)
     #     return point_belongs
 
@@ -291,7 +291,7 @@ class TriangularElement(vmw.Triangle):
     #         u = p2 - p1
     #         t = (point-p1).dot(u) / u.norm()**2
     #         projection = p1 + t * u
-    #         symmetric_point = volmdlr.Point2D(*(2 * projection - point))
+    #         symmetric_point = design3d.Point2D(*(2 * projection - point))
     #         symmetric_points.append(symmetric_point)
     #     if copy:
     #         return TriangularElement(symmetric_points)
@@ -301,7 +301,7 @@ class TriangularElement(vmw.Triangle):
 
     # def triangle_to_polygon(self):
     #     points = self.points
-    #     return volmdlr.wires.ClosedPolygon2D(points)
+    #     return design3d.wires.ClosedPolygon2D(points)
 
 
 class TriangularElement2D(TriangularElement, vmw.ClosedPolygon2D):
@@ -431,7 +431,7 @@ class QuadrilateralElement2D(vmw.ClosedPolygon2D):
     _non_data_hash_attributes = ['name']
     _generic_eq = True
 
-    def __init__(self, points: List[volmdlr.Point2D]):
+    def __init__(self, points: List[design3d.Point2D]):
         self.points = points
         # self.linear_elements = self._to_linear_elements()
         # self.form_functions = self._form_functions()
@@ -804,7 +804,7 @@ class Mesh(DessiaObject):
         """
 
         if not isinstance(nodes_correction, dict):
-            raise ValueError("It must be volmdlr.GmshParser class")
+            raise ValueError("It must be design3d.GmshParser class")
         self._nodes_correction = nodes_correction
 
     @property
@@ -827,8 +827,8 @@ class Mesh(DessiaObject):
         :type gmsh_parser: GmshParser
         """
 
-        if not isinstance(gmsh_parser, volmdlr.gmsh_vm.GmshParser):
-            raise ValueError("It must be volmdlr.GmshParser class")
+        if not isinstance(gmsh_parser, design3d.gmsh_vm.GmshParser):
+            raise ValueError("It must be design3d.GmshParser class")
         self._gmsh = gmsh_parser
 
     def copy(self):

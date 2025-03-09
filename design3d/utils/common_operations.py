@@ -12,8 +12,8 @@ from scipy.optimize import least_squares
 import scipy.integrate as scipy_integrate
 from sklearn.cluster import DBSCAN
 
-import volmdlr.core
-from volmdlr.core import EdgeStyle
+import design3d.core
+from design3d.core import EdgeStyle
 
 
 def plot_circle(circle, ax=None, edge_style: EdgeStyle = EdgeStyle()):
@@ -73,11 +73,11 @@ def split_wire_by_plane(wire, plane3d):
     :raises: NotImplementedError: If the wire intersects the plane at more than one point.
 
     :Example:
-    >>> from volmdlr import Point3D, Vector3D
-    >>> from volmdlr.surfaces import Plane3D
-    >>> from volmdlr.core import EdgeStyle
-    >>> from volmdlr.utils.common_operations import random_color
-    >>> from volmdlr.models.open_rounded_line_segments import open_rounded_line_segements
+    >>> from design3d import Point3D, Vector3D
+    >>> from design3d.surfaces import Plane3D
+    >>> from design3d.core import EdgeStyle
+    >>> from design3d.utils.common_operations import random_color
+    >>> from design3d.models.open_rounded_line_segments import open_rounded_line_segements
     >>> plane = Plane3D.from_plane_vectors(Point3D(0.4, 0.4, 0.2), Vector3D(1, 0, 0), Vector3D(0, 1, 0))
     >>> split_wire1,split_wire2 = split_wire_by_plane(open_rounded_line_segements, plane)
     >>> ax = open_rounded_line_segements.plot()
@@ -124,7 +124,7 @@ def plot_from_discretization_points(ax, edge_style, element, number_points: int 
 
     :param ax: Matplotlib plot.
     :param edge_style: edge_style to be applied to plot.
-    :param element: volmdlr element to be plotted (either 2D or 3D).
+    :param element: design3d element to be plotted (either 2D or 3D).
     :param number_points: number of points to be used in the plot.
     :param close_plot: specifies if plot is to be closed or not.
     :return: Matplotlib plot axis.
@@ -228,7 +228,7 @@ def get_point_distance_to_edge(edge, point, start, end):
     distance = best_distance
     point1_ = start
     point2_ = end
-    linesegment_class_ = getattr(volmdlr.edges, 'LineSegment' + edge.__class__.__name__[-2:])
+    linesegment_class_ = getattr(design3d.edges, 'LineSegment' + edge.__class__.__name__[-2:])
     while True:
         discretized_points_between_1_2 = edge.local_discretization(point1_, point2_, number_points)
         if not discretized_points_between_1_2:
@@ -267,7 +267,7 @@ def generic_minimum_distance(self, element, point1_edge1_, point2_edge1_, point1
     distance_points = None
     distance = best_distance
 
-    linesegment_class_ = getattr(volmdlr.edges, 'LineSegment' + self.__class__.__name__[-2:])
+    linesegment_class_ = getattr(design3d.edges, 'LineSegment' + self.__class__.__name__[-2:])
     while True:
         edge1_discretized_points_between_1_2 = self.local_discretization(point1_edge1_, point2_edge1_,
                                                                          number_points=10 * n)
@@ -365,11 +365,11 @@ def order_points_list_for_nearest_neighbor(points):
         nearest_point_idx = np.argmin(np.linalg.norm(remaining_points - current_point, axis=1))
         nearest_point = remaining_points[nearest_point_idx, :]
         remaining_points = np.delete(remaining_points, nearest_point_idx, axis=0)
-        ordered_points.append(volmdlr.Point3D(*current_point))
+        ordered_points.append(design3d.Point3D(*current_point))
         current_point = nearest_point
 
     # Add the last point to complete the loop
-    ordered_points.append(volmdlr.Point3D(*current_point))
+    ordered_points.append(design3d.Point3D(*current_point))
 
     return ordered_points
 
@@ -425,7 +425,7 @@ def get_center_of_mass(list_points):
     :param list_points: list of points to get the center of mass from.
     :return: center of mass point.
     """
-    center_mass = volmdlr.O3D
+    center_mass = design3d.O3D
     for point in list_points:
         center_mass += point
     center_mass /= len(list_points)

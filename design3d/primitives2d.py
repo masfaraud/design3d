@@ -9,10 +9,10 @@ from typing import List, Dict
 
 import matplotlib.patches
 
-import volmdlr
-from volmdlr import wires, edges, curves, PATH_ROOT
-from volmdlr.core import EdgeStyle
-from volmdlr.primitives import RoundedLineSegments
+import design3d
+from design3d import wires, edges, curves, PATH_ROOT
+from design3d.core import EdgeStyle
+from design3d.primitives import RoundedLineSegments
 
 
 class RoundedLineSegments2D(RoundedLineSegments):
@@ -23,7 +23,7 @@ class RoundedLineSegments2D(RoundedLineSegments):
     and provides methods to work with rounded line segments in 2D.
 
     :param points: The list of points defining the line segments.
-    :type points: List[volmdlr.Point2D]
+    :type points: List[design3d.Point2D]
     :param radius: The dictionary mapping segment indices to their respective radii.
     :type radius:Dict[int, float]
     :param adapt_radius: Flag indicating whether to adapt the radius based on segment length.
@@ -32,10 +32,10 @@ class RoundedLineSegments2D(RoundedLineSegments):
     :param name: The name of the rounded line segments. Defaults to ''.
     :type name: str, optional
     """
-    line_class = volmdlr.edges.LineSegment2D
-    arc_class = volmdlr.edges.Arc2D
+    line_class = design3d.edges.LineSegment2D
+    arc_class = design3d.edges.Arc2D
 
-    def __init__(self, points: List[volmdlr.Point2D], radius: Dict[int, float],
+    def __init__(self, points: List[design3d.Point2D], radius: Dict[int, float],
                  adapt_radius: bool = False, reference_path: str = PATH_ROOT, name: str = ''):
         RoundedLineSegments.__init__(self, points=points, radius=radius, adapt_radius=adapt_radius,
                                      reference_path=reference_path, name=name)
@@ -63,7 +63,7 @@ class RoundedLineSegments2D(RoundedLineSegments):
         p4 = pti + u2 * point_distance
 
         w = (u1 + u2).to_vector()
-        if not w.is_close(volmdlr.Vector2D(0, 0)):
+        if not w.is_close(design3d.Vector2D(0, 0)):
             w = w.unit_vector()
 
         v1 = u1.deterministic_unit_normal_vector()
@@ -75,7 +75,7 @@ class RoundedLineSegments2D(RoundedLineSegments):
 
         return p3, point_interior, p4, point_distance, alpha
 
-    def rotation(self, center: volmdlr.Point2D, angle: float):
+    def rotation(self, center: design3d.Point2D, angle: float):
         """
         OpenedRoundedLineSegments2D rotation.
 
@@ -89,7 +89,7 @@ class RoundedLineSegments2D(RoundedLineSegments):
                               adapt_radius=self.adapt_radius,
                               name=self.name)
 
-    def translation(self, offset: volmdlr.Vector2D):
+    def translation(self, offset: design3d.Vector2D):
         """
         OpenedRoundedLineSegments2D translation.
 
@@ -116,7 +116,7 @@ class RoundedLineSegments2D(RoundedLineSegments):
         for i in range((not self.closed), number_points - (not self.closed)):
             check = False
             normal_i = vectors[2 * i - 1] + vectors[2 * i]
-            if normal_i.is_close(volmdlr.Vector2D(0, 0)):
+            if normal_i.is_close(design3d.Vector2D(0, 0)):
                 normal_i = vectors[2 * i]
                 normal_i = normal_i.normal_vector()
                 offset_vectors.append(normal_i)
@@ -201,9 +201,9 @@ class RoundedLineSegments2D(RoundedLineSegments):
             if not self.closed:
                 pass
             else:
-                dir_vec_2 = volmdlr.Vector2D((self.points[0] - self.points[1]))
+                dir_vec_2 = design3d.Vector2D((self.points[0] - self.points[1]))
         elif self.closed and line_indexes[-1] == len(self.points) - 2:
-            dir_vec_2 = volmdlr.Vector2D(
+            dir_vec_2 = design3d.Vector2D(
                 (self.points[line_indexes[-1] + 1] - self.points[0]))
         else:
             dir_vec_2 = self.points[line_indexes[-1] + 1] - self.points[line_indexes[-1] + 2]
@@ -227,7 +227,7 @@ class RoundedLineSegments2D(RoundedLineSegments):
         normal_vectors = []
         for index in line_indexes:
             if index == len(self.points) - 1:
-                normal_vectors.append(volmdlr.Vector2D(
+                normal_vectors.append(design3d.Vector2D(
                     self.points[0] - self.points[index]).normalVector(
                     unit=True))
             else:
@@ -240,7 +240,7 @@ class RoundedLineSegments2D(RoundedLineSegments):
         Helper method: get offset vectors.
 
         """
-        intersection = volmdlr.Point2D.line_intersection(
+        intersection = design3d.Point2D.line_intersection(
             curves.Line2D(self.points[line_indexes[0]], self.points[line_indexes[0]] + directive_vector1),
             curves.Line2D(self.points[line_indexes[-1] + 1], self.points[line_indexes[-1] + 1] + directive_vector2))
         vec1 = intersection.point_distance(self.points[line_indexes[0]]) * directive_vector1
@@ -259,8 +259,8 @@ class RoundedLineSegments2D(RoundedLineSegments):
         new_points = {line_indexes[0]: self.points[line_indexes[0]] + distance_dir1 * directive_vector1}
 
         for i, index in enumerate(line_indexes[1:]):
-            coeff_vec_2 = volmdlr.Point2D.point_distance(
-                self.points[line_indexes[0]], self.points[index]) / volmdlr.Point2D.point_distance(
+            coeff_vec_2 = design3d.Point2D.point_distance(
+                self.points[line_indexes[0]], self.points[index]) / design3d.Point2D.point_distance(
                 self.points[line_indexes[0]], self.points[line_indexes[-1] + 1])
             coeff_vec_1 = 1 - coeff_vec_2
             if directive_vector1.dot(normal_vectors[i + 1]) < 0:
@@ -334,7 +334,7 @@ class OpenedRoundedLineSegments2D(RoundedLineSegments2D, wires.Wire2D):
     :type radius: {position1(n): float which is the radius linked the n-1 and n+1 points, position2(n+1):...}.
     """
 
-    def __init__(self, points: List[volmdlr.Point2D], radius: Dict[int, float], adapt_radius: bool = False,
+    def __init__(self, points: List[design3d.Point2D], radius: Dict[int, float], adapt_radius: bool = False,
                  reference_path: str = PATH_ROOT, name: str = ''):
         RoundedLineSegments2D.__init__(self, points, radius, adapt_radius=adapt_radius,
                                        reference_path=reference_path, name='')
@@ -352,7 +352,7 @@ class ClosedRoundedLineSegments2D(RoundedLineSegments2D, wires.Contour2D):
     :type radius: {position1(n): float which is the radius linked the n-1 and n+1 points, position2(n+1):...}
     """
 
-    def __init__(self, points: List[volmdlr.Point2D], radius: Dict[int, float],
+    def __init__(self, points: List[design3d.Point2D], radius: Dict[int, float],
                  adapt_radius: bool = False, reference_path: str = PATH_ROOT, name: str = ''):
         RoundedLineSegments2D.__init__(self, points, radius, adapt_radius=adapt_radius,
                                        reference_path=reference_path, name='')

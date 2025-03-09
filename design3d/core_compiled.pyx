@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 import numpy as npy
 cimport numpy as np
 import plot_data
-import volmdlr
+import design3d
 from dessia_common.core import DessiaObject
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d
@@ -504,7 +504,7 @@ cdef class Vector:
         The two vectors should be of same dimension.
 
         :param other_vector: A vector-like object
-        :type other_vector: :class:`volmdlr.Vector`
+        :type other_vector: :class:`design3d.Vector`
         :param abs_tol: Absolute tolerance to consider colinear
         :type abs_tol: float
         :return: `True` if the two vectors are colinear, `False` otherwise
@@ -524,7 +524,7 @@ cdef class Vector:
         The two vectors should be of same dimension.
 
         :param other_vector: A vector-like object
-        :type other_vector: :class:`volmdlr.Vector`
+        :type other_vector: :class:`design3d.Vector`
         :param abs_tol: Absolute tolerance to consider perpendicular
         :type abs_tol: float
         :return: `True` if the two vectors are perpendicular, `False` otherwise
@@ -539,10 +539,10 @@ cdef class Vector:
         should be of same dimension.
 
         :param points: A list of vector-like objects
-        :type points: List[:class:`volmdlr.Vector`]
+        :type points: List[:class:`design3d.Vector`]
         :param name: object's name.
         :return: The mean point or vector
-        :rtype: :class:`volmdlr.Vector`
+        :rtype: :class:`design3d.Vector`
         """
         n = 1
         point = points[0].copy()
@@ -568,9 +568,9 @@ cdef class Vector:
         All the objects of this list should be of same dimension.
 
         :param points: A list of vector-like objects with potential duplicates
-        :type points: List[:class:`volmdlr.Vector`]
+        :type points: List[:class:`design3d.Vector`]
         :return: The new list of vector-like objects without duplicates&
-        :rtype: List[:class:`volmdlr.Vector`]
+        :rtype: List[:class:`design3d.Vector`]
         """
         dict_ = {p.approx_hash(): p for p in points}
         return list(dict_.values())
@@ -662,7 +662,7 @@ cdef class Vector2D(Vector):
         should be of same dimension.
 
         :param other_vector: A Vector2D-like object
-        :type other_vector: :class:`volmdlr.Vector2D`
+        :type other_vector: :class:`design3d.Vector2D`
         :param tol: The tolerance under which the euclidean distance is
             considered equal to 0
         :type tol: float
@@ -696,7 +696,7 @@ cdef class Vector2D(Vector):
         .. _serialization and deserialization:
             https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
-        return {"object_class": "volmdlr.Vector2D",
+        return {"object_class": "design3d.Vector2D",
                 "x": self.x, "y": self.y,
                 "name": self.name}
 
@@ -708,7 +708,7 @@ cdef class Vector2D(Vector):
         :param dict_: The dictionary of a serialized Point3D
         :type dict_: dict
         :return:
-        :rtype: :class:`volmdlr.Point3D`
+        :rtype: :class:`design3d.Point3D`
 
         .. seealso::
             How `serialization and deserialization`_ works in dessia_common
@@ -725,7 +725,7 @@ cdef class Vector2D(Vector):
         :param deep: *not used*
         :param memo: *not used*
         :return: A copy of the Vector2D-like object
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
         """
         return self.__class__(self.x, self.y)
 
@@ -750,7 +750,7 @@ cdef class Vector2D(Vector):
         Computes the dot product (scalar product) of two 2-dimensional vectors.
 
         :param other_vector: A Vector2D-like object
-        :type other_vector: :class:`volmdlr.Vector2D`
+        :type other_vector: :class:`design3d.Vector2D`
         :return: A scalar, result of the dot product
         :rtype: float
         """
@@ -761,7 +761,7 @@ cdef class Vector2D(Vector):
         Computes the cross product of two 2-dimensional vectors.
 
         :param other_vector: A Vector2D-like object
-        :type other_vector: :class:`volmdlr.Vector2D`
+        :type other_vector: :class:`design3d.Vector2D`
         :return: A scalar, result of the cross product
         :rtype: float
         """
@@ -772,7 +772,7 @@ cdef class Vector2D(Vector):
         Computes the euclidiean distance between two Vector2D objects.
 
         :param other_vector: A Vector2D object
-        :type other_vector: :class:`volmdlr.Vector2D`
+        :type other_vector: :class:`design3d.Vector2D`
         :return: The euclidiean distance
         :rtype: float
         """
@@ -783,7 +783,7 @@ cdef class Vector2D(Vector):
         Calculates the parameters to be used in rotation methods
 
         :param center: The center of rotation
-        :type center: :class:`volmdlr.Point2D`
+        :type center: :class:`design3d.Point2D`
         :param angle: The angle of the rotation in radian
         :type angle: float
         :return: The abscissa and ordinate of the rotated vector
@@ -799,11 +799,11 @@ cdef class Vector2D(Vector):
         Rotates the 2-dimensional vector and returns a new rotated vector
 
         :param center: The center of rotation
-        :type center: :class:`volmdlr.Point2D`
+        :type center: :class:`design3d.Point2D`
         :param angle: The angle of the rotation in radian
         :type angle: float
         :return: A rotated Vector2D-like object
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
         """
         v2x, v2y = self.rotation_parameters(center, angle)
         return self.__class__(v2x, v2y)
@@ -813,9 +813,9 @@ cdef class Vector2D(Vector):
         Translates the 2-dimensional vector and returns a new translated vector
 
         :param offset: The offset vector of the translation
-        :type offset: :class:`volmdlr.Vector2D`
+        :type offset: :class:`design3d.Vector2D`
         :return: A translated Vector2D-like object
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
         """
         v2x = self.x + offset.x
         v2y = self.y + offset.y
@@ -831,11 +831,11 @@ cdef class Vector2D(Vector):
         vector of the input reference frame.
 
         :param frame: The input reference frame
-        :type frame: :class:`volmdlr.Frame2D`
+        :type frame: :class:`design3d.Frame2D`
         :param side: Choose between 'old' and 'new'
         :type side: str
         :return: A frame mapped Vector2D-like object
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
         """
         if side == "old":
             new_vector = frame.local_to_global_coordinates(self)
@@ -852,13 +852,13 @@ cdef class Vector2D(Vector):
 
         :param plane_origin: The origin of the plane, on which lies the
             Vector2D
-        :type plane_origin: :class:`volmdlr.Vector3D`
+        :type plane_origin: :class:`design3d.Vector3D`
         :param vx: The first direction of the plane
-        :type vx: :class:`volmdlr.Vector3D`
+        :type vx: :class:`design3d.Vector3D`
         :param vy: The second direction of the plane
-        :type vy: :class:`volmdlr.Vector3D`
+        :type vy: :class:`design3d.Vector3D`
         :return: The Vector3D from the Vector2D set in the 3-dimensional space
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
         """
         return Vector3D(plane_origin.x + vx.x * self.x + vy.x * self.y,
                         plane_origin.y + vx.y * self.x + vy.y * self.y,
@@ -869,7 +869,7 @@ cdef class Vector2D(Vector):
         Transforms a Vector2D into a Point2D and returns it.
 
         :return: A Point2D
-        :rtype: :class:`volmdlr.Point2D`
+        :rtype: :class:`design3d.Point2D`
         """
         return Point2D(self.x, self.y)
 
@@ -879,7 +879,7 @@ cdef class Vector2D(Vector):
         2-dimensional vector.
 
         :return: A normal Vector2D
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
         """
         return Vector2D(-self.y, self.x)
 
@@ -889,7 +889,7 @@ cdef class Vector2D(Vector):
         2-dimensional vector.
 
         :return: A unit normal Vector2D
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
         """
         n = self.normal_vector()
         return n.unit_vector()
@@ -916,7 +916,7 @@ cdef class Vector2D(Vector):
         :type ymax: float
         :param name: object's name.
         :return: A random Vector2D
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
         """
         return cls(random.uniform(xmin, xmax),
                    random.uniform(ymin, ymax), name=name)
@@ -933,7 +933,7 @@ cdef class Vector2D(Vector):
         :param head_width: The width of the head of the arrow
         :type head_width: float, optional
         :param origin: The starting point of the tail of the arrow
-        :type origin: :class:`volmdlr.Vector2D`, optional
+        :type origin: :class:`design3d.Vector2D`, optional
         :param ax: The Axes on which the Vector2D will be drawn
         :type ax: :class:`matplotlib.axes.Axes`, optional
         :param color: The color of the arrow
@@ -1059,7 +1059,7 @@ cdef class Point2D(Vector2D):
         .. _serialization and deserialization:
             https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
-        dict_ = {"object_class": "volmdlr.Point2D",
+        dict_ = {"object_class": "design3d.Point2D",
                  "x": self.x, "y": self.y}
         if self.name:
             dict_["name"] = self.name
@@ -1074,13 +1074,13 @@ cdef class Point2D(Vector2D):
 
         :param plane_origin: The origin of the plane, on which lies the
             Vector2D
-        :type plane_origin: :class:`volmdlr.Vector3D`
+        :type plane_origin: :class:`design3d.Vector3D`
         :param vx: The first direction of the plane
-        :type vx: :class:`volmdlr.Vector3D`
+        :type vx: :class:`design3d.Vector3D`
         :param vy: The second direction of the plane
-        :type vy: :class:`volmdlr.Vector3D`
+        :type vy: :class:`design3d.Vector3D`
         :return: The Point3D from the Point2D set in the 3-dimensional space
-        :rtype: :class:`volmdlr.Point3D`
+        :rtype: :class:`design3d.Point3D`
         """
         return Point3D(round(plane_origin.x + vx.x * self.x + vy.x * self.y, 12),
                        round(plane_origin.y + vx.y * self.x + vy.y * self.y, 12),
@@ -1091,7 +1091,7 @@ cdef class Point2D(Vector2D):
         Transforms a Point2D into a Vector2D and returns it.
 
         :return: A Vector2D
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
         """
         return Vector2D(self.x, self.y)
 
@@ -1132,23 +1132,23 @@ cdef class Point2D(Vector2D):
         Computes the euclidiean distance between two Point2D objects.
 
         :param other_point: A Point2D object
-        :type other_point: :class:`volmdlr.Point2D`
+        :type other_point: :class:`design3d.Point2D`
         :return: The euclidiean distance
         :rtype: float
         """
         return (self - other_point).norm()
 
     @classmethod
-    def line_intersection(cls, line1: "volmdlr.edges.Line2D",
-                          line2: "volmdlr.edges.Line2D",
+    def line_intersection(cls, line1: "design3d.edges.Line2D",
+                          line2: "design3d.edges.Line2D",
                           curvilinear_abscissa: bool = False, name: str = ""):
         """
         Returns a Point2D based on the intersection between two infinite lines.
 
         :param line1: The first line
-        :type line1: :class:`volmdlr.edges.Line2D`
+        :type line1: :class:`design3d.edges.Line2D`
         :param line2: The second line
-        :type line2: :class:`volmdlr.edges.Line2D`
+        :type line2: :class:`design3d.edges.Line2D`
         :param curvilinear_abscissa: `True` will return, in addition to the
             intersection point, the curvilinear abscissa of the point on the
             first line and on the second line. Otherwise, only the point will
@@ -1156,7 +1156,7 @@ cdef class Point2D(Vector2D):
         :type curvilinear_abscissa: bool, optional
         :param name: Object's name.
         :return: The two-dimensional point at the intersection of the two lines
-        :rtype: :class:`volmdlr.Point2D`
+        :rtype: :class:`design3d.Point2D`
         """
         (x1, y1), (x2, y2) = line1
         (x3, y3), (x4, y4) = line2
@@ -1180,16 +1180,16 @@ cdef class Point2D(Vector2D):
         return cls(x, y), t, u
 
     @classmethod
-    def segment_intersection(cls, segment1: "volmdlr.edges.LineSegment2D",
-                             segment2: "volmdlr.edges.LineSegment2D",
+    def segment_intersection(cls, segment1: "design3d.edges.LineSegment2D",
+                             segment2: "design3d.edges.LineSegment2D",
                              curvilinear_abscissa: bool = False, name: str = ""):
         """
         Returns a Point2D based on the intersection between two finite lines.
 
         :param segment1: The first line segment
-        :type segment1: :class:`volmdlr.edges.LineSegment2D`
+        :type segment1: :class:`design3d.edges.LineSegment2D`
         :param segment2: The second line segment
-        :type segment2: :class:`volmdlr.edges.LineSegment2D`
+        :type segment2: :class:`design3d.edges.LineSegment2D`
         :param curvilinear_abscissa: `True` will return, in addition to the
             intersection point, the curvilinear abscissa of the point on the
             first line segment and on the second line segment. Otherwise, only
@@ -1198,7 +1198,7 @@ cdef class Point2D(Vector2D):
         :param name: object's name.
         :return: The two-dimensional point at the intersection of the two lines
             segments
-        :rtype: :class:`volmdlr.Point2D`
+        :rtype: :class:`design3d.Point2D`
         """
         (x1, y1), (x2, y2) = segment1
         (x3, y3), (x4, y4) = segment2
@@ -1257,12 +1257,12 @@ cdef class Point2D(Vector2D):
         Computes the middle point between two two-dimensional vector-like objects.
 
         :param point1: the first point
-        :type point1: :class:`volmdlr.Vector2D`
+        :type point1: :class:`design3d.Vector2D`
         :param point2: the second point
-        :type point2: :class:`volmdlr.Vector2D`.
+        :type point2: :class:`design3d.Vector2D`.
         :param name: object's name.
         :return: the middle point
-        :rtype: :class:`volmdlr.Point2D`
+        :rtype: :class:`design3d.Point2D`
         """
         middle_point = (point1 + point2) * 0.5
         middle_point.name = name
@@ -1270,18 +1270,18 @@ cdef class Point2D(Vector2D):
 
     @classmethod
     def line_projection(cls, point: Vector2D,
-                        line: "volmdlr.edges.Line2D", name = ""):
+                        line: "design3d.edges.Line2D", name = ""):
         """
         Computes the projection of a two-dimensional vector-like object on an
         infinite two-dimensional line
 
         :param point: the point to be projected
-        :type point: :class:`volmdlr.Vector2D`
+        :type point: :class:`design3d.Vector2D`
         :param line: the infinite line
-        :type line: :class:`volmdlr.edges.Line2D`.
+        :type line: :class:`design3d.edges.Line2D`.
         :param name: object's name.
         :return: the projected point
-        :rtype: :class:`volmdlr.Point2D`
+        :rtype: :class:`design3d.Point2D`
         """
         p1, p2 = line[0], line[1]
         n = line.unit_normal_vector()
@@ -1296,9 +1296,9 @@ cdef class Point2D(Vector2D):
         objects.
 
         :param points: a list of points
-        :type points: List[:class:`volmdlr.Vector2D`]
+        :type points: List[:class:`design3d.Vector2D`]
         :return: the nearest point out of the list
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
         """
         min_distance = self.point_distance(points[0])
         min_point = points[0]
@@ -1308,14 +1308,14 @@ cdef class Point2D(Vector2D):
                 min_distance, min_point = pd, point
         return min_point
 
-    def axial_symmetry(self, line: "volmdlr.curves.Line2D"):
+    def axial_symmetry(self, line: "design3d.curves.Line2D"):
         """
         Returns the symmetric two-dimensional point according to a line.
 
         :param line: the line used for axial symmetry
-        :type line: :class:`volmdlr.edges.Line2D`
+        :type line: :class:`design3d.edges.Line2D`
         :return: the symmetrical point
-        :rtype: :class:`volmdlr.Point2D`
+        :rtype: :class:`design3d.Point2D`
         """
 
         point_projection = line.point_projection(self)[0]
@@ -1451,7 +1451,7 @@ cdef class Vector3D(Vector):
         should be of same dimension.
 
         :param other_vector: A Vector3D-like object
-        :type other_vector: :class:`volmdlr.Vector3D`
+        :type other_vector: :class:`design3d.Vector3D`
         :param tol: The tolerance under which the euclidean distance is
             considered equal to 0
         :type tol: float
@@ -1485,7 +1485,7 @@ cdef class Vector3D(Vector):
         .. _serialization and deserialization:
             https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
-        dict_ = {"object_class": "volmdlr.Vector3D",
+        dict_ = {"object_class": "design3d.Vector3D",
                  "x": self.x, "y": self.y, "z": self.z}
 
         if self.name:
@@ -1509,7 +1509,7 @@ cdef class Vector3D(Vector):
             Default value is '#'
         :type path: str, optional
         :return:
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
 
         .. seealso::
             How `serialization and deserialization`_ works in dessia_common
@@ -1525,7 +1525,7 @@ cdef class Vector3D(Vector):
         Computes the dot product between two 3-dimensional vectors.
 
         :param other_vector: A Vector3D-like object
-        :type other_vector: :class:`volmdlr.Vector3D`
+        :type other_vector: :class:`design3d.Vector3D`
         :return: Value of the dot product
         :rtype: float
         """
@@ -1537,7 +1537,7 @@ cdef class Vector3D(Vector):
         Computes the cross product between two 3-dimensional vectors.
 
         :param other_vector: A Vector3D-like object
-        :type other_vector: :class:`volmdlr.Vector3D`
+        :type other_vector: :class:`design3d.Vector3D`
         :return: Value of the cross product
         :rtype: float
         """
@@ -1565,7 +1565,7 @@ cdef class Vector3D(Vector):
         Computes the euclidiean distance between two Vector3D objects.
 
         :param other_vector: A Vector3D object
-        :type other_vector: :class:`volmdlr.Vector3D`
+        :type other_vector: :class:`design3d.Vector3D`
         :return: The euclidiean distance
         :rtype: float
         """
@@ -1579,13 +1579,13 @@ cdef class Vector3D(Vector):
             https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula.
 
         :param center: The center of rotation
-        :type center: :class:`volmdlr.Point3D`
+        :type center: :class:`design3d.Point3D`
         :param axis: The axis of rotation
-        :type axis: :class:`volmdlr.Vector3D`
+        :type axis: :class:`design3d.Vector3D`
         :param angle: The angle of the rotation in radian
         :type angle: float
         :return: A rotated Vector3D-like object
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
         """
         vector2 = c_vector3d_rotation(self.x, self.y, self.z,
                                       center.x, center.y, center.z,
@@ -1621,7 +1621,7 @@ cdef class Vector3D(Vector):
         :param angle: Value of the angle
         :type angle: float
         :return: A 3-dimensional point
-        :rtype: :class:`volmdlr.Point3D`
+        :rtype: :class:`design3d.Point3D`
         """
         y1, z1 = self.axis_rotation_parameters(self.y, self.z, angle)
 
@@ -1634,7 +1634,7 @@ cdef class Vector3D(Vector):
         :param angle: Value of the angle
         :type angle: float
         :return: A 3-dimensional point
-        :rtype: :class:`volmdlr.Point3D`
+        :rtype: :class:`design3d.Point3D`
         """
         z1, x1 = self.axis_rotation_parameters(self.z, self.x, angle)
         return Point3D(x1, self.y, z1)
@@ -1646,7 +1646,7 @@ cdef class Vector3D(Vector):
         :param angle: Value of the angle
         :type angle: float
         :return: A 3-dimensional point
-        :rtype: :class:`volmdlr.Point3D`
+        :rtype: :class:`design3d.Point3D`
         """
         x1, y1 = self.axis_rotation_parameters(self.x, self.y, angle)
         return Point3D(x1, y1, self.z)
@@ -1656,9 +1656,9 @@ cdef class Vector3D(Vector):
         Translates the vector and returns a new translated vector
 
         :param offset: A Vector3D-like object used for offsetting
-        :type offset: :class:`volmdlr.Vector3D`
+        :type offset: :class:`design3d.Vector3D`
         :return: A translated Vector3D-like object
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
         """
         return self + offset
 
@@ -1672,11 +1672,11 @@ cdef class Vector3D(Vector):
         vector of the input reference frame.
 
         :param frame: The input reference frame
-        :type frame: :class:`volmdlr.Frame3D`
+        :type frame: :class:`design3d.Frame3D`
         :param side: Choose between 'old' and 'new'
         :type side: str
         :return: A frame mapped Vector3D-like object
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
         """
         if side == "old":
             new_vector = frame.local_to_global_coordinates(self)
@@ -1690,13 +1690,13 @@ cdef class Vector3D(Vector):
         Projects a Vector3D-like object on a 3D plane.
 
         :param plane_origin: The origin of the 3D projection plane
-        :type plane_origin: :class:`volmdlr.Vector3D`
+        :type plane_origin: :class:`design3d.Vector3D`
         :param x: The X axis of the 3D plane
-        :type x: :class:`volmdlr.Vector3D`
+        :type x: :class:`design3d.Vector3D`
         :param y: The Y axis of the 3D plane
-        :type y: :class:`volmdlr.Vector3D`
+        :type y: :class:`design3d.Vector3D`
         :return: The projection on the 3D plane
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
         """
         z = x.cross(y)
         z = z.unit_vector()
@@ -1707,13 +1707,13 @@ cdef class Vector3D(Vector):
         Projects a Vector3D-like object on a 2D plane.
 
         :param plane_origin: The 3D origin of the 2D projection plane
-        :type plane_origin: :class:`volmdlr.Vector3D`
+        :type plane_origin: :class:`design3d.Vector3D`
         :param x: The 3D X axis of the 2D plane
-        :type x: :class:`volmdlr.Vector3D`
+        :type x: :class:`design3d.Vector3D`
         :param y: The 3D Y axis of the 2D plane
-        :type y: :class:`volmdlr.Vector3D`
+        :type y: :class:`design3d.Vector3D`
         :return: The projection on the 2D plane
-        :rtype: :class:`volmdlr.Point2D`
+        :rtype: :class:`design3d.Point2D`
         """
         p3d = self.plane_projection3d(plane_origin, x, y)
         u1 = p3d.dot(x)
@@ -1726,27 +1726,27 @@ cdef class Vector3D(Vector):
         Transforms a Vector3D-like object to a Point2D.
 
         :param plane_origin: The 3D origin of the 2D projection plane
-        :type plane_origin: :class:`volmdlr.Vector3D`
+        :type plane_origin: :class:`design3d.Vector3D`
         :param x: The 3D X axis of the 2D plane
-        :type x: :class:`volmdlr.Vector3D`
+        :type x: :class:`design3d.Vector3D`
         :param y: The 3D Y axis of the 2D plane
-        :type y: :class:`volmdlr.Vector3D`
+        :type y: :class:`design3d.Vector3D`
         :return: The transformed Point2D
-        :rtype: :class:`volmdlr.Point2D`
+        :rtype: :class:`design3d.Point2D`
         """
         x2d = self.dot(x) - plane_origin.dot(x)
         y2d = self.dot(y) - plane_origin.dot(y)
         class_name = self.__class__.__name__[:-2] + "2D"
         if class_name in ("Vector2D", "Point2D"):
-            return getattr(sys.modules["volmdlr.core_compiled"], class_name)(x2d, y2d)
-        return getattr(sys.modules["volmdlr.display"], class_name)(x2d, y2d)
+            return getattr(sys.modules["design3d.core_compiled"], class_name)(x2d, y2d)
+        return getattr(sys.modules["design3d.display"], class_name)(x2d, y2d)
 
     def random_unit_normal_vector(self):
         """
         Returns a random normal 3-dimensional vector.
 
         :return: A normal Vector3D
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
         """
         v = Vector3D.random(0, 1, 0, 1, 0, 1)
 
@@ -1758,7 +1758,7 @@ cdef class Vector3D(Vector):
         Returns a deterministic normal 3-dimensional vector.
 
         :return: A normal Vector3D
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
         """
         if not math.isclose(self.y, 0, abs_tol=1e-7) \
                 or not math.isclose(self.z, 0, abs_tol=1e-7):
@@ -1773,7 +1773,7 @@ cdef class Vector3D(Vector):
         Returns a deterministic unit normal 3-dimensional vector.
 
         :return: A normal Vector3D
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
         """
         normal_vector = self.deterministic_normal_vector()
         return normal_vector.unit_vector()
@@ -1785,7 +1785,7 @@ cdef class Vector3D(Vector):
         :param deep: *not used*
         :param memo: *not used*
         :return: A copy of the Vector2D-like object
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
         """
         return self.__class__(self.x, self.y, self.z)
 
@@ -1808,7 +1808,7 @@ cdef class Vector3D(Vector):
         :type zmax: float.
         :param name: object's name.
         :return: A random Vector3D
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
         """
         return cls(random.uniform(xmin, xmax),
                    random.uniform(ymin, ymax),
@@ -1819,7 +1819,7 @@ cdef class Vector3D(Vector):
         Converts a Vector3D object to a Point3D object.
 
         :return: A Point3D
-        :rtype: :class:`volmdlr.Point3D`
+        :rtype: :class:`design3d.Point3D`
         """
         return Point3D(self.x, self.y, self.z)
 
@@ -1834,7 +1834,7 @@ cdef class Vector3D(Vector):
             that have already been instantiated
         :type object_dict: dict
         :return: The corresponding Vector3D object
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
         """
         length_conversion_factor = kwargs.get("length_conversion_factor", 1)
 
@@ -1886,7 +1886,7 @@ cdef class Vector3D(Vector):
         :type ax: :class:`matplotlib.axes.Axes`, optional
         :param starting_point: The location of the origin of the vector.
             Default value is None, corresponding to (0, 0, 0)
-        :type starting_point: :class:`volmdlr.Vector3D`, optional
+        :type starting_point: :class:`design3d.Vector3D`, optional
         :param color: The color of the drawn vector. Default value is empty
             string for black
         :type color: str, optional
@@ -1980,7 +1980,7 @@ cdef class Point3D(Vector3D):
         .. _serialization and deserialization:
             https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
-        dict_ = {"object_class": "volmdlr.Point3D",
+        dict_ = {"object_class": "design3d.Point3D",
                  "x": self.x, "y": self.y, "z": self.z}
         if self.name:
             dict_["name"] = self.name
@@ -2032,7 +2032,7 @@ cdef class Point3D(Vector3D):
             that have already been instantiated
         :type object_dict: dict
         :return: The corresponding Point3D object
-        :rtype: :class:`volmdlr.Point3D`
+        :rtype: :class:`design3d.Point3D`
         """
         length_conversion_factor = kwargs.get("length_conversion_factor", 1)
 
@@ -2044,7 +2044,7 @@ cdef class Point3D(Vector3D):
         Converts a Point3D object to a Vector3D object.
 
         :return: A Vector3D
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
         """
         return Vector3D(self.x, self.y, self.z)
 
@@ -2053,7 +2053,7 @@ cdef class Point3D(Vector3D):
         Computes the euclidean distance between two 3-dimensional points.
 
         :param point2: The other 3-dimensional point
-        :type point2: :class:`volmdlr.Point3D`
+        :type point2: :class:`design3d.Point3D`
         :return: The euclidean distance
         :rtype: float
         """
@@ -2065,12 +2065,12 @@ cdef class Point3D(Vector3D):
         Computes the middle point between two 3-dimensional points.
 
         :param point1: The first 3-dimensional point
-        :type point1: :class:`volmdlr.Point3D`
+        :type point1: :class:`design3d.Point3D`
         :param point2: The second 3-dimensional point
-        :type point2: :class:`volmdlr.Point3D`.
+        :type point2: :class:`design3d.Point3D`.
         :param name: object's name.
         :return: The middle point
-        :rtype: :class:`volmdlr.Point3D`
+        :rtype: :class:`design3d.Point3D`
         """
         middle_point = (point1 + point2) * 0.5
         middle_point.name = name
@@ -2119,9 +2119,9 @@ cdef class Point3D(Vector3D):
         Returns the nearest 3-dimensional point out of the list.
 
         :param points: A list of 3-dimensional points
-        :type points: List[:class:`volmdlr.Point3D`]
+        :type points: List[:class:`design3d.Point3D`]
         :return: The closest point
-        :rtype: :class:`volmdlr.Point3D`
+        :rtype: :class:`design3d.Point3D`
         """
         min_distance, closest_point = math.inf, None
         for point in points:
@@ -2246,9 +2246,9 @@ class Matrix22:
         Multiplies the matrix by a 2-dimensional vector.
 
         :param vector: A Vector2D-like object
-        :type vector: :class:`volmdlr.Vector2D`
+        :type vector: :class:`design3d.Vector2D`
         :return: A Vector2D-like object
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
         """
         u1, u2 = c_matrix_vector_multiplication2(self.M11, self.M12,
                                                  self.M21, self.M22,
@@ -2270,7 +2270,7 @@ class Matrix22:
         Computes the invert matrix.
 
         :return: The inverse of the matrix
-        :rtype: :class:`volmdlr.Matrix22`
+        :rtype: :class:`design3d.Matrix22`
         """
         det = self.determinent()
         if not math.isclose(det, 0, abs_tol=1e-10):
@@ -2358,7 +2358,7 @@ class Matrix33:
         :param float_value: The value of the scalar
         :type float_value: float
         :return: The new matrix after multiplication
-        :rtype: :class:`volmdlr.Matrix33`
+        :rtype: :class:`design3d.Matrix33`
         """
         return Matrix33(self.M11 * float_value, self.M12 * float_value, self.M13 * float_value,
                         self.M21 * float_value, self.M22 * float_value, self.M23 * float_value,
@@ -2369,9 +2369,9 @@ class Matrix33:
        Multiplies the matrix by a 3-dimensional vector.
 
        :param vector: A Vector3D-like object
-       :type vector: :class:`volmdlr.Vector3D`
+       :type vector: :class:`design3d.Vector3D`
        :return: A Vector3D-like object
-       :rtype: :class:`volmdlr.Vector3D`
+       :rtype: :class:`design3d.Vector3D`
        """
         cdef double u1, u2, u3
         u1, u2, u3 = c_matrix_vector_multiplication3(self.M11, self.M12, self.M13,
@@ -2403,7 +2403,7 @@ class Matrix33:
         Computes the invert matrix.
 
         :return: The inverse of the matrix
-        :rtype: :class:`volmdlr.Matrix33`
+        :rtype: :class:`design3d.Matrix33`
         """
         det = self.determinent()
 
@@ -2435,7 +2435,7 @@ class Matrix33:
         :type maximum: float, optional.
         :param name: object's name.
         :return: A random matrix
-        :rtype: :class:`volmdlr.Matrix33`
+        :rtype: :class:`design3d.Matrix33`
         """
         range_ = maximum - minimum
         return cls(*[minimum + range_ * random.random() for _ in range(9)])
@@ -2476,9 +2476,9 @@ class Basis2D(Basis):
     Defines a 2D basis.
 
     :param u: First vector of the basis
-    :type u: :class:`volmdlr.Vector2D`
+    :type u: :class:`design3d.Vector2D`
     :param v: Second vector of the basis
-    :type v: :class:`volmdlr.Vector2D`
+    :type v: :class:`design3d.Vector2D`
     """
 
     def __init__(self, u: Vector2D, v: Vector2D, name: Text = ""):
@@ -2518,7 +2518,7 @@ class Basis2D(Basis):
         .. _serialization and deserialization:
             https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
-        return {"object_class": "volmdlr.Basis2D",
+        return {"object_class": "design3d.Basis2D",
                 "name": self.name,
                 "u": self.u.to_dict(),
                 "v": self.v.to_dict()
@@ -2530,9 +2530,9 @@ class Basis2D(Basis):
         and having for origin the given 2-dimensional point.
 
         :param origin: The origin of the 2-dimensional frame
-        :type origin: :class:`volmdlr.Point2D`
+        :type origin: :class:`design3d.Point2D`
         :return: A 2-dimensional frame
-        :rtype: :class:`volmdlr.Frame2D`
+        :rtype: :class:`design3d.Frame2D`
         """
         return Frame2D(origin, self.u, self.v)
 
@@ -2541,7 +2541,7 @@ class Basis2D(Basis):
         Computes the transfer matrix of the 2-dimensional basis.
 
         :return: The 2x2 transfer matrix
-        :rtype: :class:`volmdlr.Matrix22`
+        :rtype: :class:`design3d.Matrix22`
         """
         return Matrix22(self.u.x, self.v.x,
                         self.u.y, self.v.y)
@@ -2551,7 +2551,7 @@ class Basis2D(Basis):
         Computes the inverse transfer matrix of the 2-dimensional basis.
 
         :return: The 2x2 inverse transfer matrix
-        :rtype: :class:`volmdlr.Matrix22`
+        :rtype: :class:`design3d.Matrix22`
         """
         return self.transfer_matrix().inverse()
 
@@ -2560,9 +2560,9 @@ class Basis2D(Basis):
         Convert the given vector's coordinates from the global landmark to the local landmark of this Basis2D.
 
         :param vector: The vector to convert, given in global coordinates.
-        :type vector: :class:`volmdlr.Vector2D`
+        :type vector: :class:`design3d.Vector2D`
         :return: The converted vector, in local coordinates.
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
 
         .. deprecated:: Use global_to_local_coordinates instead.
         """
@@ -2577,9 +2577,9 @@ class Basis2D(Basis):
         Convert the given vector's coordinates from the local landmark of this Basis2D to the global landmark.
 
         :param vector: The vector to convert, given in local coordinates.
-        :type vector: :class:`volmdlr.Vector2D`
+        :type vector: :class:`design3d.Vector2D`
         :return: The converted vector, in global coordinates.
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
 
         .. deprecated:: Use local_to_global_coordinates instead.
         """
@@ -2594,9 +2594,9 @@ class Basis2D(Basis):
         Convert the given vector's coordinates from the global landmark to the local landmark of this Basis2D.
 
         :param vector: The vector to convert, given in global coordinates.
-        :type vector: :class:`volmdlr.Vector2D`
+        :type vector: :class:`design3d.Vector2D`
         :return: The converted vector, in local coordinates.
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
         """
         matrix = self.inverse_transfer_matrix()
         return matrix.vector_multiplication(vector)
@@ -2606,9 +2606,9 @@ class Basis2D(Basis):
         Convert the given vector's coordinates from the local landmark of this Basis2D to the global landmark.
 
         :param vector: The vector to convert, given in local coordinates.
-        :type vector: :class:`volmdlr.Vector2D`
+        :type vector: :class:`design3d.Vector2D`
         :return: The converted vector, in global coordinates.
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
         """
         matrix = self.transfer_matrix()
         return matrix.vector_multiplication(vector)
@@ -2620,7 +2620,7 @@ class Basis2D(Basis):
         :param angle: The angle of rotation in rad
         :type angle: float
         :return: The rotated Basis2D
-        :rtype: :class:`volmdlr.Basis2D`
+        :rtype: :class:`design3d.Basis2D`
         """
         center = O2D
         new_u = self.u.rotation(center, angle)
@@ -2634,7 +2634,7 @@ class Basis2D(Basis):
         :param deep: *not used*
         :param memo: *not used*
         :return: A copy of the Basis2D
-        :rtype: :class:`volmdlr.Basis2D`
+        :rtype: :class:`design3d.Basis2D`
         """
         return Basis2D(self.u, self.v)
 
@@ -2656,11 +2656,11 @@ class Basis3D(Basis):
     Defines a 3D basis.
 
     :param u: First vector of the basis
-    :type u: :class:`volmdlr.Vector3D`
+    :type u: :class:`design3d.Vector3D`
     :param v: Second vector of the basis
-    :type v: :class:`volmdlr.Vector3D`
+    :type v: :class:`design3d.Vector3D`
     :param w: Third vector of the basis
-    :type w: :class:`volmdlr.Vector3D`
+    :type w: :class:`design3d.Vector3D`
     """
     _standalone_in_db = False
 
@@ -2733,7 +2733,7 @@ class Basis3D(Basis):
         .. _serialization and deserialization:
             https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
-        return {"object_class": "volmdlr.Basis3D",
+        return {"object_class": "design3d.Basis3D",
                 "name": self.name,
                 "u": self.u.to_dict(),
                 "v": self.v.to_dict(),
@@ -2750,10 +2750,10 @@ class Basis3D(Basis):
         vector2 subtracted of u component, w is the cross product of u and v.
 
         :param vector1: The first vector of the Basis3D
-        :type vector1: :class:`volmdlr.Vector3D`.
+        :type vector1: :class:`design3d.Vector3D`.
         :param name: object's name.
         :param vector2: The second vector of the Basis3D
-        :type vector2: :class:`volmdlr.Vector3D`
+        :type vector2: :class:`design3d.Vector3D`
         """
         u = vector1.copy()
         u = u.unit_vector()
@@ -2768,9 +2768,9 @@ class Basis3D(Basis):
         and having for origin the given 3-dimensional point.
 
         :param origin: The origin of the 3-dimensional frame
-        :type origin: :class:`volmdlr.Point3D`
+        :type origin: :class:`design3d.Point3D`
         :return: A 3-dimensional frame
-        :rtype: :class:`volmdlr.Frame3D`
+        :rtype: :class:`design3d.Frame3D`
         """
         return Frame3D(origin, self.u, self.v, self.w)
 
@@ -2779,11 +2779,11 @@ class Basis3D(Basis):
         Rotates the 3-dimensional basis and returns a new rotated one.
 
         :param axis: The axis around which the rotation is made
-        :type axis: :class:`volmdlr.Vector3D`
+        :type axis: :class:`design3d.Vector3D`
         :param angle: The angle of rotation in rad
         :type angle: float
         :return: The rotated Basis3D
-        :rtype: :class:`volmdlr.Basis3D`
+        :rtype: :class:`design3d.Basis3D`
         """
         center = O3D
         new_u = self.u.rotation(center, axis, angle)
@@ -2799,7 +2799,7 @@ class Basis3D(Basis):
         :param angle: The rotation angle
         :type angle: float
         :return: The rotated Basis3D
-        :rtype: :class:`volmdlr.Basis3D`
+        :rtype: :class:`design3d.Basis3D`
         """
         new_u = self.u.x_rotation(angle)
         new_v = self.v.x_rotation(angle)
@@ -2814,7 +2814,7 @@ class Basis3D(Basis):
         :param angle: The rotation angle
         :type angle: float
         :return: The rotated Basis3D
-        :rtype: :class:`volmdlr.Basis3D`
+        :rtype: :class:`design3d.Basis3D`
         """
         new_u = self.u.y_rotation(angle)
         new_v = self.v.y_rotation(angle)
@@ -2829,7 +2829,7 @@ class Basis3D(Basis):
         :param angle: The rotation angle
         :type angle: float
         :return: The rotated Basis3D
-        :rtype: :class:`volmdlr.Basis3D`
+        :rtype: :class:`design3d.Basis3D`
         """
         new_u = self.u.z_rotation(angle)
         new_v = self.v.z_rotation(angle)
@@ -2871,7 +2871,7 @@ class Basis3D(Basis):
         :param angles: Three angles corresponding to psi, theta, phi in rad
         :type angles: tuple
         :return: The rotated basis
-        :rtype: :class:`volmdlr.Basis3D`
+        :rtype: :class:`design3d.Basis3D`
         """
         vect_u, vect_v, vect_w = self.euler_rotation_parameters(angles)
         return Basis3D(vect_u, vect_v, vect_w)
@@ -2881,7 +2881,7 @@ class Basis3D(Basis):
         Computes the transfer matrix of the 3-dimensional basis.
 
         :return: The 3x3 transfer matrix
-        :rtype: :class:`volmdlr.Matrix33`
+        :rtype: :class:`design3d.Matrix33`
         """
         return Matrix33(self.u.x, self.v.x, self.w.x,
                         self.u.y, self.v.y, self.w.y,
@@ -2892,7 +2892,7 @@ class Basis3D(Basis):
         Computes the inverse transfer matrix of the 3-dimensional basis.
 
         :return: The 3x3 inverse transfer matrix
-        :rtype: :class:`volmdlr.Matrix33`
+        :rtype: :class:`design3d.Matrix33`
         """
         return self.transfer_matrix().inverse()
 
@@ -2901,9 +2901,9 @@ class Basis3D(Basis):
         Convert the given vector's coordinates from the global landmark to the local landmark of this Basis3D.
 
         :param vector: The vector to convert, given in global coordinates.
-        :type vector: :class:`volmdlr.Vector3D`
+        :type vector: :class:`design3d.Vector3D`
         :return: The converted vector, in local coordinates.
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
 
         .. deprecated:: Use global_to_local_coordinates instead.
         """
@@ -2918,9 +2918,9 @@ class Basis3D(Basis):
         Convert the given vector's coordinates from the local landmark of this Basis3D to the global landmark.
 
         :param vector: The vector to convert, given in local coordinates.
-        :type vector: :class:`volmdlr.Vector3D`
+        :type vector: :class:`design3d.Vector3D`
         :return: The converted vector, in global coordinates.
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
 
         .. deprecated:: Use local_to_global_coordinates instead.
         """
@@ -2935,9 +2935,9 @@ class Basis3D(Basis):
         Convert the given vector's coordinates from the global landmark to the local landmark of this Basis3D.
 
         :param vector: The vector to convert, given in global coordinates.
-        :type vector: :class:`volmdlr.Vector3D`
+        :type vector: :class:`design3d.Vector3D`
         :return: The converted vector, in local coordinates.
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
         """
         matrix = self.inverse_transfer_matrix()
         return matrix.vector_multiplication(vector)
@@ -2947,9 +2947,9 @@ class Basis3D(Basis):
         Convert the given vector's coordinates from the local landmark of this Basis3D to the global landmark.
 
         :param vector: The vector to convert, given in local coordinates.
-        :type vector: :class:`volmdlr.Vector3D`
+        :type vector: :class:`design3d.Vector3D`
         :return: The converted vector, in global coordinates.
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
         """
         matrix = self.transfer_matrix()
         return matrix.vector_multiplication(vector)
@@ -2961,7 +2961,7 @@ class Basis3D(Basis):
         :param deep: *not used*
         :param memo: *not used*
         :return: A copy of the Basis3D
-        :rtype: :class:`volmdlr.Basis3D`
+        :rtype: :class:`design3d.Basis3D`
         """
         return Basis3D(self.u, self.v, self.w)
 
@@ -3099,7 +3099,7 @@ class Frame2D(Basis2D):
         .. _serialization and deserialization:
             https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
-        return {"object_class": "volmdlr.Frame2D",
+        return {"object_class": "design3d.Frame2D",
                 "name": self.name,
                 "origin": self.origin.to_dict(),
                 "u": self.u.to_dict(),
@@ -3120,7 +3120,7 @@ class Frame2D(Basis2D):
         Returns the 2-dimensional basis oriented the same way as the Frame2D.
 
         :return: A 2-dimensional basis
-        :rtype: :class:`volmdlr.Basis2D`
+        :rtype: :class:`design3d.Basis2D`
         """
         return Basis2D(self.u, self.v)
 
@@ -3129,9 +3129,9 @@ class Frame2D(Basis2D):
         Convert the given vector's coordinates from the global landmark to the local landmark of this Frame2D.
 
         :param vector: The vector to convert, given in global coordinates.
-        :type vector: :class:`volmdlr.Vector2D`
+        :type vector: :class:`design3d.Vector2D`
         :return: The converted vector, in local coordinates.
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
 
         .. deprecated:: Use global_to_local_coordinates instead.
         """
@@ -3146,9 +3146,9 @@ class Frame2D(Basis2D):
         Convert the given vector's coordinates from the local landmark of this Frame2D to the global landmark.
 
         :param vector: The vector to convert, given in local coordinates.
-        :type vector: :class:`volmdlr.Vector2D`
+        :type vector: :class:`design3d.Vector2D`
         :return: The converted vector, in global coordinates.
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
 
         .. deprecated:: Use local_to_global_coordinates instead.
         """
@@ -3163,9 +3163,9 @@ class Frame2D(Basis2D):
         Convert the given vector's coordinates from the global landmark to the local landmark of this Frame2D.
 
         :param vector: The vector to convert, given in global coordinates.
-        :type vector: :class:`volmdlr.Vector2D`
+        :type vector: :class:`design3d.Vector2D`
         :return: The converted vector, in local coordinates.
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
         """
         return Basis2D.global_to_local_coordinates(self, vector - self.origin)
 
@@ -3174,9 +3174,9 @@ class Frame2D(Basis2D):
         Convert the given vector's coordinates from the local landmark of this Frame2D to the global landmark.
 
         :param vector: The vector to convert, given in local coordinates.
-        :type vector: :class:`volmdlr.Vector2D`
+        :type vector: :class:`design3d.Vector2D`
         :return: The converted vector, in global coordinates.
-        :rtype: :class:`volmdlr.Vector2D`
+        :rtype: :class:`design3d.Vector2D`
         """
         return Basis2D.local_to_global_coordinates(self, vector) + self.origin
 
@@ -3199,9 +3199,9 @@ class Frame2D(Basis2D):
         Returns a translated 2-dimensional frame.
 
         :param vector: The translation vector
-        :type vector: :class:`volmdlr.Vector2D`
+        :type vector: :class:`design3d.Vector2D`
         :return: A new translated 2-dimensional frame
-        :rtype: :class:`volmdlr.Frame2D`
+        :rtype: :class:`design3d.Frame2D`
         """
         new_origin = self.origin.translation(vector)
         return Frame2D(new_origin, self.u, self.v)
@@ -3211,11 +3211,11 @@ class Frame2D(Basis2D):
         Returns a rotated 2-dimensional frame.
 
         :param center: The center of rotation
-        :type center: :class:`volmdlr.Point2D`
+        :type center: :class:`design3d.Point2D`
         :param angle: The rotation angle
         :type angle: float
         :return: New rotated frame
-        :rtype: :class:`volmdlr.Frame2D`
+        :rtype: :class:`design3d.Frame2D`
         """
         new_origin = self.origin
         if not center.is_close(new_origin):
@@ -3248,7 +3248,7 @@ class Frame2D(Basis2D):
         :param deep: *not used*
         :param memo: *not used*
         :return: A copy of the Frame2D
-        :rtype: :class:`volmdlr.Frame2D`
+        :rtype: :class:`design3d.Frame2D`
         """
         return Frame2D(self.origin, self.u, self.v)
 
@@ -3390,7 +3390,7 @@ class Frame3D(Basis3D):
         .. _serialization and deserialization:
             https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
-        return {"object_class": "volmdlr.Frame3D",
+        return {"object_class": "design3d.Frame3D",
                 "name": self.name,
                 "origin": self.origin.to_dict(),
                 "u": self.u.to_dict(),
@@ -3412,7 +3412,7 @@ class Frame3D(Basis3D):
         Returns the 3-dimensional basis oriented the same way as the Frame3D.
 
         :return: A 3-dimensional basis
-        :rtype: :class:`volmdlr.Basis3D`
+        :rtype: :class:`design3d.Basis3D`
         """
         return Basis3D(self.u, self.v, self.w)
 
@@ -3421,9 +3421,9 @@ class Frame3D(Basis3D):
         Convert the given vector's coordinates from the global landmark to the local landmark of this Frame3D.
 
         :param vector: The vector to convert, given in global coordinates.
-        :type vector: :class:`volmdlr.Vector3D`
+        :type vector: :class:`design3d.Vector3D`
         :return: The converted vector, in local coordinates.
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
 
         .. deprecated:: Use global_to_local_coordinates instead.
         """
@@ -3438,9 +3438,9 @@ class Frame3D(Basis3D):
         Convert the given vector's coordinates from the local landmark of this Frame3D to the global landmark.
 
         :param vector: The vector to convert, given in local coordinates.
-        :type vector: :class:`volmdlr.Vector3D`
+        :type vector: :class:`design3d.Vector3D`
         :return: The converted vector, in global coordinates.
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
 
         .. deprecated:: Use local_to_global_coordinates instead.
         """
@@ -3455,9 +3455,9 @@ class Frame3D(Basis3D):
         Convert the given vector's coordinates from the global landmark to the local landmark of this Frame3D.
 
         :param vector: The vector to convert, given in global coordinates.
-        :type vector: :class:`volmdlr.Vector3D`
+        :type vector: :class:`design3d.Vector3D`
         :return: The converted vector, in local coordinates.
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
         """
         return Basis3D.global_to_local_coordinates(self, vector - self.origin)
 
@@ -3466,9 +3466,9 @@ class Frame3D(Basis3D):
         Convert the given vector's coordinates from the local landmark of this Frame3D to the global landmark.
 
         :param vector: The vector to convert, given in local coordinates.
-        :type vector: :class:`volmdlr.Vector3D`
+        :type vector: :class:`design3d.Vector3D`
         :return: The converted vector, in global coordinates.
-        :rtype: :class:`volmdlr.Vector3D`
+        :rtype: :class:`design3d.Vector3D`
         """
         return Basis3D.local_to_global_coordinates(self, vector) + self.origin
 
@@ -3496,13 +3496,13 @@ class Frame3D(Basis3D):
         (calling Basis), and returns a new 3-dimensional frame.
 
         :param center: The center of rotation
-        :type center: :class:`volmdlr.Point3D`
+        :type center: :class:`design3d.Point3D`
         :param axis: The axis around which the rotation will be made
-        :type axis: :class:`volmdlr.Vector3D`
+        :type axis: :class:`design3d.Vector3D`
         :param angle: The rotation angle
         :type angle: float
         :return: New rotated frame
-        :rtype: :class:`volmdlr.Frame3D`
+        :rtype: :class:`design3d.Frame3D`
         """
         new_base = Basis3D.rotation(self, axis, angle)
         if center.is_close(self.origin):
@@ -3515,7 +3515,7 @@ class Frame3D(Basis3D):
         Translates a 3-dimensional frame.
 
         :param offset: The translation vector
-        :type offset: :class:`volmdlr.Vector3D`
+        :type offset: :class:`design3d.Vector3D`
         :return: new translated frame
         :rtype: Frame3D
         """
@@ -3529,7 +3529,7 @@ class Frame3D(Basis3D):
         :param deep: *not used*
         :param memo: *not used*
         :return: A copy of the Frame3D
-        :rtype: :class:`volmdlr.Frame3D`
+        :rtype: :class:`design3d.Frame3D`
         """
         return Frame3D(self.origin.copy(),
                        self.u.copy(), self.v.copy(), self.w.copy())
@@ -3559,10 +3559,10 @@ class Frame3D(Basis3D):
 
         :param x: The first 3-dimensional vector of the 2-dimensional surface.
             Default value is X3D, the vector (1, 0, 0)
-        :type x: :class:`volmdlr.Vector3D`, optional
+        :type x: :class:`design3d.Vector3D`, optional
         :param y: The second 3-dimensional vector of the 2-dimensional surface.
             Default value is Y3D, the vector (0, 1, 0)
-        :type y: :class:`volmdlr.Vector3D`, optional
+        :type y: :class:`design3d.Vector3D`, optional
         :param ax: The Axes on which the Frame3D will be drawn. Default value
             is None, creating a new drawing figure
         :type ax: :class:`matplotlib.axes.Axes`, optional
@@ -3638,11 +3638,11 @@ class Frame3D(Basis3D):
             that have already been instantiated
         :type object_dict: dict
         :return: The corresponding Frame3D object
-        :rtype: :class:`volmdlr.Frame3D`
+        :rtype: :class:`design3d.Frame3D`
         """
         origin = object_dict[arguments[1]]
         if arguments[2] == "$" and arguments[3] == "$":
-            return cls(origin, volmdlr.X3D, volmdlr.Y3D, volmdlr.Z3D, arguments[0][1:-1])
+            return cls(origin, design3d.X3D, design3d.Y3D, design3d.Z3D, arguments[0][1:-1])
         if arguments[2] == "$":
             return cls.from_point_and_vector(origin, object_dict[arguments[3]], main_axis=X3D,
                                              name= arguments[0][1:-1])
@@ -3666,18 +3666,18 @@ class Frame3D(Basis3D):
         an object.
 
         :param point: The origin of the new frame
-        :type point: :class:`volmdlr.Point3D`
+        :type point: :class:`design3d.Point3D`
         :param vector: The vector used to define one of the main axis
             (by default X-axis) of the local frame
-        :type vector: :class:`volmdlr.Vector3D`
+        :type vector: :class:`design3d.Vector3D`
         :param main_axis: The axis of global frame you want to match 'vector'
             (can be X3D, Y3D or Z3D). Default value is X3D,
             the vector (1, 0, 0)
-        :type main_axis: :class:`volmdlr.Vector3D`, optional
+        :type main_axis: :class:`design3d.Vector3D`, optional
         :param name: Frame's name.
         :type name: str
         :return: The created local frame
-        :rtype: :class:`volmdlr.Frame3D`
+        :rtype: :class:`design3d.Frame3D`
         """
         if main_axis not in [X3D, Y3D, Z3D]:
             raise ValueError("main_axis must be X, Y or Z of the global frame")

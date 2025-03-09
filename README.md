@@ -26,7 +26,7 @@
 
 ## Description
 
-design3d is a python volume modeler used as a CAD platform.
+design3d is a python 3d design package enabling CAD automations.
 With it, you can easily create 3D models from python code.
 Check the examples to see what you can do with this library.
 A hard fork of the discontinued volmdlr project.

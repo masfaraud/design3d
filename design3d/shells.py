@@ -1,4 +1,4 @@
-"""volmdlr shells module."""
+"""design3d shells module."""
 import math
 import random
 import warnings
@@ -14,13 +14,13 @@ from dessia_common.typings import JsonSerializable
 from numpy.typing import NDArray
 from trimesh import Trimesh
 
-import volmdlr.core
-import volmdlr.core_compiled
-import volmdlr.faces
-import volmdlr.geometry
-from volmdlr import curves, display, edges, surfaces, wires
-from volmdlr.core import edge_in_list, get_edge_index_in_list, get_point_index_in_list, point_in_list
-from volmdlr.utils.step_writer import geometric_context_writer, product_writer, step_ids_to_str
+import design3d.core
+import design3d.core_compiled
+import design3d.faces
+import design3d.geometry
+from design3d import curves, display, edges, surfaces, wires
+from design3d.core import edge_in_list, get_edge_index_in_list, get_point_index_in_list, point_in_list
+from design3d.utils.step_writer import geometric_context_writer, product_writer, step_ids_to_str
 
 # pylint: disable=unused-argument
 
@@ -67,7 +67,7 @@ def union_list_of_shells(list_shells, abs_tol: float = 1e-6):
     return shells
 
 
-class Shell3D(volmdlr.core.CompositePrimitive3D):
+class Shell3D(design3d.core.CompositePrimitive3D):
     """
     A 3D shell composed of multiple faces.
 
@@ -85,7 +85,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
     :param name: The name of the shell.
     :type name: str
     :param bounding_box: The bounding box of the shell.
-    :type bounding_box: :class:`volmdlr.core.BoundingBox`
+    :type bounding_box: :class:`design3d.core.BoundingBox`
     """
     _standalone_in_db = True
     _non_serializable_attributes = ['primitives']
@@ -93,16 +93,16 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
     _non_data_hash_attributes = []
     STEP_FUNCTION = None
 
-    def __init__(self, faces: List[volmdlr.faces.Face3D],
+    def __init__(self, faces: List[design3d.faces.Face3D],
                  color: Tuple[float, float, float] = None,
                  alpha: float = 1.,
                  name: str = '',
-                 bounding_box: volmdlr.core.BoundingBox = None,
-                 reference_path: str = volmdlr.PATH_ROOT):
+                 bounding_box: design3d.core.BoundingBox = None,
+                 reference_path: str = design3d.PATH_ROOT):
 
         self.faces = faces
         if not color:
-            self.color = volmdlr.core.DEFAULT_COLOR
+            self.color = design3d.core.DEFAULT_COLOR
         else:
             self.color = color
         self.alpha = alpha
@@ -115,7 +115,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
         self._vertices_points = None
         self._shell_octree_decomposition = None
 
-        volmdlr.core.CompositePrimitive3D.__init__(self,
+        design3d.core.CompositePrimitive3D.__init__(self,
                                                    primitives=faces, color=color, alpha=alpha,
                                                    reference_path=reference_path, name=name)
 
@@ -173,8 +173,8 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
             vertices_graph = nx.Graph()
             for face in self.faces:
                 for edge in face.outer_contour3d.primitives:
-                    edge_start_index = volmdlr.core.get_point_index_in_list(edge.start, self.vertices_points)
-                    edge_end_index = volmdlr.core.get_point_index_in_list(edge.end, self.vertices_points)
+                    edge_start_index = design3d.core.get_point_index_in_list(edge.start, self.vertices_points)
+                    edge_end_index = design3d.core.get_point_index_in_list(edge.end, self.vertices_points)
                     vertices_graph.add_edge(edge_start_index, edge_end_index, edge=edge)
             self._vertices_graph = vertices_graph
         return self._vertices_graph
@@ -248,7 +248,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
             for inner_contour in face.inner_contours3d:
                 face_contour_primitives.extend(inner_contour.primitives)
             for edge in face_contour_primitives:
-                start_index = volmdlr.core.get_point_index_in_list(edge.start, vertices_points)
+                start_index = design3d.core.get_point_index_in_list(edge.start, vertices_points)
                 vertice_faces.setdefault(start_index, set()).add(face_index)
                 face_vertices.setdefault(face_index, set()).add(start_index)
 
@@ -314,7 +314,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
             that have already been instantiated.
         :type object_dict: dict
         :return: The corresponding OpenShell3D object.
-        :rtype: :class:`volmdlr.faces.OpenShell3D`
+        :rtype: :class:`design3d.faces.OpenShell3D`
         """
         # Quick fix:
         # ----------------------------------
@@ -330,14 +330,14 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
 
     def to_step(self, current_id):
         """
-        Creates step file entities from volmdlr objects.
+        Creates step file entities from design3d objects.
         """
         step_content = ''
         faces_content = ''
         face_ids = []
 
         for face in self.faces:
-            if isinstance(face, (volmdlr.faces.Face3D, surfaces.Surface3D)):
+            if isinstance(face, (design3d.faces.Face3D, surfaces.Surface3D)):
                 face_content, face_sub_ids = face.to_step(current_id)
             else:
                 face_content, face_sub_ids = face.to_step(current_id)
@@ -361,7 +361,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
 
     def to_step_product(self, current_id):
         """
-        Creates step file entities from volmdlr objects.
+        Creates step file entities from design3d objects.
         """
         step_content = ''
         faces_content = ''
@@ -374,12 +374,12 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
         step_content += product_content
 
         brep_id = shape_representation_id
-        frame_content, frame_id = volmdlr.OXYZ.to_step(brep_id)
+        frame_content, frame_id = design3d.OXYZ.to_step(brep_id)
         manifold_id = frame_id + 1
         shell_id = manifold_id + 1
         current_id = shell_id
         for face in self.faces:
-            if isinstance(face, (volmdlr.faces.Face3D, surfaces.Surface3D)):
+            if isinstance(face, (design3d.faces.Face3D, surfaces.Surface3D)):
                 face_content, face_sub_ids = face.to_step(current_id)
             else:
                 face_content, face_sub_ids = face.to_step(current_id)
@@ -463,12 +463,12 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
 
     def to_step_face_ids(self, current_id):
         """
-        Creates step file entities from volmdlr objects.
+        Creates step file entities from design3d objects.
         """
         step_content = ''
         face_ids = []
         for face in self.faces:
-            if isinstance(face, volmdlr.faces.Face3D):
+            if isinstance(face, design3d.faces.Face3D):
                 face_content, face_sub_ids = face.to_step(current_id)
             else:
                 face_content, face_sub_ids = face.to_step(current_id)
@@ -479,18 +479,18 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
 
         shell_id = current_id
         step_content += f"#{current_id} = {self.STEP_FUNCTION}('{self.name}'," \
-                        f"({volmdlr.core.step_ids_to_str(face_ids)}));\n"
+                        f"({design3d.core.step_ids_to_str(face_ids)}));\n"
         manifold_id = shell_id + 1
         step_content += f"#{manifold_id} = SHELL_BASED_SURFACE_MODEL('{self.name}',(#{shell_id}));\n"
 
-        frame_content, frame_id = volmdlr.OXYZ.to_step(manifold_id + 1)
+        frame_content, frame_id = design3d.OXYZ.to_step(manifold_id + 1)
         step_content += frame_content
         brep_id = frame_id + 1
         step_content += f"#{brep_id} = MANIFOLD_SURFACE_SHAPE_REPRESENTATION('',(#{frame_id},#{manifold_id}),#7);\n"
 
         return step_content, brep_id, face_ids
 
-    def rotation(self, center: volmdlr.Point3D, axis: volmdlr.Vector3D,
+    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D,
                  angle: float):
         """
         Open Shell 3D / Closed Shell 3D rotation.
@@ -504,7 +504,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
                      in self.faces]
         return self.__class__(new_faces, color=self.color, alpha=self.alpha, name=self.name)
 
-    def translation(self, offset: volmdlr.Vector3D):
+    def translation(self, offset: design3d.Vector3D):
         """
         Shell3D translation.
 
@@ -516,7 +516,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
         return self.__class__(new_faces, color=self.color, alpha=self.alpha,
                               name=self.name)
 
-    def frame_mapping(self, frame: volmdlr.Frame3D, side: str):
+    def frame_mapping(self, frame: design3d.Frame3D, side: str):
         """
         Changes frame_mapping and return a new OpenShell3D.
 
@@ -556,7 +556,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
         for face in self.faces:
             if face.outer_contour3d.primitives:
                 bounding_boxes.append(face.bounding_box)
-        return volmdlr.core.BoundingBox.from_bounding_boxes(bounding_boxes)
+        return design3d.core.BoundingBox.from_bounding_boxes(bounding_boxes)
 
     def cut_by_plane(self, plane_3d: surfaces.Plane3D):
         """
@@ -569,7 +569,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
         frame_block.u = 1.1 * frame_block.u
         frame_block.v = 1.1 * frame_block.v
         frame_block.w = 1.1 * frame_block.w
-        block = volmdlr.primitives3d.Block(frame_block,
+        block = design3d.primitives3d.Block(frame_block,
                                            color=(0.1, 0.2, 0.2),
                                            alpha=0.6)
         face_3d = block.cut_by_orthogonal_plane(plane_3d)
@@ -590,11 +590,11 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
         for contour2d in contours2d:
             if contour2d.area() > 1e-7:
                 surface2d = surfaces.Surface2D(contour2d, [])
-                resulting_faces.append(volmdlr.faces.PlaneFace3D(plane_3d, surface2d))
+                resulting_faces.append(design3d.faces.PlaneFace3D(plane_3d, surface2d))
         return resulting_faces
 
     def linesegment_intersections(self, linesegment3d: edges.LineSegment3D) \
-            -> List[Tuple[volmdlr.faces.Face3D, List[volmdlr.Point3D]]]:
+            -> List[Tuple[design3d.faces.Face3D, List[design3d.Point3D]]]:
         """
         Gets the intersections of a Shell3D with a Line Segment 3D.
 
@@ -610,7 +610,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
 
     def line_intersections(self,
                            line3d: curves.Line3D) \
-            -> List[Tuple[volmdlr.faces.Face3D, List[volmdlr.Point3D]]]:
+            -> List[Tuple[design3d.faces.Face3D, List[design3d.Point3D]]]:
         """
         Gets the intersections of a Shell3D with a Line Segment 3D.
 
@@ -636,7 +636,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
         return point1, point2
 
     def minimum_distance_point(self,
-                               point: volmdlr.Point3D) -> volmdlr.Point3D:
+                               point: design3d.Point3D) -> design3d.Point3D:
         """
         Computes the distance of a point to a Shell3D, whether it is inside or outside the Shell3D.
 
@@ -714,7 +714,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
     def shell_decomposition(self):
         """Decomposition of a shell 3D."""
         if not self._shell_octree_decomposition:
-            self._shell_octree_decomposition = volmdlr.faces.octree_decomposition(self.bounding_box, self.faces)
+            self._shell_octree_decomposition = design3d.faces.octree_decomposition(self.bounding_box, self.faces)
         return self._shell_octree_decomposition
 
     def intersection_internal_aabb_volume(self, shell2: 'OpenShell3D',
@@ -740,7 +740,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
 
         if len(intersections_points + shell1_points_inside_shell2) == 0:
             return 0
-        bbox = volmdlr.core.BoundingBox.from_points(
+        bbox = design3d.core.BoundingBox.from_points(
             intersections_points + shell1_points_inside_shell2)
         return bbox.volume()
 
@@ -768,7 +768,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
 
         if len(intersections_points + shell1_points_outside_shell2) == 0:
             return 0
-        bbox = volmdlr.core.BoundingBox.from_points(
+        bbox = design3d.core.BoundingBox.from_points(
             intersections_points + shell1_points_outside_shell2)
         return bbox.volume()
 
@@ -782,7 +782,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
                 return True
         return False
 
-    def point_on_shell(self, point: volmdlr.Point3D):
+    def point_on_shell(self, point: design3d.Point3D):
         """
         Verify if a point is on the shell (on one of the shell's faces).
 
@@ -933,13 +933,13 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
 
                         if primitives[index].is_close(primitive):
 
-                            if isinstance(primitive, volmdlr.edges.BSplineCurve3D):
+                            if isinstance(primitive, design3d.edges.BSplineCurve3D):
                                 discretization_points = primitive.discretization_points()
 
                                 start_point_tag = get_point_index_in_list(discretization_points[0], points) + 1
                                 end_point_tag = get_point_index_in_list(discretization_points[1], points) + 1
 
-                                primitive_linesegments = volmdlr.edges.LineSegment3D(
+                                primitive_linesegments = design3d.edges.LineSegment3D(
                                     discretization_points[0], discretization_points[1])
                                 lines.append(primitive_linesegments.get_geo_lines(tag=line_account,
                                                                                   start_point_tag=start_point_tag
@@ -947,7 +947,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
                                                                                   end_point_tag=end_point_tag
                                                                                   + point_account))
 
-                            if isinstance(primitive, volmdlr.edges.LineSegment):
+                            if isinstance(primitive, design3d.edges.LineSegment):
 
                                 start_point_tag = get_point_index_in_list(primitive.start, points) + 1
                                 end_point_tag = get_point_index_in_list(primitive.end, points) + 1
@@ -955,7 +955,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
                                 lines.append(primitive.get_geo_lines(tag=line_account,
                                                                      start_point_tag=start_point_tag + point_account,
                                                                      end_point_tag=end_point_tag + point_account))
-                            elif isinstance(primitive, volmdlr.edges.ArcMixin):
+                            elif isinstance(primitive, design3d.edges.ArcMixin):
 
                                 start_point_tag = get_point_index_in_list(primitive.start, points) + 1
                                 center_point_tag = get_point_index_in_list(primitive.circle.center, points) + 1
@@ -1062,7 +1062,7 @@ class Shell3D(volmdlr.core.CompositePrimitive3D):
             return False
         return disjoint
 
-    def is_face_intersecting(self, face: volmdlr.faces.Face3D):
+    def is_face_intersecting(self, face: design3d.faces.Face3D):
         """Verifies if face is intersecting shell somehow."""
         if not self.bounding_box.is_intersecting(face.bounding_box):
             return False
@@ -1145,7 +1145,7 @@ class ClosedShell3D(Shell3D):
 
         return abs(volume)
 
-    def is_face_inside(self, face: volmdlr.faces.Face3D):
+    def is_face_inside(self, face: design3d.faces.Face3D):
         """
         Verifies if a face is inside the closed shell 3D.
 
@@ -1169,8 +1169,8 @@ class ClosedShell3D(Shell3D):
     def get_ray_casting_line_segment(self, point3d):
         """Gets the best ray for performing ray casting algorithm."""
         boxes_size = [self.bounding_box.size[0] / 2, self.bounding_box.size[1] / 2, self.bounding_box.size[2] / 2]
-        xyz = [volmdlr.Vector3D(boxes_size[0], 0, 0), volmdlr.Vector3D(0, boxes_size[1], 0),
-               volmdlr.Vector3D(0, 0, boxes_size[2])]
+        xyz = [design3d.Vector3D(boxes_size[0], 0, 0), design3d.Vector3D(0, boxes_size[1], 0),
+               design3d.Vector3D(0, 0, boxes_size[2])]
         points = sorted(self.bounding_box.get_points_inside_bbox(2, 2, 2), key=point3d.point_distance)
         bbox_outside_points = []
         for vector in xyz:
@@ -1189,7 +1189,7 @@ class ClosedShell3D(Shell3D):
                 point3d, point3d + 2 * vec1 + random.random() * vec2 + random.random() * vec3) for _ in range(10)]
         return rays
 
-    def point_inside(self, point3d: volmdlr.Point3D, **kwargs):
+    def point_inside(self, point3d: design3d.Point3D, **kwargs):
         """
         Ray Casting algorithm.
 
@@ -1311,9 +1311,9 @@ class ClosedShell3D(Shell3D):
 
         return list_coincident_faces
 
-    def set_operations_valid_exterior_faces(self, new_faces: List[volmdlr.faces.Face3D],
-                                            valid_faces: List[volmdlr.faces.Face3D],
-                                            list_coincident_faces: List[volmdlr.faces.Face3D],
+    def set_operations_valid_exterior_faces(self, new_faces: List[design3d.faces.Face3D],
+                                            valid_faces: List[design3d.faces.Face3D],
+                                            list_coincident_faces: List[design3d.faces.Face3D],
                                             shell2):
         """
         Select the valid faces from the new faces created during Boolean operations.
@@ -1659,7 +1659,7 @@ class ClosedShell3D(Shell3D):
             valid_coicident_faces = ClosedShell3D.get_faces_to_be_merged(union_faces)
             list_valid_coincident_faces = valid_coicident_faces[:]
             if valid_coicident_faces:
-                list_new_faces += volmdlr.faces.PlaneFace3D.merge_faces(valid_coicident_faces)
+                list_new_faces += design3d.faces.PlaneFace3D.merge_faces(valid_coicident_faces)
             for face in list_valid_coincident_faces:
                 union_faces.remove(face)
             count += 1
@@ -1794,22 +1794,22 @@ class OpenTriangleShell3D(OpenShell3D):
 
     def __init__(
         self,
-        faces: List[volmdlr.faces.Triangle3D],
+        faces: List[design3d.faces.Triangle3D],
         color: Tuple[float, float, float] = None,
         alpha: float = 1.0,
-        reference_path: str = volmdlr.PATH_ROOT,
+        reference_path: str = design3d.PATH_ROOT,
         name: str = "",
     ):
         OpenShell3D.__init__(self, faces=faces, color=color, alpha=alpha, reference_path=reference_path, name=name)
 
-    def get_bounding_box(self) -> volmdlr.core.BoundingBox:
+    def get_bounding_box(self) -> design3d.core.BoundingBox:
         """Gets the Shell bounding box."""
         vertices = np.array(
             [(face.points[i].x, face.points[i].y, face.points[i].z) for face in self.faces for i in range(3)]
         )
         bbox_min, bbox_max = np.min(vertices, axis=0), np.max(vertices, axis=0)
 
-        return volmdlr.core.BoundingBox(bbox_min[0], bbox_max[0], bbox_min[1], bbox_max[1], bbox_min[2], bbox_max[2])
+        return design3d.core.BoundingBox(bbox_min[0], bbox_max[0], bbox_min[1], bbox_max[1], bbox_min[2], bbox_max[2])
 
     def to_mesh_data(self, round_vertices: bool, n_decimals: int = 9) -> Tuple[NDArray[float], NDArray[int]]:
         """
@@ -1859,11 +1859,11 @@ class OpenTriangleShell3D(OpenShell3D):
         """
         triangles = []
 
-        points = [volmdlr.Point3D(px, py, pz) for px, py, pz in vertices]
+        points = [design3d.Point3D(px, py, pz) for px, py, pz in vertices]
 
         for i1, i2, i3 in faces:
             try:
-                triangles.append(volmdlr.faces.Triangle3D(points[i1], points[i2], points[i3]))
+                triangles.append(design3d.faces.Triangle3D(points[i1], points[i2], points[i3]))
             except ZeroDivisionError:
                 pass
         return cls(triangles, name=name)
@@ -1976,7 +1976,7 @@ class OpenTriangleShell3D(OpenShell3D):
         triangle_shell = cls.from_mesh_data(vertices, faces, name)
         triangle_shell.alpha = dict_["alpha"]
         triangle_shell.color = dict_["color"]
-        triangle_shell.reference_path = dict_.get("reference_path", volmdlr.PATH_ROOT)
+        triangle_shell.reference_path = dict_.get("reference_path", design3d.PATH_ROOT)
         return triangle_shell
 
     def to_display_triangle_shell(self) -> "DisplayTriangleShell3D":
@@ -2010,10 +2010,10 @@ class ClosedTriangleShell3D(OpenTriangleShell3D, ClosedShell3D):
 
     def __init__(
         self,
-        faces: List[volmdlr.faces.Triangle3D],
+        faces: List[design3d.faces.Triangle3D],
         color: Tuple[float, float, float] = None,
         alpha: float = 1.0,
-        reference_path: str = volmdlr.PATH_ROOT,
+        reference_path: str = design3d.PATH_ROOT,
         name: str = "",
     ):
         OpenTriangleShell3D.__init__(self, faces=faces, color=color, alpha=alpha, name=name)
@@ -2036,7 +2036,7 @@ class ClosedTriangleShell3D(OpenTriangleShell3D, ClosedShell3D):
         new_faces = []
         for face in self.faces:
             if self.point_inside(face.middle() + face.normal() * 1e-5):
-                new_faces.append(volmdlr.faces.Triangle3D(*face.points[::-1]))
+                new_faces.append(design3d.faces.Triangle3D(*face.points[::-1]))
             else:
                 new_faces.append(face)
         return ClosedTriangleShell3D(new_faces)
@@ -2050,7 +2050,7 @@ class ClosedTriangleShell3D(OpenTriangleShell3D, ClosedShell3D):
         new_faces = []
         for face in self.faces:
             if not self.point_inside(face.middle() + face.normal() * 1e-5):
-                new_faces.append(volmdlr.faces.Triangle3D(*face.points[::-1]))
+                new_faces.append(design3d.faces.Triangle3D(*face.points[::-1]))
             else:
                 new_faces.append(face)
         return ClosedTriangleShell3D(new_faces)
@@ -2065,7 +2065,7 @@ class DisplayTriangleShell3D(Shell3D):
     """
 
     def __init__(self, positions: NDArray[float], indices: NDArray[int],
-                 reference_path: str = volmdlr.PATH_ROOT, name: str = ""):
+                 reference_path: str = design3d.PATH_ROOT, name: str = ""):
         """
         Instantiate the DisplayTriangleShell3D.
 
@@ -2074,7 +2074,7 @@ class DisplayTriangleShell3D(Shell3D):
         :param name: A name for the DisplayTriangleShell3D, optional.
         """
         warnings.warn(
-            "'volmdlr.shells.DisplayTriangleShell3D' class is deprecated. Use 'volmdlr.display.Mesh3D' instead",
+            "'design3d.shells.DisplayTriangleShell3D' class is deprecated. Use 'design3d.display.Mesh3D' instead",
             DeprecationWarning
         )
 
@@ -2107,11 +2107,11 @@ class DisplayTriangleShell3D(Shell3D):
 
         return display_triangle_shell
 
-    def get_bounding_box(self) -> volmdlr.core.BoundingBox:
+    def get_bounding_box(self) -> design3d.core.BoundingBox:
         """Gets the Shell bounding box."""
         bbox_min, bbox_max = np.min(self.positions, axis=0), np.max(self.positions, axis=0)
 
-        return volmdlr.core.BoundingBox(bbox_min[0], bbox_max[0], bbox_min[1], bbox_max[1], bbox_min[2], bbox_max[2])
+        return design3d.core.BoundingBox(bbox_min[0], bbox_max[0], bbox_min[1], bbox_max[1], bbox_min[2], bbox_max[2])
 
     def babylon_meshes(self, merge_meshes=True):
         """Overload of 'babylon_meshes' for performance."""

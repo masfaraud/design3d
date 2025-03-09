@@ -18,11 +18,11 @@ cimport numpy as cnp
 from scipy.optimize import minimize
 from cython cimport cdivision, boundscheck, wraparound, exceptval
 from cython.parallel import prange
-from volmdlr.nurbs.helpers cimport linspace, binomial_coefficient
+from design3d.nurbs.helpers cimport linspace, binomial_coefficient
 from libcpp.vector cimport vector
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
 
-import volmdlr.nurbs.helpers as helpers
+import design3d.nurbs.helpers as helpers
 
 
 cnp.import_array()

@@ -1,12 +1,12 @@
 """
-volmdlr utils for importing step files.
+design3d utils for importing step files.
 """
 import re
 
-import volmdlr
-import volmdlr.shells as vmshells
-from volmdlr import surfaces
-from volmdlr.geometry import get_transfer_matrix_from_basis
+import design3d
+import design3d.shells as vmshells
+from design3d import surfaces
+from design3d.geometry import get_transfer_matrix_from_basis
 
 
 def set_to_list(step_set):
@@ -310,7 +310,7 @@ def face_outer_bound(arguments, object_dict, *args, **kwargs):
         face_outer_bound entity.
     :type object_dict: dict
     :return: A Contour3D representing the BREP of a face.
-    :rtype: volmdlr.wires.Contour3D
+    :rtype: design3d.wires.Contour3D
     """
     contour = object_dict[arguments[1]]
     if contour and arguments[2] == '.F.':
@@ -330,7 +330,7 @@ def face_bound(arguments, object_dict, *args, **kwargs):
         face_outer_bound entity.
     :type object_dict: dict
     :return: A Contour3D representing the BREP of a face.
-    :rtype: volmdlr.wires.Contour3D
+    :rtype: design3d.wires.Contour3D
     """
     return object_dict[arguments[1]]
 
@@ -439,8 +439,8 @@ def composite_curve(arguments, object_dict, *args, **kwargs):
     first_primitive = list_primitives[0]
     last_primitive = list_primitives[-1]
     if first_primitive.start.is_close(last_primitive.end):
-        return volmdlr.wires.Contour3D(list_primitives, name=name)
-    return volmdlr.wires.Wire3D(list_primitives, name=name)
+        return design3d.wires.Contour3D(list_primitives, name=name)
+    return design3d.wires.Wire3D(list_primitives, name=name)
 
 
 def pcurve(arguments, object_dict, *args, **kwargs):
@@ -494,7 +494,7 @@ def shell_based_surface_model(arguments, object_dict, *args, **kwargs):
     if len(arguments[1]) == 1:
         return object_dict[int(arguments[1][0][1:])]
     primitives = [object_dict[int(arg[1:])] for arg in arguments[1]]
-    compound = volmdlr.core.Compound(primitives)
+    compound = design3d.core.Compound(primitives)
     compound.compound_type = "manifold_solid_brep"
     return compound
 
@@ -520,11 +520,11 @@ def item_defined_transformation(arguments, object_dict, *args, **kwargs):
 
     """
     # Frame3D
-    volmdlr_object1 = object_dict[arguments[2]]
-    volmdlr_object2 = object_dict[arguments[3]]
+    design3d_object1 = object_dict[arguments[2]]
+    design3d_object2 = object_dict[arguments[3]]
     # TODO : how to frame map properly from these two Frame3D ?
-    # return volmdlr_object2 - volmdlr_object1
-    return [volmdlr_object1, volmdlr_object2]
+    # return design3d_object2 - design3d_object1
+    return [design3d_object1, design3d_object2]
 
 
 def manifold_surface_shape_representation(arguments, object_dict, *args, **kwargs):
@@ -536,7 +536,7 @@ def manifold_surface_shape_representation(arguments, object_dict, *args, **kwarg
         primitive = object_dict[int(arg[1:])]
         if isinstance(primitive, vmshells.Shell3D):
             primitives.append(primitive)
-        if isinstance(primitive, volmdlr.core.Compound):
+        if isinstance(primitive, design3d.core.Compound):
             counter = 0
             for sub_prim in primitive.primitives:
                 if sub_prim:
@@ -545,7 +545,7 @@ def manifold_surface_shape_representation(arguments, object_dict, *args, **kwarg
             primitives.append(primitive)
     if len(primitives) == 1:
         return primitives[0]
-    compound = volmdlr.core.Compound(primitives)
+    compound = design3d.core.Compound(primitives)
     compound.compound_type = "manifold_solid_brep"
     return compound
 
@@ -569,7 +569,7 @@ def faceted_brep_shape_representation(arguments, object_dict, *args, **kwargs):
                       vmshells.Shell3D):
             shell = object_dict[int(arg[1:])]
             shells.append(shell)
-    return volmdlr.core.Compound(shells)
+    return design3d.core.Compound(shells)
 
 
 def manifold_solid_brep(arguments, object_dict, *args, **kwargs):
@@ -615,18 +615,18 @@ def shape_representation(arguments, object_dict, *args, **kwargs):
                 isinstance(object_dict[int(arg[1:])],
                            vmshells.Shell3D):
             shells.append(object_dict[int(arg[1:])])
-        elif int(arg[1:]) in object_dict and isinstance(object_dict[int(arg[1:])], volmdlr.Frame3D):
+        elif int(arg[1:]) in object_dict and isinstance(object_dict[int(arg[1:])], design3d.Frame3D):
             # TODO: Is there something to read here ?
             frame = object_dict[int(arg[1:])]
             if not all(component is None for component in [frame.u, frame.u, frame.w]):
                 frames.append(frame)
         elif int(arg[1:]) in object_dict and \
                 isinstance(object_dict[int(arg[1:])],
-                           volmdlr.edges.Arc3D):
+                           design3d.edges.Arc3D):
             shells.append(object_dict[int(arg[1:])])
         elif int(arg[1:]) in object_dict and \
                 isinstance(object_dict[int(arg[1:])],
-                           volmdlr.edges.BSplineCurve3D):
+                           design3d.edges.BSplineCurve3D):
             shells.append(object_dict[int(arg[1:])])
         else:
             pass
@@ -652,7 +652,7 @@ def advanced_brep_shape_representation(arguments, object_dict, *args, **kwargs):
         primitive = object_dict[int(arg[1:])]
         if isinstance(primitive, vmshells.Shell3D):
             primitives.append(primitive)
-        if isinstance(primitive, volmdlr.core.Compound):
+        if isinstance(primitive, design3d.core.Compound):
             counter = 0
             for sub_prim in primitive.primitives:
                 sub_prim.name = arguments[0][1:-1] + str(counter)
@@ -660,7 +660,7 @@ def advanced_brep_shape_representation(arguments, object_dict, *args, **kwargs):
             primitives.append(primitive)
     if len(primitives) == 1:
         return primitives[0]
-    compound = volmdlr.core.Compound(primitives)
+    compound = design3d.core.Compound(primitives)
     compound.compound_type = "manifold_solid_brep"
     return compound
 
@@ -681,7 +681,7 @@ def geometrically_bounded_surface_shape_representation(arguments, object_dict, *
     for arg in arguments[1]:
         primitives.extend(object_dict[int(arg[1:])])
     if len(primitives) > 1:
-        compound = volmdlr.core.Compound(primitives, name=arguments[0])
+        compound = design3d.core.Compound(primitives, name=arguments[0])
         compound.compound_type = "geometric_curve_set"
         return compound
     return primitives[0]
@@ -705,7 +705,7 @@ def geometrically_bounded_wireframe_shape_representation(arguments, object_dict,
         if isinstance(prim, list):
             primitives.extend(prim)
     if len(primitives) > 1:
-        compound = volmdlr.core.Compound(primitives, name=arguments[0])
+        compound = design3d.core.Compound(primitives, name=arguments[0])
         compound.compound_type = "geometric_curve_set"
         return compound
     return primitives[0]
@@ -727,10 +727,10 @@ def frame_map_closed_shell(closed_shells, item_defined_transformation_frames, sh
     """
     if item_defined_transformation_frames[0] == item_defined_transformation_frames[1]:
         return closed_shells
-    if shape_representation_frames[0].origin.is_close(volmdlr.O3D):
+    if shape_representation_frames[0].origin.is_close(design3d.O3D):
         global_frame = shape_representation_frames[0]
     else:
-        global_frame = [frame for frame in item_defined_transformation_frames if frame.origin.is_close(volmdlr.O3D)][0]
+        global_frame = [frame for frame in item_defined_transformation_frames if frame.origin.is_close(design3d.O3D)][0]
     transformed_frame = [frame for frame in item_defined_transformation_frames if frame != global_frame][0]
     new_closedshells = []
 
@@ -738,8 +738,8 @@ def frame_map_closed_shell(closed_shells, item_defined_transformation_frames, sh
         basis_a = global_frame.basis()
         basis_b = transformed_frame.basis()
         transfer_matrix = get_transfer_matrix_from_basis(basis_a, basis_b)
-        new_frame = volmdlr.Frame3D(transformed_frame.origin, volmdlr.Vector3D(*transfer_matrix[0]),
-                                    volmdlr.Vector3D(*transfer_matrix[1]), volmdlr.Vector3D(*transfer_matrix[2]))
+        new_frame = design3d.Frame3D(transformed_frame.origin, design3d.Vector3D(*transfer_matrix[0]),
+                                    design3d.Vector3D(*transfer_matrix[1]), design3d.Vector3D(*transfer_matrix[2]))
         new_closedshells.append(shell3d.frame_mapping(new_frame, 'old'))
     return new_closedshells
 
@@ -751,13 +751,13 @@ def representation_relationship_representation_relationship_with_transformation_
     """
     if arguments[2] in object_dict:
         if isinstance(object_dict[arguments[2]], list):  # arguments = {, , [], [], item_....}
-            if object_dict[arguments[2]] and not isinstance(object_dict[arguments[2]][0], volmdlr.Frame3D) \
-                    and isinstance(object_dict[arguments[3]][0], volmdlr.Frame3D):
+            if object_dict[arguments[2]] and not isinstance(object_dict[arguments[2]][0], design3d.Frame3D) \
+                    and isinstance(object_dict[arguments[3]][0], design3d.Frame3D):
                 return frame_map_closed_shell(object_dict[arguments[2]],
                                               object_dict[arguments[4]], object_dict[arguments[3]])
 
-            if object_dict[arguments[2]] and isinstance(object_dict[arguments[2]][0], volmdlr.Frame3D) and \
-                    not isinstance(object_dict[arguments[3]][0], volmdlr.Frame3D):
+            if object_dict[arguments[2]] and isinstance(object_dict[arguments[2]][0], design3d.Frame3D) and \
+                    not isinstance(object_dict[arguments[3]][0], design3d.Frame3D):
                 return frame_map_closed_shell(object_dict[arguments[3]],
                                               object_dict[arguments[4]], object_dict[arguments[2]])
             return []
@@ -773,7 +773,7 @@ def bounded_curve_b_spline_curve_b_spline_curve_with_knots_curve_geometric_repre
     modified_arguments = [''] + arguments
     if modified_arguments[-1] == "''":
         modified_arguments.pop()
-    return STEP_TO_VOLMDLR['BOUNDED_CURVE, '
+    return STEP_TO_design3d['BOUNDED_CURVE, '
                            'B_SPLINE_CURVE, '
                            'B_SPLINE_CURVE_WITH_KNOTS, '
                            'CURVE, GEOMETRIC_REPRESENTATION_ITEM, '
@@ -799,7 +799,7 @@ def bounded_surface_b_spline_surface_b_spline_surface_with_knots_geometric_repre
     modified_arguments = [''] + arguments
     if modified_arguments[-1] == "''":
         modified_arguments.pop()
-    return STEP_TO_VOLMDLR['BOUNDED_SURFACE, B_SPLINE_SURFACE, '
+    return STEP_TO_design3d['BOUNDED_SURFACE, B_SPLINE_SURFACE, '
                            'B_SPLINE_SURFACE_WITH_KNOTS, '
                            'GEOMETRIC_REPRESENTATION_ITEM, '
                            'RATIONAL_B_SPLINE_SURFACE, '
@@ -874,38 +874,38 @@ def product_context(arguments, *args, **kwargs):
     return arguments
 
 
-STEP_TO_VOLMDLR = {
+STEP_TO_design3d = {
     # GEOMETRICAL ENTITIES
-    'CARTESIAN_POINT': volmdlr.Point3D,
-    'DIRECTION': volmdlr.Vector3D,
-    'VECTOR': volmdlr.Vector3D,
+    'CARTESIAN_POINT': design3d.Point3D,
+    'DIRECTION': design3d.Vector3D,
+    'VECTOR': design3d.Vector3D,
 
     'AXIS1_PLACEMENT': None,
     'AXIS2_PLACEMENT_2D': None,  # ??????????????????
-    'AXIS2_PLACEMENT_3D': volmdlr.Frame3D,
+    'AXIS2_PLACEMENT_3D': design3d.Frame3D,
 
-    'LINE': volmdlr.curves.Line3D,  # LineSegment3D,
-    'CIRCLE': volmdlr.curves.Circle3D,
-    'ELLIPSE': volmdlr.curves.Ellipse3D,
+    'LINE': design3d.curves.Line3D,  # LineSegment3D,
+    'CIRCLE': design3d.curves.Circle3D,
+    'ELLIPSE': design3d.curves.Ellipse3D,
     'PARABOLA': None,
     'HYPERBOLA': None,
     # 'PCURVE': None,
     'CURVE_REPLICA': None,
     'OFFSET_CURVE_3D': None,
     'TRIMMED_CURVE': None,  # BSplineCurve3D cannot be trimmed on FreeCAD
-    'B_SPLINE_CURVE': volmdlr.edges.BSplineCurve3D,
-    'B_SPLINE_CURVE_WITH_KNOTS': volmdlr.edges.BSplineCurve3D,
-    'BEZIER_CURVE': volmdlr.edges.BSplineCurve3D,
-    'RATIONAL_B_SPLINE_CURVE': volmdlr.edges.BSplineCurve3D,
-    'UNIFORM_CURVE': volmdlr.edges.BSplineCurve3D,
-    'QUASI_UNIFORM_CURVE': volmdlr.edges.BSplineCurve3D,
+    'B_SPLINE_CURVE': design3d.edges.BSplineCurve3D,
+    'B_SPLINE_CURVE_WITH_KNOTS': design3d.edges.BSplineCurve3D,
+    'BEZIER_CURVE': design3d.edges.BSplineCurve3D,
+    'RATIONAL_B_SPLINE_CURVE': design3d.edges.BSplineCurve3D,
+    'UNIFORM_CURVE': design3d.edges.BSplineCurve3D,
+    'QUASI_UNIFORM_CURVE': design3d.edges.BSplineCurve3D,
     'SURFACE_CURVE': None,  # TOPOLOGICAL EDGE
     'SEAM_CURVE': None,
     # LineSegment3D, # TOPOLOGICAL EDGE ############################
     'COMPOSITE_CURVE_SEGMENT': None,  # TOPOLOGICAL EDGE
-    'COMPOSITE_CURVE': volmdlr.wires.Wire3D,  # TOPOLOGICAL WIRE
-    'COMPOSITE_CURVE_ON_SURFACE': volmdlr.wires.Wire3D,  # TOPOLOGICAL WIRE
-    'BOUNDARY_CURVE': volmdlr.wires.Wire3D,  # TOPOLOGICAL WIRE
+    'COMPOSITE_CURVE': design3d.wires.Wire3D,  # TOPOLOGICAL WIRE
+    'COMPOSITE_CURVE_ON_SURFACE': design3d.wires.Wire3D,  # TOPOLOGICAL WIRE
+    'BOUNDARY_CURVE': design3d.wires.Wire3D,  # TOPOLOGICAL WIRE
 
     'PLANE': surfaces.Plane3D,
     'CYLINDRICAL_SURFACE': surfaces.CylindricalSurface3D,
@@ -926,8 +926,8 @@ STEP_TO_VOLMDLR = {
     'SURFACE_OF_REVOLUTION': surfaces.RevolutionSurface3D,
     'UNIFORM_SURFACE': surfaces.BSplineSurface3D,
     'QUASI_UNIFORM_SURFACE': surfaces.BSplineSurface3D,
-    'RECTANGULAR_COMPOSITE_SURFACE': volmdlr.faces.PlaneFace3D,  # TOPOLOGICAL FACES
-    'CURVE_BOUNDED_SURFACE': volmdlr.faces.PlaneFace3D,  # TOPOLOGICAL FACE
+    'RECTANGULAR_COMPOSITE_SURFACE': design3d.faces.PlaneFace3D,  # TOPOLOGICAL FACES
+    'CURVE_BOUNDED_SURFACE': design3d.faces.PlaneFace3D,  # TOPOLOGICAL FACE
 
     # Bsplines
     'BOUNDED_SURFACE, B_SPLINE_SURFACE, B_SPLINE_SURFACE_WITH_KNOTS, GEOMETRIC_REPRESENTATION_ITEM,'
@@ -937,7 +937,7 @@ STEP_TO_VOLMDLR = {
     # TOPOLOGICAL ENTITIES
     'VERTEX_POINT': None,
 
-    'EDGE_CURVE': volmdlr.edges.Edge,  # LineSegment3D, # TOPOLOGICAL EDGE
+    'EDGE_CURVE': design3d.edges.Edge,  # LineSegment3D, # TOPOLOGICAL EDGE
     'ORIENTED_EDGE': None,  # TOPOLOGICAL EDGE
     "GEOMETRIC_SET": None,
     # The one above can influence the direction with their last argument
@@ -947,12 +947,12 @@ STEP_TO_VOLMDLR = {
     'FACE_OUTER_BOUND': None,  # TOPOLOGICAL WIRE
     # Both above can influence the direction with their last argument
     # TODO : maybe take them into consideration
-    'EDGE_LOOP': volmdlr.wires.Contour3D,  # TOPOLOGICAL WIRE
-    'POLY_LOOP': volmdlr.wires.Contour3D,  # TOPOLOGICAL WIRE
+    'EDGE_LOOP': design3d.wires.Contour3D,  # TOPOLOGICAL WIRE
+    'POLY_LOOP': design3d.wires.Contour3D,  # TOPOLOGICAL WIRE
     'VERTEX_LOOP': None,  # TOPOLOGICAL WIRE
 
-    'ADVANCED_FACE': volmdlr.faces.Face3D,
-    'FACE_SURFACE': volmdlr.faces.Face3D,
+    'ADVANCED_FACE': design3d.faces.Face3D,
+    'FACE_SURFACE': design3d.faces.Face3D,
 
     'CLOSED_SHELL': vmshells.ClosedShell3D,
     'OPEN_SHELL': vmshells.OpenShell3D,
@@ -985,7 +985,7 @@ STEP_TO_VOLMDLR = {
     'SHAPE_REPRESENTATION_RELATIONSHIP': None,
     "NEXT_ASSEMBLY_USAGE_OCCURRENCE": None,
 
-    'BOUNDED_CURVE, B_SPLINE_CURVE, B_SPLINE_CURVE_WITH_KNOTS, CURVE, GEOMETRIC_REPRESENTATION_ITEM, RATIONAL_B_SPLINE_CURVE, REPRESENTATION_ITEM': volmdlr.edges.BSplineCurve3D,
+    'BOUNDED_CURVE, B_SPLINE_CURVE, B_SPLINE_CURVE_WITH_KNOTS, CURVE, GEOMETRIC_REPRESENTATION_ITEM, RATIONAL_B_SPLINE_CURVE, REPRESENTATION_ITEM': design3d.edges.BSplineCurve3D,
     "APPLICATION_CONTEXT": None,
     "PRODUCT_DEFINITION_SHAPE": None,
     "PRODUCT_DEFINITION": None,
@@ -1007,10 +1007,10 @@ STEP_REPRESENTATION_ENTITIES = {"ADVANCED_BREP_SHAPE_REPRESENTATION", "FACETED_B
 WIREFRAME_STEP_REPRESENTATION_ENTITIES = {"GEOMETRICALLY_BOUNDED_WIREFRAME_SHAPE_REPRESENTATION",
                                           "EDGE_BASED_WIREFRAME_SHAPE_REPRESENTATION"}
 
-VOLMDLR_TO_STEP = {}
-for k, v in STEP_TO_VOLMDLR.items():
+design3d_TO_STEP = {}
+for k, v in STEP_TO_design3d.items():
     if v:
-        if v in VOLMDLR_TO_STEP:
-            VOLMDLR_TO_STEP[v].append(k)
+        if v in design3d_TO_STEP:
+            design3d_TO_STEP[v].append(k)
         else:
-            VOLMDLR_TO_STEP[v] = [k]
+            design3d_TO_STEP[v] = [k]

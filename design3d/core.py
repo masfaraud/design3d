@@ -22,13 +22,13 @@ import numpy as np
 import dessia_common.core as dc
 from dessia_common.errors import ConsistencyError
 import dessia_common.files as dcf
-import volmdlr
-import volmdlr.templates
-from volmdlr.core_compiled import bbox_is_intersecting
-from volmdlr.discrete_representation_compiled import triangle_intersects_voxel
-from volmdlr.utils.step_writer import product_writer, geometric_context_writer, assembly_definition_writer, \
+import design3d
+import design3d.templates
+from design3d.core_compiled import bbox_is_intersecting
+from design3d.discrete_representation_compiled import triangle_intersects_voxel
+from design3d.utils.step_writer import product_writer, geometric_context_writer, assembly_definition_writer, \
     STEP_HEADER, STEP_FOOTER, step_ids_to_str
-from volmdlr.geometry import get_transfer_matrix_from_basis
+from design3d.geometry import get_transfer_matrix_from_basis
 
 np.seterr(divide='raise')
 
@@ -37,7 +37,7 @@ DEFAULT_COLOR = (0.8, 0.8, 0.8)
 
 def element_in_list(element, list_elements, tol: float = 1e-6):
     """
-    Verifies if a volmdlr element is inside a list  of elements, considering a certain tolerance.
+    Verifies if a design3d element is inside a list  of elements, considering a certain tolerance.
 
     :param element: Element to be verified inside list.
     :param list_elements: List of elements to be used.
@@ -134,11 +134,11 @@ def delete_double_point(list_point):
     Delete duplicate points from a list of points.
 
     :param list_point: The initial list of points
-    :type list_point: Union[List[:class:`volmdlr.Point2D`],
-        List[:class:`volmdlr.Point3D`]]
+    :type list_point: Union[List[:class:`design3d.Point2D`],
+        List[:class:`design3d.Point3D`]]
     :return: The final list of points containing no duplicates
-    :rtype: Union[List[:class:`volmdlr.Point2D`],
-        List[:class:`volmdlr.Point3D`]]
+    :rtype: Union[List[:class:`design3d.Point2D`],
+        List[:class:`design3d.Point3D`]]
     """
     # TODO : this method would be faster using sets
     points = []
@@ -157,9 +157,9 @@ def map_primitive_with_initial_and_final_frames(primitive, initial_frame, final_
     :param primitive: primitive to map
     :type primitive: Primitive3D
     :param initial_frame: Initial frame
-    :type initial_frame: volmdlr.Frame3D
+    :type initial_frame: design3d.Frame3D
     :param final_frame: The frame resulted after applying a transformation to the initial frame
-    :type final_frame: volmdlr.Frame3D
+    :type final_frame: design3d.Frame3D
     :return: A new positioned primitive
     :rtype: Primitive3D
 
@@ -169,11 +169,11 @@ def map_primitive_with_initial_and_final_frames(primitive, initial_frame, final_
     if initial_frame == primitive:
         return final_frame
     transfer_matrix = get_transfer_matrix_from_basis(initial_frame.basis(), final_frame.basis())
-    u_vector = volmdlr.Vector3D(*transfer_matrix[0])
-    v_vector = volmdlr.Vector3D(*transfer_matrix[1])
-    w_vector = volmdlr.Vector3D(*transfer_matrix[2])
-    new_frame = volmdlr.Frame3D(final_frame.origin, u_vector, v_vector, w_vector)
-    if new_frame == volmdlr.OXYZ:
+    u_vector = design3d.Vector3D(*transfer_matrix[0])
+    v_vector = design3d.Vector3D(*transfer_matrix[1])
+    w_vector = design3d.Vector3D(*transfer_matrix[2])
+    new_frame = design3d.Frame3D(final_frame.origin, u_vector, v_vector, w_vector)
+    if new_frame == design3d.OXYZ:
         return primitive
     new_primitive = primitive.frame_mapping(new_frame, 'old')
     return new_primitive
@@ -253,15 +253,15 @@ class Primitive3D(dc.PhysicalObject):
     """
 
     def __init__(self, color: Tuple[float, float, float] = None, alpha: float = 1.0,
-                 reference_path: str = volmdlr.PATH_ROOT, name: str = ''):
+                 reference_path: str = design3d.PATH_ROOT, name: str = ''):
         self.color = color
         self.alpha = alpha
         self.reference_path = reference_path
 
         dc.PhysicalObject.__init__(self, name=name)
 
-    def volmdlr_primitives(self):
-        """ Return a list of volmdlr primitives to build up volume model."""
+    def design3d_primitives(self):
+        """ Return a list of design3d primitives to build up volume model."""
         return [self]
 
     def babylon_param(self):
@@ -311,7 +311,7 @@ class CompositePrimitive3D(Primitive3D):
     _non_data_hash_attributes = []
 
     def __init__(self, primitives: List[Primitive3D], color: Tuple[float, float, float] = None, alpha: float = 1,
-                 reference_path: str = volmdlr.PATH_ROOT, name: str = ""):
+                 reference_path: str = design3d.PATH_ROOT, name: str = ""):
         self.primitives = primitives
         Primitive3D.__init__(self, color=color, alpha=alpha, reference_path=reference_path, name=name)
         self._utd_primitives_to_index = False
@@ -386,8 +386,8 @@ class BoundingRectangle(dc.DessiaObject):
         """
         Return the bounds of the BoundingRectangle.
         """
-        return [volmdlr.Point2D(self.xmin, self.ymin), volmdlr.Point2D(self.xmax, self.ymin),
-                volmdlr.Point2D(self.xmax, self.ymax), volmdlr.Point2D(self.xmin, self.ymax)]
+        return [design3d.Point2D(self.xmin, self.ymin), design3d.Point2D(self.xmax, self.ymin),
+                design3d.Point2D(self.xmax, self.ymax), design3d.Point2D(self.xmin, self.ymax)]
 
     def plot(self, ax=None, color='k', linestyle='dotted'):
         """
@@ -413,7 +413,7 @@ class BoundingRectangle(dc.DessiaObject):
         """
         Calculates the bounding rectangle center.
         """
-        return volmdlr.Point2D(0.5 * (self.xmin + self.xmax), 0.5 * (self.ymin + self.ymax))
+        return design3d.Point2D(0.5 * (self.xmin + self.xmax), 0.5 * (self.ymin + self.ymax))
 
     def is_intersecting(self, b_rectangle2):
         """
@@ -447,12 +447,12 @@ class BoundingRectangle(dc.DessiaObject):
         return (self.xmin >= b_rectangle2.xmin - tol) and (self.xmax <= b_rectangle2.xmax + tol) \
             and (self.ymin >= b_rectangle2.ymin - tol) and (self.ymax <= b_rectangle2.ymax + tol)
 
-    def point_inside(self, point: volmdlr.Point2D):
+    def point_inside(self, point: design3d.Point2D):
         """
         Returns True if a specified point is inside the bounding rectangle and False otherwise.
 
         :param point: A 2 dimensional point
-        :type point: :class:`volmdlr.Point2D`
+        :type point: :class:`design3d.Point2D`
         """
         return self.xmin < point.x < self.xmax and self.ymin < point.y < self.ymax
 
@@ -496,12 +496,12 @@ class BoundingRectangle(dc.DessiaObject):
 
         return (dx ** 2 + dy ** 2) ** 0.5
 
-    def distance_to_point(self, point: volmdlr.Point2D):
+    def distance_to_point(self, point: design3d.Point2D):
         """
         Calculate the minimal distance between the bounding rectangle and a specified point.
 
         :param point: A 2D point
-        :type point: :class:`volmdlr.Point2D`
+        :type point: :class:`design3d.Point2D`
         """
         if self.point_inside(point):
             return min([self.xmax - point.x, point.y - self.xmin,
@@ -524,12 +524,12 @@ class BoundingRectangle(dc.DessiaObject):
         return (dx ** 2 + dy ** 2) ** 0.5
 
     @classmethod
-    def from_points(cls, points: List[volmdlr.Point2D], name: str = '') -> "BoundingRectangle":
+    def from_points(cls, points: List[design3d.Point2D], name: str = '') -> "BoundingRectangle":
         """
         Initializes a bounding rectangle from a list of points.
 
         :param points: The list of points to create the bounding rectangle from.
-        :type points: List[volmdlr.Point2D].
+        :type points: List[design3d.Point2D].
         :param name: object's name.
         :return: The bounding rectangle initialized from the list of points.
         :rtype: BoundingRectangle
@@ -585,7 +585,7 @@ class BoundingBox(dc.DessiaObject):
 
         TODO: change lru_cache to cached property when support for py3.7 is dropped.
         """
-        return volmdlr.Point3D(0.5 * (self.xmin + self.xmax),
+        return design3d.Point3D(0.5 * (self.xmin + self.xmax),
                                0.5 * (self.ymin + self.ymax),
                                0.5 * (self.zmin + self.zmax))
 
@@ -614,7 +614,7 @@ class BoundingBox(dc.DessiaObject):
         :return: The dictionary representation of the bounding box.
         :rtype: dict
         """
-        return {'object_class': 'volmdlr.core.BoundingBox',
+        return {'object_class': 'design3d.core.BoundingBox',
                 'name': self.name,
                 'xmin': self.xmin,
                 'xmax': self.xmax,
@@ -625,21 +625,21 @@ class BoundingBox(dc.DessiaObject):
                 }
 
     @property
-    def points(self) -> List[volmdlr.Point3D]:
+    def points(self) -> List[design3d.Point3D]:
         """
         Returns the eight corner points of the bounding box.
 
         :return: A list of eight 3D points representing the corners of the bounding box.
-        :rtype: list of volmdlr.Point3D
+        :rtype: list of design3d.Point3D
         """
-        return [volmdlr.Point3D(self.xmin, self.ymin, self.zmin),
-                volmdlr.Point3D(self.xmax, self.ymin, self.zmin),
-                volmdlr.Point3D(self.xmax, self.ymax, self.zmin),
-                volmdlr.Point3D(self.xmin, self.ymax, self.zmin),
-                volmdlr.Point3D(self.xmin, self.ymin, self.zmax),
-                volmdlr.Point3D(self.xmax, self.ymin, self.zmax),
-                volmdlr.Point3D(self.xmax, self.ymax, self.zmax),
-                volmdlr.Point3D(self.xmin, self.ymax, self.zmax)]
+        return [design3d.Point3D(self.xmin, self.ymin, self.zmin),
+                design3d.Point3D(self.xmax, self.ymin, self.zmin),
+                design3d.Point3D(self.xmax, self.ymax, self.zmin),
+                design3d.Point3D(self.xmin, self.ymax, self.zmin),
+                design3d.Point3D(self.xmin, self.ymin, self.zmax),
+                design3d.Point3D(self.xmax, self.ymin, self.zmax),
+                design3d.Point3D(self.xmax, self.ymax, self.zmax),
+                design3d.Point3D(self.xmin, self.ymax, self.zmax)]
 
     def plot(self, ax=None, color='gray'):
         """
@@ -706,12 +706,12 @@ class BoundingBox(dc.DessiaObject):
         return cls(xmin, xmax, ymin, ymax, zmin, zmax, name=name)
 
     @classmethod
-    def from_points(cls, points: List[volmdlr.Point3D], name: str = '') -> "BoundingBox":
+    def from_points(cls, points: List[design3d.Point3D], name: str = '') -> "BoundingBox":
         """
         Initializes a bounding box from a list of points.
 
         :param points: The list of points to create the bounding box from.
-        :type points: List[volmdlr.Point3D].
+        :type points: List[design3d.Point3D].
         :param name: object's name.
         :return: The bounding box initialized from the list of points.
         :rtype: BoundingBox
@@ -723,18 +723,18 @@ class BoundingBox(dc.DessiaObject):
 
         return cls(xmin, xmax, ymin, ymax, zmin, zmax, name=name)
 
-    def to_frame(self) -> volmdlr.Frame3D:
+    def to_frame(self) -> design3d.Frame3D:
         """
         Converts the bounding box to a 3D frame.
 
         :return: A 3D frame with origin at the center and axes aligned with the x, y, and z dimensions of
             the bounding box.
-        :rtype: volmdlr.Frame3D
+        :rtype: design3d.Frame3D
         """
-        x = volmdlr.Vector3D((self.xmax - self.xmin), 0, 0)
-        y = volmdlr.Vector3D(0, (self.ymax - self.ymin), 0)
-        z = volmdlr.Vector3D(0, 0, (self.zmax - self.zmin))
-        return volmdlr.Frame3D(self.center, x, y, z)
+        x = design3d.Vector3D((self.xmax - self.xmin), 0, 0)
+        y = design3d.Vector3D(0, (self.ymax - self.ymin), 0)
+        z = design3d.Vector3D(0, 0, (self.zmax - self.zmin))
+        return design3d.Frame3D(self.center, x, y, z)
 
     def get_points_inside_bbox(self, points_x, points_y, points_z):
         """
@@ -748,14 +748,14 @@ class BoundingBox(dc.DessiaObject):
         _size = [self.size[0] / points_x, self.size[1] / points_y,
                  self.size[2] / points_z]
         initial_center = self.center.translation(
-            -volmdlr.Vector3D(self.size[0] / 2 - _size[0] / 2,
+            -design3d.Vector3D(self.size[0] / 2 - _size[0] / 2,
                               self.size[1] / 2 - _size[1] / 2,
                               self.size[2] / 2 - _size[2] / 2))
         points = []
         for z_box in range(points_z):
             for y_box in range(points_y):
                 for x_box in range(points_x):
-                    translation_vector = volmdlr.Vector3D(x_box * _size[0], y_box * _size[1],
+                    translation_vector = design3d.Vector3D(x_box * _size[0], y_box * _size[1],
                                                           z_box * _size[2])
                     point = initial_center.translation(translation_vector)
                     points.append(point)
@@ -902,12 +902,12 @@ class BoundingBox(dc.DessiaObject):
 
         return (dx ** 2 + dy ** 2 + dz ** 2) ** 0.5
 
-    def point_inside(self, point: volmdlr.Point3D, tol=1e-6) -> bool:
+    def point_inside(self, point: design3d.Point3D, tol=1e-6) -> bool:
         """
         Determines if a point belongs to the bounding box.
 
         :param point: The point to check for inclusion.
-        :type point: volmdlr.Point3D
+        :type point: design3d.Point3D
         :param tol: tolerance.
         :return: True if the point belongs to the bounding box, False otherwise.
         :rtype: bool
@@ -918,12 +918,12 @@ class BoundingBox(dc.DessiaObject):
                 and self.zmin - tol <= point[2] <= self.zmax + tol
         )
 
-    def distance_to_point(self, point: volmdlr.Point3D) -> float:
+    def distance_to_point(self, point: design3d.Point3D) -> float:
         """
         Calculates the minimum Euclidean distance between the bounding box and a point.
 
         :param point: The point to compare with.
-        :type point: volmdlr.Point3D
+        :type point: design3d.Point3D
         :return: The minimum distance between the point and the bounding box.
         :rtype: float
         """
@@ -968,10 +968,10 @@ class BoundingBox(dc.DessiaObject):
         :return: True if the bounding boxes are equal at the given tolerance, False otherwise.
         :rtype: bool
         """
-        self_corner_min = volmdlr.Point3D(self.xmin, self.ymin, self.zmin)
-        self_conrer_max = volmdlr.Point3D(self.xmax, self.ymax, self.zmax)
-        other_corner_min = volmdlr.Point3D(other_bounding_box.xmin, other_bounding_box.ymin, other_bounding_box.zmin)
-        other_corner_max = volmdlr.Point3D(other_bounding_box.xmax, other_bounding_box.ymax, other_bounding_box.zmax)
+        self_corner_min = design3d.Point3D(self.xmin, self.ymin, self.zmin)
+        self_conrer_max = design3d.Point3D(self.xmax, self.ymax, self.zmax)
+        other_corner_min = design3d.Point3D(other_bounding_box.xmin, other_bounding_box.ymin, other_bounding_box.zmin)
+        other_corner_max = design3d.Point3D(other_bounding_box.xmax, other_bounding_box.ymax, other_bounding_box.zmax)
 
         return self_corner_min.is_close(other_corner_min, tol) and self_conrer_max.is_close(other_corner_max, tol)
 
@@ -997,11 +997,11 @@ class Assembly(dc.PhysicalObject):
     """
     Defines an assembly.
 
-    :param components: A list of volmdlr objects
-    :type components: List[:class:`volmdlr.core.Primitive3D`]
-    :param positions: A list of volmdlr.Frame3D representing the positions of each component in the assembly absolute
+    :param components: A list of design3d objects
+    :type components: List[:class:`design3d.core.Primitive3D`]
+    :param positions: A list of design3d.Frame3D representing the positions of each component in the assembly absolute
         frame.
-    :type positions: List[:class:`volmdlr.Frame3D`]
+    :type positions: List[:class:`design3d.Frame3D`]
     :param name: The Assembly's name
     :type name: str
     """
@@ -1011,8 +1011,8 @@ class Assembly(dc.PhysicalObject):
     _non_data_eq_attributes = ['name', 'bounding_box']
     _non_data_hash_attributes = ['name', 'bounding_box']
 
-    def __init__(self, components: List[Primitive3D], positions: List[volmdlr.Frame3D],
-                 frame: volmdlr.Frame3D = volmdlr.OXYZ, name: str = ''):
+    def __init__(self, components: List[Primitive3D], positions: List[design3d.Frame3D],
+                 frame: design3d.Frame3D = design3d.OXYZ, name: str = ''):
         self.components = components
         self.frame = frame
         self.positions = positions
@@ -1065,11 +1065,11 @@ class Assembly(dc.PhysicalObject):
                 data = primitive.babylon_data(merge_meshes=merge_meshes)
                 babylon_data['meshes'].extend(mesh for mesh in data.get("meshes"))
                 babylon_data['lines'].extend(line for line in data.get("lines"))
-            elif isinstance(primitive, volmdlr.Point3D):
+            elif isinstance(primitive, design3d.Point3D):
                 display_points.append(primitive)
         return helper_babylon_data(babylon_data, display_points)
 
-    def frame_mapping(self, frame: volmdlr.Frame3D, side: str):
+    def frame_mapping(self, frame: design3d.Frame3D, side: str):
         """
         Changes frame_mapping and return a new Assembly.
 
@@ -1079,13 +1079,13 @@ class Assembly(dc.PhysicalObject):
                          for position in self.positions]
         return Assembly(self.components, new_positions, self.frame, self.name)
 
-    def volmdlr_primitives(self):
-        """ Return a list of volmdlr primitives to build up an Assembly. """
+    def design3d_primitives(self):
+        """ Return a list of design3d primitives to build up an Assembly. """
         return [self]
 
     def to_step(self, current_id):
         """
-        Creates step file entities from volmdlr objects.
+        Creates step file entities from design3d objects.
         """
         step_content = ''
 
@@ -1133,7 +1133,7 @@ class Assembly(dc.PhysicalObject):
 
     def to_step_product(self, current_id):
         """
-        Returns step product entities from volmdlr objects.
+        Returns step product entities from design3d objects.
         """
         step_content = ''
         product_content, shape_definition_repr_id = product_writer(current_id, self.name)
@@ -1163,7 +1163,7 @@ class Assembly(dc.PhysicalObject):
 
 class Compound(dc.PhysicalObject):
     """
-    A class that can be a collection of any volmdlr primitives.
+    A class that can be a collection of any design3d primitives.
     """
 
     def __init__(self, primitives, name: str = ""):
@@ -1197,7 +1197,7 @@ class Compound(dc.PhysicalObject):
             if all(primitive.__class__.__name__ in ('OpenShell3D', 'ClosedShell3D') or
                    hasattr(primitive, "shell_faces") for primitive in self.primitives):
                 self._type = "manifold_solid_brep"
-            elif all(isinstance(primitive, (volmdlr.wires.Wire3D, volmdlr.edges.Edge, volmdlr.Point3D))
+            elif all(isinstance(primitive, (design3d.wires.Wire3D, design3d.edges.Edge, design3d.Point3D))
                      for primitive in self.primitives):
                 self._type = "geometric_curve_set"
             else:
@@ -1218,7 +1218,7 @@ class Compound(dc.PhysicalObject):
             return BoundingBox.from_points(self.primitives)
         return BoundingBox.from_bounding_boxes(bbox_list)
 
-    def frame_mapping(self, frame: volmdlr.Frame3D, side: str):
+    def frame_mapping(self, frame: design3d.Frame3D, side: str):
         """
         Changes frame_mapping and return a new Compound.
 
@@ -1249,17 +1249,17 @@ class Compound(dc.PhysicalObject):
                 data = primitive.babylon_data(merge_meshes=merge_meshes)
                 babylon_data['meshes'].extend(mesh for mesh in data.get("meshes"))
                 babylon_data['lines'].extend(line for line in data.get("lines"))
-            elif isinstance(primitive, volmdlr.Point3D):
+            elif isinstance(primitive, design3d.Point3D):
                 display_points.append(primitive)
         return helper_babylon_data(babylon_data, display_points)
 
-    def volmdlr_primitives(self):
+    def design3d_primitives(self):
         """Return primitives."""
         return [self]
 
     def to_step(self, current_id):
         """
-        Creates step file entities from volmdlr objects.
+        Creates step file entities from design3d objects.
         """
         step_content = ''
         primitives_content = ''
@@ -1268,7 +1268,7 @@ class Compound(dc.PhysicalObject):
         product_definition_id = current_id - 2
         step_content += product_content
         brep_id = current_id + 1
-        frame_content, frame_id = volmdlr.OXYZ.to_step(brep_id)
+        frame_content, frame_id = design3d.OXYZ.to_step(brep_id)
         current_id = frame_id
 
         for primitive in self.primitives:
@@ -1298,10 +1298,10 @@ class Compound(dc.PhysicalObject):
 
 class VolumeModel(dc.PhysicalObject):
     """
-    A class containing one or several :class:`volmdlr.core.Primitive3D`.
+    A class containing one or several :class:`design3d.core.Primitive3D`.
 
     :param primitives: The vector's abscissa
-    :type primitives: List[:class:`volmdlr.core.Primitive3D`]
+    :type primitives: List[:class:`design3d.core.Primitive3D`]
     :param name: The VolumeModel's name
     :type name: str
     """
@@ -1367,7 +1367,7 @@ class VolumeModel(dc.PhysicalObject):
             volume += primitive.volume()
         return volume
 
-    def rotation(self, center: volmdlr.Point3D, axis: volmdlr.Vector3D,
+    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D,
                  angle: float):
         """
         Rotates the VolumeModel.
@@ -1382,7 +1382,7 @@ class VolumeModel(dc.PhysicalObject):
             primitive in self.primitives]
         return VolumeModel(new_primitives, self.name)
 
-    def translation(self, offset: volmdlr.Vector3D):
+    def translation(self, offset: design3d.Vector3D):
         """
         Translates the VolumeModel.
 
@@ -1393,7 +1393,7 @@ class VolumeModel(dc.PhysicalObject):
                           primitive in self.primitives]
         return VolumeModel(new_primitives, self.name)
 
-    def frame_mapping(self, frame: volmdlr.Frame3D, side: str):
+    def frame_mapping(self, frame: design3d.Frame3D, side: str):
         """
         Changes frame_mapping and return a new VolumeModel.
 
@@ -1447,7 +1447,7 @@ class VolumeModel(dc.PhysicalObject):
                 data = primitive.babylon_data(merge_meshes=merge_meshes)
                 babylon_data['meshes'].extend(mesh for mesh in data.get("meshes"))
                 babylon_data['lines'].extend(line for line in data.get("lines"))
-            elif isinstance(primitive, volmdlr.Point3D):
+            elif isinstance(primitive, design3d.Point3D):
                 display_points.append(primitive)
         return helper_babylon_data(babylon_data, display_points)
 
@@ -1458,11 +1458,11 @@ class VolumeModel(dc.PhysicalObject):
 
         """
         if use_cdn:
-            script = volmdlr.templates.BABYLON_UNPACKER_CDN_HEADER  # .substitute(name=page_name)
+            script = design3d.templates.BABYLON_UNPACKER_CDN_HEADER  # .substitute(name=page_name)
         else:
-            script = volmdlr.templates.BABYLON_UNPACKER_EMBEDDED_HEADER  # .substitute(name=page_name)
+            script = design3d.templates.BABYLON_UNPACKER_EMBEDDED_HEADER  # .substitute(name=page_name)
 
-        script += volmdlr.templates.BABYLON_UNPACKER_BODY_TEMPLATE.substitute(
+        script += design3d.templates.BABYLON_UNPACKER_BODY_TEMPLATE.substitute(
             babylon_data=babylon_data)
         return script
 
@@ -1573,14 +1573,14 @@ class VolumeModel(dc.PhysicalObject):
     def to_stl_model(self):
         """Converts the model into a stl object."""
         warnings.warn(
-            "volmdlr.stl module is deprecated. Use volmdlr.display module and 'Mesh3D' class instead for STL export.",
+            "design3d.stl module is deprecated. Use design3d.display module and 'Mesh3D' class instead for STL export.",
             DeprecationWarning
         )
 
         mesh = self.to_mesh()
 
-        # from volmdlr import stl
-        stl = volmdlr.stl.Stl.from_display_mesh(mesh)
+        # from design3d import stl
+        stl = design3d.stl.Stl.from_display_mesh(mesh)
         return stl
 
     def to_stl(self, filepath: str):
@@ -1607,7 +1607,7 @@ class VolumeModel(dc.PhysicalObject):
         step_content = STEP_HEADER.format(name=self.name,
                                           filename='',
                                           timestamp=datetime.now().isoformat(),
-                                          version=volmdlr.__version__)
+                                          version=design3d.__version__)
         current_id = 2
 
         for primitive in self.primitives:
@@ -1625,7 +1625,7 @@ class VolumeModel(dc.PhysicalObject):
 
         stream.write(step_content)
 
-    def volmdlr_volume_model(self):
+    def design3d_volume_model(self):
         """
         Method needed due to PhysicalObject inheritance.
         """
@@ -1649,13 +1649,13 @@ class VolumeModel(dc.PhysicalObject):
         lines = []
         volume = 0
         for primitive in self.primitives:
-            if isinstance(primitive, volmdlr.shells.ClosedShell3D):
+            if isinstance(primitive, design3d.shells.ClosedShell3D):
                 volume += 1
                 lines_primitives, update_data = primitive.get_geo_lines(update_data)
                 lines.extend(lines_primitives)
                 surface_loop = ((lines[-1].split('('))[1].split(')')[0])
                 lines.append('Volume(' + str(volume) + ') = {' + surface_loop + '};')
-            elif isinstance(primitive, volmdlr.shells.OpenShell3D):
+            elif isinstance(primitive, design3d.shells.OpenShell3D):
                 lines_primitives, update_data = primitive.get_geo_lines(update_data)
                 lines.extend(lines_primitives)
 
@@ -1696,7 +1696,7 @@ class VolumeModel(dc.PhysicalObject):
         lines.append('General.Verbosity = 0;')
 
         for i, primitive in enumerate(self.primitives):
-            if isinstance(primitive, volmdlr.shells.ClosedShell3D):
+            if isinstance(primitive, design3d.shells.ClosedShell3D):
                 bbx = primitive.bounding_box
                 dim1, dim2, dim3 = (bbx.xmax - bbx.xmin), (bbx.ymax - bbx.ymin), (bbx.zmax - bbx.zmin)
                 volume = dim1 * dim2 * dim3
@@ -1719,7 +1719,7 @@ class VolumeModel(dc.PhysicalObject):
                 field_nums.append(field_num + 1)
                 field_num += 2
 
-            elif isinstance(primitive, volmdlr.shells.OpenShell3D):
+            elif isinstance(primitive, design3d.shells.OpenShell3D):
                 continue
 
         lines.append('Field[' + str(field_num) + '] = MinAniso;')
@@ -2192,7 +2192,7 @@ class MovingVolumeModel(VolumeModel):
 
     """
 
-    def __init__(self, primitives: List[Primitive3D], step_frames: List[List[volmdlr.Frame3D]], name: str = ''):
+    def __init__(self, primitives: List[Primitive3D], step_frames: List[List[design3d.Frame3D]], name: str = ''):
         VolumeModel.__init__(self, primitives=primitives, name=name)
         self.step_frames = step_frames
 

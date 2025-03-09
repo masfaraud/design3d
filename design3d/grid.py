@@ -12,8 +12,8 @@ import numpy as np
 
 from dessia_common.core import DessiaObject  # isort: skip
 
-import volmdlr
-import volmdlr.wires
+import design3d
+import design3d.wires
 
 
 class Grid2D(DessiaObject):
@@ -21,12 +21,12 @@ class Grid2D(DessiaObject):
     A class defined with a list of points and characterized with a chosen direction.
 
     :param lists_points: A list of a list of points
-    :type lists_points: List[List[volmdlr.Point2D]]
+    :type lists_points: List[List[design3d.Point2D]]
     :param direction: A direction
     :type direction: List[str]
     """
 
-    def __init__(self, lists_points: List[List[volmdlr.Point2D]],
+    def __init__(self, lists_points: List[List[design3d.Point2D]],
                  direction: List[str],
                  name: str = ''):
 
@@ -39,7 +39,7 @@ class Grid2D(DessiaObject):
         Computes the deformation/displacement (dx,dy) of a grid2d based on another grid2d.
 
         :param initial_grid2d: A 2 dimensional grid
-        :type initial_grid2d: :class:`volmdlr.grid.Grid2D`
+        :type initial_grid2d: :class:`design3d.grid.Grid2D`
         :return: The displacement of the 2 dimensional grid
         :rtype:
         """
@@ -77,7 +77,7 @@ class Grid2D(DessiaObject):
         Defines a Grid2D given a list of points, number of points along the 1st dimension, and a direction.
 
         :param points:
-        :type points: List[:class:`volmdlr.Point2D`]
+        :type points: List[:class:`design3d.Point2D`]
         :param points_dim_1:
         :type points_dim_1: int
         :param direction:
@@ -107,7 +107,7 @@ class Grid2D(DessiaObject):
         :type direction: List[str].
         :param name: object's name.
         :return: The 2 dimensional grid
-        :rtype: :class:`volmdlr.grid.Grid2D`
+        :rtype: :class:`design3d.grid.Grid2D`
         """
         if direction is None:
             direction = ['+x', '+y']
@@ -137,7 +137,7 @@ class Grid2D(DessiaObject):
         if direction in [['+x', '+y'], ['-x', '+y'], ['+x', '-y'], ['-x', '-y']]:
             for yi in y:
                 for xi in x:
-                    points.append(volmdlr.Point2D(xi, yi))
+                    points.append(design3d.Point2D(xi, yi))
 
                 grid2d.append(points)
                 points = []
@@ -145,7 +145,7 @@ class Grid2D(DessiaObject):
         elif direction in [['+y', '+x'], ['-y', '+x'], ['+y', '-x'], ['-y', '-x']]:
             for xi in x:
                 for yi in y:
-                    points.append(volmdlr.Point2D(xi, yi))
+                    points.append(design3d.Point2D(xi, yi))
 
                 grid2d.append(points)
                 points = []
@@ -157,14 +157,14 @@ class Grid2D(DessiaObject):
         Defines a list of quadrilateral polygons defined based on Grid2d points.
 
         :return: The list of quadrilateral polygons
-        :rtype: List[volmdlr.wires.ClosedPolygon2D]
+        :rtype: List[design3d.wires.ClosedPolygon2D]
         """
 
         quadrilateral_polygons = []
         length_1, length_2 = len(self.lists_points[0]), len(self.lists_points)
         for i in range(0, length_1 - 1):
             for j in range(0, length_2 - 1):
-                quadrilateral_polygons.append(volmdlr.wires.ClosedPolygon2D(
+                quadrilateral_polygons.append(design3d.wires.ClosedPolygon2D(
                     [self.lists_points[i][j],
                      self.lists_points[i + 1][j],
                      self.lists_points[i + 1][j + 1],
@@ -216,7 +216,7 @@ class Grid2D(DessiaObject):
         Returns all the points in lists_points in just one list.
 
         :return: The flattened list of points
-        :rtype: List[:class:`volmdlr.Point2D`]
+        :rtype: List[:class:`design3d.Point2D`]
         """
 
         points = []

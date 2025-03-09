@@ -1,5 +1,5 @@
 """
-volmdlr utils for translating volmdlr primitives into step file entity.
+design3d utils for translating design3d primitives into step file entity.
 """
 
 
@@ -100,7 +100,7 @@ def step_ids_to_str(ids):
 STEP_HEADER = '''ISO-10303-21;
 HEADER;
 FILE_DESCRIPTION(('{name}'),'2;1');
-FILE_NAME('{filename}','{timestamp}',('Author'),(''),'Volmdlr v{version}','','Unknown');
+FILE_NAME('{filename}','{timestamp}',('Author'),(''),'design3d v{version}','','Unknown');
 FILE_SCHEMA(('AUTOMOTIVE_DESIGN {{ 1 0 10303 214 1 1 1 1 }}'));
 ENDSEC;
 DATA;

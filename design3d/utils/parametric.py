@@ -1,14 +1,14 @@
 """
-volmdlr utils for calculating 3D to surface parametric domain operation.
+design3d utils for calculating 3D to surface parametric domain operation.
 
 """
 import bisect
 import math
 import numpy as np
 
-import volmdlr
-import volmdlr.edges as vme
-from volmdlr import curves
+import design3d
+import design3d.edges as vme
+from design3d import curves
 
 
 def find_sign_changes(list_of_values):
@@ -44,7 +44,7 @@ def angle_discontinuity(angle_list):
     if indexes_sign_changes:
         for index in indexes_sign_changes:
             sign = round(angle_list[index - 1] / abs(angle_list[index - 1]), 2)
-            delta = max(abs(angle_list[index] + sign * volmdlr.TWO_PI - angle_list[index - 1]), 1e-4)
+            delta = max(abs(angle_list[index] + sign * design3d.TWO_PI - angle_list[index - 1]), 1e-4)
             if math.isclose(abs(angle_list[index]), math.pi, abs_tol=1.1 * delta) and \
                     not math.isclose(abs(angle_list[index]), 0, abs_tol=1.1 * delta):
                 indexes_angle_discontinuity.append(index)
@@ -101,15 +101,15 @@ def repair_singularity(primitive, last_primitive):
     """
     v1 = primitive.unit_direction_vector()
     v2 = last_primitive.unit_direction_vector()
-    dot = v1.dot(volmdlr.X2D)
+    dot = v1.dot(design3d.X2D)
     cross = v1.cross(v2)
     new_primitives = []
     if cross == 0 and dot == 0:
         if primitive.start.x == math.pi:
-            primitive = primitive.translation(volmdlr.Vector2D(-2 * math.pi, 0))
+            primitive = primitive.translation(design3d.Vector2D(-2 * math.pi, 0))
             new = vme.LineSegment2D(last_primitive.end, primitive.start)
         elif primitive.start.x == -math.pi:
-            primitive = primitive.translation(volmdlr.Vector2D(2 * math.pi, 0))
+            primitive = primitive.translation(design3d.Vector2D(2 * math.pi, 0))
             new = vme.LineSegment2D(last_primitive.end, primitive.start)
         else:
             new = vme.LineSegment2D(last_primitive.end, primitive.start)
@@ -176,10 +176,10 @@ def arc3d_to_cylindrical_coordinates_verification(start_end, start_end_theta_sta
         theta2 = repair_start_end_angle_periodicity(theta2, theta4)
 
     if discontinuity:
-        theta1, theta2 = repair_arc3d_angle_continuity(theta1, theta2, volmdlr.TWO_PI)
+        theta1, theta2 = repair_arc3d_angle_continuity(theta1, theta2, design3d.TWO_PI)
 
-    start = volmdlr.Point2D(theta1, z1)
-    end = volmdlr.Point2D(theta2, z2)
+    start = design3d.Point2D(theta1, z1)
+    end = design3d.Point2D(theta2, z2)
     return [start, end]
 
 
@@ -190,11 +190,11 @@ def fullarc_to_cylindrical_coordinates_verification(start, end, normal_dot_produ
     theta1, z1 = start
     _, z2 = end
     if normal_dot_product > 0:
-        end = volmdlr.Point2D(theta1 + volmdlr.TWO_PI, z2)
+        end = design3d.Point2D(theta1 + design3d.TWO_PI, z2)
     elif normal_dot_product < 0 and math.isclose(theta1, -math.pi, abs_tol=1e-6):
-        start = volmdlr.Point2D(math.pi, z1)
+        start = design3d.Point2D(math.pi, z1)
     elif normal_dot_product < 0:
-        end = volmdlr.Point2D(theta1 - volmdlr.TWO_PI, z2)
+        end = design3d.Point2D(theta1 - design3d.TWO_PI, z2)
     return [start, end]
 
 
@@ -217,7 +217,7 @@ def toroidal_repair_start_end_angle_periodicity(start, end, start_end_angles_sta
         phi1 = repair_start_end_angle_periodicity(phi1, point_after_start.y)
     if undefined_end_phi or abs(phi2) == 0.5 * math.pi:
         phi2 = repair_start_end_angle_periodicity(phi2, point_before_end.y)
-    return volmdlr.Point2D(theta1, phi1), volmdlr.Point2D(theta2, phi2)
+    return design3d.Point2D(theta1, phi1), design3d.Point2D(theta2, phi2)
 
 
 def spherical_repair_start_end_angle_periodicity(start, end, point_after_start, point_before_end):
@@ -234,7 +234,7 @@ def spherical_repair_start_end_angle_periodicity(start, end, point_after_start, 
     if abs(theta2) == math.pi or abs(theta2) == 0.5 * math.pi:
         theta2 = repair_start_end_angle_periodicity(theta2, theta4)
 
-    return volmdlr.Point2D(theta1, phi1), volmdlr.Point2D(theta2, phi2)
+    return design3d.Point2D(theta1, phi1), design3d.Point2D(theta2, phi2)
 
 
 def arc3d_to_toroidal_coordinates_verification(start_end, start_end_angles_state, reference_points,
@@ -250,12 +250,12 @@ def arc3d_to_toroidal_coordinates_verification(start_end, start_end_angles_state
     theta2, phi2 = end
     theta_discontinuity, phi_discontinuity = discontinuity
     if theta_discontinuity:
-        theta1, theta2 = repair_arc3d_angle_continuity(theta1, theta2, volmdlr.TWO_PI)
+        theta1, theta2 = repair_arc3d_angle_continuity(theta1, theta2, design3d.TWO_PI)
 
     if phi_discontinuity:
-        phi1, phi2 = repair_arc3d_angle_continuity(phi1, phi2, volmdlr.TWO_PI)
+        phi1, phi2 = repair_arc3d_angle_continuity(phi1, phi2, design3d.TWO_PI)
 
-    return volmdlr.Point2D(theta1, phi1), volmdlr.Point2D(theta2, phi2)
+    return design3d.Point2D(theta1, phi1), design3d.Point2D(theta2, phi2)
 
 
 def arc3d_to_spherical_coordinates_verification(start_end, reference_points, discontinuity):
@@ -269,9 +269,9 @@ def arc3d_to_spherical_coordinates_verification(start_end, reference_points, dis
     theta1, phi1 = start
     theta2, phi2 = end
     if discontinuity and math.isclose(phi1, phi2, abs_tol=1e-4):
-        theta1, theta2 = repair_arc3d_angle_continuity(theta1, theta2, volmdlr.TWO_PI)
+        theta1, theta2 = repair_arc3d_angle_continuity(theta1, theta2, design3d.TWO_PI)
 
-    return volmdlr.Point2D(theta1, phi1), volmdlr.Point2D(theta2, phi2)
+    return design3d.Point2D(theta1, phi1), design3d.Point2D(theta2, phi2)
 
 
 def array_range_search(x, xmin, xmax):

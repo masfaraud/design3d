@@ -16,10 +16,10 @@ from kaitaistruct import KaitaiStream
 import dessia_common.core as dc  # isort: skip
 from dessia_common.files import BinaryFile, StringFile  # isort: skip
 
-import volmdlr as vm
-import volmdlr.core as vmc
-import volmdlr.faces as vmf
-from volmdlr import shells
+import design3d as vm
+import design3d.core as vmc
+import design3d.faces as vmf
+from design3d import shells
 
 
 class Stl(dc.DessiaObject):
@@ -47,7 +47,7 @@ class Stl(dc.DessiaObject):
 
     def __init__(self, triangles: List[vmf.Triangle3D], name: str = ''):
         warnings.warn(
-            "'volmdlr.stl.Stl' class is deprecated. Use 'volmdlr.display.Mesh3D' instead",
+            "'design3d.stl.Stl' class is deprecated. Use 'design3d.display.Mesh3D' instead",
             DeprecationWarning
         )
 

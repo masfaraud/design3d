@@ -17,15 +17,15 @@ import plot_data.graph
 import dessia_common.core as dc  # isort: skip
 from dessia_common.files import BinaryFile  # isort: skip
 
-import volmdlr
-import volmdlr.core
-import volmdlr.edges
-import volmdlr.faces
-import volmdlr.curves
-import volmdlr.primitives3d
-import volmdlr.wires
-from volmdlr.utils import step_reader
-from volmdlr.utils.step_reader import (STEP_TO_VOLMDLR, STEP_REPRESENTATION_ENTITIES,
+import design3d
+import design3d.core
+import design3d.edges
+import design3d.faces
+import design3d.curves
+import design3d.primitives3d
+import design3d.wires
+from design3d.utils import step_reader
+from design3d.utils.step_reader import (STEP_TO_design3d, STEP_REPRESENTATION_ENTITIES,
                                        WIREFRAME_STEP_REPRESENTATION_ENTITIES)
 
 
@@ -235,7 +235,7 @@ class Step(dc.DessiaObject):
     def not_implemented(self):
         not_implemented = []
         for _, fun in self.functions.items():
-            if fun.name not in STEP_TO_VOLMDLR:
+            if fun.name not in STEP_TO_design3d:
                 not_implemented.append(fun.name)
         return list(set(not_implemented))
 
@@ -262,7 +262,7 @@ class Step(dc.DessiaObject):
 
                 self.functions[id1].arg.append(f'#{id2}')
 
-            elif function.name in STEP_TO_VOLMDLR:
+            elif function.name in STEP_TO_design3d:
                 graph.add_node(function.id,
                                color='rgb(0, 0, 0)',
                                shape='.',
@@ -382,18 +382,18 @@ class Step(dc.DessiaObject):
 
     def instantiate(self, name, arguments, object_dict, step_id):
         """
-        Gives the volmdlr object related to the step function.
+        Gives the design3d object related to the step function.
         """
         self.parse_arguments(arguments)
         fun_name = name.replace(', ', '_')
         fun_name = fun_name.lower()
         try:
             if hasattr(step_reader, fun_name):
-                volmdlr_object = getattr(step_reader, fun_name)(arguments, object_dict,
+                design3d_object = getattr(step_reader, fun_name)(arguments, object_dict,
                                                                 length_conversion_factor=self.length_conversion_factor)
 
-            elif name in STEP_TO_VOLMDLR and hasattr(STEP_TO_VOLMDLR[name], "from_step"):
-                volmdlr_object = STEP_TO_VOLMDLR[name].from_step(
+            elif name in STEP_TO_design3d and hasattr(STEP_TO_design3d[name], "from_step"):
+                design3d_object = STEP_TO_design3d[name].from_step(
                     arguments, object_dict, name=name, step_id=step_id, global_uncertainty=self.global_uncertainty,
                     length_conversion_factor=self.length_conversion_factor,
                     angle_conversion_factor=self.angle_conversion_factor)
@@ -403,7 +403,7 @@ class Step(dc.DessiaObject):
         except (ValueError, NotImplementedError, IndexError,
                 AttributeError, ZeroDivisionError, UnboundLocalError, TypeError) as error:
             raise ValueError(f"Error while instantiating #{step_id} = {name}({arguments})") from error
-        return volmdlr_object
+        return design3d_object
 
     def create_node_list(self, initial_nodes):
         """
@@ -421,7 +421,7 @@ class Step(dc.DessiaObject):
         while stack:
             node = stack.popleft()
             name = self.functions[node].name
-            if node not in visited_set and name in STEP_TO_VOLMDLR:
+            if node not in visited_set and name in STEP_TO_design3d:
                 visited_set.add(node)
                 if self.connections[node]:
                     list_nodes.append(node)
@@ -529,7 +529,7 @@ class Step(dc.DessiaObject):
             return self.get_shell_node_from_representation_entity(int(id_representation_entity[1:]))
         if function_name == "SHAPE_REPRESENTATION":
             return self.get_shell_node_from_shape_representation(int(id_representation_entity[1:]))
-        raise NotImplementedError("This shape representation has not yet been recognized by volmdlr step translator.")
+        raise NotImplementedError("This shape representation has not yet been recognized by design3d step translator.")
 
     def product_definition_to_product(self, id_product_definition):
         """Returns the ID of the product entity related to the given product_definition ID."""
@@ -727,9 +727,9 @@ class Step(dc.DessiaObject):
                     if not list_primitives:
                         none_primitives.add(instantiate_id)
 
-                    volmdlr_object = volmdlr.core.Assembly(list_primitives, assembly_positions, assembly_frame,
+                    design3d_object = design3d.core.Assembly(list_primitives, assembly_positions, assembly_frame,
                                                            name=name)
-                    object_dict[instantiate_id] = volmdlr_object
+                    object_dict[instantiate_id] = design3d_object
                     last_error = None
                 error = False
             except KeyError as key:
@@ -742,18 +742,18 @@ class Step(dc.DessiaObject):
                 else:
                     object_dict, _ = self._helper_instantiate(key.args[0], object_dict, {}, False)
                 last_error = key.args[0]
-        return volmdlr_object
+        return design3d_object
 
     def to_volume_model(self, show_times: bool = False):
         """
-        Translate a step file into a volmdlr object.
+        Translate a step file into a design3d object.
 
         :param show_times: if True, displays how many times a given class has been
             instantiated and the total time of all the instantiations of this
             given class.
         :type show_times: bool
-        :return: A volmdlr solid object.
-        :rtype: :class:`volmdlr.core.VolumeModel`
+        :return: A design3d solid object.
+        :rtype: :class:`design3d.core.VolumeModel`
         """
         object_dict = {}
         times = {}
@@ -788,7 +788,7 @@ class Step(dc.DessiaObject):
             print()
 
         if self.root_nodes["NEXT_ASSEMBLY_USAGE_OCCURRENCE"]:
-            return volmdlr.core.VolumeModel([self.instatiate_assembly(object_dict)])
+            return design3d.core.VolumeModel([self.instatiate_assembly(object_dict)])
         primitives = []
         shapes = [object_dict[shape] for shape in shape_representations
                   if self.functions[shape].name in STEP_REPRESENTATION_ENTITIES]
@@ -797,13 +797,13 @@ class Step(dc.DessiaObject):
                 primitives.extend(shape)
             else:
                 primitives.append(shape)
-        volume_model = volmdlr.core.VolumeModel(primitives)
-        # volume_model = volmdlr.core.VolumeModel([object_dict[shell_node] for shell_node in shell_nodes])
+        volume_model = design3d.core.VolumeModel(primitives)
+        # volume_model = design3d.core.VolumeModel([object_dict[shell_node] for shell_node in shell_nodes])
         return volume_model
 
     def _helper_instantiate(self, node, object_dict, times, show_times):
         """
-        Helper method to translate step entities into volmdlr objects.
+        Helper method to translate step entities into design3d objects.
         """
         instantiate_ids = [node]
         error = True
@@ -813,17 +813,17 @@ class Step(dc.DessiaObject):
                 # block, we want to loop from the last KeyError to the first. This avoids an infinite loop
                 for instantiate_id in instantiate_ids[::-1]:
                     t_tracker = time.time()
-                    volmdlr_object = self.instantiate(
+                    design3d_object = self.instantiate(
                         self.functions[instantiate_id].name,
                         self.functions[instantiate_id].arg[:], object_dict, instantiate_id)
                     t_tracker = time.time() - t_tracker
-                    object_dict[instantiate_id] = volmdlr_object
+                    object_dict[instantiate_id] = design3d_object
                     if show_times:
-                        if volmdlr_object.__class__ not in times:
-                            times[volmdlr_object.__class__] = [1, t_tracker]
+                        if design3d_object.__class__ not in times:
+                            times[design3d_object.__class__] = [1, t_tracker]
                         else:
-                            times[volmdlr_object.__class__][0] += 1
-                            times[volmdlr_object.__class__][1] += t_tracker
+                            times[design3d_object.__class__][0] += 1
+                            times[design3d_object.__class__][1] += t_tracker
                 error = False
             except KeyError as key:
                 # Sometimes the search don't instantiate the nodes of a
@@ -843,9 +843,9 @@ class Step(dc.DessiaObject):
                 arguments = self.functions[stepfunction.id].arg[:]
                 self.parse_arguments(arguments)
                 if arguments[1].count(',') == 2:
-                    volmdlr_object = STEP_TO_VOLMDLR[name].from_step(
+                    design3d_object = STEP_TO_design3d[name].from_step(
                         arguments, object_dict)
-                    points3d.append(volmdlr_object)
+                    points3d.append(design3d_object)
 
         # remove first point because it refers to origin
         return points3d[1:]
@@ -862,7 +862,7 @@ class Step(dc.DessiaObject):
 @dataclass
 class StepReaderReport:
     """
-    Data class to save a report after translating a step file to volmdlr object.
+    Data class to save a report after translating a step file to design3d object.
     """
     step_name: str = " "
     total_number_of_faces: int = 0

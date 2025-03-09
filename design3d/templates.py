@@ -1,5 +1,5 @@
 """
-volmdlr to babylonjs templates.
+design3d to babylonjs templates.
 """
 
 import os
@@ -12,7 +12,7 @@ BABYLON_UNPACKER_CDN_HEADER = '''
 <html>
 <head>
    <meta charset="utf-8">
-   <title>Babylon from volmdlr</title>
+   <title>Babylon from design3d</title>
    <style>
       html, body {
          overflow: hidden;
@@ -40,7 +40,7 @@ BABYLON_UNPACKER_EMBEDDED_HEADER = '''
 <html>
 <head>
    <meta charset="utf-8">
-   <title>Babylon from volmdlr</title>
+   <title>Babylon from design3d</title>
    <style>
       html, body {
          overflow: hidden;
@@ -60,8 +60,8 @@ BABYLON_UNPACKER_EMBEDDED_HEADER = '''
 
 for filename in ['babylon.js', 'babylonjs.loaders.min.js', 'earcut.min.js', 'pep.js']:
     with pkg_resources.resource_stream(
-            pkg_resources.Requirement('volmdlr'),
-            os.path.join('volmdlr/assets/js/', filename)) as fjs:
+            pkg_resources.Requirement('design3d'),
+            os.path.join('design3d/assets/js/', filename)) as fjs:
         BABYLON_UNPACKER_EMBEDDED_HEADER += fjs.read().decode('utf-8')
 
 BABYLON_UNPACKER_EMBEDDED_HEADER += '''

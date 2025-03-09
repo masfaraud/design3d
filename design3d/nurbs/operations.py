@@ -4,8 +4,8 @@ Nurbs main operations algorithms.
 
 from functools import lru_cache
 import numpy as np
-import volmdlr
-from volmdlr.nurbs import core
+import design3d
+from design3d.nurbs import core
 
 
 def knot_insertion(degree, knotvector, ctrlpts, u, **kwargs):
@@ -180,7 +180,7 @@ def insert_knot_curve(obj, param, num, **kwargs):
         # Create new curve
         knots, knot_multiplicities = get_knots_and_multiplicities(kv_new)
         point_name = "Point" + obj.__class__.__name__[-2:]
-        cpts_tmp = [getattr(volmdlr, point_name)(*point) for point in cpts_tmp]
+        cpts_tmp = [getattr(design3d, point_name)(*point) for point in cpts_tmp]
         # Return new spline geometry
         if obj.__class__.__name__[:-2] == "BezierCurve":
             return obj.__class__(obj.degree, cpts_tmp)
@@ -299,7 +299,7 @@ def insert_knot_surface(obj, param, num, **kwargs):
         weights = None
         if obj.rational:
             cpts_tmp, weights = separate_ctrlpts_weights(cpts_tmp)
-        control_points = [volmdlr.Point3D(*point) for point in cpts_tmp]
+        control_points = [design3d.Point3D(*point) for point in cpts_tmp]
         obj = obj.__class__(obj.degree_u, obj.degree_v,
                             control_points,
                             obj.nb_u + num[0], obj.nb_v, multiplicities, obj.v_multiplicities,
@@ -333,7 +333,7 @@ def insert_knot_surface(obj, param, num, **kwargs):
         weights = None
         if obj.rational:
             cpts_tmp, weights = separate_ctrlpts_weights(cpts_tmp)
-        control_points = [volmdlr.Point3D(*point) for point in cpts_tmp]
+        control_points = [design3d.Point3D(*point) for point in cpts_tmp]
         # Update the surface after knot insertion
         obj = obj.__class__(obj.degree_u, obj.degree_v,
                             control_points, obj.nb_u, obj.nb_v + num[1], obj.u_multiplicities, multiplicities,
@@ -485,13 +485,13 @@ def extract_surface_curve_u(obj, param, curve_class, **kwargs):
         * ``find_span_func``: FindSpan implementation. *Default:* :func:`.helpers.find_span_linear`
 
     :param obj: surface
-    :type obj: volmdlr.surfaces.BSplineSurface3D
+    :type obj: design3d.surfaces.BSplineSurface3D
     :param param: parameter for the u-direction
     :type param: float
     :param curve_class: BSpline curve object
-    :type curve_class: volmdlr.edges.BSplineCurve3D
+    :type curve_class: design3d.edges.BSplineCurve3D
     :return: The bspline curve at the specified parameter
-    :rtype: volmdlr.surfaces.BSplineSurface3D
+    :rtype: design3d.surfaces.BSplineSurface3D
 
     """
 
@@ -515,7 +515,7 @@ def extract_surface_curve_u(obj, param, curve_class, **kwargs):
     weights = None
     if obj.rational:
         surf2_ctrlpts, weights = separate_ctrlpts_weights(surf2_ctrlpts)
-    control_points = [volmdlr.Point3D(*point) for point in surf2_ctrlpts]
+    control_points = [design3d.Point3D(*point) for point in surf2_ctrlpts]
 
     return curve_class(obj.degree_v, control_points, obj.v_multiplicities, obj.v_knots, weights)
 
@@ -531,13 +531,13 @@ def extract_surface_curve_v(obj, param, curve_class, **kwargs):
         * ``find_span_func``: FindSpan implementation. *Default:* :func:`.helpers.find_span_linear`
 
     :param obj: surface
-    :type obj: volmdlr.surfaces.BSplineSurface3D
+    :type obj: design3d.surfaces.BSplineSurface3D
     :param param: parameter for the u-direction
     :type param: float
     :param curve_class: BSpline curve object
-    :type curve_class: volmdlr.edges.BSplineCurve3D
+    :type curve_class: design3d.edges.BSplineCurve3D
     :return: The bspline curve at the specified parameter
-    :rtype: volmdlr.surfaces.BSplineSurface3D
+    :rtype: design3d.surfaces.BSplineSurface3D
 
     """
 
@@ -562,7 +562,7 @@ def extract_surface_curve_v(obj, param, curve_class, **kwargs):
     weights = None
     if obj.rational:
         surf2_ctrlpts, weights = separate_ctrlpts_weights(surf2_ctrlpts)
-    control_points = [volmdlr.Point3D(*point) for point in surf2_ctrlpts]
+    control_points = [design3d.Point3D(*point) for point in surf2_ctrlpts]
 
     return curve_class(obj.degree_u, control_points, obj.u_multiplicities, obj.u_knots, weights)
 
@@ -769,7 +769,7 @@ def construct_split_surfaces(obj, knotvectors, direction, knot_span, insertion_c
     weights = None
     if obj.rational:
         surf1_ctrlpts, weights = separate_ctrlpts_weights(surf1_ctrlpts)
-    control_points = [volmdlr.Point3D(*point) for point in surf1_ctrlpts]
+    control_points = [design3d.Point3D(*point) for point in surf1_ctrlpts]
     surf1 = obj.__class__(obj.degree_u, obj.degree_v, control_points, surf1_nb_u,
                           surf1_nb_v, u_multiplicities, v_multiplicities, u_knots, v_knots, weights)
 
@@ -781,7 +781,7 @@ def construct_split_surfaces(obj, knotvectors, direction, knot_span, insertion_c
     weights = None
     if obj.rational:
         surf2_ctrlpts, weights = separate_ctrlpts_weights(surf2_ctrlpts)
-    control_points = [volmdlr.Point3D(*point) for point in surf2_ctrlpts]
+    control_points = [design3d.Point3D(*point) for point in surf2_ctrlpts]
     surf2 = obj.__class__(obj.degree_u, obj.degree_v, control_points,
                           surf2_nb_u, surf2_nb_v, u_multiplicities, v_multiplicities, u_knots, v_knots, weights)
 

@@ -10,7 +10,7 @@ from typing import Tuple
 from numpy import array, zeros
 from numpy.linalg import solve as np_solve
 
-import volmdlr as vm
+import design3d as vm
 
 
 def euler_angles_to_transfer_matrix(psi, theta, phi):
@@ -132,9 +132,9 @@ def vectors3d_angle(vector1, vector2):
     Computes the angle between two 3 dimensional vectors.
 
     :param vector1: The fist 3 dimensional vector
-    :type vector1: :class:`volmdlr.Vector3D`
+    :type vector1: :class:`design3d.Vector3D`
     :param vector2: The second 3 dimensional vectors
-    :type vector2: :class:`volmdlr.Vector3D`
+    :type vector2: :class:`design3d.Vector3D`
     :return: The angle between the two vectors
     :rtype: float
     """

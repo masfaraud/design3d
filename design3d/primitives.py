@@ -11,8 +11,8 @@ from typing import Dict, List
 from numpy import zeros
 from scipy.optimize import linprog
 
-import volmdlr.edges
-from volmdlr import PATH_ROOT
+import design3d.edges
+from design3d import PATH_ROOT
 
 
 class RoundedLineSegments:
@@ -22,10 +22,10 @@ class RoundedLineSegments:
     """
     _non_serializable_attributes = ['line_class', 'arc_class', 'basis_primitives', 'primitives']
 
-    line_class = volmdlr.edges.LineSegment
-    arc_class = volmdlr.edges.ArcMixin
+    line_class = design3d.edges.LineSegment
+    arc_class = design3d.edges.ArcMixin
 
-    def __init__(self, points: List[volmdlr.Point3D], radius: Dict[str, float],
+    def __init__(self, points: List[design3d.Point3D], radius: Dict[str, float],
                  closed: bool = False, adapt_radius: bool = False, reference_path: str = PATH_ROOT, name: str = ''):
 
         self.points = points
@@ -56,7 +56,7 @@ class RoundedLineSegments:
             pt2 = self.points[point_index + 1]
         return pt1, pti, pt2
 
-    def frame_mapping(self, frame: volmdlr.Frame3D, side: str):
+    def frame_mapping(self, frame: design3d.Frame3D, side: str):
         """
         Changes frame_mapping and return a new RoundedLineSegments.
 

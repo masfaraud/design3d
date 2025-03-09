@@ -1,14 +1,14 @@
 """
-Volmdlr init module.
+design3d init module.
 """
 # -*- coding: utf-8 -*-
 import math
 
 import pkg_resources
 
-__version__ = pkg_resources.require("volmdlr")[0].version
+__version__ = pkg_resources.require("design3d")[0].version
 
-from volmdlr.core_compiled import (O2D, O3D, OXY, X2D, X3D, Y2D, Y3D, Z3D,
+from design3d.core_compiled import (O2D, O3D, OXY, X2D, X3D, Y2D, Y3D, Z3D,
                                    Basis2D, Basis3D, Frame2D, Frame3D,
                                    linesegment2d_point_distance, LineSegment3DDistance,
                                    linesegment3d_point_distance, get_minimum_distance_points_lines,

@@ -17,8 +17,8 @@ from numpy.typing import NDArray
 from scipy.spatial import cKDTree
 from trimesh import Trimesh
 
-import volmdlr.edges
-from volmdlr.core import Primitive3D
+import design3d.edges
+from design3d.core import Primitive3D
 
 # TODO: make this module "mesh" as it is not useful only for display
 
@@ -341,8 +341,8 @@ class Mesh2D(MeshMixin, DessiaObject):
     2D triangle mesh.
     """
 
-    _linesegment_class = volmdlr.edges.LineSegment2D
-    _point_class = volmdlr.Point2D
+    _linesegment_class = design3d.edges.LineSegment2D
+    _point_class = design3d.Point2D
 
     def __init__(self, vertices: NDArray[float], triangles: NDArray[int], name: str = ""):
         """
@@ -378,8 +378,8 @@ class Mesh3D(MeshMixin, Primitive3D):
 
     # pylint: disable=too-many-public-methods
 
-    _linesegment_class = volmdlr.edges.LineSegment3D
-    _point_class = volmdlr.Point3D
+    _linesegment_class = design3d.edges.LineSegment3D
+    _point_class = design3d.Point3D
 
     def __init__(
         self,
@@ -432,7 +432,7 @@ class Mesh3D(MeshMixin, Primitive3D):
             maximums = np.max(self.vertices, axis=0)
             minimums = np.min(self.vertices, axis=0)
 
-            self._bounding_box = volmdlr.core.BoundingBox(
+            self._bounding_box = design3d.core.BoundingBox(
                 minimums[0], maximums[0], minimums[1], maximums[1], minimums[2], maximums[2]
             )
 
@@ -489,9 +489,9 @@ class Mesh3D(MeshMixin, Primitive3D):
 
         if return_points:
 
-            closest_point_self = volmdlr.Point3D(closest_point_self[0],
+            closest_point_self = design3d.Point3D(closest_point_self[0],
                                                  closest_point_self[1], closest_point_self[2])
-            closest_point_other = volmdlr.Point3D(closest_point_other[0],
+            closest_point_other = design3d.Point3D(closest_point_other[0],
                                                   closest_point_other[1], closest_point_other[2])
             return min_distance, closest_point_self, closest_point_other
 
@@ -873,13 +873,13 @@ class Mesh3D(MeshMixin, Primitive3D):
         :rtype: list[Triangle3D]
         """
         # pylint: disable=import-outside-toplevel, cyclic-import
-        from volmdlr.faces import Triangle3D
+        from design3d.faces import Triangle3D
 
         triangles3d = []
         for vertex1, vertex2, vertex3 in self.remove_degenerate_triangles(tol=1e-6).triangles_vertices():
-            point1 = volmdlr.Point3D(*vertex1)
-            point2 = volmdlr.Point3D(*vertex2)
-            point3 = volmdlr.Point3D(*vertex3)
+            point1 = design3d.Point3D(*vertex1)
+            point2 = design3d.Point3D(*vertex2)
+            point3 = design3d.Point3D(*vertex3)
 
             triangles3d.append(Triangle3D(point1, point2, point3))
 
@@ -900,7 +900,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         )
 
         # pylint: disable=import-outside-toplevel, cyclic-import
-        from volmdlr.shells import ClosedTriangleShell3D
+        from design3d.shells import ClosedTriangleShell3D
 
         return ClosedTriangleShell3D(faces=self.to_triangles3d(), name=self.name)
 
@@ -919,7 +919,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         )
 
         # pylint: disable=import-outside-toplevel, cyclic-import
-        from volmdlr.shells import OpenTriangleShell3D
+        from design3d.shells import OpenTriangleShell3D
 
         return OpenTriangleShell3D(faces=self.to_triangles3d(), name=self.name)
 

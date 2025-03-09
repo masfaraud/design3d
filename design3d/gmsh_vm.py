@@ -10,8 +10,8 @@ from typing import Dict
 from dessia_common.core import DessiaObject  # isort: skip
 from dessia_common.files import BinaryFile
 
-import volmdlr
-import volmdlr.mesh
+import design3d
+import design3d.mesh
 
 
 class GmshParser(DessiaObject):
@@ -316,7 +316,7 @@ class GmshParser(DessiaObject):
                 points = []
                 for i in range(step, step + num_nodes_in_block):
                     line = lines[i].split()
-                    points.append(volmdlr.mesh.Node3D(float(line[0]),
+                    points.append(design3d.mesh.Node3D(float(line[0]),
                                                       float(line[1]),
                                                       float(line[2])))
 
@@ -457,7 +457,7 @@ class GmshParser(DessiaObject):
 
     def define_quadratic_tetrahedron_element_mesh(self):
         """
-        Defines a volmdlr mesh with Quadratic TetrahedronElement from a .msh file.
+        Defines a design3d mesh with Quadratic TetrahedronElement from a .msh file.
         """
 
         # nodes = self.nodes[0]
@@ -472,18 +472,18 @@ class GmshParser(DessiaObject):
                 elements_points = []
                 for i in range(10):
                     elements_points.append(points[tetrahedron[i]])
-                tetrahedrons_mesh.append(volmdlr.mesh.TetrahedralElementQuadratic(elements_points))
+                tetrahedrons_mesh.append(design3d.mesh.TetrahedralElementQuadratic(elements_points))
 
-            element_groups.append(volmdlr.mesh.ElementsGroup(tetrahedrons_mesh, name=''))
+            element_groups.append(design3d.mesh.ElementsGroup(tetrahedrons_mesh, name=''))
 
-        mesh = volmdlr.mesh.Mesh(element_groups)
+        mesh = design3d.mesh.Mesh(element_groups)
         mesh.gmsh = self
 
         return mesh
 
     def define_tetrahedron_element_mesh(self):
         """
-        Defines a volmdlr mesh with TetrahedronElement from a .msh file.
+        Defines a design3d mesh with TetrahedronElement from a .msh file.
         """
 
         # nodes = self.nodes[0]
@@ -495,21 +495,21 @@ class GmshParser(DessiaObject):
         for tetrahedrons in tetrahedron_elements:
             tetrahedrons_mesh = []
             for tetrahedron in tetrahedrons:
-                tetrahedrons_mesh.append(volmdlr.mesh.TetrahedralElement([points[tetrahedron[0]],
+                tetrahedrons_mesh.append(design3d.mesh.TetrahedralElement([points[tetrahedron[0]],
                                                                           points[tetrahedron[1]],
                                                                           points[tetrahedron[2]],
                                                                           points[tetrahedron[3]]]))
 
-            element_groups.append(volmdlr.mesh.ElementsGroup(tetrahedrons_mesh, name=''))
+            element_groups.append(design3d.mesh.ElementsGroup(tetrahedrons_mesh, name=''))
 
-        mesh = volmdlr.mesh.Mesh(element_groups)
+        mesh = design3d.mesh.Mesh(element_groups)
         mesh.gmsh = self
 
         return mesh
 
     def define_triangular_element_mesh(self):
         """
-        Defines a volmdlr mesh with TriangularElement from a .msh file.
+        Defines a design3d mesh with TriangularElement from a .msh file.
         """
 
         # nodes = self.nodes[0]
@@ -522,16 +522,16 @@ class GmshParser(DessiaObject):
             triangles_mesh = []
             for triangle in triangles:
                 if points[0].__class__.__name__[-2::] == '3D':
-                    triangles_mesh.append(volmdlr.mesh.TriangularElement3D([points[triangle[0]],
+                    triangles_mesh.append(design3d.mesh.TriangularElement3D([points[triangle[0]],
                                                                             points[triangle[1]],
                                                                             points[triangle[2]]]))
                 else:
-                    triangles_mesh.append(volmdlr.mesh.TriangularElement2D([points[triangle[0]],
+                    triangles_mesh.append(design3d.mesh.TriangularElement2D([points[triangle[0]],
                                                                             points[triangle[1]],
                                                                             points[triangle[2]]]))
-            element_groups.append(volmdlr.mesh.ElementsGroup(triangles_mesh, name=''))
+            element_groups.append(design3d.mesh.ElementsGroup(triangles_mesh, name=''))
 
-        mesh = volmdlr.mesh.Mesh(element_groups)
+        mesh = design3d.mesh.Mesh(element_groups)
         mesh.gmsh = self
 
         return mesh
@@ -542,7 +542,7 @@ class GmshParser(DessiaObject):
         Check if the nodes are defined on 2D or not.
 
         :param list_nodes: A list of points (nodes)
-        :type list_nodes: List[volmdlr.mesh.Node2D]
+        :type list_nodes: List[design3d.mesh.Node2D]
         :return: True or False
         :rtype: bool
         """
@@ -564,12 +564,12 @@ class GmshParser(DessiaObject):
         Convert a list of Node3D to a list of Node2D.
 
         :param list_nodes: A list of points3d (nodes)
-        :type list_nodes: List[volmdlr.mesh.Node2D]
+        :type list_nodes: List[design3d.mesh.Node2D]
         :return: A list of points2d (nodes)
-        :rtype: List[volmdlr.mesh.Node2D]
+        :rtype: List[design3d.mesh.Node2D]
         """
 
-        return [volmdlr.mesh.Node2D(node[0], node[1]) for
+        return [design3d.mesh.Node2D(node[0], node[1]) for
                 node in list_nodes]
 
     def get_lines_nodes(self):
@@ -672,7 +672,7 @@ class GmshParser(DessiaObject):
 
         lines = []
         lines.append('# vtk DataFile Version 2.0')
-        lines.append(output_file_name + ', Created by Volmdlr')
+        lines.append(output_file_name + ', Created by design3d')
         lines.append('ASCII')
         lines.append('DATASET UNSTRUCTURED_GRID')
         lines.append('POINTS ' + str(len(self.nodes['all_nodes'])) + ' double')

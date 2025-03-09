@@ -23,7 +23,7 @@ from scipy.linalg import lu_factor, lu_solve
 
 from cython.cimports.libcpp.vector import vector
 
-from volmdlr.nurbs import core, helpers
+from design3d.nurbs import core, helpers
 
 
 @cython.wraparound(False)

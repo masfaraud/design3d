@@ -1,5 +1,5 @@
 """
-Class for discrete representations of volmdlr models (voxelization for 3D geometries, pixelization for 2D geometries).
+Class for discrete representations of design3d models (voxelization for 3D geometries, pixelization for 2D geometries).
 """
 import itertools
 import math
@@ -13,9 +13,9 @@ from dessia_common.serialization import JsonSerializable
 from matplotlib import patches
 from numpy.typing import NDArray
 
-from volmdlr import Point2D, Point3D, Vector3D
-from volmdlr.core import BoundingBox, BoundingRectangle, VolumeModel
-from volmdlr.discrete_representation_compiled import (
+from design3d import Point2D, Point3D, Vector3D
+from design3d.core import BoundingBox, BoundingRectangle, VolumeModel
+from design3d.discrete_representation_compiled import (
     flood_fill_matrix_2d,
     flood_fill_matrix_3d,
     line_segments_to_pixels,
@@ -25,11 +25,11 @@ from volmdlr.discrete_representation_compiled import (
     triangle_intersects_voxel,
     voxel_triangular_faces,
 )
-from volmdlr.display import Mesh3D
-from volmdlr.edges import LineSegment2D
-from volmdlr.faces import Face3D, Triangle3D
-from volmdlr.shells import ClosedTriangleShell3D, DisplayTriangleShell3D, Shell3D
-from volmdlr.wires import ClosedPolygon2D
+from design3d.display import Mesh3D
+from design3d.edges import LineSegment2D
+from design3d.faces import Face3D, Triangle3D
+from design3d.shells import ClosedTriangleShell3D, DisplayTriangleShell3D, Shell3D
+from design3d.wires import ClosedPolygon2D
 
 # pylint: disable=no-name-in-module,too-many-lines,arguments-differ,unused-argument
 
@@ -399,7 +399,7 @@ class DiscreteRepresentation:
 
 class Voxelization(DiscreteRepresentation, PhysicalObject):
     """
-    Abstract base class for creating and manipulating voxelizations of volmdlr geometries.
+    Abstract base class for creating and manipulating voxelizations of design3d geometries.
 
     This approach is used to create a voxelization of the surfaces, without filling the volume.
 
@@ -625,13 +625,13 @@ class Voxelization(DiscreteRepresentation, PhysicalObject):
 
         return Mesh3D(vertices=vertices, triangles=faces, name=self.name)
 
-    def volmdlr_primitives(self, **kwargs):
+    def design3d_primitives(self, **kwargs):
         """
-        Generate volmdlr primitives.
+        Generate design3d primitives.
 
         :param kwargs: Additional keyword arguments.
 
-        :return: A list of volmdlr primitives.
+        :return: A list of design3d primitives.
         """
         return [self.to_mesh().split_shared_vertices()]  # split shared vertices for shadow display purpose
 
@@ -3018,7 +3018,7 @@ class OctreeBasedVoxelization(Voxelization):
 
 class Pixelization(DiscreteRepresentation, DessiaObject):
     """
-    Abstract base class for creating and manipulating pixelizations of volmdlr geometries.
+    Abstract base class for creating and manipulating pixelizations of design3d geometries.
 
     This approach is used to create a pixelization of the contour, without filling the surface.
 
