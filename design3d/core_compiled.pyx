@@ -3225,7 +3225,6 @@ class Frame2D(Basis2D):
             new_basis = new_basis.rotation(angle)
         return Frame2D(new_origin, new_basis.u, new_basis.v)
 
-
     def copy(self, deep=True, memo=None):
         """
         Creates a copy of a 2-dimensional frame.
