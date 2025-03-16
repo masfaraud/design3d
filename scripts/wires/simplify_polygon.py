@@ -3,8 +3,8 @@
 
 """
 
-import volmdlr as vm
-import volmdlr.wires as vmw
+import design3d as vm
+import design3d.wires as vmw
 
 list_point3d = [vm.Point3D(-0.5178099145507813, 0.3835421110454358, 0.3857924987792969),
                 vm.Point3D(-0.5197773189544678, 0.3835421110454358, 0.5413672103881836),

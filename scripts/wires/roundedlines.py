@@ -10,11 +10,11 @@ import math
 
 import numpy as np
 
-import volmdlr as vm
-from volmdlr.core import EdgeStyle
-import volmdlr.primitives2d as primitives2d
-import volmdlr.primitives3d as primitives3d
-from volmdlr import curves
+import design3d as vm
+from design3d.core import EdgeStyle
+import design3d.primitives2d as primitives2d
+import design3d.primitives3d as primitives3d
+from design3d import curves
 # Ajout commentaire juste pour tester
 # =============================================================================
 #  2D version

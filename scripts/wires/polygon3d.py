@@ -8,8 +8,8 @@ Created on Fri Mar 10 17:02:36 2017
 import math
 import time
 
-import volmdlr as vm
-import volmdlr.wires as vmw
+import design3d as vm
+import design3d.wires as vmw
 
 p1 = vm.Point3D(0, 0, 0)
 p2 = vm.Point3D(1, 0, 0.1)

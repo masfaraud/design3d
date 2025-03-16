@@ -5,8 +5,8 @@ Created on Mon Sep 13 12:32:18 2021
 @author: Mack_Pro
 """
 
-import volmdlr as vm
-import volmdlr.cloud as vmc
+import design3d as vm
+import design3d.cloud as vmc
 
 points = [vm.Point2D(-0.06609303833007812, 0.017389551162719726), 
           vm.Point2D(-0.0771529913682204, 0.01738535660963792), 

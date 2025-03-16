@@ -9,11 +9,11 @@
 
 import matplotlib.pyplot as plt
 
-import volmdlr as vm
-import volmdlr.edges
-import volmdlr.wires
-import volmdlr.curves
-from volmdlr.core import EdgeStyle
+import design3d as vm
+import design3d.edges
+import design3d.wires
+import design3d.curves
+from design3d.core import EdgeStyle
 # %% Initial Data
 
 points = [vm.Point2D(6, 0), vm.Point2D(6, 2),
@@ -22,7 +22,7 @@ points = [vm.Point2D(6, 0), vm.Point2D(6, 2),
           vm.Point2D(0, 2), vm.Point2D(0, 0)]
 
 contour = vm.wires.Contour2D.from_points(points)
-line = volmdlr.curves.Line2D(vm.Point2D(-1, 3), vm.Point2D(7, 3))
+line = design3d.curves.Line2D(vm.Point2D(-1, 3), vm.Point2D(7, 3))
 
 # %% Symmetry
 

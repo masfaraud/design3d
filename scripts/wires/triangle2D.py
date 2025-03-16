@@ -6,9 +6,9 @@ Created on Mon Jun  7 16:23:04 2021
 @author: masfaraud
 """
 
-import volmdlr as vm
-import volmdlr.core as vmc
-import volmdlr.wires as vmw
+import design3d as vm
+import design3d.core as vmc
+import design3d.wires as vmw
 
 p1 = vm.Point2D(0, 0)
 p2 = vm.Point2D(27.768772992234517, 0.0)

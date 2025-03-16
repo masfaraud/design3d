@@ -8,7 +8,7 @@ Created on Tue Mar 14 13:55:59 2017
 
 # Debug of area and inertia
 
-import volmdlr as vm
+import design3d as vm
 
 r=0.05
 
