@@ -456,7 +456,7 @@ class Arrow3D(FancyArrowPatch):
         x1, y1, z1 = self.starting_point
         dx, dy, dz = self._xyz
         x2, y2, z2 = (dx + x1, dy + y1, dz + z1)
-        xn, yn, zn = proj3d.proj_transform((x1, x2), (y1, y2), (z1, z2), self.axes.M)
+        xn, yn, _ = proj3d.proj_transform((x1, x2), (y1, y2), (z1, z2), self.axes.M)
         self.set_positions((xn[0], yn[0]), (xn[1], yn[1]))
         FancyArrowPatch.draw(self, renderer)
 
@@ -948,7 +948,7 @@ cdef class Vector2D(Vector):
             origin = Vector2D(0., 0.)
 
         if ax is None:
-            fig, ax = plt.subplots()
+            _, ax = plt.subplots()
 
         if math.isclose(self.norm(), 0, abs_tol=1e-9):
             point = origin.copy()
@@ -1122,7 +1122,7 @@ cdef class Point2D(Vector2D):
         :rtype: :class:`matplotlib.axes.Axes`
         """
         if ax is None:
-            fig, ax = plt.subplots()
+            _, ax = plt.subplots()
 
         ax.plot([self.x], [self.y], color=color, alpha=alpha, marker="o")
         return ax
@@ -1283,7 +1283,7 @@ cdef class Point2D(Vector2D):
         :return: the projected point
         :rtype: :class:`design3d.Point2D`
         """
-        p1, p2 = line[0], line[1]
+        p1 = line[0]
         n = line.unit_normal_vector()
         pp1 = point - p1
         point = pp1 - pp1.dot(n) * n + p1
@@ -3225,21 +3225,6 @@ class Frame2D(Basis2D):
             new_basis = new_basis.rotation(angle)
         return Frame2D(new_origin, new_basis.u, new_basis.v)
 
-    def Draw(self, ax=None, style="ok"):
-        """
-        # TODO : unused ? to be deleted ?
-
-        :param ax:
-        :param style:
-        :return:
-        """
-        if ax is None:
-            fig, ax = plt.subplots()
-
-        ax.plot(*self.origin, style)
-        self.u.plot(origin=self.origin, ax=ax, color="r")
-        self.v.plot(origin=self.origin, ax=ax, color="g")
-        ax.axis("equal")
 
     def copy(self, deep=True, memo=None):
         """
@@ -3274,7 +3259,7 @@ class Frame2D(Basis2D):
         :rtype: :class:`matplotlib.axes.Axes`
         """
         if ax is None:
-            fig, ax = plt.subplots()
+            _, ax = plt.subplots()
 
         x1 = [p.x for p in (self.origin, self.origin + self.u * ratio)]
         y1 = [p.y for p in (self.origin, self.origin + self.u * ratio)]

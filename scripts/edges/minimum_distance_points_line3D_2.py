@@ -63,4 +63,3 @@ model = design3d.core.VolumeModel([rl1, rl, ll])
 # model.FreeCADExport('lines')
 
 ll2 = primitives3D.OpenRoundedLineSegments3D([p1, p2], {}, name='mesure')
-
