@@ -2,11 +2,11 @@
 """
 """
 
-import volmdlr as vm
-import volmdlr.edges as vme
-import volmdlr.faces as vmf
-import volmdlr.primitives3d as p3d
-import volmdlr.wires as vmw
+import design3d as vm
+import design3d.edges as vme
+import design3d.faces as vmf
+import design3d.primitives3d as p3d
+import design3d.wires as vmw
 
 points = [vm.Point3D(-0.51883, -0.39865, 0.5391699999999999),
           vm.Point3D(-0.5502100000000001, -0.25545000000000007, 0.5352),

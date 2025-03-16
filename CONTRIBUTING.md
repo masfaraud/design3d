@@ -1,11 +1,11 @@
-# Contributing to volmdlr
+# Contributing to design3d
 
 First off, thanks for taking the time to contribute! 
 
 All types of contributions are encouraged and valued. The community looks forward to your contributions. 
 
 > And if you like the project, but just don't have time to contribute, that's fine. There are other easy ways to support the project and show your appreciation, which we would also be very happy about:
-> - Use volmdlr in your projects!
+> - Use design3d in your projects!
 > - Star the project
 > - Talk about it
 > - Refer this project in your project's readme
@@ -40,7 +40,7 @@ Your contribution may be refused by our CI. In this case:
 - non-respect of PEP8
 - no CHANGELOG.md edit
 
-Correct the CI errors to get approval from volmdlr team!
+Correct the CI errors to get approval from design3d team!
 
 ## I Have a Question
 

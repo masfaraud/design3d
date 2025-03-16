@@ -6,16 +6,16 @@ Created on Tue Oct 23 18:06:45 2018
 @author: steven
 """
 
-import volmdlr
-import volmdlr.edges
+import design3d
+import design3d.edges
 
 # Random arc
-i = volmdlr.Point2D.random(-1,1,-1,1)
-e = volmdlr.Point2D.random(-1,1,-1,1)
-s = volmdlr.Point2D.random(-1,1,-1,1)
+i = design3d.Point2D.random(-1,1,-1,1)
+e = design3d.Point2D.random(-1,1,-1,1)
+s = design3d.Point2D.random(-1,1,-1,1)
 
 
-a = volmdlr.edges.Arc2D.from_3_points(s, i, e)
+a = design3d.edges.Arc2D.from_3_points(s, i, e)
 ax = a.plot()
 
 for p in a.discretization_points(number_points=10):

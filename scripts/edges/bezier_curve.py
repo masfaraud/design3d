@@ -1,14 +1,14 @@
 import matplotlib.pyplot as plt
 
-import volmdlr as vm
-import volmdlr.edges as vme
+import volmdlr as d3d
+import volmdlr.edges as d3de
 
 degree = 3
-points = [vm.Point2D(0, 0),
-          vm.Point2D(1, 1),
-          vm.Point2D(2, 0),
-          vm.Point2D(3, 0)]
-bezier_curve2d = vme.BezierCurve2D(degree=degree,
+points = [d3d.Point2D(0, 0),
+          d3d.Point2D(1, 1),
+          d3d.Point2D(2, 0),
+          d3d.Point2D(3, 0)]
+bezier_curve2d = d3de.BezierCurve2D(degree=degree,
                                    control_points=points,
                                    name='bezier curve 1')
 _, ax = plt.subplots()
@@ -16,11 +16,11 @@ bezier_curve2d.plot(ax=ax)
 [p.plot(ax=ax) for p in points]
 
 degree = 3
-points = [vm.Point3D(0, 0, 0),
-          vm.Point3D(1, 1, 2),
-          vm.Point3D(2, 1, 1),
-          vm.Point3D(3, 0, 4)]
-bezier_curve3d = vme.BezierCurve3D(degree=degree,
+points = [d3d.Point3D(0, 0, 0),
+          d3d.Point3D(1, 1, 2),
+          d3d.Point3D(2, 1, 1),
+          d3d.Point3D(3, 0, 4)]
+bezier_curve3d = d3de.BezierCurve3D(degree=degree,
                                    control_points=points,
                                    name='bezier curve 1')
 fig = plt.figure()

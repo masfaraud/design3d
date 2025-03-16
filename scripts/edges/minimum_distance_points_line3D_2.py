@@ -12,28 +12,29 @@ import random
 import matplotlib.pyplot as plt
 import numpy as npy
 
-import volmdlr as volmdlr
-import volmdlr.primitives2d as primitives2D
-import volmdlr.primitives3d as primitives3D
+import design3d as design3d
+import design3d.core as design3dc
+import design3d.primitives2d as primitives2D
+import design3d.primitives3d as primitives3D
 
 radius_circle = 0.008
-c = volmdlr.wires.Circle2D(volmdlr.Point2D(0, 0), radius_circle)
-contour = volmdlr.wires.Contour2D([c])
-pt0 = volmdlr.Point3D(0.01, 0.04, 0.16)
-pt1 = volmdlr.Point3D(0.03, 0, 0.2)
-pt2 = volmdlr.Point3D(0.45, 0.01, 0.1)
-pt3 = volmdlr.Point3D(0.45, 0, -0.1)
-pt4 = volmdlr.Point3D(0.3, 0.04, -0.02)
+c = design3d.wires.Circle2D(design3d.Point2D(0, 0), radius_circle)
+contour = design3d.wires.Contour2D([c])
+pt0 = design3d.Point3D(0.01, 0.04, 0.16)
+pt1 = design3d.Point3D(0.03, 0, 0.2)
+pt2 = design3d.Point3D(0.45, 0.01, 0.1)
+pt3 = design3d.Point3D(0.45, 0, -0.1)
+pt4 = design3d.Point3D(0.3, 0.04, -0.02)
 pts = [pt0, pt1, pt2, pt3, pt4]
 radius = {1: 0.03, 2: 0.01, 3: 0.07}
 rl = primitives3D.OpenRoundedLineSegments3D(pts, radius, adapt_radius=True, name='wire')
 sweep = primitives3D.Sweep(contour, rl, name='pipe')
 
 
-pt10 = volmdlr.Point3D(0.02, 0.22, 0.25)
-pt11 = volmdlr.Point3D(0.02, 0.24, 0.25)
-pt12 = volmdlr.Point3D(0.6, 0.24, 0.20)
-pt13 = volmdlr.Point3D(0.40, 0.17, 0.13)
+pt10 = design3d.Point3D(0.02, 0.22, 0.25)
+pt11 = design3d.Point3D(0.02, 0.24, 0.25)
+pt12 = design3d.Point3D(0.6, 0.24, 0.20)
+pt13 = design3d.Point3D(0.40, 0.17, 0.13)
 pts1 = [pt10, pt11, pt12, pt13]
 radius1 = {1: 0.01, 2: 0.05}
 
@@ -58,11 +59,8 @@ ll = primitives3D.OpenRoundedLineSegments3D([p1, p2], {}, name='mesure')
 
 # mes.MPLPlot(ax=ax)
 
-model = volmdlr.core.VolumeModel([rl1, rl, ll])
+model = design3d.core.VolumeModel([rl1, rl, ll])
 # model.FreeCADExport('lines')
 
 ll2 = primitives3D.OpenRoundedLineSegments3D([p1, p2], {}, name='mesure')
 
-model2 = volmdlr.core.VolumeModel([LS1, LS2, ll2])
-# model2.MPLPlot()
-# model2.FreeCADExport('lines2')

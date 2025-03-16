@@ -7,11 +7,11 @@ import math
 
 import matplotlib.pyplot as plt
 
-import volmdlr as vm
-import volmdlr.edges as vme
-import volmdlr.wires as vmw
-from volmdlr import primitives3d, curves
-from volmdlr.core import EdgeStyle
+import design3d as vm
+import design3d.edges as vme
+import design3d.wires as vmw
+from design3d import primitives3d, curves
+from design3d.core import EdgeStyle
 
 degree = 5
 control_points = [vm.Point3D(0, 0, 0),

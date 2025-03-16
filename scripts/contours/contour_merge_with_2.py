@@ -9,24 +9,24 @@
 
 import matplotlib.pyplot as plt
 
-import volmdlr as vm
-from volmdlr.core import EdgeStyle
-import volmdlr.wires
+import design3d as d3d
+from design3d.core import EdgeStyle
+import design3d.wires
 
 # %% Contours2d
 
-p1 = [vm.Point2D(6, 0), vm.Point2D(6, 2),
-      vm.Point2D(3, 2), vm.Point2D(3, 1),
-      vm.Point2D(1, 1), vm.Point2D(1, 2),
-      vm.Point2D(0, 2), vm.Point2D(0, 0)]
+p1 = [d3d.Point2D(6, 0), d3d.Point2D(6, 2),
+      d3d.Point2D(3, 2), d3d.Point2D(3, 1),
+      d3d.Point2D(1, 1), d3d.Point2D(1, 2),
+      d3d.Point2D(0, 2), d3d.Point2D(0, 0)]
 
-p2 = [vm.Point2D(-1, 2), vm.Point2D(1, 2),
-      vm.Point2D(1, 3), vm.Point2D(3, 3),
-      vm.Point2D(3, 2), vm.Point2D(4, 2),
-      vm.Point2D(4, 4), vm.Point2D(-1, 4)]
+p2 = [d3d.Point2D(-1, 2), d3d.Point2D(1, 2),
+      d3d.Point2D(1, 3), d3d.Point2D(3, 3),
+      d3d.Point2D(3, 2), d3d.Point2D(4, 2),
+      d3d.Point2D(4, 4), d3d.Point2D(-1, 4)]
 
-contour1 = volmdlr.wires.Contour2D((vm.wires.ClosedPolygon2D(p1).line_segments))
-contour2 = volmdlr.wires.Contour2D((vm.wires.ClosedPolygon2D(p2).line_segments))
+contour1 = design3d.wires.Contour2D((d3d.wires.ClosedPolygon2D(p1).line_segments))
+contour2 = design3d.wires.Contour2D((d3d.wires.ClosedPolygon2D(p2).line_segments))
 
 fig, axs = plt.subplots(2, 4)
 for i in range(0, 2):

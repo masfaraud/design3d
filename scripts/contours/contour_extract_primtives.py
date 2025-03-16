@@ -10,37 +10,37 @@ Created on Tue Oct 18 2022
 
 import matplotlib.pyplot as plt
 
-import volmdlr.edges
-import volmdlr.wires
+import design3d.edges
+import design3d.wires
 
 # %% Data
 
 primitives = [
-    volmdlr.edges.LineSegment2D(volmdlr.Point2D(0.001, 0.014),
-                                volmdlr.Point2D(0.001, 0.0125)),
+    design3d.edges.LineSegment2D(design3d.Point2D(0.001, 0.014),
+                                design3d.Point2D(0.001, 0.0125)),
 
-    volmdlr.edges.Arc2D(volmdlr.Point2D(0.001, 0.0125),
-                        volmdlr.Point2D(0.009862829911410362, 0.007744326060968065),
-                        volmdlr.Point2D(0.012539936203984454, 0.0)),
+    design3d.edges.Arc2D(design3d.Point2D(0.001, 0.0125),
+                        design3d.Point2D(0.009862829911410362, 0.007744326060968065),
+                        design3d.Point2D(0.012539936203984454, 0.0)),
 
-    volmdlr.edges.Arc2D(volmdlr.Point2D(0.012539936203984454, 0.0),
-                        volmdlr.Point2D(0.0, -0.012539936203984454),
-                        volmdlr.Point2D(-0.012539936203984454, 0.0)),
+    design3d.edges.Arc2D(design3d.Point2D(0.012539936203984454, 0.0),
+                        design3d.Point2D(0.0, -0.012539936203984454),
+                        design3d.Point2D(-0.012539936203984454, 0.0)),
 
-    volmdlr.edges.Arc2D(volmdlr.Point2D(-0.012539936203984454, 0.0),
-                        volmdlr.Point2D(-0.00921384654213387, 0.008506176103162205),
-                        volmdlr.Point2D(-0.001, 0.0125)),
+    design3d.edges.Arc2D(design3d.Point2D(-0.012539936203984454, 0.0),
+                        design3d.Point2D(-0.00921384654213387, 0.008506176103162205),
+                        design3d.Point2D(-0.001, 0.0125)),
 
-    volmdlr.edges.LineSegment2D(volmdlr.Point2D(-0.001, 0.0125),
-                                volmdlr.Point2D(-0.001, 0.014)),
+    design3d.edges.LineSegment2D(design3d.Point2D(-0.001, 0.0125),
+                                design3d.Point2D(-0.001, 0.014)),
 
-    volmdlr.edges.LineSegment2D(volmdlr.Point2D(-0.001, 0.014),
-                                volmdlr.Point2D(0.001, 0.014))
+    design3d.edges.LineSegment2D(design3d.Point2D(-0.001, 0.014),
+                                design3d.Point2D(0.001, 0.014))
 ]
-contour2d = volmdlr.wires.Contour2D(primitives)
+contour2d = design3d.wires.Contour2D(primitives)
 
-point1 = volmdlr.Point2D(-0.007116025403784438, 0.010325317547305484)
-point2 = volmdlr.Point2D(-0.005383974596215561, 0.011325317547305485)
+point1 = design3d.Point2D(-0.007116025403784438, 0.010325317547305484)
+point2 = design3d.Point2D(-0.005383974596215561, 0.011325317547305485)
 
 # %% Wire.extract_without_primitives
 
@@ -61,5 +61,5 @@ for i in range(len(axs)):
     point1.plot(ax=axs[i])
     point2.plot(ax=axs[i])
     for prim in extracted_primitives[i]:
-        prim.plot(ax=axs[i], edge_style=volmdlr.edges.EdgeStyle(color=colors[i]))
+        prim.plot(ax=axs[i], edge_style=design3d.edges.EdgeStyle(color=colors[i]))
     axs[i].set_title(titles[i])

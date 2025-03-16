@@ -6,17 +6,17 @@ A sweep example.
 
 import random
 import matplotlib.pyplot as plt
-import volmdlr
+import design3d
 
-import volmdlr as vm
-import volmdlr.primitives3d as primitives3d
-import volmdlr.wires as wires
-from volmdlr import curves
-from volmdlr.models.open_rounded_line_segments import open_rounded_line_segements
+import design3d as d3d
+import design3d.primitives3d as primitives3d
+import design3d.wires as wires
+from design3d import curves
+from design3d.models.open_rounded_line_segments import open_rounded_line_segements
 
-# contour = wires.Circle2D(vm.O2D, 0.008)
-contour = wires.ClosedPolygon2D([volmdlr.Point2D(-0.004, -0.004), volmdlr.Point2D(0.004, -0.004),
-                                 volmdlr.Point2D(0.004, 0.004), volmdlr.Point2D(-0.004, 0.004)])
+# contour = wires.Circle2D(d3d.O2D, 0.008)
+contour = wires.ClosedPolygon2D([design3d.Point2D(-0.004, -0.004), design3d.Point2D(0.004, -0.004),
+                                 design3d.Point2D(0.004, 0.004), design3d.Point2D(-0.004, 0.004)])
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
@@ -30,7 +30,7 @@ u = open_rounded_line_segements.primitives[0].unit_normal_vector(0.)
 if not u:
     u = w.deterministic_unit_normal_vector()
 v = w.cross(u)
-frame = volmdlr.Frame3D(origin, u, v, w)
+frame = design3d.Frame3D(origin, u, v, w)
 frame.plot(ax, ratio=0.01)
 open_rounded_line_segements.primitives[0].start.plot(ax)
 for prim in open_rounded_line_segements.primitives:
@@ -42,17 +42,17 @@ for prim in open_rounded_line_segements.primitives:
 
 sweep = primitives3d.Sweep(contour, open_rounded_line_segements, name='Random pipe')
 
-model = vm.core.VolumeModel([sweep])
+model = d3d.core.VolumeModel([sweep])
 model._check_platform()
 model.babylonjs()
 
 model.to_step('sweep.step')
 
-contour = wires.ClosedPolygon2D([volmdlr.Point2D(-0.008, -0.004), volmdlr.Point2D(0.008, -0.004),
-                                 volmdlr.Point2D(0.008, 0.004), volmdlr.Point2D(-0.008, 0.004)])
+contour = wires.ClosedPolygon2D([design3d.Point2D(-0.008, -0.004), design3d.Point2D(0.008, -0.004),
+                                 design3d.Point2D(0.008, 0.004), design3d.Point2D(-0.008, 0.004)])
 
 sweep = primitives3d.Sweep(contour, open_rounded_line_segements, name='Random pipe')
-model = vm.core.VolumeModel([sweep])
+model = d3d.core.VolumeModel([sweep])
 model._check_platform()
 model.babylonjs()
 

@@ -10,24 +10,24 @@ Created on Wed Mar 2 2022
 
 import matplotlib.pyplot as plt
 
-import volmdlr as vm
-import volmdlr.wires
-from volmdlr.core import EdgeStyle
+import design3d as d3d
+import design3d.wires
+from design3d.core import EdgeStyle
 
 # %% Contour2d
 
-p = [vm.Point2D(-0.3, -0.2), vm.Point2D(0.3, -0.2),
-      vm.Point2D(0.2, 0.2), vm.Point2D(0, 0.3), vm.Point2D(-0.2, 0.2)]
+p = [d3d.Point2D(-0.3, -0.2), d3d.Point2D(0.3, -0.2),
+      d3d.Point2D(0.2, 0.2), d3d.Point2D(0, 0.3), d3d.Point2D(-0.2, 0.2)]
 
-contour = vm.wires.ClosedPolygon2D(p)
+contour = d3d.wires.ClosedPolygon2D(p)
 
 # %% Wire2d
 
-primitives = [vm.edges.LineSegment2D(vm.Point2D(-0.35, -0.1), vm.Point2D(-0.1, 0)),
-              vm.edges.LineSegment2D(vm.Point2D(-0.1, 0), vm.Point2D(0.2, 0.2)),
-              vm.edges.LineSegment2D(vm.Point2D(0.2, 0.2), vm.Point2D(0.3, 0.3))]
+primitives = [d3d.edges.LineSegment2D(d3d.Point2D(-0.35, -0.1), d3d.Point2D(-0.1, 0)),
+              d3d.edges.LineSegment2D(d3d.Point2D(-0.1, 0), d3d.Point2D(0.2, 0.2)),
+              d3d.edges.LineSegment2D(d3d.Point2D(0.2, 0.2), d3d.Point2D(0.3, 0.3))]
 
-wire = vm.wires.Wire2D(primitives)
+wire = d3d.wires.Wire2D(primitives)
 
 # %% Cut_by_wire
 

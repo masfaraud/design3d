@@ -2,14 +2,14 @@
 
 import matplotlib.pyplot as plt
 
-import volmdlr as vm
-from volmdlr.core import EdgeStyle
-import volmdlr.primitives2d as p2d
-from volmdlr import edges, curves
-from volmdlr.utils.common_operations import random_color
+import design3d as d3d
+from design3d.core import EdgeStyle
+import design3d.primitives2d as p2d
+from design3d import edges, curves
+from design3d.utils.common_operations import random_color
 plt, (ax1, ax2, ax3) = plt.subplots(1, 3)
 
-u = vm.Vector2D.random(0, 1, 0, 1)
+u = d3d.Vector2D.random(0, 1, 0, 1)
 u = u.unit_vector()
 v = u.normal_vector()
 
@@ -32,7 +32,7 @@ contour =p2d.ClosedRoundedLineSegments2D(
     {3:0.3*l})
 
 ax = contour.plot(ax=ax1)
-line = curves.Line2D(vm.O2D, u)
+line = curves.Line2D(d3d.O2D, u)
 line2 = curves.Line2D(0.3*v, u+0.3*v)
 
 line.plot(ax=ax1, edge_style=EdgeStyle(color='b'))
