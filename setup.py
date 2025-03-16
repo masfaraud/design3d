@@ -156,7 +156,8 @@ setup(
                            "design3d/nurbs/core.pyx",
                            "design3d/nurbs/helpers.pyx",
                            "design3d/nurbs/fitting.py",
-                           "design3d/nurbs/operations.py"]),
+                           "design3d/nurbs/operations.py"],
+                          language_level = "3"),
     include_dirs=[np.get_include()],
     python_requires=">=3.9",
 )
