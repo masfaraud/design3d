@@ -1,9 +1,9 @@
-import volmdlr as vm
-import volmdlr.edges as vme
-import volmdlr.faces as vmf
-import volmdlr.primitives3d as p3d
-import volmdlr.wires as vmw
-from volmdlr import surfaces
+import design3d as vm
+import design3d.edges as vme
+import design3d.faces as vmf
+import design3d.primitives3d as p3d
+import design3d.wires as vmw
+from design3d import surfaces
 
 sphere = surfaces.SphericalSurface3D(vm.Frame3D(vm.O3D, vm.X3D, vm.Y3D, vm.Z3D), 0.3)
 sphere.plot()

@@ -1,5 +1,5 @@
-import volmdlr as vm
-import volmdlr.primitives3d as primitives3D
+import design3d as vm
+import design3d.primitives3d as primitives3D
 
 resolution = 0.0010
 

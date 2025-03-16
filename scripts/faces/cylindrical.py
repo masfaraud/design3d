@@ -6,14 +6,14 @@ Created on Fri Sep 18 12:40:31 2020
 @author: masfaraud
 """
 
-from volmdlr.core import EdgeStyle
-import volmdlr.faces
-from volmdlr import faces, surfaces
+from design3d.core import EdgeStyle
+import design3d.faces
+from design3d import faces, surfaces
 
 
 R = 0.32
 
-surface = surfaces.CylindricalSurface3D(volmdlr.OXYZ, R)
+surface = surfaces.CylindricalSurface3D(design3d.OXYZ, R)
 
 face = faces.CylindricalFace3D.from_surface_rectangular_cut(surface, -0.01, 1.3, -0.1, 0.3)
 face.babylonjs(debug=True, use_cdn=False)

@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jun 28 11:34:09 2021
 
-@author: dasilva
 """
 import math
 import time
 
-import volmdlr as vm
-from volmdlr import faces, edges, wires, surfaces, shells
+import design3d as vm
+from design3d import faces, edges, wires, surfaces, shells
 
 time_before = time.time()
 

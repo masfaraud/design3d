@@ -5,9 +5,9 @@
 """
 
 
-import volmdlr as vm
-import volmdlr.faces as faces
-from volmdlr import surfaces
+import design3d as vm
+import design3d.faces as faces
+from design3d import surfaces
 
 R = 0.32
 alpha = 0.2

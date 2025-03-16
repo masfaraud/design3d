@@ -4,9 +4,9 @@
 
 """
 
-import volmdlr as vm
-import volmdlr.faces as vmf
-from volmdlr import surfaces
+import design3d as vm
+import design3d.faces as vmf
+from design3d import surfaces
 
 # 2D
 control_points = [vm.Point3D(0, 0, 0),
