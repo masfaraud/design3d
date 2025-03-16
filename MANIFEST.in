@@ -1,6 +1,7 @@
 recursive-include design3d/assets *.html *.js *ts *jpg *png
 include design3d/*.pyx
 include design3d/nurbs/*.pyx
+include design3d/nurbs/*.pxd
 exclude design3d/*.c
 prune .git
 include pyproject.toml
