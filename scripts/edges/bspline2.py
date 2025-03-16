@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 
-import volmdlr as d3d
-import volmdlr.edges as d3de
-from volmdlr.core import EdgeStyle
+import design3d as d3d
+import design3d.edges as d3de
+from design3d.core import EdgeStyle
 
 degree = 5
 control_points = [d3d.Point3D(0, 0, 0),

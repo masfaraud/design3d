@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
-import volmdlr as d3d
-import volmdlr.edges as d3de
+import design3d as d3d
+import design3d.edges as d3de
 
 degree = 3
 points = [d3d.Point2D(0, 0),

@@ -1,8 +1,8 @@
 import math
 
-import volmdlr as d3d
-import volmdlr.edges as d3de
-import volmdlr.wires as d3dw
+import design3d as d3d
+import design3d.edges as d3de
+import design3d.wires as d3dw
 
 for iarc, arc in enumerate([d3de.Arc2D.from_3_points(d3d.Point2D(0.3, 0.4),
                       d3d.Point2D(0.35, 0.3),

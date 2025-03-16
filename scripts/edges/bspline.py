@@ -6,8 +6,8 @@ Created on Fri Jan  8 16:23:49 2021
 @author: steven
 """
 
-import volmdlr as d3d
-import volmdlr.edges as d3de
+import design3d as d3d
+import design3d.edges as d3de
 
 # 2D
 points2d = [d3d.Point2D(0, 0),
