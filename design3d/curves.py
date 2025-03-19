@@ -1466,19 +1466,6 @@ class Circle2D(CircleMixin, ClosedCurve):
         """Plots the circle using Matplotlib."""
         return vm_common_operations.plot_circle(self, ax, edge_style)
 
-    def plot_data(self, edge_style: plot_data.EdgeStyle = None, surface_style: plot_data.SurfaceStyle = None):
-        """
-        Get plot data for the circle 2d.
-
-        :param edge_style: Plotting style for the line.
-        :type edge_style: :class:`plot_data.EdgeStyle`, optional
-        :return: Plot data for the line.
-        :rtype: :class:`plot_data.Circle2D`
-        """
-        return plot_data.Circle2D(cx=self.center.x, cy=self.center.y,
-                                  r=self.radius,
-                                  edge_style=edge_style,
-                                  surface_style=surface_style)
 
     def area(self):
         """
