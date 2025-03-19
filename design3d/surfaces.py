@@ -3135,7 +3135,7 @@ class ToroidalSurface3D(UVPeriodicalSurface):
         return circles
 
     @classmethod
-    def dict_to_object(cls, dict_: JsonSerializable, **kwargs) -> 'ToroidalSurface3D':
+    def dict_to_object(cls, dict_, **kwargs) -> 'ToroidalSurface3D':
         """Creates a ToroidalSurface3D from a dictionary."""
         frame = design3d.Frame3D.dict_to_object(dict_['frame'])
         name = dict_['name']
