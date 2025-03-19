@@ -15,11 +15,9 @@ from typing import List
 
 import matplotlib.pyplot as plt
 import numpy as np
-import plot_data.core as plot_data
 from scipy.spatial.qhull import ConvexHull, Delaunay
 from triangle import triangulate
 
-from dessia_common.core import PhysicalObject
 import design3d
 import design3d.core
 import design3d.display as vmd
@@ -188,9 +186,9 @@ class WireMixin:
     def _data_hash(self):
         return sum(hash(e) for e in self.primitives) + len(self.primitives)
 
-    def to_dict(self, *args, **kwargs):
-        """Avoids storing points in memo that makes serialization slow."""
-        return PhysicalObject.to_dict(self, use_pointers=False)
+    # def to_dict(self, *args, **kwargs):
+    #     """Avoids storing points in memo that makes serialization slow."""
+    #     return PhysicalObject.to_dict(self, use_pointers=False)
 
     def length(self):
         """Returns the wire's length."""
@@ -704,7 +702,7 @@ class WireMixin:
         return intersections_points
 
 
-class EdgeCollection3D(WireMixin, PhysicalObject):
+class EdgeCollection3D(WireMixin):
     """
     A collection of simple edges 3D.
     """
@@ -719,7 +717,7 @@ class EdgeCollection3D(WireMixin, PhysicalObject):
         self.color = color
         self.alpha = alpha
         self._bbox = None
-        PhysicalObject.__init__(self, name=name)
+        self.name = name
 
     def plot(self, ax=None, edge_style: EdgeStyle = EdgeStyle()):
         """ Plot edges with Matplotlib, not tested. """
@@ -783,7 +781,7 @@ class EdgeCollection3D(WireMixin, PhysicalObject):
         return [babylon_mesh]
 
 
-class Wire2D(WireMixin, PhysicalObject):
+class Wire2D(WireMixin):
     """
     A collection of simple primitives, following each other making a wire.
 
@@ -794,7 +792,7 @@ class Wire2D(WireMixin, PhysicalObject):
         self._length = None
         self.primitives = primitives
         self.reference_path = reference_path
-        PhysicalObject.__init__(self, name=name)
+        self.name = name
 
     def __hash__(self):
         return hash(('wire2d', tuple(self.primitives)))
@@ -897,11 +895,6 @@ class Wire2D(WireMixin, PhysicalObject):
             offset_primitives.append(cutted_primitive)
 
         return self.__class__(offset_primitives)
-
-    def plot_data(self, *args, **kwargs):
-        """Plot data for Wire2D."""
-        reference_path = kwargs.get("reference_path", PATH_ROOT)
-        return [p.plot_data(reference_path=reference_path) for p in self.primitives]
 
     def line_intersections(self, line: 'curves.Line2D'):
         """
@@ -1319,7 +1312,7 @@ class Wire2D(WireMixin, PhysicalObject):
         return ax
 
 
-class Wire3D(WireMixin, PhysicalObject):
+class Wire3D(WireMixin):
     """
     A collection of simple primitives, following each other making a wire.
 
@@ -1333,7 +1326,7 @@ class Wire3D(WireMixin, PhysicalObject):
         self.color = color
         self.alpha = alpha
         self.reference_path = reference_path
-        PhysicalObject.__init__(self, name=name)
+        self.name = name
 
     def _bounding_box(self):
         """
@@ -2201,15 +2194,6 @@ class Contour2D(ContourMixin, Wire2D):
                 second_moment_area_xy -= second_moment_area_xy_e
 
         return second_moment_area_x, second_moment_area_y, second_moment_area_xy
-
-    def plot_data(self, edge_style: plot_data.EdgeStyle = None, surface_style: plot_data.SurfaceStyle = None):
-        """Plot 2D representation of the contour."""
-        plot_data_primitives = [item.plot_data() for item in self.primitives]
-        return plot_data.Contour2D(plot_data_primitives=plot_data_primitives,
-                                   edge_style=edge_style,
-                                   surface_style=surface_style,
-                                   reference_path=self.reference_path,
-                                   name=self.name)
 
     def is_edge_inside(self, edge, abs_tol: float = 1e-6):
         """
