@@ -8,6 +8,8 @@ tutorials/*.py
 *.fcstd
 *.fcstd1
 
+*.cpp
+*.c
 
 # Python gitignore
 # Byte-compiled / optimized / DLL files

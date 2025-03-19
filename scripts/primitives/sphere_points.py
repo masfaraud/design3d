@@ -4,11 +4,11 @@ Demo script of spheres created on the skin of a defined sphere.
 import math
 import random
 
-import volmdlr as vm
-import volmdlr.core as vmc
-import volmdlr.primitives3d as p3d
+import design3d as d3d
+import design3d.core as d3dc
+import design3d.primitives3d as p3d
 
-center = vm.Point3D.random(0, 0.1, 0, 0.1, -0.1, 0)
+center = d3d.Point3D.random(0, 0.1, 0, 0.1, -0.1, 0)
 radius = random.randrange(5, 50, 5)
 radius *= 1e-3
 
@@ -32,5 +32,5 @@ for pt in points_in:
 # all_points = point_skin + point_in
 # print(len(all_points))
 
-# vol = vmc.VolumeModel(spheres)
+# vol = d3dc.VolumeModel(spheres)
 # vol.babylonjs()

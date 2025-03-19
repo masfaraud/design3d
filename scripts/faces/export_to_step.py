@@ -8,10 +8,10 @@ Created on Mon Feb 14 2022
 
 # %% Libraries
 
-import volmdlr.core
-import volmdlr.step
-from volmdlr import faces, shells
-from volmdlr.models import bspline_surfaces
+import design3d.core
+import design3d.step
+from design3d import faces, shells
+from design3d.models import bspline_surfaces
 
 # %% BsplineFaces3D
 
@@ -19,7 +19,7 @@ bspline_faces = [faces.BSplineFace3D.from_surface_rectangular_cut(bspline_surfac
 
 # %% Export
 
-model = volmdlr.core.VolumeModel([shells.OpenShell3D(bspline_faces)])
+model = design3d.core.VolumeModel([shells.OpenShell3D(bspline_faces)])
 
 model.to_step('model_to_step.stp')
 
@@ -27,7 +27,7 @@ model.to_step('model_to_step.stp')
 
 filepath = 'model_to_step.stp'
 
-step = volmdlr.step.Step.from_file(filepath)
+step = design3d.step.Step.from_file(filepath)
 model_imported = step.to_volume_model()
 
 # assert model_imported == model

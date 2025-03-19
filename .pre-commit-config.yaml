@@ -3,14 +3,14 @@
 
 repos:
   - repo: https://github.com/MarcoGorelli/cython-lint
-    rev: v0.10.1
+    rev: v0.16.6
     hooks:
       - id: cython-lint
         args: [--max-line-length, "120"]
       - id: double-quote-cython-strings
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v5.0.0
     hooks:
       - id: check-json
       - id: check-added-large-files

@@ -9,20 +9,20 @@
 
 import matplotlib.pyplot as plt
 
-import volmdlr as vm
-import volmdlr.wires
-from volmdlr.core import EdgeStyle
+import design3d as d3d
+import design3d.wires
+from design3d.core import EdgeStyle
 
 # %% Contours2d
 
-p1 = [vm.Point2D(-0.2, -0.2), vm.Point2D(0.2, -0.2), 
-      vm.Point2D(0.2, 0.2), vm.Point2D(-0.2, 0.2)]
+p1 = [d3d.Point2D(-0.2, -0.2), d3d.Point2D(0.2, -0.2), 
+      d3d.Point2D(0.2, 0.2), d3d.Point2D(-0.2, 0.2)]
 
-p2 = [vm.Point2D(-0.1, 0.2), vm.Point2D(0.3, 0.2),
-      vm.Point2D(0.3, 0.6), vm.Point2D(-0.1, 0.6)]
+p2 = [d3d.Point2D(-0.1, 0.2), d3d.Point2D(0.3, 0.2),
+      d3d.Point2D(0.3, 0.6), d3d.Point2D(-0.1, 0.6)]
 
-contour1 = vm.wires.ClosedPolygon2D(p1)
-contour2 = vm.wires.ClosedPolygon2D(p2)
+contour1 = d3d.wires.ClosedPolygon2D(p1)
+contour2 = d3d.wires.ClosedPolygon2D(p2)
 
 to_plot, title, colors = [], [], []
 
@@ -80,7 +80,7 @@ for i, plot_ in enumerate(to_plot):
                 for element in p:
                     element.plot(ax=axs[i], edge_style=EdgeStyle(color=colors[i], width=4))
             else:
-                if isinstance(p, volmdlr.edges.LineSegment2D):
+                if isinstance(p, design3d.edges.LineSegment2D):
                     p.plot(ax=axs[i], edge_style=EdgeStyle(color=colors[i], width=4))
                 else:
                     p.plot(ax=axs[i], color=colors[i])

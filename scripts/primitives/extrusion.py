@@ -8,21 +8,21 @@ Created on Fri Mar  3 09:56:29 2017
 
 import numpy as npy
 
-import volmdlr as vm
-import volmdlr.edges as edges
-import volmdlr.primitives2d as primitives2d
-import volmdlr.primitives3d as primitives3d
-import volmdlr.wires as wires
+import design3d as d3d
+import design3d.edges as edges
+import design3d.primitives2d as primitives2d
+import design3d.primitives3d as primitives3d
+import design3d.wires as wires
 
-p1 = vm.Point2D(0, 0)
-p2 = vm.Point2D(0.1, 0.)
-p3 = vm.Point2D(0.1, 0.2)
-p4 = vm.Point2D(0.05, 0.1)
-p5 = vm.Point2D(0., 0.21)
-p6 = vm.Point2D(0.05, 0.05)
+p1 = d3d.Point2D(0, 0)
+p2 = d3d.Point2D(0.1, 0.)
+p3 = d3d.Point2D(0.1, 0.2)
+p4 = d3d.Point2D(0.05, 0.1)
+p5 = d3d.Point2D(0., 0.21)
+p6 = d3d.Point2D(0.05, 0.05)
 
-p7 = vm.Point2D(0.06, 0.05)
-p8 = vm.Point2D(0.04, 0.07)
+p7 = d3d.Point2D(0.06, 0.05)
+p8 = d3d.Point2D(0.04, 0.07)
 
 radius = {0: 0.01, 2: 0.01, 3: 0.015}
 
@@ -33,9 +33,9 @@ l3 = edges.LineSegment2D(p8, p6)
 c2 = wires.Contour2D([l1, l2, l3])
 
 
-profile = primitives3d.ExtrudedProfile(vm.OYZX, outer_profile, [c2], 0.1, name='extrusion')
+profile = primitives3d.ExtrudedProfile(d3d.OYZX, outer_profile, [c2], 0.1, name='extrusion')
 
-model = vm.core.VolumeModel([profile])
+model = d3d.core.VolumeModel([profile])
 
 model.babylonjs()
 

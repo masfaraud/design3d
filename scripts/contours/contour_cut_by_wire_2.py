@@ -10,9 +10,9 @@ Created on Tue Oct 18 2022
 
 import matplotlib.pyplot as plt
 
-import volmdlr as vm
-from volmdlr.core import EdgeStyle
-import volmdlr.wires
+import design3d as vm
+from design3d.core import EdgeStyle
+import design3d.wires
 
 # %% Function -plot-
 
@@ -71,7 +71,7 @@ points = [
     vm.Point2D(0.09686210943003962, 0.04545460320088811),
     vm.Point2D(0.15573034610061637, 0.04966777166777087), vm.Point2D(0.20308817713481986, 0.04966773764193705)]
 
-contour1 = volmdlr.wires.Contour2D.from_points(points)
+contour1 = design3d.wires.Contour2D.from_points(points)
 
 # %% Contour 2
 
@@ -106,7 +106,7 @@ points = [
     vm.Point2D(0.2030881157414971, 0.012323183603131671), vm.Point2D(0.2030881575366132, 0.04966771677601732)]
 
 
-contour2 = volmdlr.wires.Contour2D.from_points(points)
+contour2 = design3d.wires.Contour2D.from_points(points)
 
 # %% Cut_by_Wire
 

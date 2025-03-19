@@ -1,20 +1,20 @@
 import matplotlib.pyplot as plt
 
-import volmdlr as vm
-import volmdlr.edges as vme
-from volmdlr.core import EdgeStyle
+import design3d as d3d
+import design3d.edges as d3de
+from design3d.core import EdgeStyle
 
 degree = 5
-control_points = [vm.Point3D(0, 0, 0),
-                  vm.Point3D(3, 2, 1),
-                  vm.Point3D(5, -1, 4),
-                  vm.Point3D(5, -4, 0),
-                  vm.Point3D(-1, -2, -3),
-                  vm.Point3D(-3, 4, 1)]
+control_points = [d3d.Point3D(0, 0, 0),
+                  d3d.Point3D(3, 2, 1),
+                  d3d.Point3D(5, -1, 4),
+                  d3d.Point3D(5, -4, 0),
+                  d3d.Point3D(-1, -2, -3),
+                  d3d.Point3D(-3, 4, 1)]
 knots = [0.0, 1.0]
 knot_multiplicities = [6, 6]
 weights = None  # [1, 2, 1, 2, 1, 2]
-bspline_curve3d = vme.BSplineCurve3D(degree=degree,
+bspline_curve3d = d3de.BSplineCurve3D(degree=degree,
                                      control_points=control_points,
                                      knot_multiplicities=knot_multiplicities,
                                      knots=knots,

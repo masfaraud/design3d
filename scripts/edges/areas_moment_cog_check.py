@@ -1,17 +1,17 @@
 import math
 
-import volmdlr as vm
-import volmdlr.edges as vme
-import volmdlr.wires as vmw
+import design3d as d3d
+import design3d.edges as d3de
+import design3d.wires as d3dw
 
-for iarc, arc in enumerate([vme.Arc2D.from_3_points(vm.Point2D(0.3, 0.4),
-                      vm.Point2D(0.35, 0.3),
-                      vm.Point2D(0.37, 0.22)),
-            vme.Arc2D.from_3_points(vm.Point2D(0.3, 0.4),
-                      vm.Point2D(-0.35, 0.3),
-                      vm.Point2D(0.37, 0.22))]):
+for iarc, arc in enumerate([d3de.Arc2D.from_3_points(d3d.Point2D(0.3, 0.4),
+                      d3d.Point2D(0.35, 0.3),
+                      d3d.Point2D(0.37, 0.22)),
+            d3de.Arc2D.from_3_points(d3d.Point2D(0.3, 0.4),
+                      d3d.Point2D(-0.35, 0.3),
+                      d3d.Point2D(0.37, 0.22))]):
 
-    arc_triangle = vmw.ClosedPolygon2D([arc.start,arc.end, arc.circle.center])
+    arc_triangle = d3dw.ClosedPolygon2D([arc.start,arc.end, arc.circle.center])
 
     ax = arc.plot()
     arc.circle.center.plot(ax=ax)

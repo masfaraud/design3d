@@ -6,9 +6,9 @@ Created on Thu Nov  4 17:46:36 2021
 @author: steven
 """
 
-import volmdlr as vm
-import volmdlr.faces as vmf
-from volmdlr import surfaces, shells
+import design3d as vm
+import design3d.faces as vmf
+from design3d import surfaces, shells
 
 base_points1 = [vm.Point2D(0, 0),
                vm.Point2D(0.1, 0.05),

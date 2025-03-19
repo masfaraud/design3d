@@ -4,15 +4,15 @@
 Minimum distance line between two lines
 """
 
-import volmdlr as vm
-import volmdlr.primitives3d as primitives3d
-from volmdlr import curves
+import design3d as d3d
+import design3d.primitives3d as primitives3d
+from design3d import curves
 #import numpy as npy
 
-p11 = vm.Point3D.random(-1,1,-1,1,-1,1)
-p12 = vm.Point3D.random(-1,1,-1,1,-1,1)
-p21 = vm.Point3D.random(-1,1,-1,1,-1,1)
-p22 = vm.Point3D.random(-1,1,-1,1,-1,1)
+p11 = d3d.Point3D.random(-1,1,-1,1,-1,1)
+p12 = d3d.Point3D.random(-1,1,-1,1,-1,1)
+p21 = d3d.Point3D.random(-1,1,-1,1,-1,1)
+p22 = d3d.Point3D.random(-1,1,-1,1,-1,1)
 
 l1 = curves.Line3D(p11, p12)
 l2 = curves.Line3D(p21, p22)
@@ -25,7 +25,7 @@ w = pmd2 - pmd1
 
 print(u.dot(w), v.dot(w))
 
-m = vm.core.VolumeModel([('', [l1, l2, pmd1, pmd2])])
+m = d3d.core.VolumeModel([('', [l1, l2, pmd1, pmd2])])
 
 m.MPLPlot() #Problem
 

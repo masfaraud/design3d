@@ -1,33 +1,32 @@
+import design3d
+import design3d.edges
+import design3d.faces
+import design3d.wires
+from design3d import faces, surfaces
+from design3d.core import EdgeStyle
 
-import volmdlr
-import volmdlr.edges
-import volmdlr.faces
-import volmdlr.wires
-from volmdlr import faces, surfaces
-from volmdlr.core import EdgeStyle
+p1 = design3d.Point3D(0.15, 0.48, 0.5)
+p2 = design3d.Point3D(0.15, 0.1, 0.5)
 
-p1 = volmdlr.Point3D(0.15, 0.48, 0.5)
-p2 = volmdlr.Point3D(0.15, 0.1, 0.5)
+p1s = design3d.Point2D(0, 0)
+p2s = design3d.Point2D(0.1, 0)
+p3s = design3d.Point2D(0.2, 0.1)
+p4s = design3d.Point2D(-0.01, 0.05)
+surface2d = surfaces.Surface2D(design3d.wires.ClosedPolygon2D([p1s, p2s, p3s, p4s]), [])
 
-p1s = volmdlr.Point2D(0, 0)
-p2s = volmdlr.Point2D(0.1, 0)
-p3s = volmdlr.Point2D(0.2, 0.1)
-p4s = volmdlr.Point2D(-0.01, 0.05)
-surface2d = surfaces.Surface2D(volmdlr.wires.ClosedPolygon2D([p1s, p2s, p3s, p4s]), [])
-
-u = volmdlr.Vector3D(0.1, 0.7, -0.5)
+u = design3d.Vector3D(0.1, 0.7, -0.5)
 u = u.unit_vector()
 v = u.deterministic_unit_normal_vector()
 w = u.cross(v)
-plane = surfaces.Plane3D(frame=volmdlr.Frame3D(0.1*volmdlr.X3D, u, v, w))
-face = volmdlr.faces.PlaneFace3D(plane, surface2d)
+plane = surfaces.Plane3D(frame=design3d.Frame3D(0.1*design3d.X3D, u, v, w))
+face = design3d.faces.PlaneFace3D(plane, surface2d)
 
 ax = face.plot()
 p1.plot(ax=ax, color='b')
 p2.plot(ax=ax, color='g')
 
-l1 = volmdlr.edges.LineSegment3D(p1, p1+w)
-l2 = volmdlr.edges.LineSegment3D(p2, p2+w)
+l1 = design3d.edges.LineSegment3D(p1, p1+w)
+l2 = design3d.edges.LineSegment3D(p2, p2+w)
 
 l1.plot(ax=ax, edge_style = EdgeStyle(color='b'))
 l2.plot(ax=ax, edge_style = EdgeStyle(color='g'))

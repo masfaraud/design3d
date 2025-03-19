@@ -1,10 +1,10 @@
 import math
 
-import volmdlr as vm
-import volmdlr.faces as vmf
-import volmdlr.primitives3d as primitives3D
-import volmdlr.wires as vmw
-from volmdlr import surfaces, shells
+import design3d as vm
+import design3d.faces as vmf
+import design3d.primitives3d as primitives3D
+import design3d.wires as vmw
+from design3d import surfaces, shells
 
 poly1_vol1 = vmw.ClosedPolygon3D([vm.Point3D(-0.1, -0.05, 0),
                                   vm.Point3D(-0.15, 0.1, 0),

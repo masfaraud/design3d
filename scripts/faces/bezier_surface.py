@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
-import volmdlr as vm
-import volmdlr.faces as vmf
+import design3d as vm
+import design3d.faces as vmf
 
 degree_u = 3
 degree_v = 2

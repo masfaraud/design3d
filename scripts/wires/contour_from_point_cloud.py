@@ -7,14 +7,9 @@ Created on Tue Jun 22 14:20:01 2021
 """
 
 
-import math
-import time
-
 import matplotlib.pyplot as plt
 
-import volmdlr as vm
-import volmdlr.primitives2d as primitives2d
-import volmdlr.wires as vmw
+import design3d as vm
 
 n = 1000
 

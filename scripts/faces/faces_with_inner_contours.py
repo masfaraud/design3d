@@ -8,7 +8,7 @@ Created on Mon Feb 14 2022
 
 import os
 
-import volmdlr.step
+import design3d.step
 
 for step_file in [
     'bsplineface_with_inner_contours.stp',
@@ -17,7 +17,7 @@ for step_file in [
     print('Reading step file: ', step_file)
     
     filepath = os.path.join('../faces', step_file)
-    step = volmdlr.step.Step.from_file(filepath=filepath)
+    step = design3d.step.Step.from_file(filepath=filepath)
     model = step.to_volume_model()    
     primitives = model.primitives
 

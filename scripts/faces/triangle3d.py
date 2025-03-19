@@ -5,9 +5,9 @@
 
 """
 
-import volmdlr as vm
-import volmdlr.core as vmc
-import volmdlr.faces as faces
+import design3d as vm
+import design3d.core as vmc
+import design3d.faces as faces
 
 p1 = vm.Point3D.random(0, 0.1, 0, 0.1, -0.1, 0)
 p2 = vm.Point3D.random(0, 0.1, 0, 0.1, -0.1, 0)

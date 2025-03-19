@@ -6,8 +6,8 @@ Created on Fri Sep 18 12:40:31 2020
 @author: masfaraud
 """
 
-import volmdlr as vm
-from volmdlr import faces, surfaces
+import design3d as vm
+from design3d import faces, surfaces
 
 # u = vm.Vector3D.random(0, 1, 0, 1, 0, 1)
 # u.Normalize()
