@@ -19,9 +19,7 @@ from typing import List, Text, Tuple
 import matplotlib.pyplot as plt
 import numpy as npy
 cimport numpy as np
-import plot_data
 import design3d
-from dessia_common.core import DessiaObject
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d
 
@@ -690,11 +688,6 @@ cdef class Vector2D(Vector):
         :return: A serialized version of the Vector2D
         :rtype: dict
 
-        .. seealso::
-            How `serialization and deserialization`_ works in dessia_common
-
-        .. _serialization and deserialization:
-            https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
         return {"object_class": "design3d.Vector2D",
                 "x": self.x, "y": self.y,
@@ -710,11 +703,6 @@ cdef class Vector2D(Vector):
         :return:
         :rtype: :class:`design3d.Point3D`
 
-        .. seealso::
-            How `serialization and deserialization`_ works in dessia_common
-
-        .. _serialization and deserialization:
-            https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
         return cls(dict_["x"], dict_["y"], dict_.get("name", ""))
 
@@ -1053,11 +1041,6 @@ cdef class Point2D(Vector2D):
         :return: A serialized version of the Point2D
         :rtype: dict
 
-        .. seealso::
-            How `serialization and deserialization`_ works in dessia_common
-
-        .. _serialization and deserialization:
-            https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
         dict_ = {"object_class": "design3d.Point2D",
                  "x": self.x, "y": self.y}
@@ -1228,28 +1211,6 @@ cdef class Point2D(Vector2D):
                 return None
             else:
                 return None, None, None
-
-    def plot_data(self, marker=None, color="black", size=1,
-                  opacity=1, arrow=False, stroke_width=None):
-        """
-        Transforms the two-dimensional point into a plot_data twe-dimensional point.
-
-        :param marker: # TODO: unused parameter
-        :type marker: str, optional
-        :param color: # TODO: unused parameter
-        :type color: str, optional
-        :param size: # TODO: unused parameter
-        :type size: float, optional
-        :param opacity: # TODO: unused parameter
-        :type opacity: float, optional
-        :param arrow: # TODO: unused parameter
-        :type arrow: bool, optional
-        :param stroke_width: # TODO: unused parameter
-        :type stroke_width: float, optional
-        :return: a plot_data two-dimensional point
-        :rtype: :class:`plot_data.Point2D`
-        """
-        return plot_data.Point2D(self.x, self.y)
 
     @classmethod
     def middle_point(cls, point1: Vector2D, point2: Vector2D, name = ""):
@@ -1479,11 +1440,6 @@ cdef class Vector3D(Vector):
         :return: A serialized version of the Vector3D
         :rtype: dict
 
-        .. seealso::
-            How `serialization and deserialization`_ works in dessia_common
-
-        .. _serialization and deserialization:
-            https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
         dict_ = {"object_class": "design3d.Vector3D",
                  "x": self.x, "y": self.y, "z": self.z}
@@ -1511,11 +1467,6 @@ cdef class Vector3D(Vector):
         :return:
         :rtype: :class:`design3d.Vector3D`
 
-        .. seealso::
-            How `serialization and deserialization`_ works in dessia_common
-
-        .. _serialization and deserialization:
-            https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
 
         return cls(dict_["x"], dict_["y"], dict_["z"], dict_.get("name", ""))
@@ -1974,11 +1925,6 @@ cdef class Point3D(Vector3D):
         :return: A serialized version of the Point3D
         :rtype: dict
 
-        .. seealso::
-            How `serialization and deserialization`_ works in dessia_common
-
-        .. _serialization and deserialization:
-            https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
         dict_ = {"object_class": "design3d.Point3D",
                  "x": self.x, "y": self.y, "z": self.z}
@@ -2452,7 +2398,7 @@ class Matrix33:
                           [self.M31, self.M32, self.M33]])
 
 
-class Basis(DessiaObject):
+class Basis:
     """
     Abstract class of a basis
     """
@@ -2512,11 +2458,6 @@ class Basis2D(Basis):
         :return: A serialized version of the Basis2D
         :rtype: dict
 
-        .. seealso::
-            How `serialization and deserialization`_ works in dessia_common
-
-        .. _serialization and deserialization:
-            https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
         return {"object_class": "design3d.Basis2D",
                 "name": self.name,
@@ -2727,11 +2668,6 @@ class Basis3D(Basis):
         :return: A serialized version of the Basis3D
         :rtype: dict
 
-        .. seealso::
-            How `serialization and deserialization`_ works in dessia_common
-
-        .. _serialization and deserialization:
-            https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
         return {"object_class": "design3d.Basis3D",
                 "name": self.name,
@@ -3093,11 +3029,7 @@ class Frame2D(Basis2D):
         :return: A serialized version of the Frame2D
         :rtype: dict
 
-        .. seealso::
-            How `serialization and deserialization`_ works in dessia_common
 
-        .. _serialization and deserialization:
-            https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
         return {"object_class": "design3d.Frame2D",
                 "name": self.name,
@@ -3368,11 +3300,6 @@ class Frame3D(Basis3D):
         :return: A serialized version of the Frame3D
         :rtype: dict
 
-        .. seealso::
-            How `serialization and deserialization`_ works in dessia_common
-
-        .. _serialization and deserialization:
-            https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
         """
         return {"object_class": "design3d.Frame3D",
                 "name": self.name,
