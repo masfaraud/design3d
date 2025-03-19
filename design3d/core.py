@@ -19,9 +19,7 @@ except (TypeError, OSError):
 import matplotlib.pyplot as plt
 import numpy as np
 
-import dessia_common.core as dc
-from dessia_common.errors import ConsistencyError
-import dessia_common.files as dcf
+
 import design3d
 import design3d.templates
 from design3d.core_compiled import bbox_is_intersecting
@@ -248,7 +246,7 @@ class EdgeStyle:
     equal_aspect: bool = True
 
 
-class Primitive3D(dc.PhysicalObject):
+class Primitive3D:
     """
     Defines a Primitive3D.
     """
@@ -258,8 +256,8 @@ class Primitive3D(dc.PhysicalObject):
         self.color = color
         self.alpha = alpha
         self.reference_path = reference_path
+        self.name = name
 
-        dc.PhysicalObject.__init__(self, name=name)
 
     def design3d_primitives(self):
         """ Return a list of design3d primitives to build up volume model."""
@@ -305,11 +303,6 @@ class CompositePrimitive3D(Primitive3D):
     """
     A collection of simple primitives3D.
     """
-    _standalone_in_db = True
-    _eq_is_data_eq = True
-    _non_serializable_attributes = []
-    _non_data_eq_attributes = ['name']
-    _non_data_hash_attributes = []
 
     def __init__(self, primitives: List[Primitive3D], color: Tuple[float, float, float] = None, alpha: float = 1,
                  reference_path: str = design3d.PATH_ROOT, name: str = ""):
@@ -317,9 +310,9 @@ class CompositePrimitive3D(Primitive3D):
         Primitive3D.__init__(self, color=color, alpha=alpha, reference_path=reference_path, name=name)
         self._utd_primitives_to_index = False
 
-    def to_dict(self, *args, **kwargs):
-        """Avoids storing points in memo that makes serialization slow."""
-        return dc.PhysicalObject.to_dict(self, use_pointers=False)
+    # def to_dict(self, *args, **kwargs):
+    #     """Avoids storing points in memo that makes serialization slow."""
+    #     return dc.PhysicalObject.to_dict(self, use_pointers=False)
 
     def plot(self, ax=None, edge_style: EdgeStyle = EdgeStyle()):
         """
@@ -343,7 +336,7 @@ class CompositePrimitive3D(Primitive3D):
         return ax
 
 
-class BoundingRectangle(dc.DessiaObject):
+class BoundingRectangle:
     """
     Bounding rectangle.
 
@@ -362,8 +355,6 @@ class BoundingRectangle(dc.DessiaObject):
         self.xmax = xmax
         self.ymin = ymin
         self.ymax = ymax
-        # Disabling Dessia object init call for performance. Check when performance enhancement on dessia_common side
-        # dc.DessiaObject.__init__(self, name=name)
         self.name = name
 
     def __getitem__(self, key):
@@ -542,7 +533,7 @@ class BoundingRectangle(dc.DessiaObject):
         return cls(xmin, xmax, ymin, ymax, name=name)
 
 
-class BoundingBox(dc.DessiaObject):
+class BoundingBox:
     """
     An axis aligned boundary box.
     """
@@ -574,8 +565,6 @@ class BoundingBox(dc.DessiaObject):
         self.zmax = zmax
         self._size = None
         self._octree = None
-        # disabling super init call for efficiency, put back when dc disable kwargs
-        # dc.DessiaObject.__init__(self, name=name)
         self.name = name
 
     @property
@@ -994,7 +983,7 @@ class BoundingBox(dc.DessiaObject):
         return self._octree
 
 
-class Assembly(dc.PhysicalObject):
+class Assembly:
     """
     Defines an assembly.
 
@@ -1006,11 +995,6 @@ class Assembly(dc.PhysicalObject):
     :param name: The Assembly's name
     :type name: str
     """
-    _standalone_in_db = True
-    _eq_is_data_eq = True
-    _non_serializable_attributes = ['bounding_box', "primitives"]
-    _non_data_eq_attributes = ['name', 'bounding_box']
-    _non_data_hash_attributes = ['name', 'bounding_box']
 
     def __init__(self, components: List[Primitive3D], positions: List[design3d.Frame3D],
                  frame: design3d.Frame3D = design3d.OXYZ, name: str = ''):
@@ -1020,7 +1004,7 @@ class Assembly(dc.PhysicalObject):
         self.primitives = [map_primitive_with_initial_and_final_frames(primitive, frame, frame_primitive)
                            for primitive, frame_primitive in zip(components, positions)]
         self._bbox = None
-        dc.PhysicalObject.__init__(self, name=name)
+        self.name = name
 
     @property
     def bounding_box(self):
@@ -1162,7 +1146,7 @@ class Assembly(dc.PhysicalObject):
             [shape_representation_id, product_definition_id, frame_ids]
 
 
-class Compound(dc.PhysicalObject):
+class Compound:
     """
     A class that can be a collection of any design3d primitives.
     """
@@ -1171,7 +1155,7 @@ class Compound(dc.PhysicalObject):
         self.primitives = primitives
         self._bbox = None
         self._type = None
-        dc.PhysicalObject.__init__(self, name=name)
+        self.name = name
 
     @property
     def bounding_box(self):
@@ -1297,7 +1281,7 @@ class Compound(dc.PhysicalObject):
         return step_content, current_id, [brep_id, product_definition_id]
 
 
-class VolumeModel(dc.PhysicalObject):
+class VolumeModel:
     """
     A class containing one or several :class:`design3d.core.Primitive3D`.
 
@@ -1306,21 +1290,13 @@ class VolumeModel(dc.PhysicalObject):
     :param name: The VolumeModel's name
     :type name: str
     """
-    _standalone_in_db = True
-    _eq_is_data_eq = True
-    _non_serializable_attributes = ['shells', 'bounding_box']
-    _non_data_eq_attributes = ['name', 'shells', 'bounding_box', 'contours',
-                               'faces']
-    _non_data_hash_attributes = ['name', 'shells', 'bounding_box', 'contours',
-                                 'faces']
-    _dessia_methods = ['to_stl_model']
 
     def __init__(self, primitives: List[Primitive3D], name: str = ''):
         self.primitives = primitives
         self.name = name
         self.shells = []
         self._bbox = None
-        dc.PhysicalObject.__init__(self, name=name)
+        self.name = name
 
     def __hash__(self):
         return sum(hash(point) for point in self.primitives)
@@ -1588,7 +1564,7 @@ class VolumeModel(dc.PhysicalObject):
         """Export a stl file of the model."""
         self.to_mesh().save_to_stl_file(filepath)
 
-    def to_stl_stream(self, stream: dcf.BinaryFile):
+    def to_stl_stream(self, stream):
         """Converts the model into a stl stream file."""
         self.to_mesh().save_to_stl_stream(stream)
         return stream
@@ -1600,7 +1576,7 @@ class VolumeModel(dc.PhysicalObject):
         with open(filepath, 'w', encoding='utf-8') as file:
             self.to_step_stream(file)
 
-    def to_step_stream(self, stream: dcf.StringFile):
+    def to_step_stream(self, stream):
         """
         Export object CAD to given stream in STEP format.
 
@@ -1733,7 +1709,7 @@ class VolumeModel(dc.PhysicalObject):
 
         return lines
 
-    def to_geo_stream(self, stream: dcf.StringFile,
+    def to_geo_stream(self, stream,
                       factor: float, **kwargs):
         """
         Gets the .geo file for the VolumeModel.
@@ -2027,7 +2003,7 @@ class VolumeModel(dc.PhysicalObject):
         gmsh.finalize()
 
     def to_msh_stream(self, mesh_dimension: int,
-                      factor: float, stream: dcf.StringFile,
+                      factor: float, stream,
                       mesh_order: int = 1,
                       file_name: str = '', **kwargs):
         """
@@ -2094,7 +2070,7 @@ class VolumeModel(dc.PhysicalObject):
         # gmsh.finalize()
 
     def to_msh_file(self, mesh_dimension: int,
-                    factor: float, stream: dcf.StringFile,
+                    factor: float, stream,
                     mesh_order: int = 1, file_name: str = '', **kwargs):
         """ Convert and write model to a .msh file. """
 

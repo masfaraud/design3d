@@ -113,8 +113,8 @@ setup(
     long_description_content_type="text/markdown",
     keywords="volume, modeler, CAD",
     url="https://github.com/masfaraud/design3d",
-    author="DessiA Technologies",
-    author_email="root@dessia.tech",
+    author="Steven Masfaraud",
+    author_email="design3d@masfaraud.fr",
     license="Creative Commons Attribution-Share Alike license",
     packages=[
         "design3d",
@@ -126,7 +126,6 @@ setup(
     include_package_data=True,
     install_requires=[
         "packaging",
-        "dessia_common>=0.14.0",
         "Cython>=3.0.0",
         "numpy",
         "matplotlib",
@@ -134,7 +133,6 @@ setup(
         "geomdl",
         "networkx",
         "triangle",
-        "plot_data>=0.23.0",
         "kaitaistruct",
         "binaryornot",
         "sympy",

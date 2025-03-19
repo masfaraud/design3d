@@ -8,7 +8,7 @@ import math
 from typing import List, Tuple
 import random
 
-import dessia_common.core as dc
+
 import matplotlib.pyplot as plt
 from trimesh.proximity import closest_point
 
@@ -23,7 +23,7 @@ import volmdlr.stl as vmstl
 import volmdlr.wires as vmw
 
 
-class PointCloud3D(dc.DessiaObject):
+class PointCloud3D:
     """
     Point Cloud3D, a list of points.
 
@@ -33,7 +33,7 @@ class PointCloud3D(dc.DessiaObject):
     def __init__(self, points: List[vm.Point3D], name: str = ''):
         self.points = points
         self.__bounding_box = None
-        dc.DessiaObject.__init__(self, name=name)
+        self.name = name
 
     @classmethod
     def from_stl(cls, file_path, name: str = 'from_stl'):
@@ -353,7 +353,7 @@ class PointCloud3D(dc.DessiaObject):
         return new_position_plane, new_poly
 
 
-class PointCloud2D(dc.DessiaObject):
+class PointCloud2D:
     """
     Point Cloud2D class.
 
@@ -362,7 +362,7 @@ class PointCloud2D(dc.DessiaObject):
 
     def __init__(self, points, name: str = ''):
         self.points = points
-        dc.DessiaObject.__init__(self, name=name)
+        self.name = name
 
     def plot(self, ax=None, color='k'):
         """Plot a point cloud 2d using Matplotlib."""

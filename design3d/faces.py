@@ -11,8 +11,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import triangle as triangle_lib
 
-from dessia_common.core import DessiaObject
-
 import design3d.core
 from design3d.core import EdgeStyle
 import design3d.core_compiled
@@ -99,9 +97,9 @@ class Face3D(design3d.core.Primitive3D):
 
         design3d.core.Primitive3D.__init__(self, reference_path=reference_path, name=name)
 
-    def to_dict(self, *args, **kwargs):
-        """Avoids storing points in memo that makes serialization slow."""
-        return DessiaObject.to_dict(self, use_pointers=False)
+    # def to_dict(self, *args, **kwargs):
+    #     """Avoids storing points in memo that makes serialization slow."""
+    #     return DessiaObject.to_dict(self, use_pointers=False)
 
     def __hash__(self):
         """Computes the hash."""
@@ -1646,12 +1644,6 @@ class PlaneFace3D(Face3D):
     :type surface2d: Surface2D.
     """
 
-    _standalone_in_db = False
-    _generic_eq = True
-    _non_serializable_attributes = ["bounding_box", "polygon2D"]
-    _non_data_eq_attributes = ["name", "bounding_box", "outer_contour3d", "inner_contours3d"]
-    _non_data_hash_attributes = []
-
     def __init__(self, surface3d: surfaces.Plane3D, surface2d: surfaces.Surface2D,
                  reference_path: str = design3d.PATH_ROOT, name: str = ""):
         self._bbox = None
@@ -2243,8 +2235,6 @@ class Triangle3D(PlaneFace3D):
     :param point3: The third point.
     :type point3: design3d.Point3D.
     """
-
-    _standalone_in_db = False
 
     def __init__(
         self,

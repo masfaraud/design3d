@@ -12,7 +12,6 @@ from functools import cached_property
 
 import numpy as np
 
-import dessia_common.core as dc
 import matplotlib.patches
 import matplotlib.pyplot as plt
 from numpy.typing import NDArray
@@ -38,7 +37,7 @@ from design3d.core import EdgeStyle
 # pylint: disable=arguments-differ
 
 
-class Edge(dc.DessiaObject):
+class Edge:
     """
     Defines a simple edge Object.
     """
@@ -51,8 +50,6 @@ class Edge(dc.DessiaObject):
         self._unit_direction_vector_memo = None
         self._reverse = None
         self._middle_point = None
-        # Disabling super init call for performance
-        # dc.DessiaObject.__init__(self, name=name)
         self.reference_path = reference_path
         self.name = name
 

@@ -7,7 +7,6 @@
 </h4>
 
 <div align="center">
-  <a href="http://dessia.tech/"><img src="https://img.shields.io/website-up-down-green-red/http/dessia.tech.svg"></a>  
   <a href="https://gitHub.com/masfaraud/design3d/stargazers/"><img src="https://badgen.net/github/stars/masfaraud/design3d"></a>  
   <a href="https://pypi.org/project/design3d/"><img src="https://img.shields.io/pypi/v/design3d.svg"></a>
   <a href="https://github.com/masfaraud/design3d/graphs/contributors"><img src="https://img.shields.io/github/contributors/masfaraud/design3d.svg"></a>
@@ -87,7 +86,8 @@ See the [script](https://github.com/masfaraud/design3d/tree/master/scripts) fold
 
 ## Documentation
 
-https://documentation.dessia.tech/design3d/
+Yet to be uploaded
+Can be built from docs folder
 
 ## License
 
