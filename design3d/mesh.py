@@ -12,7 +12,6 @@ from typing import List
 import matplotlib.pyplot as plt
 import numpy as np
 
-from dessia_common.core import DessiaObject  # isort: skip
 
 import design3d as vm
 import design3d.edges as vme
@@ -214,58 +213,11 @@ class TriangularElement(vmw.Triangle):
         x_3 = inv_a.vector_multiplication(vm.Z3D)
         return x_1, x_2, x_3
 
-    # def _quadratic_form_functions(self):
-    #     a = [[1, self.points[0][0], self.points[0][1],self.points[0][0]**2,
-    #           self.points[0][0]*self.points[0][1],self.points[0][1]**2],
-    #           [1, self.points[1][0], self.points[1][1],self.points[1][0]**2,
-    #            self.points[1][0]*self.points[1][1],self.points[1][1]**2],
-    #           [1, self.points[2][0], self.points[2][1],self.points[2][0]**2,
-    #            self.points[2][0]*self.points[2][1],self.points[2][1]**2],
-    #           [1, self.points[3][0], self.points[3][1],self.points[3][0]**2,
-    #            self.points[3][0]*self.points[3][1],self.points[3][1]**2],
-    #           [1, self.points[4][0], self.points[4][1],self.points[4][0]**2,
-    #            self.points[4][0]*self.points[4][1],self.points[4][1]**2],
-    #           [1, self.points[5][0], self.points[5][1],self.points[5][0]**2,
-    #            self.points[5][0]*self.points[5][1],self.points[5][1]**2]]
-
-    #     try :
-    #         inv_a = a.inverse()
-    #     except ValueError:
-    #         self.plot()
-    #         print(self._area())
-    #         raise FlatElementError('form function bug')
-    #     x1 = inv_a.dot([1,0,0,0,0,0])
-    #     x2 = inv_a.dot([1,0,0,0,0,0])
-    #     x3 = inv_a.dot([1,0,0,0,0,0])
-    #     x4=inv_a.dot([1,0,0,0,0,0])
-
-    #     return x1, x2, x3
 
     def _area(self):
         u_vect = self.points[1] - self.points[0]
         v_vect = self.points[2] - self.points[0]
         return abs(u_vect.cross(v_vect)) / 2
-
-    # def point_belongs(self, point):
-    #     polygon = design3d.wires.ClosedPolygon2D(self.points)
-    #     point_belongs = polygon.point_belongs(point)
-    #     return point_belongs
-
-    # def rotation(self, center, angle, copy=True):
-    #     if copy:
-    #         return TriangularElement([pt.rotation(center, angle, copy=True)
-    #                                   for pt in self.points])
-    #     else:
-    #         for pt in self.points:
-    #             pt.Rotation(center, angle, copy=False)
-
-    # def translation(self, offset, copy=True):
-    #     if copy:
-    #         return TriangularElement([pt.translation(offset, copy=True)
-    #                                   for pt in self.points])
-    #     else:
-    #         for pt in self.points:
-    #             pt.translation(offset, copy=False)
 
     def axial_symmetry(self, line):
         """
@@ -283,25 +235,6 @@ class TriangularElement(vmw.Triangle):
         for point in self.points:
             new_points.append(point.axial_symmetry(line))
         return self.__class__(new_points)
-
-    # def axial_symmetry(self, line, copy=True):
-    #     p1, p2 = line.points
-    #     symmetric_points = []
-    #     for point in self.points:
-    #         u = p2 - p1
-    #         t = (point-p1).dot(u) / u.norm()**2
-    #         projection = p1 + t * u
-    #         symmetric_point = design3d.Point2D(*(2 * projection - point))
-    #         symmetric_points.append(symmetric_point)
-    #     if copy:
-    #         return TriangularElement(symmetric_points)
-    #     else:
-    #         for i, point in enumerate(self.points):
-    #             point = symmetric_points[i]
-
-    # def triangle_to_polygon(self):
-    #     points = self.points
-    #     return design3d.wires.ClosedPolygon2D(points)
 
 
 class TriangularElement2D(TriangularElement, vmw.ClosedPolygon2D):
@@ -446,12 +379,6 @@ class QuadrilateralElement2D(vmw.ClosedPolygon2D):
 class TriangularElement3D(TriangularElement, vmw.ClosedPolygon3D):
     """ Class to define a 3D triangular element. """
 
-    _standalone_in_db = False
-    _non_serializable_attributes = []
-    _non_data_eq_attributes = ['name']
-    _non_data_hash_attributes = ['name']
-    _generic_eq = True
-
     def __init__(self, points):
         self.points = points
         # self.linear_elements = self._to_linear_elements()
@@ -471,14 +398,8 @@ class TriangularElement3D(TriangularElement, vmw.ClosedPolygon3D):
         return self.__class__(new_points)
 
 
-class TetrahedralElement(DessiaObject):
+class TetrahedralElement:
     """ Class to define a 3D tetrahedral element. """
-
-    _standalone_in_db = False
-    _non_serializable_attributes = []
-    _non_data_eq_attributes = ['name']
-    _non_data_hash_attributes = ['name']
-    _generic_eq = True
 
     def __init__(self, points, name: str = ''):
         self.points = points
@@ -490,7 +411,7 @@ class TetrahedralElement(DessiaObject):
         self.triangular_elements = self._triangular_elements()
 
         self.volume = self._volume()
-        DessiaObject.__init__(self, name=name)
+        self.name = name
 
     def _triangular_elements(self):
 
@@ -542,29 +463,17 @@ class TetrahedralElement(DessiaObject):
         return form_funct[0], form_funct[1], form_funct[2], form_funct[3]
 
 
-class TetrahedralElementQuadratic(DessiaObject):
+class TetrahedralElementQuadratic:
     """ Class to define a 3D quadratic tetrahedral element. """
 
-    _standalone_in_db = False
-    _non_serializable_attributes = []
-    _non_data_eq_attributes = ['name']
-    _non_data_hash_attributes = ['name']
-    _generic_eq = True
 
     def __init__(self, points, name: str = ''):
         self.points = points
         self.name = name
-        DessiaObject.__init__(self, name=name)
 
 
-class ElementsGroup(DessiaObject):
+class ElementsGroup:
     """Defines a group of elements."""
-
-    _standalone_in_db = False
-    _non_serializable_attributes = []
-    _non_data_eq_attributes = ['name']
-    _non_data_hash_attributes = ['name']
-    _generic_eq = True
 
     def __init__(self, elements, name: str):
         self.elements = elements
@@ -573,7 +482,6 @@ class ElementsGroup(DessiaObject):
 
         self._elements_per_node = None
 
-        DessiaObject.__init__(self, name=name)
 
     def _nodes(self):
         nodes = set()
