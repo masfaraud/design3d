@@ -17,6 +17,3 @@ p3 = vm.Point3D(2, 1, -0.1)
 p4 = vm.Point3D(1, 0.5, 0.1)
 p5 = vm.Point3D(-0.5, 1, 0)
 polygon = vm.wires.ClosedPolygon3D([p1, p2, p3, p4, p5])
-
-
-polygon._check_platform()
