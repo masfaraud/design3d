@@ -550,7 +550,7 @@ class ElementsGroup:
         return ax
 
 
-class Mesh(DessiaObject):
+class Mesh:
     """Defines a mesh."""
 
     _standalone_in_db = True
@@ -565,7 +565,6 @@ class Mesh(DessiaObject):
         self.node_to_index = {self.nodes[i]: i for i in range(len(self.nodes))}
         self._nodes_correction = {}
         self._gmsh = None
-        DessiaObject.__init__(self, name='')
 
     def _set_nodes_number(self):
         nodes = set()
