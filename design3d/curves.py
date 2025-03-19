@@ -12,10 +12,6 @@ import scipy.integrate as scipy_integrate
 from matplotlib import __version__ as _mpl_version
 from packaging import version
 
-from dessia_common.core import DessiaObject
-
-import plot_data.colors
-import plot_data.core as plot_data
 import design3d
 from design3d import core, geometry, get_minimum_distance_points_lines
 from design3d.nurbs.helpers import generate_knot_vector
@@ -44,11 +40,11 @@ def hyperbola_parabola_control_point_and_weight(start, start_tangent, end, end_t
     return point1, weight_1
 
 
-class Curve(DessiaObject):
+class Curve:
     """Abstract class for a curve object."""
 
     def __init__(self, name: str = ''):
-        DessiaObject.__init__(self, name=name)
+        self.name = name
 
     @property
     def periodic(self):
@@ -534,19 +530,6 @@ class Line2D(Line):
                 ax.plot([point3[0], point4[0]], [point3[1], point4[1]], color=edge_style.color)
 
         return ax
-
-    def plot_data(self, edge_style=None):
-        """
-        Get plot data for the line.
-
-        :param edge_style: Plotting style for the line.
-        :type edge_style: :class:`plot_data.EdgeStyle`, optional
-        :return: Plot data for the line.
-        :rtype: :class:`plot_data.Line2D`
-        """
-        return plot_data.Line2D([self.point1.x, self.point1.y],
-                                [self.point2.x, self.point2.y],
-                                edge_style=edge_style)
 
     def create_tangent_circle(self, point, other_line):
         """
