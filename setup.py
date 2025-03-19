@@ -118,7 +118,6 @@ setup(
     license="Creative Commons Attribution-Share Alike license",
     packages=[
         "design3d",
-        "design3d.models",
         "design3d.utils",
         "design3d.nurbs"
     ],
