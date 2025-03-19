@@ -15,8 +15,6 @@ import numpy as np
 import matplotlib.patches
 import matplotlib.pyplot as plt
 from numpy.typing import NDArray
-import plot_data.core as plot_data
-import plot_data.colors
 import scipy.integrate as scipy_integrate
 from scipy.optimize import least_squares, minimize
 from geomdl import NURBS, BSpline
@@ -2628,18 +2626,6 @@ class LineSegment2D(LineSegment):
             raise ValueError('Please Enter a valid side: old or new')
         return LineSegment2D(start=new_start, end=new_end, reference_path=self.reference_path, name=self.name)
 
-    def plot_data(self, edge_style: plot_data.EdgeStyle = None):
-        """
-        Plot data method for a LineSegment2D.
-
-        :param edge_style: edge style.
-        :return: plot_data.LineSegment2D object.
-        """
-        return plot_data.LineSegment2D(point1=[self.start.x, self.start.y],
-                                       point2=[self.end.x, self.end.y],
-                                       reference_path=self.reference_path,
-                                       edge_style=edge_style)
-
     def create_tangent_circle(self, point, other_line):
         """Create a circle tangent to a LineSegment."""
         circle1, circle2 = other_line.create_tangent_circle(point, self.line)
@@ -3523,29 +3509,6 @@ class Arc2D(ArcMixin, Edge):
         # Must be computed at center, so huygens related to center
         return design3d.geometry.huygens2d(moment_area_x, moment_area_y, moment_area_xy, self.area(),
                                           self.circle.center, point)
-
-    def plot_data(self, edge_style: plot_data.EdgeStyle = None):
-        """
-        Plot data method for a Arc2D.
-
-        :param edge_style: edge style.
-        :type edge_style: plot_data.EdgeStyle
-        :return: plot_data.Arc2D object.
-        """
-        start_angle = self.angle_start
-        end_angle = self.angle_end
-        if not self.is_trigo:
-            start_angle = 2 * math.pi - start_angle
-            end_angle = 2 * math.pi - end_angle
-        return plot_data.Arc2D(cx=self.circle.center.x,
-                               cy=self.circle.center.y,
-                               r=self.circle.radius,
-                               start_angle=start_angle,
-                               end_angle=end_angle,
-                               edge_style=edge_style,
-                               clockwise=not self.is_trigo,
-                               reference_path=self.reference_path,
-                               name=self.name)
 
     def copy(self, *args, **kwargs):
         """
@@ -4712,12 +4675,6 @@ class LineSegment3D(LineSegment):
         edge2d = self.plane_projection2d(design3d.O3D, x_3d, y_3d)
         edge2d.plot(ax=ax, edge_style=EdgeStyle(color=color, width=width))
         return ax
-
-    def plot_data(self, x_3d, y_3d, edge_style=plot_data.EdgeStyle(color_stroke=plot_data.colors.BLACK,
-                                                                   line_width=1, dashline=None)):
-        """Plot a Line Segment 3D object using dessia's plot_data library."""
-        edge2d = self.plane_projection2d(design3d.O3D, x_3d, y_3d)
-        return edge2d.plot_data(edge_style)
 
     def to_2d(self, plane_origin, x, y):
         """
