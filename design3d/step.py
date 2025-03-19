@@ -12,10 +12,7 @@ from dataclasses import dataclass, field
 
 import matplotlib.pyplot as plt
 import networkx as nx
-import plot_data.graph
 
-import dessia_common.core as dc  # isort: skip
-from dessia_common.files import BinaryFile  # isort: skip
 
 import design3d
 import design3d.core
@@ -78,7 +75,7 @@ class StepFunction:
         self.arg = arguments
 
 
-class Step(dc.DessiaObject):
+class Step:
     """
     Defines the Step class.
 
@@ -94,8 +91,7 @@ class Step(dc.DessiaObject):
         self.angle_conversion_factor = 1
         # self.read_diagnostic = StepReaderReport
         self._roots_nodes = None
-
-        dc.DessiaObject.__init__(self, name=name)
+        self.name=name
 
     @property
     def all_connections(self):
@@ -120,7 +116,7 @@ class Step(dc.DessiaObject):
         return self._graph
 
     @classmethod
-    def from_stream(cls, stream: BinaryFile, name: str = ''):
+    def from_stream(cls, stream, name: str = ''):
         """Instantiate a Step object from a stream."""
         stream.seek(0)
         lines = []

@@ -13,16 +13,13 @@ from typing import List
 from binaryornot.check import is_binary
 from kaitaistruct import KaitaiStream
 
-import dessia_common.core as dc  # isort: skip
-from dessia_common.files import BinaryFile, StringFile  # isort: skip
-
 import design3d as vm
 import design3d.core as vmc
 import design3d.faces as vmf
 from design3d import shells
 
 
-class Stl(dc.DessiaObject):
+class Stl:
     """
     STL files are used to represent simple 3D models, defined using triangular 3D faces.
 
@@ -52,7 +49,7 @@ class Stl(dc.DessiaObject):
         )
 
         self.triangles = triangles
-        dc.DessiaObject.__init__(self, name=name)
+        self.name=name
 
         self.normals = None
 
@@ -99,7 +96,7 @@ class Stl(dc.DessiaObject):
         return all_points
 
     @classmethod
-    def from_binary_stream(cls, stream: BinaryFile, distance_multiplier: float = 0.001):
+    def from_binary_stream(cls, stream, distance_multiplier: float = 0.001):
         """
         Create an STL object from a binary stream.
 
@@ -156,7 +153,7 @@ class Stl(dc.DessiaObject):
         return cls(triangles, name=name)
 
     @classmethod
-    def from_text_stream(cls, stream: StringFile,
+    def from_text_stream(cls, stream,
                          distance_multiplier: float = 0.001):
         """
         Create an STL object from a text stream.

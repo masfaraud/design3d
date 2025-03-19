@@ -7,17 +7,15 @@ from functools import cached_property, lru_cache
 from itertools import chain
 from typing import List, Union
 
-import matplotlib.pyplot as plt
 import numpy as np
 from numpy.typing import NDArray
+import matplotlib.pyplot as plt
 import triangle as triangle_lib
 
 from geomdl import NURBS, BSpline
 from scipy.linalg import lu_factor, lu_solve
 from scipy.optimize import least_squares, minimize
 
-from dessia_common.core import DessiaObject, PhysicalObject
-from dessia_common.typings import JsonSerializable
 import design3d.nurbs.helpers as nurbs_helpers
 from design3d.nurbs.helpers import generate_knot_vector
 import design3d.core
@@ -48,7 +46,7 @@ def knots_vector_inv(knots_vector):
     return knots, multiplicities
 
 
-class Surface2D(PhysicalObject):
+class Surface2D:
     """
     A surface bounded by an outer contour.
 
@@ -61,7 +59,7 @@ class Surface2D(PhysicalObject):
         self.inner_contours = inner_contours
         self._area = None
 
-        PhysicalObject.__init__(self, name=name)
+        self.name=name
 
     def __hash__(self):
         """
@@ -694,18 +692,7 @@ class Surface2D(PhysicalObject):
 
         design3d.core.VolumeModel.generate_msh_file(file_name, mesh_dimension, mesh_order)
 
-        # gmsh.initialize()
-        # gmsh.open(file_name + ".geo")
-
-        # gmsh.model.geo.synchronize()
-        # gmsh.model.mesh.generate(mesh_dimension)
-
-        # gmsh.write(file_name + ".msh")
-
-        # gmsh.finalize()
-
-
-class Surface3D(DessiaObject):
+class Surface3D:
     """
     Abstract class.
 
@@ -716,7 +703,7 @@ class Surface3D(DessiaObject):
 
     def __init__(self, frame: design3d.Frame3D = None, name: str = ''):
         self.frame = frame
-        DessiaObject.__init__(self, name=name)
+        self.name=name
 
     @property
     def u_domain(self):
