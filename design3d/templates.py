@@ -58,11 +58,21 @@ BABYLON_UNPACKER_EMBEDDED_HEADER = '''
    <script>
    '''
 
+base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "assets/js/"))
+
+# for filename in ['babylon.js', 'babylonjs.loaders.min.js', 'earcut.min.js', 'pep.js']:
+#     with pkg_resources.resource_stream(
+#             pkg_resources.Requirement('design3d'),
+#             os.path.join('design3d/assets/js/', filename)) as fjs:
+#         BABYLON_UNPACKER_EMBEDDED_HEADER += fjs.read().decode('utf-8')
+
+
 for filename in ['babylon.js', 'babylonjs.loaders.min.js', 'earcut.min.js', 'pep.js']:
-    with pkg_resources.resource_stream(
-            pkg_resources.Requirement('design3d'),
-            os.path.join('design3d/assets/js/', filename)) as fjs:
-        BABYLON_UNPACKER_EMBEDDED_HEADER += fjs.read().decode('utf-8')
+    file_path = os.path.join(base_path, filename)
+
+    with open(file_path, 'r', encoding='utf-8') as fjs:
+        BABYLON_UNPACKER_EMBEDDED_HEADER += fjs.read()
+
 
 BABYLON_UNPACKER_EMBEDDED_HEADER += '''
       </script>

@@ -114,5 +114,4 @@ for i in range(1):
 #
 #
 model = d3d.core.VolumeModel([box, box_red])
-model._check_platform()
 model.babylonjs(debug=True)
