@@ -33,13 +33,9 @@ jobs:
         run: |
           pre-commit run --all-files
       
-      - name: Build Package
-        run: |
-          python -m build
-
       - name: Install Package
         run: |
-          pip install dist/*.whl[test]
+          pip install .[test]
 
       - name: Run Scripts
         run: |
