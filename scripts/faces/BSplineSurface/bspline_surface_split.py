@@ -92,4 +92,3 @@ for i, s in enumerate(splitted_surfaces):
 ax = faces.BSplineFace3D.from_surface_rectangular_cut(bspline_surface, 0, 1, 0, 1).plot()
 for f in splitted_faces:
     f.plot(ax=ax, color=f.color)
-
