@@ -39,10 +39,13 @@ jobs:
 
       - name: Install Package
         run: |
-          pip install dist/*.whl
+          pip install dist/*.whl[test]
 
       - name: Run Scripts
         run: |
-          cd scripts
-          python ci_scripts.py 
+          cd tests
+          coverage run --rcfile=../.coveragerc --data-file=../.coverage --source design3d -m unittest discover -v
+          cd ../scripts
+          coverage run --rcfile=../.coveragerc --data-file=../.coverage --source design3d -a ci_scripts.py
+          coverage report
           done

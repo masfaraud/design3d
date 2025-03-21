@@ -48,7 +48,6 @@ surface2 = surfaces.BSplineSurface3D.from_points_interpolation(grid2, size_u, si
 face2 = vmf.BSplineFace3D.from_surface_rectangular_cut(surface2, 0, 1, 0, 1)
 
 shell = shells.OpenShell3D([face1, face2])
-shell._check_platform()
 shell.babylonjs()
 # ax = surface.plot()
 # for p in grid:

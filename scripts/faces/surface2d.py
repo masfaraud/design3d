@@ -38,5 +38,3 @@ contour = design3d.primitives2d.ClosedRoundedLineSegments2D([p1, p2,
 hole = curves.Circle2D(design3d.OXY.translation(pc), 0.5*r)
 surface = surfaces.Surface2D(contour, [hole])
 surface.plot()
-
-surface._check_platform()

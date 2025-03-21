@@ -7,10 +7,9 @@
 
 # %% Libraries
 
-# import volmdlr.step as vms
 import numpy as npy
-from volmdlr import faces
-from volmdlr.models import bspline_surfaces
+from design3d import faces
+from design3d.models import bspline_surfaces
 
 # %% Read Step file
 

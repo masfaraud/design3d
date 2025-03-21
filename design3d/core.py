@@ -258,11 +258,6 @@ class Primitive3D:
         self.reference_path = reference_path
         self.name = name
 
-
-    def design3d_primitives(self):
-        """ Return a list of design3d primitives to build up volume model."""
-        return [self]
-
     def babylon_param(self):
         """
         Returns babylonjs parameters.
@@ -297,6 +292,19 @@ class Primitive3D:
         babylon_mesh.update(self.babylon_param())
         babylon_mesh["reference_path"] = self.reference_path
         return [babylon_mesh]
+    
+
+    def babylonjs(
+        self,
+        page_name: str = None,
+        use_cdn: bool = True,
+        debug: bool = False,
+        merge_meshes: bool = True,
+        dark_mode: bool = False,
+    ):
+        model = VolumeModel([self], name=self.name)
+        return model.babylonjs(page_name=page_name, use_cdn=use_cdn, debug=debug, merge_meshes=merge_meshes,
+                        dark_mode=dark_mode)
 
 
 class CompositePrimitive3D(Primitive3D):
@@ -1064,9 +1072,6 @@ class Assembly:
                          for position in self.positions]
         return Assembly(self.components, new_positions, self.frame, self.name)
 
-    def design3d_primitives(self):
-        """ Return a list of design3d primitives to build up an Assembly. """
-        return [self]
 
     def to_step(self, current_id):
         """
@@ -1238,9 +1243,6 @@ class Compound:
                 display_points.append(primitive)
         return helper_babylon_data(babylon_data, display_points)
 
-    def design3d_primitives(self):
-        """Return primitives."""
-        return [self]
 
     def to_step(self, current_id):
         """
@@ -1429,15 +1431,15 @@ class VolumeModel:
         return helper_babylon_data(babylon_data, display_points)
 
     @classmethod
-    def babylonjs_script(cls, babylon_data, use_cdn=True, **kwargs):
+    def babylonjs_script(cls, babylon_data, title="", use_cdn=True, **kwargs):
         """
         Run babylonjs script.
 
         """
         if use_cdn:
-            script = design3d.templates.BABYLON_UNPACKER_CDN_HEADER  # .substitute(name=page_name)
+            script = design3d.templates.BABYLON_UNPACKER_CDN_HEADER.substitute(title=title)
         else:
-            script = design3d.templates.BABYLON_UNPACKER_EMBEDDED_HEADER  # .substitute(name=page_name)
+            script = design3d.templates.BABYLON_UNPACKER_EMBEDDED_HEADER.substitute(title=title)
 
         script += design3d.templates.BABYLON_UNPACKER_BODY_TEMPLATE.substitute(
             babylon_data=babylon_data)
@@ -1475,7 +1477,7 @@ class VolumeModel:
         """
         babylon_data = self.babylon_data(merge_meshes=merge_meshes)
         babylon_data["dark_mode"] = 1 if dark_mode else 0
-        script = self.babylonjs_script(babylon_data, use_cdn=use_cdn, debug=debug)
+        script = self.babylonjs_script(babylon_data, title=self.name, use_cdn=use_cdn, debug=debug)
         if page_name is None:
             with tempfile.NamedTemporaryFile(suffix=".html", delete=False) as file:
                 file.write(bytes(script, "utf8"))

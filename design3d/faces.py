@@ -506,8 +506,8 @@ class Face3D(design3d.core.Primitive3D):
         tri = {'vertices': np.array(vertices).reshape((-1, 2)),
                'segments': np.array(segments).reshape((-1, 2)),
                }
-        triagulation = triangle_lib.triangulate(tri, tri_opt)
-        return vmd.Mesh2D(triagulation['vertices'], triangles=triagulation['triangles'])
+        triangulation = triangle_lib.triangulate(tri, tri_opt)
+        return vmd.Mesh2D(triangulation['vertices'], triangles=triangulation['triangles'])
 
     def helper_to_mesh(self, polygon_data=None) -> design3d.display.Mesh2D:
         """
@@ -570,7 +570,7 @@ class Face3D(design3d.core.Primitive3D):
                'holes': np.array(holes).reshape((-1, 2))
                }
         triangulation = triangle_lib.triangulate(tri, tri_opt)
-        return vmd.Mesh2D(triangulation['vertices'], triangles=triangulation['triangles'])
+        return vmd.Mesh2D(triangulation['vertices'], triangles=triangulation['triangles'].astype(np.int32))
 
     def triangulation(self):
         """Triangulates the face."""

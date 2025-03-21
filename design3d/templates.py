@@ -7,12 +7,12 @@ from string import Template
 
 import pkg_resources
 
-BABYLON_UNPACKER_CDN_HEADER = '''
+BABYLON_UNPACKER_CDN_HEADER = Template('''
 <!doctype html>
 <html>
 <head>
    <meta charset="utf-8">
-   <title>Babylon from design3d</title>
+   <title>design3d: $title</title>
    <style>
       html, body {
          overflow: hidden;
@@ -33,14 +33,14 @@ BABYLON_UNPACKER_CDN_HEADER = '''
       <script src='https://unpkg.com/earcut@2.1.1/dist/earcut.min.js'></script>
       <script src='https://cdn.babylonjs.com/gui/babylon.gui.min.js'></script>
 </head>
-'''
+''')
 
 BABYLON_UNPACKER_EMBEDDED_HEADER = '''
 <!doctype html>
 <html>
 <head>
    <meta charset="utf-8">
-   <title>Babylon from design3d</title>
+   <title>design3d: $title</title>
    <style>
       html, body {
          overflow: hidden;
@@ -60,12 +60,6 @@ BABYLON_UNPACKER_EMBEDDED_HEADER = '''
 
 base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "assets/js/"))
 
-# for filename in ['babylon.js', 'babylonjs.loaders.min.js', 'earcut.min.js', 'pep.js']:
-#     with pkg_resources.resource_stream(
-#             pkg_resources.Requirement('design3d'),
-#             os.path.join('design3d/assets/js/', filename)) as fjs:
-#         BABYLON_UNPACKER_EMBEDDED_HEADER += fjs.read().decode('utf-8')
-
 
 for filename in ['babylon.js', 'babylonjs.loaders.min.js', 'earcut.min.js', 'pep.js']:
     file_path = os.path.join(base_path, filename)
@@ -78,6 +72,8 @@ BABYLON_UNPACKER_EMBEDDED_HEADER += '''
       </script>
 </head>
 '''
+
+BABYLON_UNPACKER_EMBEDDED_HEADER = Template(BABYLON_UNPACKER_EMBEDDED_HEADER)
 
 
 BABYLON_UNPACKER_BODY_TEMPLATE = Template(

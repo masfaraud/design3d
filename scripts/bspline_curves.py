@@ -8,7 +8,7 @@ Created on Thu Mar 3 2022.
 
 # %% Libraries
 
-import volmdlr.edges
+import design3d.edges
 
 # %% BsplineCurve2D (1)
 
@@ -510,4 +510,4 @@ dic_bspline = {
       'name': ''},
      {'$ref': '#/end'}]}
 
-bspline_curve2d_1 = volmdlr.edges.BSplineCurve2D.dict_to_object(dic_bspline)
+bspline_curve2d_1 = design3d.edges.BSplineCurve2D.dict_to_object(dic_bspline)

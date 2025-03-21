@@ -128,7 +128,11 @@ class MeshMixin:
             return self
 
         merged_vertices = np.concatenate((self.vertices, other.vertices))
-        merged_triangles = np.concatenate((self.triangles, other.triangles + len(self.vertices)))
+        # merged_triangles = np.concatenate((self.triangles, other.triangles + len(self.vertices).astype(np.int32)))
+        merged_triangles = np.concatenate((
+            self.triangles.astype(np.int32), 
+            (other.triangles.astype(np.int32) + len(self.vertices))
+        ), dtype=np.int32)
 
         mesh = self.__class__(merged_vertices, merged_triangles, name=self.name)
 
