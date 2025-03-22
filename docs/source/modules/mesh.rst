@@ -2,7 +2,7 @@
 Mesh
 ----
 
-.. automodule:: volmdlr.mesh
+.. automodule:: design3d.mesh
    :members:
    :undoc-members:
    :show-inheritance:

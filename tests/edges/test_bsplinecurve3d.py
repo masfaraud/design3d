@@ -1,7 +1,7 @@
 import unittest
 import os
 import design3d
-import design3d.edges as vme
+import design3d.edges as d3de
 from design3d import curves
 from dessia_common.core import DessiaObject
 
@@ -10,7 +10,7 @@ folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'bsplinecurve
 
 
 class TestBSplineCurve3D(unittest.TestCase):
-    b_splinecurve3d = vme.BSplineCurve3D(degree=5, control_points=[
+    b_splinecurve3d = d3de.BSplineCurve3D(degree=5, control_points=[
         design3d.Point3D(0.5334, 4.61e-10, -2.266), design3d.Point3D(0.5334, 0.236642912449, -2.26599999893),
         design3d.Point3D(0.5334, 0.473285829931, -2.23144925183),
         design3d.Point3D(0.5334, 0.70316976404, -2.16234807551),
@@ -20,7 +20,7 @@ class TestBSplineCurve3D(unittest.TestCase):
                                          knots=[0.0, 0.4999999725155696, 1.0])
 
     def test_bounding_box(self):
-        bspline = vme.BSplineCurve3D.from_points_interpolation([
+        bspline = d3de.BSplineCurve3D.from_points_interpolation([
             design3d.Point3D(1.0, 1.0, 0.0),
             design3d.Point3D(0.8090169943749475, 0.8090169943749475, 0.587785252292473),
             design3d.Point3D(0.30901699437494745, 0.30901699437494745, 0.9510565162951533),
@@ -32,14 +32,14 @@ class TestBSplineCurve3D(unittest.TestCase):
         self.assertAlmostEqual(bbox.volume(), 3.9998457739878495, 3)
 
     def test_trim(self):
-        obj = vme.BSplineCurve3D.from_json(os.path.join(folder, "bspline_buggy_trim.json"))
+        obj = d3de.BSplineCurve3D.from_json(os.path.join(folder, "bspline_buggy_trim.json"))
         point1 = design3d.Point3D(1.20555954308, -0.879118549155, 0.938030639643)
         point2 = design3d.Point3D(1.2150653573, -0.879118549155, 0.958332154591)
         trimmed_curve = obj.trim(point1, point2)
         self.assertTrue(trimmed_curve.start.is_close(point1))
         self.assertTrue(trimmed_curve.end.is_close(point2))
         self.assertAlmostEqual(trimmed_curve.length(), 0.03513727259692126, 2)
-        obj = vme.BSplineCurve3D.from_json(os.path.join(folder, "bsplinecurve_trim.json"))
+        obj = d3de.BSplineCurve3D.from_json(os.path.join(folder, "bsplinecurve_trim.json"))
         point1 = design3d.Point3D(0.342947999551, -0.440408114191, 0.0132802444727)
         point2 = design3d.Point3D(0.342919095763, -0.44741803835000005, 0.0132953396808)
         trimmed_curve = obj.trim(point1, point2, True)
@@ -53,7 +53,7 @@ class TestBSplineCurve3D(unittest.TestCase):
         trim = bspline.trim(point2, point1, True)
         self.assertAlmostEqual(trim.length(), 2.5461209947115186)
 
-        bspline = vme.BSplineCurve3D.from_json(os.path.join(folder, "test_periodic_bspline_trim.json"))
+        bspline = d3de.BSplineCurve3D.from_json(os.path.join(folder, "test_periodic_bspline_trim.json"))
 
         point1 = bspline.point_at_abscissa(1)
         point2 = bspline.point_at_abscissa(3)
@@ -66,21 +66,21 @@ class TestBSplineCurve3D(unittest.TestCase):
         trim = bspline.trim(bspline.start, bspline.end)
         self.assertEqual(bspline, trim)
 
-        bspline = vme.BSplineCurve3D.from_json(os.path.join(folder, "bsplinecurve3d_split_test.json"))
+        bspline = d3de.BSplineCurve3D.from_json(os.path.join(folder, "bsplinecurve3d_split_test.json"))
         point1 = design3d.Point3D(0.0781678147963, -0.08091364816680001, 0.112275939295)
         point2 = design3d.Point3D(0.0711770282536, -0.08091364816680001, 0.11191690794)
         trimmed_curve = bspline.trim(point1, point2, True)
         self.assertTrue(trimmed_curve.start.is_close(point1))
         self.assertAlmostEqual(bspline.point_to_parameter(trimmed_curve.end), 0.49999, 4)
 
-        bspline = vme.BSplineCurve3D.from_json(os.path.join(folder, "bsplinecurve_close_points_trim_bug.json"))
+        bspline = d3de.BSplineCurve3D.from_json(os.path.join(folder, "bsplinecurve_close_points_trim_bug.json"))
         point1 = design3d.Point3D(-0.544134241655, -0.609582655058, 0.271301659325)
         point2 = design3d.Point3D(-0.544132239261, -0.609587093354, 0.271301378758)
         trimmed_curve = bspline.trim(point1, point2, True)
         self.assertEqual(len(trimmed_curve.knots), 2)
         self.assertAlmostEqual(trimmed_curve.length(), 4.876112145226163e-06)
 
-        bspline = vme.BSplineCurve3D.from_json(
+        bspline = d3de.BSplineCurve3D.from_json(
             os.path.join(folder, "bsplinecurve_trim_with_close_to_bound_points.json"))
         point1 = design3d.Point3D(-0.662347482412, 0.174584944052, 0.484523514816)
         point2 = design3d.Point3D(-0.66214998812, 0.174699062854, 0.484497837201)
@@ -88,7 +88,7 @@ class TestBSplineCurve3D(unittest.TestCase):
         self.assertEqual(len(trimmed_curve.knots), 4)
         self.assertAlmostEqual(trimmed_curve.length(), 0.0002325755440461709, 6)
 
-        bspline = vme.BSplineCurve3D.from_json(
+        bspline = d3de.BSplineCurve3D.from_json(
             os.path.join(folder, "bsplinecurve_split_bug_2.json"))
         point1 = design3d.Point3D(3.7101740508972862, -1.631997806124392e-05, -18.5000000067868)
         point2 = design3d.Point3D(3.493253085347731, 1.2499999999999991, -18.49999999999689)
@@ -101,7 +101,7 @@ class TestBSplineCurve3D(unittest.TestCase):
             os.path.join(folder, "periodic_bsplinecurve_from_step_test_object_dict.json")).primitives
         object_dict = {0: obj_list[0], 1: obj_list[1], 2: obj_list[2]}
         arguments = ["''", 1, 2, 0, '.F.']
-        bsplinecurve = vme.Edge.from_step(arguments, object_dict)
+        bsplinecurve = d3de.Edge.from_step(arguments, object_dict)
         self.assertTrue(bsplinecurve.start.is_close(object_dict[1], 1e-5))
         self.assertTrue(bsplinecurve.end.is_close(object_dict[2], 1e-5))
         self.assertTrue(bsplinecurve.point_at_abscissa(0.5 * bsplinecurve.length()).is_close(
@@ -115,8 +115,8 @@ class TestBSplineCurve3D(unittest.TestCase):
                   design3d.Point3D(7.115095014105684, 0.40888620982702983, 1.1362954032756774),
                   design3d.Point3D(-3.0, 1.022248896290622, 0.5746069851843745),
                   design3d.Point3D(2.739350840642852, -5.869347626045908, -0.7880999427201254)]
-        bspline = vme.BSplineCurve3D.from_points_interpolation(points, 3)
-        linesegment = vme.LineSegment3D(design3d.Point3D(-3.0, 4.0, 1.0), design3d.Point3D(-3, -3, 0))
+        bspline = d3de.BSplineCurve3D.from_points_interpolation(points, 3)
+        linesegment = d3de.LineSegment3D(design3d.Point3D(-3.0, 4.0, 1.0), design3d.Point3D(-3, -3, 0))
         dist, min_dist_pt1, min_dist_pt2 = bspline.minimum_distance(linesegment, True)
         self.assertAlmostEqual(dist, 4.155003073325757e-09)
         self.assertTrue(min_dist_pt1.is_close(min_dist_pt2))
@@ -129,22 +129,22 @@ class TestBSplineCurve3D(unittest.TestCase):
                   design3d.Point3D(7.115095014105684, 0.40888620982702983, 1.1362954032756774),
                   design3d.Point3D(-3.0, 1.022248896290622, 0.5746069851843745),
                   design3d.Point3D(2.739350840642852, -5.869347626045908, -0.7880999427201254)]
-        bspline = vme.BSplineCurve3D.from_points_interpolation(points, 3, centripetal=True)
-        linesegment = vme.LineSegment3D(design3d.Point3D(-3.0, 4.0, 1.0), design3d.Point3D(-3, -3, 0))
+        bspline = d3de.BSplineCurve3D.from_points_interpolation(points, 3, centripetal=True)
+        linesegment = d3de.LineSegment3D(design3d.Point3D(-3.0, 4.0, 1.0), design3d.Point3D(-3, -3, 0))
         intersections = bspline.linesegment_intersections(linesegment)
         self.assertEqual(len(intersections), 1)
         self.assertTrue(intersections[0].is_close(
             design3d.Point3D(-3.0, 1.0222488954206392, 0.5746069850600913)))
 
     def test_point_at_abscissa(self):
-        bspline = vme.BSplineCurve3D.from_json(os.path.join(folder, "bsplinecurve_periodic.json"))
+        bspline = d3de.BSplineCurve3D.from_json(os.path.join(folder, "bsplinecurve_periodic.json"))
         self.assertTrue(bspline.start.is_close(bspline.point_at_abscissa(0)))
         self.assertTrue(bspline.end.is_close(bspline.point_at_abscissa(bspline.length())))
         self.assertTrue(bspline.point_at_abscissa(0.5 * bspline.length()).is_close(
             design3d.Point3D(0.3429479995510001, -0.44040811419137504, 0.01328024447265125)))
 
     def test_decompose(self):
-        bspline = vme.BSplineCurve3D.from_json(os.path.join(folder, "spiral_bsplinecurve.json"))
+        bspline = d3de.BSplineCurve3D.from_json(os.path.join(folder, "spiral_bsplinecurve.json"))
         decompose_results = list(bspline.decompose(return_params=True))
         self.assertEqual(len(decompose_results), 37)
         for patch, param in decompose_results:
@@ -161,9 +161,9 @@ class TestBSplineCurve3D(unittest.TestCase):
             design3d.Point3D(0.5334, 1.784620497933768, -1.1990649949459866)))
 
     def test_linesegment_intersection(self):
-        linesegment1 = vme.LineSegment3D(design3d.Point3D(0.5334, -0.44659009801843536, 0.0),
+        linesegment1 = d3de.LineSegment3D(design3d.Point3D(0.5334, -0.44659009801843536, 0.0),
                                          design3d.Point3D(0.5334, 0.4342689853571558, -0.47337857496375274))
-        linesegment2 = vme.LineSegment3D(design3d.Point3D(0.5334, -0.44659009801843536, 0.0),
+        linesegment2 = d3de.LineSegment3D(design3d.Point3D(0.5334, -0.44659009801843536, 0.0),
                                          design3d.Point3D(0.5334, 2.1959871521083385, -1.4201357248912583))
         bspline_lineseg_intersections1 = self.b_splinecurve3d.linesegment_intersections(linesegment1)
         bspline_lineseg_intersections2 = self.b_splinecurve3d.linesegment_intersections(linesegment2)
@@ -177,7 +177,7 @@ class TestBSplineCurve3D(unittest.TestCase):
 
     def test_abscissa(self):
         point = design3d.Point3D(0.18357300891283804, 0.7465725481678318, 0.44333916797214895)
-        bsplinecurve = vme.BSplineCurve3D.from_json(os.path.join(folder, "bsplinecurve3d_abscissa_test.json"))
+        bsplinecurve = d3de.BSplineCurve3D.from_json(os.path.join(folder, "bsplinecurve3d_abscissa_test.json"))
         abscissa = bsplinecurve.abscissa(point)
         self.assertTrue(bsplinecurve.point_at_abscissa(abscissa).is_close(point))
 
@@ -211,7 +211,7 @@ class TestBSplineCurve3D(unittest.TestCase):
         knots = [0.0, 1.0]
         knot_multiplicities = [6, 6]
         weights = None  # [1, 2, 1, 2, 1, 2]
-        bspline_curve3d = vme.BSplineCurve3D(degree=degree,
+        bspline_curve3d = d3de.BSplineCurve3D(degree=degree,
                                              control_points=control_points,
                                              knot_multiplicities=knot_multiplicities,
                                              knots=knots,

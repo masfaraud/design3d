@@ -2,7 +2,7 @@
 Surfaces
 --------
 
-.. automodule:: volmdlr.surfaces
+.. automodule:: design3d.surfaces
    :members:
    :undoc-members:
    :show-inheritance:

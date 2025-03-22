@@ -1,44 +1,44 @@
 {
-  "object_class": "volmdlr.edges.ArcEllipse3D",
+  "object_class": "design3d.edges.ArcEllipse3D",
   "name": "",
   "start": {
-    "object_class": "volmdlr.Point3D",
+    "object_class": "design3d.Point3D",
     "x": -0.4722553340258772,
     "y": -0.5147703297668124,
     "z": 0.5139895261529044
   },
   "end": {
-    "object_class": "volmdlr.Point3D",
+    "object_class": "design3d.Point3D",
     "x": -0.45406029326947306,
     "y": -0.5145117507981201,
     "z": 0.5057976089050882
   },
   "ellipse": {
-    "object_class": "volmdlr.curves.Ellipse3D",
+    "object_class": "design3d.curves.Ellipse3D",
     "name": "",
     "frame": {
-      "object_class": "volmdlr.Frame3D",
+      "object_class": "design3d.Frame3D",
       "name": "",
       "origin": {
-        "object_class": "volmdlr.Point3D",
+        "object_class": "design3d.Point3D",
         "x": -0.4636352650376746,
         "y": -0.5146029629218862,
         "z": 0.5088253029086754
       },
       "u": {
-        "object_class": "volmdlr.Vector3D",
+        "object_class": "design3d.Vector3D",
         "x": -0.8577170218519301,
         "y": -0.016653392447698645,
         "z": 0.5138522890339582
       },
       "v": {
-        "object_class": "volmdlr.Vector3D",
+        "object_class": "design3d.Vector3D",
         "x": 0.5141198069940289,
         "y": -0.030753268830964377,
         "z": 0.8571668802004851
       },
       "w": {
-        "object_class": "volmdlr.Vector3D",
+        "object_class": "design3d.Vector3D",
         "x": 0.001527901134919558,
         "y": 0.9993882633772488,
         "z": 0.0349394410649132
@@ -47,25 +47,25 @@
     "major_axis": 0.010050015092977259,
     "minor_axis": 0.009916160772037906,
     "center": {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": -0.4636352650376746,
       "y": -0.5146029629218862,
       "z": 0.5088253029086754
     },
     "normal": {
-      "object_class": "volmdlr.Vector3D",
+      "object_class": "design3d.Vector3D",
       "x": 0.001527901134919558,
       "y": 0.9993882633772488,
       "z": 0.0349394410649132
     },
     "major_dir": {
-      "object_class": "volmdlr.Vector3D",
+      "object_class": "design3d.Vector3D",
       "x": -0.8577170218519301,
       "y": -0.016653392447698645,
       "z": 0.5138522890339582
     },
     "minor_dir": {
-      "object_class": "volmdlr.Vector3D",
+      "object_class": "design3d.Vector3D",
       "x": 0.5141198069940289,
       "y": -0.030753268830964377,
       "z": 0.8571668802004851

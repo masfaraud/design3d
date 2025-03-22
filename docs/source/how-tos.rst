@@ -1,5 +1,5 @@
 ==============================================
-Section on how to create Basic volmdlr objects
+Section on how to create Basic design3d objects
 ==============================================
 
 Basic Objects
@@ -22,9 +22,9 @@ Additionally, there is an optional argument name, which is a string representing
            :include-source:
            :align: center
 
-           import volmdlr
+           import design3d
 
-           vector = volmdlr.Vector2D(1.0, 1.0)
+           vector = design3d.Vector2D(1.0, 1.0)
            vector.plot(color='orange')
 
     .. grid-item-card::  Vector3D
@@ -33,9 +33,9 @@ Additionally, there is an optional argument name, which is a string representing
            :include-source:
            :align: center
 
-           import volmdlr
+           import design3d
 
-           vector = volmdlr.Vector3D(1.0, 1.0, 1.0)
+           vector = design3d.Vector3D(1.0, 1.0, 1.0)
            vector.plot(color='orange')
 
 How to create a Point
@@ -49,9 +49,9 @@ which is a string representing the vector's name.
 
 .. code-block:: python
 
-   import volmdlr
+   import design3d
 
-   point2d = volmdlr.Point2D(x=1.0, y=2.0, name='vector name')
+   point2d = design3d.Point2D(x=1.0, y=2.0, name='vector name')
    print('point2d:', point2d)
    >>> point2d: Point2D: [1.0, 2.0]
 
@@ -63,9 +63,9 @@ which is a string representing the vector's name.
 
 .. code-block:: python
 
-   import volmdlr
+   import design3d
 
-   point3d = volmdlr.Point3D(x=1.0, y=2.0, z=3.0, name='vector name')
+   point3d = design3d.Point3D(x=1.0, y=2.0, z=3.0, name='vector name')
    print('point3d:', point3d)
    >>> point2d: Point3D: [1.0, 2.0, 3.0]
 
@@ -80,13 +80,13 @@ Exmaple:
    :include-source:
    :align: center
 
-   import volmdlr
+   import design3d
 
-   origin = volmdlr.Point3D(0, 0, 0)
-   u = volmdlr.Vector3D(1, 0, 0)
-   v = volmdlr.Vector3D(0, 1, 0)
-   w = volmdlr.Vector3D(0, 0, 1)
-   frame = volmdlr.Frame3D(origin, u, v, w)
+   origin = design3d.Point3D(0, 0, 0)
+   u = design3d.Vector3D(1, 0, 0)
+   v = design3d.Vector3D(0, 1, 0)
+   w = design3d.Vector3D(0, 0, 1)
+   frame = design3d.Frame3D(origin, u, v, w)
    frame.plot()
 
 Curves
@@ -110,12 +110,12 @@ and providing the required arguments. Here's how you can do it:
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import curves
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import curves
+           from design3d.core import EdgeStyle
 
-           point1 = volmdlr.Point2D(1.0, 1.0)
-           point2 = volmdlr.Point2D(-2.0, -3.0)
+           point1 = design3d.Point2D(1.0, 1.0)
+           point2 = design3d.Point2D(-2.0, -3.0)
            line2d = curves.Line2D(point1, point2, name='line2d_name_is_optional')
            line2d.plot(edge_style=EdgeStyle('orange'))
 
@@ -125,12 +125,12 @@ and providing the required arguments. Here's how you can do it:
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import curves
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import curves
+           from design3d.core import EdgeStyle
 
-           point1 = volmdlr.Point3D(1.0, 1.0, 1.0)
-           point2 = volmdlr.Point3D(-2.0, -3.0, -1.0)
+           point1 = design3d.Point3D(1.0, 1.0, 1.0)
+           point2 = design3d.Point3D(-2.0, -3.0, -1.0)
            line3d = curves.Line3D(point1, point2, name='line3d_name_is_optional')
            line3d.plot(edge_style=EdgeStyle('orange'))
 
@@ -149,12 +149,12 @@ and it also accepts an optional name for identification.
        :include-source:
        :align: center
 
-       import volmdlr
-       from volmdlr import curves
-       from volmdlr.core import EdgeStyle
+       import design3d
+       from design3d import curves
+       from design3d.core import EdgeStyle
 
-       center2d = volmdlr.Point2D(0.0, 0.0)
-       circle2d = curves.Circle2D(frame=volmdlr.OXY, radius=1, name='optional_circle_name')
+       center2d = design3d.Point2D(0.0, 0.0)
+       circle2d = curves.Circle2D(frame=design3d.OXY, radius=1, name='optional_circle_name')
        circle2d.plot(edge_style=EdgeStyle('orange'))
 
 Circle3D
@@ -170,15 +170,15 @@ circle lies, and w represents the normal vector to the plane.
        :include-source:
        :align: center
 
-       import volmdlr
-       from volmdlr import curves
-       from volmdlr.core import EdgeStyle
+       import design3d
+       from design3d import curves
+       from design3d.core import EdgeStyle
 
-       center3D = volmdlr.Point3D(0.0, 0.0, 0.0)
-       u_vector = volmdlr.Vector3D(1.0, 0.0, 0.0)
-       v_vector = volmdlr.Vector3D(0.0, 1.0, 0.0)
-       w_vector = volmdlr.Vector3D(0.0, 0.0, 1.0)
-       frame3d = volmdlr.Frame3D(center3D, u_vector, v_vector, w_vector)
+       center3D = design3d.Point3D(0.0, 0.0, 0.0)
+       u_vector = design3d.Vector3D(1.0, 0.0, 0.0)
+       v_vector = design3d.Vector3D(0.0, 1.0, 0.0)
+       w_vector = design3d.Vector3D(0.0, 0.0, 1.0)
+       frame3d = design3d.Frame3D(center3D, u_vector, v_vector, w_vector)
        circle3d = curves.Circle3D(frame=frame3d, radius=1, name='optional_circle_name')
        circle3d.plot(edge_style=EdgeStyle('orange'))
 
@@ -195,13 +195,13 @@ An ellipse in defined by three arguments: a major axis (A), e minor axis (B) and
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import curves
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import curves
+           from design3d.core import EdgeStyle
 
-           u_vector = volmdlr.Vector2D(0.7071067811865475, 0.7071067811865475)
-           v_vector = volmdlr.Vector2D(-0.7071067811865475, 0.7071067811865475)
-           ellipse2d = curves.Ellipse2D(major_axis=2, minor_axis=1, frame=volmdlr.Frame2D(volmdlr.O2D, u_vector, v_vector))
+           u_vector = design3d.Vector2D(0.7071067811865475, 0.7071067811865475)
+           v_vector = design3d.Vector2D(-0.7071067811865475, 0.7071067811865475)
+           ellipse2d = curves.Ellipse2D(major_axis=2, minor_axis=1, frame=design3d.Frame2D(design3d.O2D, u_vector, v_vector))
            ellipse2d.plot(edge_style=EdgeStyle(color='orange'))
 
     .. grid-item-card::  Ellipse3D
@@ -210,15 +210,15 @@ An ellipse in defined by three arguments: a major axis (A), e minor axis (B) and
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import curves
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import curves
+           from design3d.core import EdgeStyle
 
-           vector1 = volmdlr.Vector3D(1, 1, 1)
+           vector1 = design3d.Vector3D(1, 1, 1)
            vector1 = vector1.unit_vector()
            vector2 = vector1.deterministic_unit_normal_vector()
            vector3 = vector1.cross(vector2)
-           frame = volmdlr.Frame3D(volmdlr.O3D, vector1, vector2, vector3)
+           frame = design3d.Frame3D(design3d.O3D, vector1, vector2, vector3)
            ellipse3d = curves.Ellipse3D(major_axis=2, minor_axis=1, frame=frame)
            ellipse3d.plot(edge_style=EdgeStyle('orange'))
 
@@ -236,11 +236,11 @@ For more details on Hyperbolas, you can search for the corresponding class in :r
             :include-source:
             :align: center
 
-            import volmdlr
-            from volmdlr import curves
-            from volmdlr.core import EdgeStyle
+            import design3d
+            from design3d import curves
+            from design3d.core import EdgeStyle
 
-            hyperberbola_2d = curves.Hyperbola2D(volmdlr.OXY, 1, 2)
+            hyperberbola_2d = curves.Hyperbola2D(design3d.OXY, 1, 2)
             hyperberbola_2d.plot(edge_style=EdgeStyle(color='orange'))
 
     .. grid-item-card::  Hyperbola3D
@@ -249,11 +249,11 @@ For more details on Hyperbolas, you can search for the corresponding class in :r
             :include-source:
             :align: center
 
-            import volmdlr
-            from volmdlr import curves
-            from volmdlr.core import EdgeStyle
+            import design3d
+            from design3d import curves
+            from design3d.core import EdgeStyle
 
-            hyperberbola_3d = curves.Hyperbola3D(volmdlr.OXYZ, 1, 2)
+            hyperberbola_3d = curves.Hyperbola3D(design3d.OXYZ, 1, 2)
             hyperberbola_3d.plot(edge_style=EdgeStyle(color='orange'))
 
 How to create an Parabola
@@ -270,11 +270,11 @@ For more details on Parabolas, you can search for the corresponding class in :re
             :include-source:
             :align: center
 
-            import volmdlr
-            from volmdlr import curves
-            from volmdlr.core import EdgeStyle
+            import design3d
+            from design3d import curves
+            from design3d.core import EdgeStyle
 
-            parabola_2d = curves.Parabola2D(volmdlr.OXY, 1)
+            parabola_2d = curves.Parabola2D(design3d.OXY, 1)
             parabola_2d.plot(edge_style=EdgeStyle(color='orange'))
 
     .. grid-item-card::  Parabola3D
@@ -283,11 +283,11 @@ For more details on Parabolas, you can search for the corresponding class in :re
             :include-source:
             :align: center
 
-            import volmdlr
-            from volmdlr import curves
-            from volmdlr.core import EdgeStyle
+            import design3d
+            from design3d import curves
+            from design3d.core import EdgeStyle
 
-            parabola_3d = curves.Parabola3D(volmdlr.OXYZ, 2)
+            parabola_3d = curves.Parabola3D(design3d.OXYZ, 2)
             parabola_3d.plot(edge_style=EdgeStyle(color='orange'))
 
 
@@ -310,12 +310,12 @@ LineSegment2D
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import edges
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges
+           from design3d.core import EdgeStyle
 
-           start_point = volmdlr.Point2D(1.0, 1.0)
-           end_point = volmdlr.Point2D(3.0, 4.0)
+           start_point = design3d.Point2D(1.0, 1.0)
+           end_point = design3d.Point2D(3.0, 4.0)
            linesegment2d = edges.LineSegment2D(start=start_point, end=end_point, name='linesegment\'s name')
            linesegment2d.plot(edge_style=EdgeStyle(color='orange'))
 
@@ -330,12 +330,12 @@ LineSegment3D
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import edges
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges
+           from design3d.core import EdgeStyle
 
-           start_point = volmdlr.Point3D(1.0, 1.0, 1.0)
-           end_point = volmdlr.Point3D(3.0, 4.0, 6.0)
+           start_point = design3d.Point3D(1.0, 1.0, 1.0)
+           end_point = design3d.Point3D(3.0, 4.0, 6.0)
            linesegment3d = edges.LineSegment3D(start=start_point, end=end_point, name='linesegment\'s name')
            linesegment3d.plot(edge_style=EdgeStyle(color='orange'))
 
@@ -357,12 +357,12 @@ There is also a boolean is_trigo argument that defines if the arc is in the trig
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import edges, curves
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges, curves
+           from design3d.core import EdgeStyle
 
-           circle2d = curves.Circle2D(volmdlr.OXY, 1)
-           arc2d = edges.Arc2D(circle2d, volmdlr.Point2D(-1, 0), volmdlr.Point2D(1, 0), True)
+           circle2d = curves.Circle2D(design3d.OXY, 1)
+           arc2d = edges.Arc2D(circle2d, design3d.Point2D(-1, 0), design3d.Point2D(1, 0), True)
            ax = arc2d.plot(edge_style=EdgeStyle('orange'))
            ax.set_aspect('equal')
 
@@ -380,18 +380,18 @@ Just as the Arc2D, Arc3D is defined by the base circle curve along with a start 
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import edges, curves
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges, curves
+           from design3d.core import EdgeStyle
 
-           vector1 = volmdlr.Vector3D(1, 1, 1)
+           vector1 = design3d.Vector3D(1, 1, 1)
            vector1 = vector1.unit_vector()
            vector2 = vector1.deterministic_unit_normal_vector()
            vector3 = vector1.cross(vector2)
-           frame = volmdlr.Frame3D(volmdlr.O3D, vector1, vector2, vector3)
+           frame = design3d.Frame3D(design3d.O3D, vector1, vector2, vector3)
            circle3d = curves.Circle3D(frame, 1)
-           arc3d = edges.Arc3D(circle3d, start=volmdlr.Point3D(0.5773502691896258, 0.5773502691896258, 0.5773502691896258),
-                       end=volmdlr.Point3D(-0.9855985596534886, -0.11957315586905026, -0.11957315586905026))
+           arc3d = edges.Arc3D(circle3d, start=design3d.Point3D(0.5773502691896258, 0.5773502691896258, 0.5773502691896258),
+                       end=design3d.Point3D(-0.9855985596534886, -0.11957315586905026, -0.11957315586905026))
            ax = arc3d.plot(edge_style=EdgeStyle('orange'))
 
 
@@ -414,17 +414,17 @@ Object's descrition
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import edges, curves
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges, curves
+           from design3d.core import EdgeStyle
 
-           u_vector = volmdlr.Vector2D(0.7071067811865475, 0.7071067811865475)
-           v_vector = volmdlr.Vector2D(-0.7071067811865475, 0.7071067811865475)
-           ellipse2d = curves.Ellipse2D(2, 1, volmdlr.Frame2D(volmdlr.O2D, u_vector, v_vector))
-           u_vector = volmdlr.Vector2D(0.7071067811865475, 0.7071067811865475)
-           v_vector = volmdlr.Vector2D(-0.7071067811865475, 0.7071067811865475)
-           ellipse2d = curves.Ellipse2D(2, 1, volmdlr.Frame2D(volmdlr.O2D, u_vector, v_vector))
-           arc_ellipse2d = edges.ArcEllipse2D(ellipse2d, start=volmdlr.Point2D(0.5, 1.5), end=volmdlr.Point2D(1.5, 0.5))
+           u_vector = design3d.Vector2D(0.7071067811865475, 0.7071067811865475)
+           v_vector = design3d.Vector2D(-0.7071067811865475, 0.7071067811865475)
+           ellipse2d = curves.Ellipse2D(2, 1, design3d.Frame2D(design3d.O2D, u_vector, v_vector))
+           u_vector = design3d.Vector2D(0.7071067811865475, 0.7071067811865475)
+           v_vector = design3d.Vector2D(-0.7071067811865475, 0.7071067811865475)
+           ellipse2d = curves.Ellipse2D(2, 1, design3d.Frame2D(design3d.O2D, u_vector, v_vector))
+           arc_ellipse2d = edges.ArcEllipse2D(ellipse2d, start=design3d.Point2D(0.5, 1.5), end=design3d.Point2D(1.5, 0.5))
            arc_ellipse2d.plot(edge_style=EdgeStyle('orange'))
 
 
@@ -442,17 +442,17 @@ Object's descrition
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import edges, curves
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges, curves
+           from design3d.core import EdgeStyle
 
-           vector1 = volmdlr.Vector3D(1, 1, 1)
+           vector1 = design3d.Vector3D(1, 1, 1)
            vector1 = vector1.unit_vector()
            vector2 = vector1.deterministic_unit_normal_vector()
            vector3 = vector1.cross(vector2)
-           frame = volmdlr.Frame3D(volmdlr.O3D, vector1, vector2, vector3)
-           start_point = volmdlr.Point3D(0.2391463117381003, 1.1051717155225391, 1.1051717155225391)
-           end_point = volmdlr.Point3D(-1.393846850117352, -0.5278214463329132, -0.5278214463329132)
+           frame = design3d.Frame3D(design3d.O3D, vector1, vector2, vector3)
+           start_point = design3d.Point3D(0.2391463117381003, 1.1051717155225391, 1.1051717155225391)
+           end_point = design3d.Point3D(-1.393846850117352, -0.5278214463329132, -0.5278214463329132)
            ellipse3d = curves.Ellipse3D(2, 1, frame)
            arc_ellipse3d = edges.ArcEllipse3D(ellipse3d, start=start_point, end=end_point)
            arc_ellipse3d.plot(edge_style=EdgeStyle('orange'))
@@ -476,13 +476,13 @@ BSplineCurve2D
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import edges
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges
+           from design3d.core import EdgeStyle
            from geomdl import utilities
 
            DEGREE = 3
-           points = [volmdlr.Point2D(0, 0), volmdlr.Point2D(1, 1), volmdlr.Point2D(2, -1), volmdlr.Point2D(3, 0)]
+           points = [design3d.Point2D(0, 0), design3d.Point2D(1, 1), design3d.Point2D(2, -1), design3d.Point2D(3, 0)]
            knotvector = utilities.generate_knot_vector(DEGREE, len(points))
            knot_multiplicity = [1] * len(knotvector)
            bspline1 = edges.BSplineCurve2D(DEGREE, points, knot_multiplicity, knotvector, None, False)
@@ -500,17 +500,17 @@ BSplineCurve3D
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import edges
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges
+           from design3d.core import EdgeStyle
 
            degree = 5
-           control_points = [volmdlr.Point3D(0, 3, 0),
-                             volmdlr.Point3D(3, 2, 1),
-                             volmdlr.Point3D(5, -1, 4),
-                             volmdlr.Point3D(5, -4, 0),
-                             volmdlr.Point3D(-1, -2, -3),
-                             volmdlr.Point3D(-3, 4, 1)]
+           control_points = [design3d.Point3D(0, 3, 0),
+                             design3d.Point3D(3, 2, 1),
+                             design3d.Point3D(5, -1, 4),
+                             design3d.Point3D(5, -4, 0),
+                             design3d.Point3D(-1, -2, -3),
+                             design3d.Point3D(-3, 4, 1)]
            knots = [0.0, 1.0]
            knot_multiplicities = [6, 6]
            weights = None  # [1, 2, 1, 2, 1, 2]
@@ -541,13 +541,13 @@ Wire2D
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import wires, edges
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import wires, edges
+           from design3d.core import EdgeStyle
 
-           line_segment1 = edges.LineSegment2D(volmdlr.Point2D(1, -1), volmdlr.Point2D(1.5, 1))
-           arc = edges.Arc2D.from_3_points(volmdlr.Point2D(1.5, 1), volmdlr.Point2D(1.3, 1.5), volmdlr.Point2D(0.5, 1.5))
-           points2d = [volmdlr.Point2D(-1, 1), volmdlr.Point2D(2, 2), volmdlr.Point2D(-2, -2), volmdlr.Point2D(1, -1)]
+           line_segment1 = edges.LineSegment2D(design3d.Point2D(1, -1), design3d.Point2D(1.5, 1))
+           arc = edges.Arc2D.from_3_points(design3d.Point2D(1.5, 1), design3d.Point2D(1.3, 1.5), design3d.Point2D(0.5, 1.5))
+           points2d = [design3d.Point2D(-1, 1), design3d.Point2D(2, 2), design3d.Point2D(-2, -2), design3d.Point2D(1, -1)]
            bspline = edges.BSplineCurve2D(3, points2d, knot_multiplicities=[4, 4], knots=[0.0, 1.0])
            wire2d = wires.Wire2D([bspline, line_segment1, arc])
            wire2d.plot(edge_style=EdgeStyle('orange'))
@@ -564,17 +564,17 @@ Wire3D
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import edges, wires
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges, wires
+           from design3d.core import EdgeStyle
 
            degree = 5
-           control_points = [volmdlr.Point3D(0, 3, 0),
-                            volmdlr.Point3D(3, 2, 1),
-                            volmdlr.Point3D(5, -1, 4),
-                            volmdlr.Point3D(5, -4, 0),
-                            volmdlr.Point3D(-1, -2, -3),
-                            volmdlr.Point3D(-3, 4, 1)]
+           control_points = [design3d.Point3D(0, 3, 0),
+                            design3d.Point3D(3, 2, 1),
+                            design3d.Point3D(5, -1, 4),
+                            design3d.Point3D(5, -4, 0),
+                            design3d.Point3D(-1, -2, -3),
+                            design3d.Point3D(-3, 4, 1)]
            knots = [0.0, 1.0]
            knot_multiplicities = [6, 6]
            weights = None  # [1, 2, 1, 2, 1, 2]
@@ -583,8 +583,8 @@ Wire3D
                                           knots=knots,
                                           weights=weights,
                                           name='B Spline Curve 3D 1')
-           lineseg1 = edges.LineSegment3D(volmdlr.Point3D(3, 3, 2), bspline_curve3d.start)
-           lineseg2 = edges.LineSegment3D(bspline_curve3d.end, volmdlr.Point3D(-3, -3, 0))
+           lineseg1 = edges.LineSegment3D(design3d.Point3D(3, 3, 2), bspline_curve3d.start)
+           lineseg2 = edges.LineSegment3D(bspline_curve3d.end, design3d.Point3D(-3, -3, 0))
            wire3d = wires.Wire3D([lineseg1, bspline_curve3d, lineseg2])
            wire3d.plot(edge_style=EdgeStyle('orange'))
 
@@ -605,16 +605,16 @@ Contour2D
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import edges, wires
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges, wires
+           from design3d.core import EdgeStyle
 
-           line_segment1 = edges.LineSegment2D(volmdlr.Point2D(1, -1), volmdlr.Point2D(1.5, 1))
-           line_segment2 = edges.LineSegment2D(volmdlr.Point2D(0.5, 1.5), volmdlr.Point2D(-2, 1))
-           line_segment3 = edges.LineSegment2D(volmdlr.Point2D(-2, 1), volmdlr.Point2D(-2, 0.7))
-           line_segment4 = edges.LineSegment2D(volmdlr.Point2D(-2, 0.7), volmdlr.Point2D(-1, 1))
-           arc = edges.Arc2D.from_3_points(volmdlr.Point2D(1.5, 1), volmdlr.Point2D(1.3, 1.5), volmdlr.Point2D(0.5, 1.5))
-           points2d = [volmdlr.Point2D(-1, 1), volmdlr.Point2D(2, 2), volmdlr.Point2D(-2, -2), volmdlr.Point2D(1, -1)]
+           line_segment1 = edges.LineSegment2D(design3d.Point2D(1, -1), design3d.Point2D(1.5, 1))
+           line_segment2 = edges.LineSegment2D(design3d.Point2D(0.5, 1.5), design3d.Point2D(-2, 1))
+           line_segment3 = edges.LineSegment2D(design3d.Point2D(-2, 1), design3d.Point2D(-2, 0.7))
+           line_segment4 = edges.LineSegment2D(design3d.Point2D(-2, 0.7), design3d.Point2D(-1, 1))
+           arc = edges.Arc2D.from_3_points(design3d.Point2D(1.5, 1), design3d.Point2D(1.3, 1.5), design3d.Point2D(0.5, 1.5))
+           points2d = [design3d.Point2D(-1, 1), design3d.Point2D(2, 2), design3d.Point2D(-2, -2), design3d.Point2D(1, -1)]
            bspline = edges.BSplineCurve2D(3, points2d, knot_multiplicities=[4, 4], knots=[0.0, 1.0])
            wire2d = wires.Wire2D([bspline, line_segment1, arc, line_segment2, line_segment3, line_segment4])
            wire2d.plot(edge_style=EdgeStyle('orange'))
@@ -630,17 +630,17 @@ Contour3D
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import edges, wires
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges, wires
+           from design3d.core import EdgeStyle
 
            degree = 5
-           control_points = [volmdlr.Point3D(0, 3, 0),
-                            volmdlr.Point3D(3, 2, 1),
-                            volmdlr.Point3D(5, -1, 4),
-                            volmdlr.Point3D(5, -4, 0),
-                            volmdlr.Point3D(-1, -2, -3),
-                            volmdlr.Point3D(-3, 4, 1)]
+           control_points = [design3d.Point3D(0, 3, 0),
+                            design3d.Point3D(3, 2, 1),
+                            design3d.Point3D(5, -1, 4),
+                            design3d.Point3D(5, -4, 0),
+                            design3d.Point3D(-1, -2, -3),
+                            design3d.Point3D(-3, 4, 1)]
            knots = [0.0, 1.0]
            knot_multiplicities = [6, 6]
            weights = None  # [1, 2, 1, 2, 1, 2]
@@ -649,9 +649,9 @@ Contour3D
                                           knots=knots,
                                           weights=weights,
                                           name='B Spline Curve 3D 1')
-           lineseg1 = edges.LineSegment3D(volmdlr.Point3D(3, 3, 2), bspline_curve3d.start)
-           lineseg2 = edges.LineSegment3D(bspline_curve3d.end, volmdlr.Point3D(-3, -3, 0))
-           arc = edges.Arc3D.from_3_points(volmdlr.Point3D(-3, -3, 0), volmdlr.Point3D(6.324555320336761, -5.692099788303083, -0.8973665961010275), volmdlr.Point3D(3, 3, 2))
+           lineseg1 = edges.LineSegment3D(design3d.Point3D(3, 3, 2), bspline_curve3d.start)
+           lineseg2 = edges.LineSegment3D(bspline_curve3d.end, design3d.Point3D(-3, -3, 0))
+           arc = edges.Arc3D.from_3_points(design3d.Point3D(-3, -3, 0), design3d.Point3D(6.324555320336761, -5.692099788303083, -0.8973665961010275), design3d.Point3D(3, 3, 2))
            wire3d = wires.Wire3D([lineseg1, bspline_curve3d, lineseg2, arc])
            wire3d.plot(edge_style=EdgeStyle('orange'))
 
@@ -679,15 +679,15 @@ Attributes:
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import surfaces
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import surfaces
+           from design3d.core import EdgeStyle
 
-           p1s = volmdlr.Point2D(0, 0)
-           p2s = volmdlr.Point2D(0.1, 0)
-           p3s = volmdlr.Point2D(0.2, 0.1)
-           p4s = volmdlr.Point2D(-0.01, 0.05)
-           surface2d = surfaces.Surface2D(volmdlr.wires.ClosedPolygon2D([p1s, p2s, p3s, p4s]), [])
+           p1s = design3d.Point2D(0, 0)
+           p2s = design3d.Point2D(0.1, 0)
+           p3s = design3d.Point2D(0.2, 0.1)
+           p4s = design3d.Point2D(-0.01, 0.05)
+           surface2d = surfaces.Surface2D(design3d.wires.ClosedPolygon2D([p1s, p2s, p3s, p4s]), [])
            surface2d.plot(edge_style=EdgeStyle('orange'))
 
 Plane3D
@@ -707,12 +707,12 @@ Plane3D
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import edges, curves, surfaces, wires, faces
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges, curves, surfaces, wires, faces
+           from design3d.core import EdgeStyle
 
-           surface3d = surfaces.Plane3D(volmdlr.Frame3D(volmdlr.Point3D(0.0, 0.0, 0.0), volmdlr.Vector3D(1.0, 0.0, 0.0),
-                                                       volmdlr.Vector3D(0.0, 1.0, 0.0), volmdlr.Vector3D(0.0, 0.0, 1.0)))
+           surface3d = surfaces.Plane3D(design3d.Frame3D(design3d.Point3D(0.0, 0.0, 0.0), design3d.Vector3D(1.0, 0.0, 0.0),
+                                                       design3d.Vector3D(0.0, 1.0, 0.0), design3d.Vector3D(0.0, 0.0, 1.0)))
            surface3d.plot(edge_style=EdgeStyle('orange'), length=2)
 
 
@@ -735,11 +735,11 @@ To instanciate a CylindricalSurface3D, you have to provide tree parameters: a `f
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import surfaces
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import surfaces
+           from design3d.core import EdgeStyle
 
-           surface3d = surfaces.CylindricalSurface3D(volmdlr.OXYZ, 1, 'cylindrical_surface_name')
+           surface3d = surfaces.CylindricalSurface3D(design3d.OXYZ, 1, 'cylindrical_surface_name')
            surface3d.plot(edge_style=EdgeStyle('orange'), length=2)
 
 ToroidalSurface3D
@@ -763,10 +763,10 @@ To instanciate a ToroidalSurface3D, you have to provide tree parameters: a `fram
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import surfaces
-           from volmdlr.core import EdgeStyle
-           surface3d = surfaces.ToroidalSurface3D(frame=volmdlr.OXYZ, major_radius=2, minor_radius=1, name='toroidal_surface_name')
+           import design3d
+           from design3d import surfaces
+           from design3d.core import EdgeStyle
+           surface3d = surfaces.ToroidalSurface3D(frame=design3d.OXYZ, major_radius=2, minor_radius=1, name='toroidal_surface_name')
            surface3d.plot(edge_style=EdgeStyle('orange'), length=2)
 
 ConicalSurface3D
@@ -788,11 +788,11 @@ To instanciate a ConicalSurface3D, you have to provide tree parameters: a `frame
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import surfaces
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import surfaces
+           from design3d.core import EdgeStyle
 
-           surface3d = surfaces.ConicalSurface3D(frame=volmdlr.OXYZ, semi_angle=1.5, name='conical_surface_name')
+           surface3d = surfaces.ConicalSurface3D(frame=design3d.OXYZ, semi_angle=1.5, name='conical_surface_name')
            surface3d.plot(edge_style=EdgeStyle('orange'), z=5)
 
 SphericalSurface3D
@@ -814,11 +814,11 @@ To instanciate a SphericalSurface3D, you have to provide tree parameters: a `fra
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import surfaces
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import surfaces
+           from design3d.core import EdgeStyle
 
-           surface3d = surfaces.SphericalSurface3D(frame=volmdlr.OXYZ, radius=2, name='spherical_surface_name')
+           surface3d = surfaces.SphericalSurface3D(frame=design3d.OXYZ, radius=2, name='spherical_surface_name')
            surface3d.plot(edge_style=EdgeStyle('orange'))
 
 RulledSurface3D
@@ -840,9 +840,9 @@ To instanciate it, you need to provide 3 parameters: `wire1`, `wire2`and `name`.
            :include-source:
            :align: center
 
-           import volmdlr
-           from volmdlr import surfaces
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import surfaces
+           from design3d.core import EdgeStyle
            #todo
 
 
@@ -853,7 +853,7 @@ This class represents a three-dimensional extrusion surface. It can be instancia
 
 `edge`: This is a parameter passed to the constructor, representing the edge that defines the curve to be extruded. It is of type Union[edges.FullArcEllipse3D, edges.BSplineCurve3D], indicating that the edge is expected to be an Ellipse or a B-Spline curve. But The edge can also be either a Wire3D or a Contour3D
 
-`direction`: This is a parameter passed to the constructor, representing the axis of extrusion. It is of type volmdlr.Vector3D. The direction vector is normalized to ensure it is a unit vector.
+`direction`: This is a parameter passed to the constructor, representing the axis of extrusion. It is of type design3d.Vector3D. The direction vector is normalized to ensure it is a unit vector.
 
 `name`: An optional parameter representing the name of the extrusion surface. The default value is an empty string if not provided.
 
@@ -865,16 +865,16 @@ This class represents a three-dimensional extrusion surface. It can be instancia
             :include-source:
             :align: center
 
-            import volmdlr
-            from volmdlr import edges, surfaces, curves
-            from volmdlr.core import EdgeStyle
+            import design3d
+            from design3d import edges, surfaces, curves
+            from design3d.core import EdgeStyle
 
-            circle3d = curves.Circle3D(volmdlr.OXYZ, 1)
+            circle3d = curves.Circle3D(design3d.OXYZ, 1)
 
             arc3d = edges.Arc3D(circle3d, start=circle3d.point_at_abscissa(0.2),
                                 end=circle3d.point_at_abscissa(2.5))
 
-            surface = surfaces.ExtrusionSurface3D(arc3d, volmdlr.Z3D)
+            surface = surfaces.ExtrusionSurface3D(arc3d, design3d.Z3D)
 
             surface.plot(edge_style=EdgeStyle('orange'))
 
@@ -886,9 +886,9 @@ RevolutionSurface3D
 
 `edge: This is a parameter passed to the constructor, representing the edge that defines the profile curve of the surface of revolution. It is of type edges.Edge, indicating that it is expected to be an edge.
 
-`axis_point`: This is a parameter passed to the constructor, representing the placement of the axis of revolution. It is of type volmdlr.Point3D.
+`axis_point`: This is a parameter passed to the constructor, representing the placement of the axis of revolution. It is of type design3d.Point3D.
 
-`axis`: This is a parameter passed to the constructor, representing the axis of revolution. It is of type volmdlr.Vector3D. The axis vector is normalized to ensure it is a unit vector.
+`axis`: This is a parameter passed to the constructor, representing the axis of revolution. It is of type design3d.Vector3D. The axis vector is normalized to ensure it is a unit vector.
 
 `name`: An optional parameter representing the name of the revolution surface. The default value is an empty string if not provided.
 
@@ -901,19 +901,19 @@ RevolutionSurface3D
             :align: center
 
             import math
-            import volmdlr
-            from volmdlr import edges, wires, surfaces
-            from volmdlr.core import EdgeStyle
+            import design3d
+            from design3d import edges, wires, surfaces
+            from design3d.core import EdgeStyle
 
-            linesegment = edges.LineSegment3D(volmdlr.Point3D(0.5, 0, 0), volmdlr.Point3D(0.5, 0, 0.5))
+            linesegment = edges.LineSegment3D(design3d.Point3D(0.5, 0, 0), design3d.Point3D(0.5, 0, 0.5))
 
-            arc = edges.Arc3D.from_3_points(volmdlr.Point3D(0.5, 0, 0.5),
-                            volmdlr.Point3D(0.3 + 0.2 * math.cos(math.pi / 6), 0, 0.5 + 0.2 * math.sin(math.pi / 6)),
-                            volmdlr.Point3D(0.3 + 0.2 * math.cos(math.pi / 3), 0, 0.5 + 0.2 * math.sin(math.pi / 3)))
+            arc = edges.Arc3D.from_3_points(design3d.Point3D(0.5, 0, 0.5),
+                            design3d.Point3D(0.3 + 0.2 * math.cos(math.pi / 6), 0, 0.5 + 0.2 * math.sin(math.pi / 6)),
+                            design3d.Point3D(0.3 + 0.2 * math.cos(math.pi / 3), 0, 0.5 + 0.2 * math.sin(math.pi / 3)))
 
             wire = wires.Wire3D([linesegment, arc])
-            axis_point = volmdlr.O3D
-            axis = volmdlr.Z3D
+            axis_point = design3d.O3D
+            axis = design3d.Z3D
             surface = surfaces.RevolutionSurface3D(wire, axis_point, axis)
             surface.plot(edge_style=EdgeStyle('orange'))
 
@@ -926,7 +926,7 @@ BSplineSurface3D
 
 `degree_v`: Represents the degree of the B-spline curve in the v direction.
 
-`control_points`: Represents a list of 3D control points that define the shape of the surface. The control points are of type List[volmdlr.Point3D].
+`control_points`: Represents a list of 3D control points that define the shape of the surface. The control points are of type List[design3d.Point3D].
 
 `nb_u`: Represents the number of control points in the u direction.
 
@@ -953,8 +953,8 @@ BSplineSurface3D
             :include-source:
             :align: center
 
-            from volmdlr import surfaces
-            from volmdlr.core import EdgeStyle
+            from design3d import surfaces
+            from design3d.core import EdgeStyle
             import numpy as np
 
             bsp = surfaces.BSplineSurface3D(3, 3, np.array([
@@ -1004,16 +1004,16 @@ Ensure to provide the necessary information for both `surface3d` and `surface2d`
 
         .. code-block:: python
 
-            import volmdlr
-            from volmdlr import edges, curves, surfaces, wires, faces
-            from volmdlr.core import EdgeStyle
+            import design3d
+            from design3d import edges, curves, surfaces, wires, faces
+            from design3d.core import EdgeStyle
 
-            surface3d = surfaces.Plane3D(volmdlr.Frame3D(volmdlr.Point3D(0.0, 0.0, 0.0), volmdlr.Vector3D(1.0, 0.0, 0.0),
-                                                        volmdlr.Vector3D(0.0, 1.0, 0.0), volmdlr.Vector3D(0.0, 0.0, 1.0)))
+            surface3d = surfaces.Plane3D(design3d.Frame3D(design3d.Point3D(0.0, 0.0, 0.0), design3d.Vector3D(1.0, 0.0, 0.0),
+                                                        design3d.Vector3D(0.0, 1.0, 0.0), design3d.Vector3D(0.0, 0.0, 1.0)))
 
-            outer_contour2d = wires.Contour2D.from_points(points=[volmdlr.Point2D(0., 0.), volmdlr.Point2D(2, 0),
-                                                                 volmdlr.Point2D(2, 2), volmdlr.Point2D(1, 2),
-                                                                 volmdlr.Point2D(1, 1), volmdlr.Point2D(0, 1)])
+            outer_contour2d = wires.Contour2D.from_points(points=[design3d.Point2D(0., 0.), design3d.Point2D(2, 0),
+                                                                 design3d.Point2D(2, 2), design3d.Point2D(1, 2),
+                                                                 design3d.Point2D(1, 1), design3d.Point2D(0, 1)])
             inner_contours2d = []
             surface2d = surfaces.Surface2D(outer_contour=outer_contour2d, inner_contours=inner_contours2d)
 
@@ -1035,11 +1035,11 @@ A Triangle3D receives three mandatory arguments: The three vertices points of th
 
         .. code-block:: python
 
-           import volmdlr
-           from volmdlr import edges, curves, surfaces, wires, faces
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges, curves, surfaces, wires, faces
+           from design3d.core import EdgeStyle
 
-           triangle3d = faces.Triangle3D(volmdlr.Point3D(0., 0., 1.0), volmdlr.Point3D(2, 0, 0.2), volmdlr.Point3D(2, 2, 3.0))
+           triangle3d = faces.Triangle3D(design3d.Point3D(0., 0., 1.0), design3d.Point3D(2, 0, 0.2), design3d.Point3D(2, 2, 3.0))
            triangle3d.babylonjs()
 
         .. figure:: ../source/_static/index-images/triangle3d.png
@@ -1061,21 +1061,21 @@ Ensure to provide the necessary information for both `surface3d` and `surface2d`
 
         .. code-block:: python
 
-           import volmdlr
-           from volmdlr import edges, curves, surfaces, wires, faces
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges, curves, surfaces, wires, faces
+           from design3d.core import EdgeStyle
 
-           vector1 = volmdlr.Vector3D(1, 1, 1)
+           vector1 = design3d.Vector3D(1, 1, 1)
            vector1 = vector1.unit_vector()
            vector2 = vector1.deterministic_unit_normal_vector()
            vector3 = vector1.cross(vector2)
-           frame = volmdlr.Frame3D(volmdlr.O3D, vector1, vector2, vector3)
+           frame = design3d.Frame3D(design3d.O3D, vector1, vector2, vector3)
 
            surface3d = surfaces.CylindricalSurface3D(frame, 1)
 
-           outer_contour2d = wires.Contour2D.from_points(points=[volmdlr.Point2D(0., 0.), volmdlr.Point2D(4, 0),
-                                                                            volmdlr.Point2D(4, 4), volmdlr.Point2D(2, 4),
-                                                                            volmdlr.Point2D(2, 2), volmdlr.Point2D(0, 2)])
+           outer_contour2d = wires.Contour2D.from_points(points=[design3d.Point2D(0., 0.), design3d.Point2D(4, 0),
+                                                                            design3d.Point2D(4, 4), design3d.Point2D(2, 4),
+                                                                            design3d.Point2D(2, 2), design3d.Point2D(0, 2)])
            surface2d = surfaces.Surface2D(outer_contour=outer_contour2d, inner_contours=[])
 
            face3d = faces.CylindricalFace3D(surface3d, surface2d)
@@ -1105,14 +1105,14 @@ Ensure to provide the necessary information for both `surface3d` and `surface2d`
 
         .. code-block:: python
 
-           import volmdlr
-           from volmdlr import edges, curves, surfaces, wires, faces
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges, curves, surfaces, wires, faces
+           from design3d.core import EdgeStyle
 
 
-           surface3d = surfaces.ToroidalSurface3D(volmdlr.OXYZ, major_radius=0.2, minor_radius=0.03, name='optional_toroidalsurface3d\'s_name')
+           surface3d = surfaces.ToroidalSurface3D(design3d.OXYZ, major_radius=0.2, minor_radius=0.03, name='optional_toroidalsurface3d\'s_name')
 
-           points = [volmdlr.Point2D(-1.0, 0), volmdlr.Point2D(1, 0), volmdlr.Point2D(1, 3.5), volmdlr.Point2D(-1, 3.5)]
+           points = [design3d.Point2D(-1.0, 0), design3d.Point2D(1, 0), design3d.Point2D(1, 3.5), design3d.Point2D(-1, 3.5)]
            outer_contour2d = wires.Contour2D.from_points(points=points)
            surface2d = surfaces.Surface2D(outer_contour=outer_contour2d, inner_contours=[])
 
@@ -1142,14 +1142,14 @@ Ensure to provide the necessary information for both `surface3d` and `surface2d`
 
         .. code-block:: python
 
-           import volmdlr
-           from volmdlr import edges, curves, surfaces, wires, faces
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges, curves, surfaces, wires, faces
+           from design3d.core import EdgeStyle
 
 
-           surface3d = surfaces.ConicalSurface3D(volmdlr.OXYZ, semi_angle=0.2, name='optional_conicalsurface3d\'s_name')
+           surface3d = surfaces.ConicalSurface3D(design3d.OXYZ, semi_angle=0.2, name='optional_conicalsurface3d\'s_name')
 
-           points = [volmdlr.Point2D(-1.0, 0.0), volmdlr.Point2D(3.0, 0.0), volmdlr.Point2D(3.0, 4.0), volmdlr.Point2D(-1.0, 4.0)]
+           points = [design3d.Point2D(-1.0, 0.0), design3d.Point2D(3.0, 0.0), design3d.Point2D(3.0, 4.0), design3d.Point2D(-1.0, 4.0)]
            outer_contour2d = wires.Contour2D.from_points(points=points)
            surface2d = surfaces.Surface2D(outer_contour=outer_contour2d, inner_contours=[])
 
@@ -1180,14 +1180,14 @@ Ensure to provide the necessary information for both `surface3d` and `surface2d`
 
         .. code-block:: python
 
-           import volmdlr
-           from volmdlr import edges, curves, surfaces, wires, faces
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges, curves, surfaces, wires, faces
+           from design3d.core import EdgeStyle
 
 
-           surface3d = surfaces.SphericalSurface3D(volmdlr.OXYZ, radius=0.2, name='optional_sphericalsurface3d\'s_name')
+           surface3d = surfaces.SphericalSurface3D(design3d.OXYZ, radius=0.2, name='optional_sphericalsurface3d\'s_name')
 
-           points = [volmdlr.Point2D(0.0, 0.0), volmdlr.Point2D(2.5, 0.0), volmdlr.Point2D(2.5, 1.5), volmdlr.Point2D(0.0, 1.5)]
+           points = [design3d.Point2D(0.0, 0.0), design3d.Point2D(2.5, 0.0), design3d.Point2D(2.5, 1.5), design3d.Point2D(0.0, 1.5)]
            outer_contour2d = wires.Contour2D.from_points(points=points)
            surface2d = surfaces.Surface2D(outer_contour=outer_contour2d, inner_contours=[])
 
@@ -1221,17 +1221,17 @@ Ensure to provide the necessary information for both `surface3d` and `surface2d`
 
         .. code-block:: python
 
-           import volmdlr
-           from volmdlr import edges, curves, surfaces, wires, faces
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges, curves, surfaces, wires, faces
+           from design3d.core import EdgeStyle
 
 
-           arc2 = volmdlr.edges.Arc3D(curves.Circle3D(volmdlr.OXYZ, 1), volmdlr.Point3D(1, 0, 0), volmdlr.Point3D(0, 1, 0))
-           surface3d = surfaces.ExtrusionSurface3D(edge=arc2, direction=volmdlr.Z3D)
+           arc2 = design3d.edges.Arc3D(curves.Circle3D(design3d.OXYZ, 1), design3d.Point3D(1, 0, 0), design3d.Point3D(0, 1, 0))
+           surface3d = surfaces.ExtrusionSurface3D(edge=arc2, direction=design3d.Z3D)
 
-           outer_contour2d = wires.Contour2D.from_points(points=[volmdlr.Point2D(0., 0.), volmdlr.Point2D(1, 0),
-                                                                            volmdlr.Point2D(1, 1), volmdlr.Point2D(0.5, 1),
-                                                                            volmdlr.Point2D(0.5, 0.5), volmdlr.Point2D(0, 0.5)])
+           outer_contour2d = wires.Contour2D.from_points(points=[design3d.Point2D(0., 0.), design3d.Point2D(1, 0),
+                                                                            design3d.Point2D(1, 1), design3d.Point2D(0.5, 1),
+                                                                            design3d.Point2D(0.5, 0.5), design3d.Point2D(0, 0.5)])
            inner_contours2d = []
            surface2d = surfaces.Surface2D(outer_contour=outer_contour2d, inner_contours=inner_contours2d)
 
@@ -1263,28 +1263,28 @@ Ensure to provide the necessary information for both `surface3d` and `surface2d`
 
         .. code-block:: python
 
-           import volmdlr
-           from volmdlr import edges, curves, surfaces, wires, faces
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges, curves, surfaces, wires, faces
+           from design3d.core import EdgeStyle
 
            fullarc = edges.FullArc3D(circle=curves.Circle3D(
-                        volmdlr.Frame3D(
-                            volmdlr.Point3D(0.003516498393599, -0.01267818173491, 0.0), volmdlr.Vector3D(1.0, 0.0, 0.0),
-                            volmdlr.Vector3D(0.0, 1.0, 0.0), volmdlr.Vector3D(0.0, 0.0, 1.0)), radius=0.024102542625267),
-                            start_end=volmdlr.Point3D(0.027619041018866, -0.01267818173491, 0.0))
+                        design3d.Frame3D(
+                            design3d.Point3D(0.003516498393599, -0.01267818173491, 0.0), design3d.Vector3D(1.0, 0.0, 0.0),
+                            design3d.Vector3D(0.0, 1.0, 0.0), design3d.Vector3D(0.0, 0.0, 1.0)), radius=0.024102542625267),
+                            start_end=design3d.Point3D(0.027619041018866, -0.01267818173491, 0.0))
 
            surface3d = surfaces.RevolutionSurface3D(
-                edge=fullarc, axis_point=volmdlr.Point3D(0, 0, 0), axis=volmdlr.Vector3D(0, 1, 0))
+                edge=fullarc, axis_point=design3d.Point3D(0, 0, 0), axis=design3d.Vector3D(0, 1, 0))
 
 
-           outer_contour2d = wires.Contour2D(primitives=[edges.LineSegment2D(volmdlr.Point2D(0.0, 0.023550776716126855),
-                                                                  volmdlr.Point2D(6.283185307179586, 0.023550776716126855)),
-                                              edges.LineSegment2D(volmdlr.Point2D(6.283185307179586, 0.023550776716126855),
-                                                                  volmdlr.Point2D(6.283185307179586, 0.016162537035284696)),
-                                              edges.LineSegment2D(volmdlr.Point2D(6.283185307179586, 0.016162537035284696),
-                                                                  volmdlr.Point2D(0.0, 0.016162537035284696)),
-                                              edges.LineSegment2D(volmdlr.Point2D(0.0, 0.016162537035284696),
-                                                                  volmdlr.Point2D(0.0, 0.023550776716126855))])
+           outer_contour2d = wires.Contour2D(primitives=[edges.LineSegment2D(design3d.Point2D(0.0, 0.023550776716126855),
+                                                                  design3d.Point2D(6.283185307179586, 0.023550776716126855)),
+                                              edges.LineSegment2D(design3d.Point2D(6.283185307179586, 0.023550776716126855),
+                                                                  design3d.Point2D(6.283185307179586, 0.016162537035284696)),
+                                              edges.LineSegment2D(design3d.Point2D(6.283185307179586, 0.016162537035284696),
+                                                                  design3d.Point2D(0.0, 0.016162537035284696)),
+                                              edges.LineSegment2D(design3d.Point2D(0.0, 0.016162537035284696),
+                                                                  design3d.Point2D(0.0, 0.023550776716126855))])
            inner_contours2d = []
            surface2d = surfaces.Surface2D(outer_contour=outer_contour2d, inner_contours=inner_contours2d)
            face = faces.RevolutionFace3D(surface3d, surface2d)
@@ -1313,21 +1313,21 @@ Ensure to provide the necessary information for both `surface3d` and `surface2d`
 
         .. code-block:: python
 
-           import volmdlr
-           from volmdlr import edges, curves, surfaces, wires, faces
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges, curves, surfaces, wires, faces
+           from design3d.core import EdgeStyle
 
-           control_points = [volmdlr.Point3D(0, 0, 0), volmdlr.Point3D(0.1, 0.02, 0), volmdlr.Point3D(0.2, 0.02, 0),
-                             volmdlr.Point3D(0, 0, 0.15), volmdlr.Point3D(0.1, 0.02, 0.15), volmdlr.Point3D(0.2, 0.02, 0.15),
-                             volmdlr.Point3D(0, 0, 0.3), volmdlr.Point3D(0.1, 0.021, 0.3), volmdlr.Point3D(0.2, 0.022, 0.3)
+           control_points = [design3d.Point3D(0, 0, 0), design3d.Point3D(0.1, 0.02, 0), design3d.Point3D(0.2, 0.02, 0),
+                             design3d.Point3D(0, 0, 0.15), design3d.Point3D(0.1, 0.02, 0.15), design3d.Point3D(0.2, 0.02, 0.15),
+                             design3d.Point3D(0, 0, 0.3), design3d.Point3D(0.1, 0.021, 0.3), design3d.Point3D(0.2, 0.022, 0.3)
                   ]
 
            surface3d = surfaces.BSplineSurface3D(degree_u=2, degree_v=2, control_points=control_points, nb_u=3, nb_v=3,
                                                u_multiplicities=[1, 2, 2, 1], v_multiplicities=[1, 2, 2, 1],
                                                u_knots=[0.1, 0.3, 0.5, 0.7], v_knots=[0.1, 0.3, 0.5, 0.7])
 
-           outer_contour2d = wires.Contour2D.from_points(points=[volmdlr.Point2D(0, 0), volmdlr.Point2D(1, 0),
-                                                                 volmdlr.Point2D(1, 1), volmdlr.Point2D(0, 1)])
+           outer_contour2d = wires.Contour2D.from_points(points=[design3d.Point2D(0, 0), design3d.Point2D(1, 0),
+                                                                 design3d.Point2D(1, 1), design3d.Point2D(0, 1)])
            inner_contours2d = []
            surface2d = surfaces.Surface2D(outer_contour=outer_contour2d, inner_contours=inner_contours2d)
 
@@ -1354,20 +1354,20 @@ In the example bellow, it is shown the definition of the shell's lateral faces.
 
         .. code-block:: python
 
-           import volmdlr
-           from volmdlr import edges, curves, surfaces, wires, faces, shells
-           from volmdlr.core import EdgeStyle
+           import design3d
+           from design3d import edges, curves, surfaces, wires, faces, shells
+           from design3d.core import EdgeStyle
            import math
 
-           polygon1_vol1 = wires.ClosedPolygon3D([volmdlr.Point3D(-0.1, -0.05, 0), volmdlr.Point3D(-0.15, 0.1, 0),
-                               volmdlr.Point3D(0.05, 0.2, 0), volmdlr.Point3D(0.12, 0.15, 0), volmdlr.Point3D(0.1, -0.02, 0)])
+           polygon1_vol1 = wires.ClosedPolygon3D([design3d.Point3D(-0.1, -0.05, 0), design3d.Point3D(-0.15, 0.1, 0),
+                               design3d.Point3D(0.05, 0.2, 0), design3d.Point3D(0.12, 0.15, 0), design3d.Point3D(0.1, -0.02, 0)])
 
-           polygon2_vol1 = polygon1_vol1.rotation(volmdlr.O3D, volmdlr.Z3D, math.pi).translation(0.2*volmdlr.Z3D)
-           polygon3_vol1 = polygon2_vol1.rotation(volmdlr.O3D, volmdlr.Z3D, math.pi/8).translation(0.1*(volmdlr.Z3D+volmdlr.X3D+volmdlr.Y3D))
+           polygon2_vol1 = polygon1_vol1.rotation(design3d.O3D, design3d.Z3D, math.pi).translation(0.2*design3d.Z3D)
+           polygon3_vol1 = polygon2_vol1.rotation(design3d.O3D, design3d.Z3D, math.pi/8).translation(0.1*(design3d.Z3D+design3d.X3D+design3d.Y3D))
            faces_ = [faces.Triangle3D(*points)
-                   for points in polygon1_vol1.sewing(polygon2_vol1, volmdlr.X3D, volmdlr.Y3D)] + \
+                   for points in polygon1_vol1.sewing(polygon2_vol1, design3d.X3D, design3d.Y3D)] + \
                    [faces.Triangle3D(*points)
-                   for points in polygon2_vol1.sewing(polygon3_vol1, volmdlr.X3D, volmdlr.Y3D)]
+                   for points in polygon2_vol1.sewing(polygon3_vol1, design3d.X3D, design3d.Y3D)]
 
 
 OpenShell3D
@@ -1399,11 +1399,11 @@ ClosedShell3D
 
         .. code-block:: python
 
-           bottom_surface3d = surfaces.Plane3D.from_plane_vectors(volmdlr.O3D, volmdlr.X3D, volmdlr.Y3D)
-           bottom_surface2d = surfaces.Surface2D(polygon1_vol1.to_2d(volmdlr.O3D, volmdlr.X3D, volmdlr.Y3D),[])
+           bottom_surface3d = surfaces.Plane3D.from_plane_vectors(design3d.O3D, design3d.X3D, design3d.Y3D)
+           bottom_surface2d = surfaces.Surface2D(polygon1_vol1.to_2d(design3d.O3D, design3d.X3D, design3d.Y3D),[])
 
-           top_surface3d = surfaces.Plane3D.from_plane_vectors(0.3*volmdlr.Z3D, volmdlr.X3D, volmdlr.Y3D)
-           top_surface2d = surfaces.Surface2D(polygon3_vol1.to_2d(volmdlr.O3D, volmdlr.X3D, volmdlr.Y3D),[])
+           top_surface3d = surfaces.Plane3D.from_plane_vectors(0.3*design3d.Z3D, design3d.X3D, design3d.Y3D)
+           top_surface2d = surfaces.Surface2D(polygon3_vol1.to_2d(design3d.O3D, design3d.X3D, design3d.Y3D),[])
 
            bottom_face = faces.PlaneFace3D(bottom_surface3d, bottom_surface2d)
            top_face = faces.PlaneFace3D(top_surface3d, top_surface2d)
@@ -1427,15 +1427,15 @@ The optional keyword arguments include color (RGB tuple representing the color o
 
 .. code-block:: python
 
-    import volmdlr  # Import the necessary module
-    from volmdlr import primitives3d
+    import design3d  # Import the necessary module
+    from design3d import primitives3d
 
     # Define the 3D frame for the block
-    frame = volmdlr.Frame3D(
-        origin=volmdlr.Point3D(0, 0, 0),  # Center of the block
-        u=volmdlr.Vector3D(1, 0, 0),  # Vector defining one edge
-        v=volmdlr.Vector3D(0, 1, 0),  # Vector defining another edge
-        w=volmdlr.Vector3D(0, 0, 1)   # Vector defining the third edge
+    frame = design3d.Frame3D(
+        origin=design3d.Point3D(0, 0, 0),  # Center of the block
+        u=design3d.Vector3D(1, 0, 0),  # Vector defining one edge
+        v=design3d.Vector3D(0, 1, 0),  # Vector defining another edge
+        w=design3d.Vector3D(0, 0, 1)   # Vector defining the third edge
     )
 
     # Create a block instance
@@ -1463,12 +1463,12 @@ Here is how you can instantiate it:
 
 .. code-block:: python
 
-    import volmdlr
-    from volmdlr import primitives3d
+    import design3d
+    from design3d import primitives3d
 
 
     # Define the 3D frame for the cylinder
-    frame = volmdlr.OXYZ
+    frame = design3d.OXYZ
 
     # Define cylinder parameters
     radius = 1.0
@@ -1495,10 +1495,10 @@ Here is how you can instantiate it:
 
 .. code-block:: python
 
-    import volmdlr
-    from volmdlr import primitives3d
+    import design3d
+    from design3d import primitives3d
 
-    frame = volmdlr.OXYZ
+    frame = design3d.OXYZ
     inner_radius = 1.0
     outer_radius = 1.5
     length = 4.0
@@ -1524,10 +1524,10 @@ Here is how you can instantiate it:
 
 .. code-block:: python
 
-    import volmdlr
-    from volmdlr import primitives3d
+    import design3d
+    from design3d import primitives3d
 
-    frame = volmdlr.OXYZ
+    frame = design3d.OXYZ
     radius = 0.2
     length = 0.5
     cone = primitives3d.Cone(frame=frame, radius = radius, length=length, color=(0.5, 0.5, 0.5), alpha=0.8, name='MyCone')
@@ -1547,11 +1547,11 @@ Here is how you can instantiate it:
 
 .. code-block:: python
 
-    import volmdlr
-    from volmdlr import primitives3d
+    import design3d
+    from design3d import primitives3d
 
     # Define the center point of the sphere
-    center = volmdlr.Point3D(0, 0, 0)
+    center = design3d.Point3D(0, 0, 0)
 
     # Define the radius of the sphere
     radius = 2.0
@@ -1578,18 +1578,18 @@ The constructor takes several parameters:
 
 .. code-block:: python
 
-    import volmdlr
-    from volmdlr import primitives3d
+    import design3d
+    from design3d import primitives3d
     import math
     # Define the 3D frame for the revolved profile
-    frame = volmdlr.OYZX
+    frame = design3d.OYZX
 
     # Define the 2D contour to be revolved
-    contour2d = volmdlr.wires.Contour2D.from_points([volmdlr.Point2D(0, 0), volmdlr.Point2D(1, 0), volmdlr.Point2D(1, 1)])
+    contour2d = design3d.wires.Contour2D.from_points([design3d.Point2D(0, 0), design3d.Point2D(1, 0), design3d.Point2D(1, 1)])
 
     # Define the axis of revolution
-    axis_point = volmdlr.Point3D(0, 0, 0)
-    axis = volmdlr.Vector3D(0, 0, 1)
+    axis_point = design3d.Point3D(0, 0, 0)
+    axis = design3d.Vector3D(0, 0, 1)
 
     # Create a revolved profile instance
     revolved_profile = primitives3d.RevolvedProfile(frame, contour2d, axis_point, axis, angle=math.pi / 2,
@@ -1619,20 +1619,20 @@ Here's an explanation of the class and an example of how it could be used:
 
 .. code-block:: python
 
-    import volmdlr  # Import the necessary module
-    from volmdlr import primitives3d
+    import design3d  # Import the necessary module
+    from design3d import primitives3d
 
     # Define the 3D frame for the extruded profile
-    frame = volmdlr.Frame3D(
-        origin=volmdlr.Point3D(0, 0, 0),
-        u=volmdlr.Vector3D(1, 0, 0),
-        v=volmdlr.Vector3D(0, 1, 0),
-        w=volmdlr.Vector3D(0, 0, 1)
+    frame = design3d.Frame3D(
+        origin=design3d.Point3D(0, 0, 0),
+        u=design3d.Vector3D(1, 0, 0),
+        v=design3d.Vector3D(0, 1, 0),
+        w=design3d.Vector3D(0, 0, 1)
     )
 
     # Define the outer and inner 2D contours
-    outer_contour2d = volmdlr.wires.Contour2D.from_points([volmdlr.Point2D(0, 0), volmdlr.Point2D(1, 0), volmdlr.Point2D(1, 1)])
-    inner_contours2d = [volmdlr.wires.Contour2D.from_points([volmdlr.Point2D(0.3, 0.2), volmdlr.Point2D(0.8, 0.2), volmdlr.Point2D(0.8, 0.7)])]
+    outer_contour2d = design3d.wires.Contour2D.from_points([design3d.Point2D(0, 0), design3d.Point2D(1, 0), design3d.Point2D(1, 1)])
+    inner_contours2d = [design3d.wires.Contour2D.from_points([design3d.Point2D(0.3, 0.2), design3d.Point2D(0.8, 0.2), design3d.Point2D(0.8, 0.7)])]
 
     # Create an extruded profile instance
     extruded_profile = primitives3d.ExtrudedProfile(frame, outer_contour2d, inner_contours2d, extrusion_length=2.0, color=(0.5, 0.5, 0.5), alpha=0.8, name='MyExtrusion')
@@ -1658,16 +1658,16 @@ The constructor takes several parameters:
 
     import random
 
-    import volmdlr
-    from volmdlr import primitives3d
+    import design3d
+    from design3d import primitives3d
 
     random.seed(2)
 
-    p1 = volmdlr.Point3D(0, 0, 0)
-    p2 = volmdlr.Point3D(-0.150, 0, 0)
-    p3 = volmdlr.Point3D(-0.150, 0.215, 0)
-    p4 = volmdlr.Point3D(-0.150, 0.215, -0.058)
-    p5 = volmdlr.Point3D(-0.220, 0.186, -0.042)
+    p1 = design3d.Point3D(0, 0, 0)
+    p2 = design3d.Point3D(-0.150, 0, 0)
+    p3 = design3d.Point3D(-0.150, 0.215, 0)
+    p4 = design3d.Point3D(-0.150, 0.215, -0.058)
+    p5 = design3d.Point3D(-0.220, 0.186, -0.042)
 
     points = [p1, p2, p3, p4, p5]
     radius = {1: 0.015, 2: 0.020, 3: 0.03}
@@ -1675,14 +1675,14 @@ The constructor takes several parameters:
     current_point = p5
 
     for i in range(6):
-        current_point += volmdlr.Point3D.random(-0.1, 0.3, -0.1, 0.3, -0.1, 0.3)
+        current_point += design3d.Point3D.random(-0.1, 0.3, -0.1, 0.3, -0.1, 0.3)
         points.append(current_point)
         radius[4 + i] = 0.01 + 0.03 * random.random()
 
 
     open_rounded_line_segements = primitives3d.OpenRoundedLineSegments3D(points, radius, adapt_radius=True, name='wire')
-    contour = wires.ClosedPolygon2D([volmdlr.Point2D(-0.004, -0.004), volmdlr.Point2D(0.004, -0.004),
-                                     volmdlr.Point2D(0.004, 0.004), volmdlr.Point2D(-0.004, 0.004)])
+    contour = wires.ClosedPolygon2D([design3d.Point2D(-0.004, -0.004), design3d.Point2D(0.004, -0.004),
+                                     design3d.Point2D(0.004, 0.004), design3d.Point2D(-0.004, 0.004)])
     sweep = primitives3d.Sweep(contour, open_rounded_line_segements, color=(0.5, 0.5, 0.5), alpha=0.8, name='MySweep')
     sweep.babylonjs()
 

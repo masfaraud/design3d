@@ -29,8 +29,8 @@ import design3d.core_compiled
 import design3d.geometry
 from design3d import curves as design3d_curves
 from design3d import get_minimum_distance_points_lines, PATH_ROOT
-import design3d.utils.common_operations as vm_common_operations
-import design3d.utils.intersections as vm_utils_intersections
+import design3d.utils.common_operations as d3d_common_operations
+import design3d.utils.intersections as d3d_utils_intersections
 from design3d.core import EdgeStyle
 # pylint: disable=arguments-differ
 
@@ -337,7 +337,7 @@ class Edge:
             min_dist, point_min_dist_1, _ = bspline.minimum_distance(edge2_, True)
             if not math.isclose(min_dist, 0.0, abs_tol=1e-6):
                 continue
-            intersections_points = vm_utils_intersections.get_bsplinecurve_intersections(
+            intersections_points = d3d_utils_intersections.get_bsplinecurve_intersections(
                 edge2_, bspline, abs_tol=abs_tol)
             if not intersections_points:
                 intersections.append(point_min_dist_1)
@@ -369,7 +369,7 @@ class Edge:
             return intersections
         if hasattr(edge2, 'start') and hasattr(edge2, 'end'):
             return self._generic_edge_intersections(edge2, abs_tol)
-        return vm_utils_intersections.get_bsplinecurve_intersections(edge2, self, abs_tol)
+        return d3d_utils_intersections.get_bsplinecurve_intersections(edge2, self, abs_tol)
 
     def validate_crossings(self, edge, intersection):
         """Validates the intersections as crossings: edge not touching the other at one end, or in a tangent point."""
@@ -419,7 +419,7 @@ class Edge:
         """
         abscissa1 = self.abscissa(point1)
         abscissa2 = self.abscissa(point2)
-        return vm_common_operations.get_abscissa_discretization(self, abscissa1, abscissa2, number_points, False)
+        return d3d_common_operations.get_abscissa_discretization(self, abscissa1, abscissa2, number_points, False)
 
     def trim(self, point1, point2, *args, **kwargs):
         """
@@ -453,7 +453,7 @@ class Edge:
         :return: distance.
         """
 
-        return vm_common_operations.get_point_distance_to_edge(self, point, self.start, self.end)
+        return d3d_common_operations.get_point_distance_to_edge(self, point, self.start, self.end)
 
     @property
     def simplify(self):
@@ -484,7 +484,7 @@ class Edge:
         :param return_points: Weather to return the corresponding points or not.
         :return: distance to edge.
         """
-        return vm_common_operations.generic_minimum_distance(self, element, self.start, self.end,
+        return d3d_common_operations.generic_minimum_distance(self, element, self.start, self.end,
                                                              element.start, element.end, return_points)
 
     def minimum_distance(self, element, return_points=False):
@@ -518,7 +518,7 @@ class Edge:
             discretization points
         :return: list of locally discretized point and a list containing the abscissas' values.
         """
-        return vm_common_operations.get_abscissa_discretization(self, abscissa1, abscissa2,
+        return d3d_common_operations.get_abscissa_discretization(self, abscissa1, abscissa2,
                                                                 max_number_points, return_abscissas)
 
     def sort_points_along_curve(self, points: List[Union[design3d.Point2D, design3d.Point3D]]):
@@ -2278,7 +2278,7 @@ class BSplineCurve2D(BSplineCurve):
         """
         if self.bounding_rectangle.distance_to_b_rectangle(linesegment2d.bounding_rectangle) > abs_tol:
             return []
-        intersections_points = vm_utils_intersections.get_bsplinecurve_intersections(
+        intersections_points = d3d_utils_intersections.get_bsplinecurve_intersections(
             linesegment2d, self, abs_tol=abs_tol)
         return intersections_points
 
@@ -3191,7 +3191,7 @@ class Arc2D(ArcMixin, Edge):
 
     def arc_intersections(self, arc, abs_tol: float = 1e-6):
         """Intersections between two arc 2d."""
-        circle_intersections = vm_utils_intersections.get_circle_intersections(self.circle, arc.circle)
+        circle_intersections = d3d_utils_intersections.get_circle_intersections(self.circle, arc.circle)
         arc_intersections = [inter for inter in circle_intersections
                              if self.point_belongs(inter, abs_tol) and arc.point_belongs(inter, abs_tol)]
         return arc_intersections
@@ -3206,7 +3206,7 @@ class Arc2D(ArcMixin, Edge):
         """
         if self.bounding_rectangle.distance_to_b_rectangle(arcellipse.bounding_rectangle) > abs_tol:
             return []
-        intersections = vm_utils_intersections.get_bsplinecurve_intersections(arcellipse, self, abs_tol)
+        intersections = d3d_utils_intersections.get_bsplinecurve_intersections(arcellipse, self, abs_tol)
         return intersections
 
     def abscissa(self, point: design3d.Point2D, tol=1e-6):
@@ -3709,7 +3709,7 @@ class FullArc2D(FullArcMixin, Arc2D):
 
     def plot(self, ax=None, edge_style: EdgeStyle = EdgeStyle()):
         """Plots a fullarc using Matplotlib."""
-        return vm_common_operations.plot_circle(self.circle, ax, edge_style)
+        return d3d_common_operations.plot_circle(self.circle, ax, edge_style)
 
     def line_intersections(self, line2d: design3d_curves.Line2D, tol=1e-9):
         """Full Arc 2D intersections with a Line 2D."""
@@ -3953,7 +3953,7 @@ class ArcEllipse2D(ArcEllipseMixin, Edge):
         u1, u2 = initial_point.x / self.ellipse.major_axis, initial_point.y / self.ellipse.minor_axis
         initial_angle = design3d.geometry.sin_cos_angle(u1, u2)
         angle_start, initial_angle = self.valid_abscissa_start_end_angle(initial_angle)
-        abscissa_angle = vm_common_operations.ellipse_abscissa_angle_integration(
+        abscissa_angle = d3d_common_operations.ellipse_abscissa_angle_integration(
             self.ellipse, abscissa, angle_start, initial_angle)
         x = self.ellipse.major_axis * math.cos(abscissa_angle)
         y = self.ellipse.minor_axis * math.sin(abscissa_angle)
@@ -4099,7 +4099,7 @@ class ArcEllipse2D(ArcEllipseMixin, Edge):
         self.end.plot(ax=ax, color='b')
         self.ellipse.center.plot(ax=ax, color='y')
 
-        return vm_common_operations.plot_from_discretization_points(ax, edge_style, self, number_points=100)
+        return d3d_common_operations.plot_from_discretization_points(ax, edge_style, self, number_points=100)
 
     def normal_vector(self, abscissa):
         """
@@ -4161,7 +4161,7 @@ class ArcEllipse2D(ArcEllipseMixin, Edge):
         :param tol: maximum tolerance.
         :return: List with all intersections
         """
-        ellipse2d_linesegment_intersections = vm_utils_intersections.ellipse2d_line_intersections(
+        ellipse2d_linesegment_intersections = d3d_utils_intersections.ellipse2d_line_intersections(
             self.ellipse, line2d)
         linesegment_intersections = []
         for inter in ellipse2d_linesegment_intersections:
@@ -4196,7 +4196,7 @@ class ArcEllipse2D(ArcEllipseMixin, Edge):
         """
         if self.bounding_rectangle.distance_to_b_rectangle(bspline.bounding_rectangle) > abs_tol:
             return []
-        intersections = vm_utils_intersections.get_bsplinecurve_intersections(self, bspline, abs_tol)
+        intersections = d3d_utils_intersections.get_bsplinecurve_intersections(self, bspline, abs_tol)
         return intersections
 
     def rotation(self, center, angle: float):
@@ -4464,7 +4464,7 @@ class FullArcEllipse2D(FullArcEllipse, ArcEllipse2D):
         """
         if ax is None:
             _, ax = plt.subplots()
-        ax = vm_common_operations.plot_from_discretization_points(
+        ax = d3d_common_operations.plot_from_discretization_points(
             ax, edge_style=edge_style, element=self, number_points=50)
         if edge_style.equal_aspect:
             ax.set_aspect('equal')
@@ -5451,14 +5451,14 @@ class BSplineCurve3D(BSplineCurve):
         """Get the intersections with the specified curve."""
         if self.bounding_box.distance_to_bbox(curve.bounding_box) > abs_tol:
             return []
-        intersections_points = vm_utils_intersections.get_bsplinecurve_intersections(curve, self, abs_tol=abs_tol)
+        intersections_points = d3d_utils_intersections.get_bsplinecurve_intersections(curve, self, abs_tol=abs_tol)
         return intersections_points
 
     def circle_intersections(self, circle, abs_tol: float = 1e-6):
         """Get the intersections with the specified circle."""
         if self.bounding_box.distance_to_bbox(circle.bounding_box) > abs_tol:
             return []
-        intersections_points = vm_utils_intersections.get_bsplinecurve_intersections(circle, self, abs_tol=abs_tol)
+        intersections_points = d3d_utils_intersections.get_bsplinecurve_intersections(circle, self, abs_tol=abs_tol)
         return intersections_points
 
     def is_shared_section_possible(self, other_bspline2, tol):
@@ -5772,7 +5772,7 @@ class Arc3D(ArcMixin, Edge):
         if ax is None:
             fig = plt.figure()
             ax = fig.add_subplot(111, projection='3d')
-        ax = vm_common_operations.plot_from_discretization_points(
+        ax = d3d_common_operations.plot_from_discretization_points(
             ax, edge_style=edge_style, element=self, number_points=25)
         if edge_style.edge_ends:
             self.start.plot(ax=ax, color='r')
@@ -5886,7 +5886,7 @@ class Arc3D(ArcMixin, Edge):
         :param return_points: boolean to decide weather to return the corresponding minimal distance points or not.
         :return: minimum distance / minimal distance with corresponding points.
         """
-        point1, point2 = vm_common_operations.minimum_distance_points_circle3d_linesegment3d(self, linesegment3d)
+        point1, point2 = d3d_common_operations.minimum_distance_points_circle3d_linesegment3d(self, linesegment3d)
         if return_points:
             return point1.point_distance(point2), point1, point2
         return point1.point_distance(point2)
@@ -6010,7 +6010,7 @@ class Arc3D(ArcMixin, Edge):
             return [self.start]
         if line3d.point_belongs(self.end):
             return [self.end]
-        circle3d_lineseg_inters = vm_utils_intersections.circle_3d_line_intersections(self.circle, line3d)
+        circle3d_lineseg_inters = d3d_utils_intersections.circle_3d_line_intersections(self.circle, line3d)
         linesegment_intersections = []
         for intersection in circle3d_lineseg_inters:
             if self.point_belongs(intersection, tol):
@@ -6164,7 +6164,7 @@ class FullArc3D(FullArcMixin, Arc3D):
             ax = plt.figure().add_subplot(111, projection='3d')
         if show_frame:
             self.circle.frame.plot(ax, ratio=self.radius)
-        ax = vm_common_operations.plot_from_discretization_points(
+        ax = d3d_common_operations.plot_from_discretization_points(
             ax, edge_style=edge_style, element=self, number_points=100, close_plot=True)
         if edge_style.edge_ends:
             self.start.plot(ax=ax)
@@ -6479,7 +6479,7 @@ class ArcEllipse3D(ArcEllipseMixin, Edge):
 
         ax.plot([self.start[0]], [self.start[1]], [self.start[2]], c='r')
         ax.plot([self.end[0]], [self.end[1]], [self.end[2]], c='b')
-        ax = vm_common_operations.plot_from_discretization_points(
+        ax = d3d_common_operations.plot_from_discretization_points(
             ax, edge_style=edge_style, element=self, number_points=25)
         if edge_style.edge_ends:
             self.start.plot(ax, 'r')

@@ -6,41 +6,41 @@ Here we will present you all possible boolean operations using ClosedShell3D.
 
 .. code-block:: python
 
-    import volmdlr
-    from volmdlr import edges, curves, surfaces, wires, faces, shells
-    from volmdlr.core import EdgeStyle
+    import design3d
+    from design3d import edges, curves, surfaces, wires, faces, shells
+    from design3d.core import EdgeStyle
     import math
 
     # Create a random shape shell's faces
-    polygon1_vol1 = wires.ClosedPolygon3D([volmdlr.Point3D(-0.1, -0.05, 0),
-                                           volmdlr.Point3D(-0.15, 0.1, 0),
-                                           volmdlr.Point3D(0.05, 0.2, 0),
-                                           volmdlr.Point3D(0.12, 0.15, 0),
-                                           volmdlr.Point3D(0.1, -0.02, 0)])
+    polygon1_vol1 = wires.ClosedPolygon3D([design3d.Point3D(-0.1, -0.05, 0),
+                                           design3d.Point3D(-0.15, 0.1, 0),
+                                           design3d.Point3D(0.05, 0.2, 0),
+                                           design3d.Point3D(0.12, 0.15, 0),
+                                           design3d.Point3D(0.1, -0.02, 0)])
 
-    polygon2_vol1 = polygon1_vol1.rotation(volmdlr.O3D,
-                                           volmdlr.Z3D, math.pi).translation(0.2*volmdlr.Z3D)
+    polygon2_vol1 = polygon1_vol1.rotation(design3d.O3D,
+                                           design3d.Z3D, math.pi).translation(0.2*design3d.Z3D)
     polygon3_vol1 = polygon2_vol1.rotation(
-            volmdlr.O3D, volmdlr.Z3D, math.pi/8).translation(0.1*(
-                            volmdlr.Z3D+volmdlr.X3D+volmdlr.Y3D))
+            design3d.O3D, design3d.Z3D, math.pi/8).translation(0.1*(
+                            design3d.Z3D+design3d.X3D+design3d.Y3D))
     faces_ = [faces.Triangle3D(*points)
                 for points in polygon1_vol1.sewing(polygon2_vol1,
-                                                   volmdlr.X3D, volmdlr.Y3D)] \
+                                                   design3d.X3D, design3d.Y3D)] \
                 + [faces.Triangle3D(*points)
-                for points in polygon2_vol1.sewing(polygon3_vol1, volmdlr.X3D, volmdlr.Y3D)]
-    bottom_surface3d = surfaces.Plane3D.from_plane_vectors(volmdlr.O3D,
-                                                           volmdlr.X3D,
-                                                           volmdlr.Y3D)
-    bottom_surface2d = surfaces.Surface2D(polygon1_vol1.to_2d(volmdlr.O3D,
-                                                              volmdlr.X3D,
-                                                              volmdlr.Y3D),[])
+                for points in polygon2_vol1.sewing(polygon3_vol1, design3d.X3D, design3d.Y3D)]
+    bottom_surface3d = surfaces.Plane3D.from_plane_vectors(design3d.O3D,
+                                                           design3d.X3D,
+                                                           design3d.Y3D)
+    bottom_surface2d = surfaces.Surface2D(polygon1_vol1.to_2d(design3d.O3D,
+                                                              design3d.X3D,
+                                                              design3d.Y3D),[])
 
-    top_surface3d = surfaces.Plane3D.from_plane_vectors(0.3*volmdlr.Z3D,
-                                                        volmdlr.X3D,
-                                                        volmdlr.Y3D)
-    top_surface2d = surfaces.Surface2D(polygon3_vol1.to_2d(volmdlr.O3D,
-                                                           volmdlr.X3D,
-                                                           volmdlr.Y3D),[])
+    top_surface3d = surfaces.Plane3D.from_plane_vectors(0.3*design3d.Z3D,
+                                                        design3d.X3D,
+                                                        design3d.Y3D)
+    top_surface2d = surfaces.Surface2D(polygon3_vol1.to_2d(design3d.O3D,
+                                                           design3d.X3D,
+                                                           design3d.Y3D),[])
 
     bottom_face = faces.PlaneFace3D(bottom_surface3d, bottom_surface2d)
     top_face = faces.PlaneFace3D(top_surface3d, top_surface2d)
@@ -49,9 +49,9 @@ Here we will present you all possible boolean operations using ClosedShell3D.
     #Instanciate shell
     shell1 = shells.ClosedShell3D(faces_, color=(1, .1, .1), alpha=0.6)
 
-    shell2 = shell1.rotation(volmdlr.O3D, volmdlr.X3D, math.pi / 5)
-    shell2 = shell2.translation(volmdlr.Vector3D(.1, .1, .1))
-    volmdlr.core.VolumeModel([shell1, shell2]).babylonjs()
+    shell2 = shell1.rotation(design3d.O3D, design3d.X3D, math.pi / 5)
+    shell2 = shell2.translation(design3d.Vector3D(.1, .1, .1))
+    design3d.core.VolumeModel([shell1, shell2]).babylonjs()
 
     ...
 

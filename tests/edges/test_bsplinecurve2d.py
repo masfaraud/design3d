@@ -3,7 +3,7 @@ import os
 from dessia_common.core import DessiaObject
 import design3d
 import design3d.nurbs.helpers as nurbs_helpers
-import design3d.edges as vme
+import design3d.edges as d3de
 from design3d.models import bspline_curves
 from design3d import curves
 from geomdl import BSpline
@@ -23,7 +23,7 @@ class TestBSplineCurve2D(unittest.TestCase):
     points = [design3d.Point2D(0, 0), design3d.Point2D(1, 1), design3d.Point2D(2, -1), design3d.Point2D(3, 0)]
     knotvector = nurbs_helpers.generate_knot_vector(degree, len(points))
     knot_multiplicity = [1] * len(knotvector)
-    bspline1 = vme.BSplineCurve2D(degree, points, knot_multiplicity, knotvector, None)
+    bspline1 = d3de.BSplineCurve2D(degree, points, knot_multiplicity, knotvector, None)
     bspline2, bspline3 = bspline1.split(design3d.Point2D(1.5, 0.0))
     bspline4, bspline5 = bspline2.split(bspline2.point_at_abscissa(0.3 * bspline2.length()))
     bspline6 = bspline1.split(bspline1.point_at_abscissa(0.7 * bspline1.length()))[0]
@@ -40,9 +40,9 @@ class TestBSplineCurve2D(unittest.TestCase):
     knot_multiplicities = [4, 1, 1, 4]
     knots = [0.0, 0.33, 0.66, 1.0]
 
-    bspline2d = vme.BSplineCurve2D(degree, ctrlpts, knot_multiplicities, knots)
+    bspline2d = d3de.BSplineCurve2D(degree, ctrlpts, knot_multiplicities, knots)
     weights = [0.5, 1.0, 0.75, 1.0, 0.25, 1.0]
-    bspline2d_rational = vme.BSplineCurve2D(degree, ctrlpts, knot_multiplicities, knots, weights=weights)
+    bspline2d_rational = d3de.BSplineCurve2D(degree, ctrlpts, knot_multiplicities, knots, weights=weights)
 
     def test_evaluate_single(self):
         test_cases = [
@@ -98,7 +98,7 @@ class TestBSplineCurve2D(unittest.TestCase):
         degree = 3  # cubic curve
 
         # Do global curve interpolation
-        curve = vme.BSplineCurve2D.from_points_interpolation(points, degree, centripetal=False)
+        curve = d3de.BSplineCurve2D.from_points_interpolation(points, degree, centripetal=False)
         expected_ctrlpts = [
             [0.0, 0.0],
             [7.3169635171119936, 3.6867775257587367],
@@ -117,7 +117,7 @@ class TestBSplineCurve2D(unittest.TestCase):
         degree = 3  # cubic curve
 
         # Do global curve interpolation
-        curve = vme.BSplineCurve2D.from_points_approximation(points, degree, centripetal=False)
+        curve = d3de.BSplineCurve2D.from_points_approximation(points, degree, centripetal=False)
         expected_ctrlpts = [
             [0.0, 0.0],
             [9.610024470158852, 8.200277881464892],
@@ -137,7 +137,7 @@ class TestBSplineCurve2D(unittest.TestCase):
                     design3d.Point2D(1, 0.9)]
 
         # %%% Approximation
-        bspline_curve2d_approximated = vme.BSplineCurve2D.from_points_approximation(points2d, 3, ctrlpts_size=5)
+        bspline_curve2d_approximated = d3de.BSplineCurve2D.from_points_approximation(points2d, 3, ctrlpts_size=5)
         expected_ctrlpts = [design3d.Point2D(0.0, 0.1), design3d.Point2D(0.1686778402310228, 0.2366540266279785),
                             design3d.Point2D(0.466545895266623, 0.5077440536607246),
                             design3d.Point2D(0.7432185866086097, 0.852531277025759), design3d.Point2D(1.0, 0.9)]
@@ -153,7 +153,7 @@ class TestBSplineCurve2D(unittest.TestCase):
         bspline_curve2d = bspline_curves.bspline_curve2d_1
         point = design3d.Point2D(-0.31240117104573617, -2.8555856978321796)
 
-        bspline = vme.BSplineCurve2D.from_json(os.path.join(folder, "bg_bspline5_.json"))
+        bspline = d3de.BSplineCurve2D.from_json(os.path.join(folder, "bg_bspline5_.json"))
         point1 = bspline.points[25]
         point2 = bspline.points[75]
 
@@ -201,7 +201,7 @@ class TestBSplineCurve2D(unittest.TestCase):
                              design3d.Point2D(2.8695307222689292, 1.908674758526091),
                              design3d.Point2D(3.031498051508191, 1.89997293414679),
                              design3d.Point2D(3.141592653589793, 1.9000000000000003)]
-        bspline_curve2d = vme.BSplineCurve2D(3, control_points_2d, [4, 1, 1, 1, 1, 1, 1, 1, 4],
+        bspline_curve2d = d3de.BSplineCurve2D(3, control_points_2d, [4, 1, 1, 1, 1, 1, 1, 1, 4],
                                              [0.0, 0.2102659043588606, 0.30933566258662554, 0.40542083024287023,
                                               0.5000013075051806, 0.5945816603424732, 0.6906664654007513,
                                               0.7897356531977031, 1.0])
@@ -211,7 +211,7 @@ class TestBSplineCurve2D(unittest.TestCase):
         curve.ctrlpts = [[1, 0, 0], [1, 1, 0], [0, 1, 0]]
         curve.knotvector = [0, 0, 0, 1, 1, 1]
 
-        bspline_curve3d = vme.BSplineCurve3D.from_geomdl_curve(curve)
+        bspline_curve3d = d3de.BSplineCurve3D.from_geomdl_curve(curve)
         # Test discretization with default number of points (20)
         points = bspline_curve3d.discretization_points()
         self.assertEqual(len(points), 100)
@@ -313,13 +313,13 @@ class TestBSplineCurve2D(unittest.TestCase):
             self.assertTrue(point1.is_close(point2))
 
     def test_simplify(self):
-        bsplinecurve = vme.BSplineCurve3D.from_json(os.path.join(folder, "bsplinecurve_fullarc.json"))
+        bsplinecurve = d3de.BSplineCurve3D.from_json(os.path.join(folder, "bsplinecurve_fullarc.json"))
         fullarc = bsplinecurve.simplify
-        self.assertTrue(isinstance(fullarc, vme.FullArc3D))
+        self.assertTrue(isinstance(fullarc, d3de.FullArc3D))
 
     def test_direction_independent_is_close(self):
-        bsplinecurve1 = vme.BSplineCurve3D.from_json(os.path.join(folder, "bspline_curve1.json"))
-        bsplinecurve2 = vme.BSplineCurve3D.from_json(os.path.join(folder, "bspline_curve2.json"))
+        bsplinecurve1 = d3de.BSplineCurve3D.from_json(os.path.join(folder, "bspline_curve1.json"))
+        bsplinecurve2 = d3de.BSplineCurve3D.from_json(os.path.join(folder, "bspline_curve2.json"))
         self.assertTrue(bsplinecurve1.direction_independent_is_close(bsplinecurve2))
 
     def test_split_curve(self):
@@ -331,7 +331,7 @@ class TestBSplineCurve2D(unittest.TestCase):
         self.assertTrue(splitted_curves[1].end.is_close(design3d.Point2D(50.0, 5.0)))
 
         split_point = design3d.Point2D(0.04820589473987067, 0.011936395549382077)
-        bsplinecurve = vme.BSplineCurve2D.from_json(os.path.join(folder, "bsplinecurve_split_bug.json"))
+        bsplinecurve = d3de.BSplineCurve2D.from_json(os.path.join(folder, "bsplinecurve_split_bug.json"))
         splitted_curves = bsplinecurve.split(split_point)
         self.assertTrue(splitted_curves[0].start.is_close(design3d.Point2D(0.04873977000999985, 0.011815456390639745)))
         self.assertTrue(splitted_curves[0].end.is_close(split_point))

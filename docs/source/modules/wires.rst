@@ -2,7 +2,7 @@
 Wires
 -----
 
-.. automodule:: volmdlr.wires
+.. automodule:: design3d.wires
    :members:
    :undoc-members:
    :show-inheritance:

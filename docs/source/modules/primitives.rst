@@ -4,7 +4,7 @@ Primitives
 Primitives
 ----------
 
-.. automodule:: volmdlr.primitives
+.. automodule:: design3d.primitives
    :members:
    :undoc-members:
    :show-inheritance:
@@ -12,7 +12,7 @@ Primitives
 Primitives2d
 ------------
 
-.. automodule:: volmdlr.primitives2d
+.. automodule:: design3d.primitives2d
    :members:
    :undoc-members:
    :show-inheritance:
@@ -21,7 +21,7 @@ Primitives2d
 Primitives3d
 ------------
 
-.. automodule:: volmdlr.primitives3d
+.. automodule:: design3d.primitives3d
    :members:
    :undoc-members:
    :show-inheritance:

@@ -6,10 +6,10 @@ import math
 import random
 
 import design3d
-import design3d.core as vmc
-import design3d.display as vmd
-import design3d.wires as vmw
-import design3d.faces as vmf
+import design3d.core as d3dc
+import design3d.display as d3dd
+import design3d.wires as d3dw
+import design3d.faces as d3df
 
 random.seed(781)
 
@@ -30,7 +30,7 @@ class TestClosedPolygon3D(unittest.TestCase):
             radius = mean_radius + 2*(random.random() - 0.5)*delta_radius
             points.append((radius * initial_point).rotation(design3d.O3D, z, theta))
             theta += theta_r + (random.random() - 0.5)*theta_r
-        return vmw.ClosedPolygon3D(points)
+        return d3dw.ClosedPolygon3D(points)
 
     def test_sewing(self):
         z1 = 0.1
@@ -43,14 +43,14 @@ class TestClosedPolygon3D(unittest.TestCase):
         polygon2 = polygon2.translation(z2*design3d.Z3D)
 
         ax = polygon1.plot()
-        polygon2.plot(ax=ax, edge_style=vmc.EdgeStyle(color='r'))
+        polygon2.plot(ax=ax, edge_style=d3dc.EdgeStyle(color='r'))
 
         sewing_triangles = polygon1.sewing(polygon2, design3d.X3D, design3d.Y3D)
         poly1_normal_out = 0.
         poly2_normal_out = 0.
 
         for p1, p2, p3 in sewing_triangles:
-            triangle = vmf.Triangle3D(p1, p2, p3)
+            triangle = d3df.Triangle3D(p1, p2, p3)
             triangle_normal = triangle.normal()
             triangle_middle = triangle.middle()
             if ((p1 in polygon1.points) + (p2 in polygon1.points) + (p3 in polygon1.points)) == 2:

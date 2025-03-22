@@ -332,7 +332,7 @@ class CompositePrimitive3D(Primitive3D):
         :type ax: Matplotlib plot
         edge_style : optional
             The EdgeStyle to use when plotting the primitives.
-        :type edge_style: vme.EdgeStyle
+        :type edge_style: d3de.EdgeStyle
         :return: The Axes3D object onto which the primitives were plotted.
         :rtype: Matplotlib plot
         """

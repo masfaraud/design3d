@@ -4,9 +4,9 @@ import os
 import numpy as np
 from dessia_common.core import DessiaObject
 import design3d
-import design3d.edges as vme
+import design3d.edges as d3de
 from design3d import curves, surfaces, edges
-import design3d.wires as vmw
+import design3d.wires as d3dw
 from design3d import O3D, X3D, Y3D, Z3D, Point2D, Point3D
 from design3d.models import conical_surfaces
 
@@ -85,18 +85,18 @@ class TestConicalSurface3D(unittest.TestCase):
         self.assertTrue(self.conical_surface3.is_coincident(conical_surface3_close))
 
     def test_arc3d_to_2d(self):
-        arc1 = vme.Arc3D.from_3_points(design3d.Point3D(-1 / math.sqrt(2), 1 / math.sqrt(2), 1 / math.sqrt(3)),
+        arc1 = d3de.Arc3D.from_3_points(design3d.Point3D(-1 / math.sqrt(2), 1 / math.sqrt(2), 1 / math.sqrt(3)),
                          design3d.Point3D(-1, 0, 1 / math.sqrt(3)),
                          design3d.Point3D(-1 / math.sqrt(2), -1 / math.sqrt(2), 1 / math.sqrt(3)))
-        arc2 = vme.Arc3D.from_3_points(design3d.Point3D(0, -1, 1 / math.sqrt(3)),
+        arc2 = d3de.Arc3D.from_3_points(design3d.Point3D(0, -1, 1 / math.sqrt(3)),
                          design3d.Point3D(-1 / math.sqrt(2), 1 / math.sqrt(2), 1 / math.sqrt(3)),
                          design3d.Point3D(1, 0, 1 / math.sqrt(3)))
         test1 = self.conical_surface.arc3d_to_2d(arc3d=arc1)[0]
         test2 = self.conical_surface.arc3d_to_2d(arc3d=arc2)[0]
 
         # Assert that the returned object is an edges.LineSegment2D
-        self.assertIsInstance(test1, vme.LineSegment2D)
-        self.assertIsInstance(test2, vme.LineSegment2D)
+        self.assertIsInstance(test1, d3de.LineSegment2D)
+        self.assertIsInstance(test2, d3de.LineSegment2D)
 
         # Assert that the returned object is right on the parametric domain (take into account periodicity)
         self.assertTrue(test1.start.is_close(design3d.Point2D(0.75 * math.pi, 0.5773502691896258)))
@@ -105,10 +105,10 @@ class TestConicalSurface3D(unittest.TestCase):
         self.assertTrue(test2.end.is_close(design3d.Point2D(-2 * math.pi, 0.5773502691896258)))
 
     def test_contour2d_to_3d(self):
-        contour2d = vmw.Contour2D([vme.LineSegment2D(design3d.Point2D(-math.pi, 0.0), design3d.Point2D(math.pi, 0.0)),
-                                   vme.LineSegment2D(design3d.Point2D(math.pi, 0.0), design3d.Point2D(math.pi, 1.0)),
-                                   vme.LineSegment2D(design3d.Point2D(math.pi, 1.0), design3d.Point2D(-math.pi, 1.0)),
-                                   vme.LineSegment2D(design3d.Point2D(-math.pi, 1.0), design3d.Point2D(-math.pi, 0.0))])
+        contour2d = d3dw.Contour2D([d3de.LineSegment2D(design3d.Point2D(-math.pi, 0.0), design3d.Point2D(math.pi, 0.0)),
+                                   d3de.LineSegment2D(design3d.Point2D(math.pi, 0.0), design3d.Point2D(math.pi, 1.0)),
+                                   d3de.LineSegment2D(design3d.Point2D(math.pi, 1.0), design3d.Point2D(-math.pi, 1.0)),
+                                   d3de.LineSegment2D(design3d.Point2D(-math.pi, 1.0), design3d.Point2D(-math.pi, 0.0))])
         contour3d, primitives_mapping = self.conical_surface.contour2d_to_3d(contour2d, return_primitives_mapping=True)
         self.assertEqual(len(contour3d.primitives), len(primitives_mapping))
         self.assertIsNone(primitives_mapping.get(contour2d.primitives[0]))
@@ -121,20 +121,20 @@ class TestConicalSurface3D(unittest.TestCase):
         start_end1 = Point3D(0.035, 0, 0)
         circle1 = curves.Circle3D(design3d.Frame3D(center1, design3d.X3D, design3d.Y3D, design3d.Z3D),
                                   center1.point_distance(start_end1))
-        primitives_cone = [vme.LineSegment3D(Point3D(0, 0, 0.1), Point3D(0.035, 0, 0.0)),
-                           vme.FullArc3D(circle1, start_end1),
-                           vme.LineSegment3D(Point3D(0.035, 0, 0.0), Point3D(0, 0, 0.1))]
+        primitives_cone = [d3de.LineSegment3D(Point3D(0, 0, 0.1), Point3D(0.035, 0, 0.0)),
+                           d3de.FullArc3D(circle1, start_end1),
+                           d3de.LineSegment3D(Point3D(0.035, 0, 0.0), Point3D(0, 0, 0.1))]
 
         primitives_demi_cone = [primitives_cone[0],
-                                vme.Arc3D.from_3_points(Point3D(0.035, 0, 0),
+                                d3de.Arc3D.from_3_points(Point3D(0.035, 0, 0),
                                                         Point3D(0, 0.035, 0), Point3D(-0.035, 0, 0)),
-                                vme.LineSegment3D(Point3D(-0.035, 0, 0.0), Point3D(0, 0, 0.1))
+                                d3de.LineSegment3D(Point3D(-0.035, 0, 0.0), Point3D(0, 0, 0.1))
                                 ]
 
-        contour_cone = vmw.Contour3D(primitives_cone)
+        contour_cone = d3dw.Contour3D(primitives_cone)
         contour2d_cone = self.conical_surface2.contour3d_to_2d(contour_cone)
 
-        contour_demi_cone = vmw.Contour3D(primitives_demi_cone)
+        contour_demi_cone = d3dw.Contour3D(primitives_demi_cone)
         contour2d_demi_cone = self.conical_surface2.contour3d_to_2d(contour_demi_cone)
 
         area_cone = contour2d_cone.area()
@@ -143,8 +143,8 @@ class TestConicalSurface3D(unittest.TestCase):
         linesegment2d_cone = contour2d_cone.primitives[2]
 
         # Assert that the returned object is an edges.LineSegment2D
-        self.assertIsInstance(fullarc2d, vme.LineSegment2D)
-        self.assertIsInstance(linesegment2d_cone, vme.LineSegment2D)
+        self.assertIsInstance(fullarc2d, d3de.LineSegment2D)
+        self.assertIsInstance(linesegment2d_cone, d3de.LineSegment2D)
 
         self.assertEqual(area_cone, 0.2 * math.pi)
         self.assertEqual(area_demi_cone, 0.1 * math.pi)
@@ -155,7 +155,7 @@ class TestConicalSurface3D(unittest.TestCase):
         self.assertEqual(linesegment2d_cone.end, Point2D(-2 * math.pi, 0.0))
 
         surface = surfaces.ConicalSurface3D.from_json(os.path.join(folder, "conical_singularity_suface.json"))
-        contour3d = vmw.Contour3D.from_json(os.path.join(folder, "conical_singularity_contour.json"))
+        contour3d = d3dw.Contour3D.from_json(os.path.join(folder, "conical_singularity_contour.json"))
         contour, primitives_mapping = surface.contour3d_to_2d(contour3d, return_primitives_mapping=True)
       
         self.assertTrue(contour.is_ordered())
@@ -168,7 +168,7 @@ class TestConicalSurface3D(unittest.TestCase):
 
         surface = surfaces.ConicalSurface3D.from_json(
             os.path.join(folder, "conicalsurface_contour_with_singularity_2.json"))
-        contour3d = vmw.Contour3D.from_json(
+        contour3d = d3dw.Contour3D.from_json(
             os.path.join(folder, "conicalsurface_contour_with_singularity_contour_2.json"))
         contour = surface.contour3d_to_2d(contour3d)
         self.assertTrue(contour.is_ordered())
@@ -176,7 +176,7 @@ class TestConicalSurface3D(unittest.TestCase):
 
         surface = surfaces.ConicalSurface3D.from_json(
             os.path.join(folder, "conicalsurface_linesegment3d_to_2d.json"))
-        contour3d = vmw.Contour3D.from_json(
+        contour3d = d3dw.Contour3D.from_json(
             os.path.join(folder, "conicalsurface_linesegment3d_to_2d_contour.json"))
         contour = surface.contour3d_to_2d(contour3d)
         self.assertTrue(contour.is_ordered())
@@ -191,7 +191,7 @@ class TestConicalSurface3D(unittest.TestCase):
                           design3d.Point3D(0.00158690018976903, 0.004075, 0.000281226693398416),
                           design3d.Point3D(0.00235270234694773, 0.004075, 0.000502294734194975)]
 
-        bspline_curve = vme.BSplineCurve3D(3, control_points, [4, 1, 4], knots=[0.0, 0.5, 1.0])
+        bspline_curve = d3de.BSplineCurve3D(3, control_points, [4, 1, 4], knots=[0.0, 0.5, 1.0])
         bspline_curve2d = conical_surface3.bsplinecurve3d_to_2d(bspline_curve)
         bspline_curve3d = conical_surface3.bsplinecurve2d_to_3d(bspline_curve2d[0])
         original_length = bspline_curve.length()

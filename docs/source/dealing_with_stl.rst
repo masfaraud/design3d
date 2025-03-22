@@ -18,11 +18,11 @@ import STL files
 
 .. code-block:: python
 
-    import volmdlr.cloud
-    import volmdlr.core
-    import volmdlr.stl as vmstl
+    import design3d.cloud
+    import design3d.core
+    import design3d.stl as d3dstl
 
-    stl = vmstl.Stl.load_from_file('path/to/your/stl/file.stl')
+    stl = d3dstl.Stl.load_from_file('path/to/your/stl/file.stl')
     shell = stl.to_closed_shell()
     shell.alpha = 0.3
     shell.babylonjs()
@@ -33,11 +33,11 @@ If we break it down we have:
 
 .. code-block:: python
 
-    import volmdlr.cloud
-    import volmdlr.core
-    import volmdlr.stl as vmstl
+    import design3d.cloud
+    import design3d.core
+    import design3d.stl as d3dstl
 
-In this section, the necessary modules from the volmdlr library are imported.
+In this section, the necessary modules from the design3d library are imported.
 It seems to be organized into sub-modules such as cloud, core, and stl.
 These modules likely provide different functionalities related to cloud computing, core geometry operations, and STL file manipulation, respectively.
 
@@ -45,9 +45,9 @@ These modules likely provide different functionalities related to cloud computin
 
 .. code-block:: python
 
-    stl = vmstl.Stl.load_from_file('path/to/your/stl/file.stl')
+    stl = d3dstl.Stl.load_from_file('path/to/your/stl/file.stl')
 
-Here, an STL file is loaded using the ``Stl.load_from_file()`` method from the vmstl sub-module.
+Here, an STL file is loaded using the ``Stl.load_from_file()`` method from the d3dstl sub-module.
 The path to your STL file should be specified in the ``'path/to/your/stl/file.stl'`` placeholder.
 The stl variable is assigned the resulting Stl object, which likely holds the geometry and other properties of the loaded STL file.
 
@@ -79,14 +79,14 @@ To achieve it, you can do as follows:
 
 .. code-block:: python
 
-    import volmdlr.cloud
-    import volmdlr.core
-    import volmdlr.stl as vmstl
+    import design3d.cloud
+    import design3d.core
+    import design3d.stl as d3dstl
 
-    stl = vmstl.Stl.load_from_file('path/to/your/stl/file.stl')
+    stl = d3dstl.Stl.load_from_file('path/to/your/stl/file.stl')
 
     list_points = stl.extract_points_BIS()
-    pointcloud3d = volmdlr.cloud.PointCloud3D(list_points)
+    pointcloud3d = design3d.cloud.PointCloud3D(list_points)
     shell2 = pointcloud3d.to_shell(resolution=15)
 
     shell2.babylons()
@@ -97,11 +97,11 @@ In detail, each part of the code mean:
 
 .. code-block:: python
 
-    import volmdlr.cloud
-    import volmdlr.core
-    import volmdlr.stl as vmstl
+    import design3d.cloud
+    import design3d.core
+    import design3d.stl as d3dstl
 
-    stl = vmstl.Stl.load_from_file('path/to/your/stl/file.stl')
+    stl = d3dstl.Stl.load_from_file('path/to/your/stl/file.stl')
 
 As also shown in previous example, first we import all packages needed and then the STl file is loaded using the ``Vmstl.Stl.load_from_file`` method substituting ``'path/to/your/stl/file.stl'`` by the actual path to your stl file.
 
@@ -114,7 +114,7 @@ The resulting list_points variable holds the list of extracted points.
 
 .. code-block:: python
 
-    pointcloud3d = volmdlr.cloud.PointCloud3D(list_points)
+    pointcloud3d = design3d.cloud.PointCloud3D(list_points)
 
 A ``PointCloud3D`` object is created using the extracted list of points (list_points).
 This step essentially converts the list of points into a point cloud representation suitable for further processing and visualization.

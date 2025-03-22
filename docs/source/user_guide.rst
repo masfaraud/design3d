@@ -121,17 +121,17 @@ User guide
 
             Useful
 
-The volmdlr library is structured using a modular approach as follows:
+The design3d library is structured using a modular approach as follows:
 
 
 * :ref:`core_compiled`: provides fundamental objects and algorithms for B-Rep modeling, implemented in C++ for performance reasons;
 * :ref:`core`: provides fundamental data structures and algorithms for B-Rep modeling;
-* :ref:`geometry`: provides functions and tools for calculations and geometric operations with volmdlr geometric objects;
+* :ref:`geometry`: provides functions and tools for calculations and geometric operations with design3d geometric objects;
 * :ref:`curves`: Provides fundamental curves Objects, like Infinite lines, Circle and ellipses.
 * :ref:`edges`: a shape corresponding to a curve and bounded by a start and an end point;
 * :ref:`wires`: a sequence of edges connected by their vertices;
 * :ref:`surfaces`: Provides surfaces objects, which are defined by its mathematical equations
-* :ref:`faces`: Provides faces objects, whire are defined by a surface and a boundary representation, that is called Suface2D in volmdlr;
+* :ref:`faces`: Provides faces objects, whire are defined by a surface and a boundary representation, that is called Suface2D in design3d;
 * :ref:`shells`: Provides shells objects, whiche are collections of faces
 * :ref:`stl`: provides support for importing and exporting STL files;
 * :ref:`step`: provides support for importing and exporting STEP files;

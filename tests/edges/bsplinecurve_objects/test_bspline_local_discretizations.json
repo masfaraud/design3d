@@ -1,3014 +1,3014 @@
 {
-  "object_class": "volmdlr.core.VolumeModel",
+  "object_class": "design3d.core.VolumeModel",
   "name": "",
   "primitives": [
     {
-      "object_class": "volmdlr.edges.BSplineCurve3D",
+      "object_class": "design3d.edges.BSplineCurve3D",
       "name": " ",
       "degree": 5,
       "control_points": [
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.3065326633165831,
           "z": -0.06269865103351575
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 0.30729881543126975,
           "z": -0.06636103418224172
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 0.3054441585716979,
           "z": -0.05754405548666255
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 0.3050666646795263,
           "z": -0.055287903369477746
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.30382096007623755,
           "z": -0.04828167705015867
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.3028551670878033,
           "z": -0.04155525689014176
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000006,
           "y": 0.30211817414444997,
           "z": -0.03590764618545688
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999997,
           "y": 0.301518388465938,
           "z": -0.03042860906217513
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.3010047174038466,
           "z": -0.024877233308080608
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.3005992755045651,
           "z": -0.019356880197061707
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.3002927703787002,
           "z": -0.013823103431027368
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.30008928013408637,
           "z": -0.00829522909395108
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.29998726313050156,
           "z": -0.002764426129362023
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.2999871717375836,
           "z": 0.002764256588546108
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.30008944041954455,
           "z": 0.008295865762315207
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.3002924201404865,
           "z": 0.013821518353691071
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.30060008076991,
           "z": 0.019360613653747447
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.3010028465100891,
           "z": 0.024868520342436935
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.3015227461450688,
           "z": 0.030448920135059593
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.30210801375754104,
           "z": 0.03586028148585079
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000036,
           "y": 0.302876329399596,
           "z": 0.04164660724580605
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.30353115695995614,
           "z": 0.046384752270568645
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.30467150381667824,
           "z": 0.05291902553342607
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 0.3050272388600401,
           "z": 0.055348709207415116
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000047,
           "y": 0.3069908628477171,
           "z": 0.06490856454298555
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999996,
           "y": 0.3062318335266099,
           "z": 0.061312440852467655
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.3085724417564843,
           "z": 0.07218778392308982
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.3090932502494022,
           "z": 0.07392432429009752
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.3107684125316171,
           "z": 0.08077296437561549
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.31205888316684455,
           "z": 0.08531161819780957
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 0.3135941491421024,
           "z": 0.09066208668705236
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.3152133472715425,
           "z": 0.09593452106926972
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 0.3167818913689427,
           "z": 0.1007019474555203
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000047,
           "y": 0.31711308461125487,
           "z": 0.10173697685302142
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999963,
           "y": 0.31967997672188797,
           "z": 0.10923332936799292
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.32117005305653434,
           "z": 0.11319127901298544
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.322958317658592,
           "z": 0.11801051366222083
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.3254655988097808,
           "z": 0.1242840939624282
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.32663263926386815,
           "z": 0.1270771570767952
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.32784332742410616,
           "z": 0.13001370722551386
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.33057866281900855,
           "z": 0.1363117153114399
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.33234627458026195,
           "z": 0.14020890673243597
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.33513915526610966,
           "z": 0.14623342264233966
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.33685828941888596,
           "z": 0.14969914509615156
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.3376636505857028,
           "z": 0.15146829460122424
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 0.3417084034474582,
           "z": 0.15934951107568973
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000007,
           "y": 0.34142668305511986,
           "z": 0.1590299463882872
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999991,
           "y": 0.3487227571951601,
           "z": 0.17246278059262107
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000009,
           "y": 0.3446295710899125,
           "z": 0.1649992840957788
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999994,
           "y": 0.35192603122285526,
           "z": 0.17818643654916544
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000047,
           "y": 0.35124039091740034,
           "z": 0.1768950213397069
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999947,
           "y": 0.35754382342055996,
           "z": 0.18759294874480653
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000005,
           "y": 0.3553917441397211,
           "z": 0.1839839297015543
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999997,
           "y": 0.36093807621284757,
           "z": 0.19309667320930077
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000007,
           "y": 0.3610600614804329,
           "z": 0.19333361987834335
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999925,
           "y": 0.36841843627533705,
           "z": 0.20471791177349463
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000007,
           "y": 0.364937826267494,
           "z": 0.19937788856540883
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999963,
           "y": 0.3719563344541148,
           "z": 0.21003916160482608
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.3726483509364705,
           "z": 0.21097942155254565
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.3779943926341626,
           "z": 0.21869222987279582
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.3767777324366801,
           "z": 0.21691812451928832
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.38195333308070456,
           "z": 0.2242648420326779
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.3864051281609312,
           "z": 0.23021265682660563
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.38624316803320385,
           "z": 0.230018413700593
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.3905216188742767,
           "z": 0.2357038325574901
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.3938545495242061,
           "z": 0.24000358909265482
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 0.3973779930251636,
           "z": 0.2444696549460686
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.3982578797957172,
           "z": 0.24555825550767924
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.40234912390385125,
           "z": 0.2506853665668616
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999997,
           "y": 0.4081424095930401,
           "z": 0.25762906844453654
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000036,
           "y": 0.406747937878817,
           "z": 0.25592937992384523
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999995,
           "y": 0.41107355178402794,
           "z": 0.26116306163937364
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000074,
           "y": 0.41936904338170816,
           "z": 0.2706116952845241
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999925,
           "y": 0.4151214439827818,
           "z": 0.2657508170551465
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000013,
           "y": 0.42152846749243583,
           "z": 0.273112224989045
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999977,
           "y": 0.42986904159714723,
           "z": 0.2821158089820356
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000246,
           "y": 0.4242355820367946,
           "z": 0.2760215699589019
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999987,
           "y": 0.4336449512590657,
           "z": 0.2862211439972869
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000007,
           "y": 0.43854049316040133,
           "z": 0.29119577275334857
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999996,
           "y": 0.4358210424001992,
           "z": 0.2884275853769152
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.4438844115710637,
           "z": 0.29673464351304474
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.4480234989907031,
           "z": 0.3007835266951072
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.4472734294960829,
           "z": 0.3000846250435103
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.45497013374613404,
           "z": 0.3076337736718469
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.45749374273609283,
           "z": 0.309977789365844
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999963,
           "y": 0.4587983309017149,
           "z": 0.31128556894154463
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000004,
           "y": 0.46724954699256915,
           "z": 0.3191474517536834
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999963,
           "y": 0.4664587871522874,
           "z": 0.31836884791646486
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000036,
           "y": 0.47109372956241735,
           "z": 0.3226829047167515
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 0.4794919507687431,
           "z": 0.3300718404746361
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.4757705065285789,
           "z": 0.3268167063350458
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.48611601572020824,
           "z": 0.3358586503843328
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.4875938392846717,
           "z": 0.3369858781908591
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.4884478571120134,
           "z": 0.3378575796188877
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999995,
           "y": 0.5011713842875299,
           "z": 0.34827657794059946
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000006,
           "y": 0.49392977516045766,
           "z": 0.34238079870705046
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.5077382650669646,
           "z": 0.3535695094805558
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.5065645280307802,
           "z": 0.3524993637387949
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.5106320961285389,
           "z": 0.3558254357390275
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.5201070346064849,
           "z": 0.3629631804385574
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.5156267168522297,
           "z": 0.35964629391158465
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.5297097238224445,
           "z": 0.3701162586466143
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.5247991114200619,
           "z": 0.3664708629395395
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.5358785946032264,
           "z": 0.3745652119792533
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.5374803346896467,
           "z": 0.3755721702834829
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 0.5403111201297522,
           "z": 0.37769035885296487
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999996,
           "y": 0.5506805006802595,
           "z": 0.38467058379524954
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000006,
           "y": 0.5454224710082255,
           "z": 0.38124022039602606
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999992,
           "y": 0.5629135539903677,
           "z": 0.39277159994096517
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000009,
           "y": 0.5528514819295876,
           "z": 0.38622885097154847
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.5721668986887374,
           "z": 0.3986634992689781
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999997,
           "y": 0.5630075224684462,
           "z": 0.3928234591597149
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.5801942790594239,
           "z": 0.40357443778582225
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.574199687051967,
           "z": 0.39984207983894693
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 0.5880472995383447,
           "z": 0.40821324827715555
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.585337612327506,
           "z": 0.40656549041722795
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 0.596658470339345,
           "z": 0.4131492668062049
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 0.595965071608135,
           "z": 0.41273261613108747
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 0.6062157996037348,
           "z": 0.41844885657918174
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.6059943232916101,
           "z": 0.4183339041842161
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 0.6167870913646728,
           "z": 0.42409129291733155
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000004,
           "y": 0.6153469955301043,
           "z": 0.42337415169452686
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999996,
           "y": 0.6285223722057772,
           "z": 0.43009061961865314
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000036,
           "y": 0.6238894958894078,
           "z": 0.42783293118356264
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999963,
           "y": 0.641251952076457,
           "z": 0.43630104065684155
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.6320119669567394,
           "z": 0.43193156937745947
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 0.6545692151278316,
           "z": 0.44251731153824303
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.6415764135848727,
           "z": 0.4365105591137086
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.6644597380120139,
           "z": 0.44692306528185916
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.6557244718310701,
           "z": 0.4429341017558966
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.6711677920882728,
           "z": 0.4497574406504785
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000004,
           "y": 0.6729753985401632,
           "z": 0.45032747600313033
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999994,
           "y": 0.6761037363365643,
           "z": 0.4517785486068573
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000063,
           "y": 0.690721368603863,
           "z": 0.457463024842737
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.6843080631341111,
           "z": 0.45501339568872573
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.7019173706014875,
           "z": 0.461705397031754
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.700381803677861,
           "z": 0.46100783344421775
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.7067439100836236,
           "z": 0.4634496477014977
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 0.7214630746281523,
           "z": 0.4683530972166953
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 0.7145849236883294,
           "z": 0.466087086062299
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.7314480415055615,
           "z": 0.4716200147950289
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.7350634334536474,
           "z": 0.4725923767658604
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.7377238428991012,
           "z": 0.4734821420375843
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.7497565566324111,
           "z": 0.47693942554679847
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.7542639281622281,
           "z": 0.478133267179718
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 0.7585859619186999,
           "z": 0.4793074510638651
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.7680106114377138,
           "z": 0.4817496851218446
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.7780477956412757,
           "z": 0.48408618891359917
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.777132208906494,
           "z": 0.4838800074560854
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 0.7895187661057801,
           "z": 0.4866947496564027
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999996,
           "y": 0.7999789617964782,
           "z": 0.4887258107106134
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000047,
           "y": 0.8014316265907532,
           "z": 0.4890063157867794
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999963,
           "y": 0.8102798970912384,
           "z": 0.49068301968511574
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000004,
           "y": 0.8197791780037903,
           "z": 0.4922211033286944
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999997,
           "y": 0.8260985358025921,
           "z": 0.4932822965047395
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.839771283412698,
           "z": 0.49510475730227227
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 0.8362016152867197,
           "z": 0.49465842442005387
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 0.8537049263689266,
           "z": 0.4968202460585513
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 0.8584144728920833,
           "z": 0.49716973895928607
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.8702590762348209,
           "z": 0.4982926089871617
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999963,
           "y": 0.8790675425664038,
           "z": 0.49884883174363254
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000036,
           "y": 0.8895757492909226,
           "z": 0.49944649441576283
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.8994323277196223,
           "z": 0.49979183398836774
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.9095732943505777,
           "z": 0.5000045465510494
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.9195823901828064,
           "z": 0.5000337697935476
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999963,
           "y": 0.9296705671631655,
           "z": 0.499896488912771
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000006,
           "y": 0.9396730924446101,
           "z": 0.4995926469231582
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999997,
           "y": 0.9498327590279374,
           "z": 0.49910057941363417
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.9595321543348716,
           "z": 0.49848176606345607
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.9697621262358161,
           "z": 0.49762261151693865
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.9783557317256197,
           "z": 0.49679233707623915
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000036,
           "y": 0.9908081169094622,
           "z": 0.49534621218002184
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999995,
           "y": 0.9967623081085459,
           "z": 0.49444835740283766
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000005,
           "y": 1.0015500725948754,
           "z": 0.49396777832608413
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.0390173707810044,
           "z": 0.4875761863743964
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999997,
           "y": 1.0504727663814717,
           "z": 0.4843168562589139
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 1.073659814127014,
           "z": 0.4786133095041743
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.09029679886749,
           "z": 0.47334611192715753
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 1.107399542630349,
           "z": 0.4676232484051602
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 1.1222182352085952,
           "z": 0.4620310214420497
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.1360172739298424,
           "z": 0.4564281781954
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 1.1487084389069075,
           "z": 0.45085509679703617
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.1605892893511531,
           "z": 0.44528746567656197
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000036,
           "y": 1.1717382235897205,
           "z": 0.4397292471033398
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999997,
           "y": 1.182269319385529,
           "z": 0.43417568799326883
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.1922505877293283,
           "z": 0.42862652487423486
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.2017451191676969,
           "z": 0.4230804129977632
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.21080113298155,
           "z": 0.417536856192896
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 1.2194600663611195,
           "z": 0.4119952996483566
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 1.227756273226702,
           "z": 0.40645540173462413
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.2357192474557606,
           "z": 0.40091686846830665
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.2433742815051594,
           "z": 0.3953794826464001
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.2507433711388238,
           "z": 0.389843066597084
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.257845746785571,
           "z": 0.38430747954743993
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 1.2646983574415713,
           "z": 0.37877260604895097
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 1.2713162262973927,
           "z": 0.3732383515250887
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.277712747627017,
           "z": 0.36770463731306713
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.2838999227575696,
           "z": 0.3621713976144076
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.2898885552524966,
           "z": 0.3566385768830679
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.2956884113082643,
           "z": 0.3511061279259207
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.3013083536467998,
           "z": 0.34557401036992097
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.3067564536798566,
           "z": 0.34004218947324766
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.3120400862892194,
           "z": 0.33451063517007606
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 1.3171660103452207,
           "z": 0.3289793213069486
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.3221404375392325,
           "z": 0.3234482250231111
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 1.3269690915312922,
           "z": 0.3179173262457792
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 1.3316572590374711,
           "z": 0.31238660727547235
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 1.336209834160454,
           "z": 0.30685605244336844
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 1.3406313570279067,
           "z": 0.30132564782650306
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.3449260476076756,
           "z": 0.2957953810095589
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 1.3490978354175265,
           "z": 0.29026524088476496
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 1.353150385722467,
           "z": 0.2847352174827689
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.3570871227149894,
           "z": 0.27920530182919034
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.360911250091757,
           "z": 0.2736754858222709
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.3646257693755828,
           "z": 0.2681457621281865
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.368233496276725,
           "z": 0.26261612409103485
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.3717370753435767,
           "z": 0.25708656565518245
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 1.375138993115702,
           "z": 0.25155708129805576
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.3784415899611078,
           "z": 0.24602766597167913
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.3816470707546753,
           "z": 0.24049831505179023
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.3847575145319804,
           "z": 0.2349690242932664
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.3877748832355685,
           "z": 0.22943978979108495
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.3907010296544169,
           "z": 0.2239106079459381
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.3935377046447457,
           "z": 0.21838147543393144
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.3962865637088573,
           "z": 0.2128523891797601
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 1.398949172999121,
           "z": 0.20732334633293073
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.401527014806177,
           "z": 0.20179434424662537
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 1.4040214925829957,
           "z": 0.1962653804588653
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000036,
           "y": 1.4064339355506108,
           "z": 0.1907364526756703
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 1.4087656029259534,
           "z": 0.18520755875602227
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.411017687807303,
           "z": 0.17967869669830888
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 1.4131913207495914,
           "z": 0.17414986462821677
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000063,
           "y": 1.4152875730571552,
           "z": 0.16862106078774222
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999994,
           "y": 1.4173074598197863,
           "z": 0.16309228352533103
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000006,
           "y": 1.419251942713908,
           "z": 0.15756353128691447
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999963,
           "y": 1.421121932589505,
           "z": 0.15203480260781252
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 1.422918291860418,
           "z": 0.14650609610536305
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.424641836714322,
           "z": 0.1409774104722114
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.426293339156905,
           "z": 0.1354487444702091
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.4278735289031719,
           "z": 0.1299200969248107
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 1.4293830951277267,
           "z": 0.12439146671997303
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 1.4308226880845454,
           "z": 0.118862852793447
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 1.432192920605924,
           "z": 0.11333425413247468
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.4334943694889775,
           "z": 0.10780566976980643
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.4347275767778118,
           "z": 0.10227709878003066
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 1.4358930509481196,
           "z": 0.09674854027618038
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 1.4369912680007564,
           "z": 0.09121999340657534
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.4380226724700231,
           "z": 0.08569145735190124
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 1.438987678351761,
           "z": 0.08016293132247387
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999997,
           "y": 1.4398866699560842,
           "z": 0.07463441455567878
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.4407200026890055,
           "z": 0.06910590631360017
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 1.441488003766588,
           "z": 0.06357740588074436
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.4421909728653233,
           "z": 0.058048912561944804
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.4428291827116595,
           "z": 0.05252042568033938
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.443402879613418,
           "z": 0.04699194457546905
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.4439122839357144,
           "z": 0.04146346860147312
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 1.4443575905233654,
           "z": 0.03593499712533519
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.44473896907186,
           "z": 0.030406529525238927
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.4450565644483548,
           "z": 0.024878065188940993
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.4453104969644093,
           "z": 0.019349603512225883
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.445500862601311,
           "z": 0.013821143897388385
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.4456277331892537,
           "z": 0.008292685751750838
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.4456911565411132,
           "z": 0.0027642284862067676
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 1.4456911565411135,
           "z": -0.002764228486207112
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 1.4456277331892535,
           "z": -0.00829268575175074
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.44550086260131,
           "z": -0.01382114389738865
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 1.4453104969644108,
           "z": -0.019349603512225873
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 1.445056564448354,
           "z": -0.024878065188941083
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 1.4447389690718604,
           "z": -0.030406529525238736
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 1.4443575905233652,
           "z": -0.03593499712533562
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 1.443912283935714,
           "z": -0.04146346860147225
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000047,
           "y": 1.4434028796134177,
           "z": -0.04699194457546958
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999996,
           "y": 1.4428291827116586,
           "z": -0.052520425680339454
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 1.4421909728653244,
           "z": -0.05804891256194457
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 1.441488003766587,
           "z": -0.06357740588074552
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 1.440720002689006,
           "z": -0.06910590631359914
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.4398866699560835,
           "z": -0.07463441455567996
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.4389876783517612,
           "z": -0.08016293132247297
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.4380226724700227,
           "z": -0.0856914573519017
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 1.4369912680007584,
           "z": -0.09121999340657612
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.435893050948118,
           "z": -0.09674854027617921
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.4347275767778116,
           "z": -0.10227709878003137
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.4334943694889783,
           "z": -0.10780566976980661
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.4321929206059245,
           "z": -0.11333425413247523
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.4308226880845454,
           "z": -0.11886285279344644
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.4293830951277255,
           "z": -0.12439146671997353
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.4278735289031725,
           "z": -0.12992009692481085
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.426293339156905,
           "z": -0.13544874447020908
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.4246418367143223,
           "z": -0.14097741047221204
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.4229182918604162,
           "z": -0.14650609610536294
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.4211219325895073,
           "z": -0.1520348026078126
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.4192519427139056,
           "z": -0.1575635312869148
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.417307459819788,
           "z": -0.16309228352533153
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.4152875730571532,
           "z": -0.16862106078774122
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000004,
           "y": 1.4131913207495923,
           "z": -0.17414986462821824
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 1.4110176878073022,
           "z": -0.1796786966983085
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.4087656029259548,
           "z": -0.18520755875602168
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.4064339355506088,
           "z": -0.1907364526756711
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.4040214925829977,
           "z": -0.19626538045886446
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.4015270148061756,
           "z": -0.20179434424662637
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 1.3989491729991206,
           "z": -0.20732334633292993
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 1.3962865637088577,
           "z": -0.21285238917976057
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.3935377046447455,
           "z": -0.21838147543393063
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 1.3907010296544173,
           "z": -0.2239106079459391
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.3877748832355676,
           "z": -0.22943978979108415
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.3847575145319804,
           "z": -0.2349690242932681
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.3816470707546753,
           "z": -0.24049831505178954
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.3784415899611082,
           "z": -0.2460276659716796
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 1.3751389931157014,
           "z": -0.2515570812980559
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.371737075343577,
           "z": -0.257086565655183
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.3682334962767257,
           "z": -0.26261612409103463
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.3646257693755823,
           "z": -0.2681457621281866
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.360911250091758,
           "z": -0.2736754858222708
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.3570871227149888,
           "z": -0.2792053018291903
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 1.3531503857224674,
           "z": -0.2847352174827688
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.349097835417527,
           "z": -0.29026524088476496
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.3449260476076756,
           "z": -0.29579538100955904
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.340631357027907,
           "z": -0.3013256478265029
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.3362098341604538,
           "z": -0.30685605244336905
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.3316572590374716,
           "z": -0.3123866072754723
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.326969091531292,
           "z": -0.3179173262457799
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.3221404375392325,
           "z": -0.323448225023111
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 1.317166010345222,
           "z": -0.3289793213069488
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 1.3120400862892188,
           "z": -0.3345106351700757
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.3067564536798553,
           "z": -0.3400421894732487
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.3013083536468002,
           "z": -0.3455740103699205
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.2956884113082638,
           "z": -0.3511061279259216
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 1.2898885552524957,
           "z": -0.3566385768830674
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000005,
           "y": 1.2838999227575705,
           "z": -0.3621713976144079
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999997,
           "y": 1.2777127476270154,
           "z": -0.3677046373130671
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.2713162262973936,
           "z": -0.37323835152508894
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.26469835744157,
           "z": -0.3787726060489511
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999997,
           "y": 1.2578457467855704,
           "z": -0.3843074795474402
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000004,
           "y": 1.2507433711388238,
           "z": -0.3898430665970839
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 1.2433742815051587,
           "z": -0.39537948264639994
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 1.2357192474557614,
           "z": -0.40091686846830704
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.2277562732267002,
           "z": -0.4064554017346238
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.2194600663611195,
           "z": -0.41199529964835707
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 1.2108011329815498,
           "z": -0.4175368561928956
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.201745119167697,
           "z": -0.4230804129977636
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.192250587729327,
           "z": -0.428626524874235
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 1.1822693193855294,
           "z": -0.4341756879932692
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.1717382235897194,
           "z": -0.43972924710333944
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.1605892893511525,
           "z": -0.4452874656765624
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.1487084389069075,
           "z": -0.45085509679703606
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 1.1360172739298406,
           "z": -0.4564281781954002
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.1222182352085983,
           "z": -0.46203102144204933
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 1.107399542630346,
           "z": -0.46762324840516095
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 1.0902967988674925,
           "z": -0.47334611192715675
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 1.073659814127012,
           "z": -0.47861330950417474
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 1.050472766381471,
           "z": -0.4843168562589137
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999936,
           "y": 1.0390173707810086,
           "z": -0.48757618637439715
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.400000000000001,
           "y": 1.0015500725948676,
           "z": -0.4939677783260829
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999936,
           "y": 0.9967623081085532,
           "z": -0.4944483574028382
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000047,
           "y": 0.9908081169094578,
           "z": -0.49534621218002134
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 0.9783557317256221,
           "z": -0.4967923370762394
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000036,
           "y": 0.9697621262358155,
           "z": -0.497622611516939
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.9595321543348719,
           "z": -0.49848176606345657
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.9498327590279376,
           "z": -0.4991005794136332
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.9396730924446092,
           "z": -0.4995926469231595
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.9296705671631654,
           "z": -0.49989648891276933
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.9195823901828072,
           "z": -0.5000337697935492
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000047,
           "y": 0.9095732943505764,
           "z": -0.500004546551049
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999994,
           "y": 0.8994323277196229,
           "z": -0.49979183398836824
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000004,
           "y": 0.8895757492909222,
           "z": -0.4994464944157634
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999997,
           "y": 0.8790675425664037,
           "z": -0.4988488317436324
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 0.8702590762348198,
           "z": -0.49829260898716077
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999997,
           "y": 0.858414472892084,
           "z": -0.497169738959287
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000036,
           "y": 0.8537049263689238,
           "z": -0.49682024605855146
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999997,
           "y": 0.8362016152867209,
           "z": -0.4946584244200537
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000074,
           "y": 0.8397712834126958,
           "z": -0.4951047573022729
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999995,
           "y": 0.8260985358025933,
           "z": -0.493282296504739
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.8197791780037886,
           "z": -0.49222110332869407
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.8102798970912394,
           "z": -0.49068301968511624
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.8014316265907508,
           "z": -0.48900631578677856
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000036,
           "y": 0.7999789617964802,
           "z": -0.4887258107106144
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.7895187661057789,
           "z": -0.4866947496564017
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.7771322089064941,
           "z": -0.48388000745608595
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.7780477956412754,
           "z": -0.48408618891359867
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.7680106114377133,
           "z": -0.48174968512184463
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.7585859619187,
           "z": -0.47930745106386563
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.7542639281622275,
           "z": -0.4781332671797177
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.7497565566324108,
           "z": -0.47693942554679786
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.7377238428991015,
           "z": -0.4734821420375856
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 0.7350634334536472,
           "z": -0.47259237676585925
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.731448041505561,
           "z": -0.47162001479502974
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999963,
           "y": 0.714584923688329,
           "z": -0.4660870860622974
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.7214630746281525,
           "z": -0.46835309721669627
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.7067439100836226,
           "z": -0.4634496477014971
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.7003818036778607,
           "z": -0.4610078334442183
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.7019173706014874,
           "z": -0.46170539703175356
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.6843080631341112,
           "z": -0.4550133956887257
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.6907213686038624,
           "z": -0.45746302484273693
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.6761037363365652,
           "z": -0.45177854860685757
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.6729753985401634,
           "z": -0.45032747600312967
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.6711677920882736,
           "z": -0.44975744065048
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.6557244718310701,
           "z": -0.4429341017558956
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.6644597380120132,
           "z": -0.4469230652818601
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 0.6415764135848718,
           "z": -0.43651055911370623
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 0.6545692151278326,
           "z": -0.4425173115382452
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.6320119669567378,
           "z": -0.431931569377458
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000004,
           "y": 0.6412519520764585,
           "z": -0.43630104065684255
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 0.623889495889406,
           "z": -0.4278329311835618
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 0.6285223722057783,
           "z": -0.4300906196186537
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 0.6153469955301029,
           "z": -0.423374151694526
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.6167870913646735,
           "z": -0.4240912929173323
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 0.6059943232916098,
           "z": -0.41833390418421545
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.6062157996037353,
           "z": -0.41844885657918174
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.595965071608134,
           "z": -0.41273261613108775
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 0.5966584703393465,
           "z": -0.4131492668062051
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 0.585337612327505,
           "z": -0.4065654904172279
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.5880472995383442,
           "z": -0.40821324827715505
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.5741996870519678,
           "z": -0.39984207983894726
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.5801942790594226,
           "z": -0.40357443778582114
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.563007522468447,
           "z": -0.3928234591597161
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 0.5721668986887366,
           "z": -0.39866349926897704
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000005,
           "y": 0.5528514819295871,
           "z": -0.38622885097154896
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999996,
           "y": 0.5629135539903682,
           "z": -0.3927715999409646
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.5454224710082255,
           "z": -0.38124022039602584
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.5506805006802601,
           "z": -0.3846705837952507
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.540311120129751,
           "z": -0.3776903588529636
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.5374803346896477,
           "z": -0.3755721702834835
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.5358785946032262,
           "z": -0.3745652119792529
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.5247991114200619,
           "z": -0.36647086293953984
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000036,
           "y": 0.5297097238224441,
           "z": -0.37011625864661385
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999963,
           "y": 0.5156267168522292,
           "z": -0.3596462939115841
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 0.520107034606486,
           "z": -0.3629631804385582
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.5106320961285378,
           "z": -0.3558254357390267
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.5065645280307816,
           "z": -0.3524993637387958
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.5077382650669628,
           "z": -0.35356950948055493
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999947,
           "y": 0.4939297751604572,
           "z": -0.34238079870704896
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000006,
           "y": 0.5011713842875309,
           "z": -0.34827657794060163
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 0.4884478571120124,
           "z": -0.33785757961888624
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 0.4875938392846724,
           "z": -0.33698587819086
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.4861160157202071,
           "z": -0.33585865038433205
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.4757705065285794,
           "z": -0.326816706335045
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.47949195076874285,
           "z": -0.3300718404746374
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.47109372956241685,
           "z": -0.3226829047167503
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.46645878715228806,
           "z": -0.31836884791646597
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999963,
           "y": 0.46724954699256843,
           "z": -0.31914745175368264
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.45879833090171496,
           "z": -0.3112855689415445
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.45749374273609267,
           "z": -0.30997778936584414
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.45497013374613393,
           "z": -0.30763377367184663
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.4472734294960822,
           "z": -0.30008462504351
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.4480234989907036,
           "z": -0.3007835266951072
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000036,
           "y": 0.44388441157106395,
           "z": -0.2967346435130446
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999925,
           "y": 0.4358210424001967,
           "z": -0.2884275853769136
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.400000000000001,
           "y": 0.43854049316040355,
           "z": -0.2911957727533509
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999897,
           "y": 0.43364495125906344,
           "z": -0.28622114399727994
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000018,
           "y": 0.4242355820367919,
           "z": -0.2760215699589095
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999836,
           "y": 0.4298690415971503,
           "z": -0.28211580898202876
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000008,
           "y": 0.4215284674924343,
           "z": -0.27311222498904847
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999996,
           "y": 0.41512144398278433,
           "z": -0.26575081705514586
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.4193690433817051,
           "z": -0.27061169528452395
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.4110735517840301,
           "z": -0.26116306163937447
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 0.40674793787881613,
           "z": -0.2559293799238442
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.4081424095930407,
           "z": -0.25762906844453765
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000004,
           "y": 0.4023491239038502,
           "z": -0.2506853665668602
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.3982578797957174,
           "z": -0.2455582555076791
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.397377993025163,
           "z": -0.24446965494606893
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.3938545495242064,
           "z": -0.2400035890926545
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.3905216188742769,
           "z": -0.23570383255749028
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.3862431680332032,
           "z": -0.2300184137005928
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.38640512816093187,
           "z": -0.23021265682660563
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.38195333308070417,
           "z": -0.22426484203267896
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.3767777324366798,
           "z": -0.21691812451928663
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.377994392634163,
           "z": -0.2186922298727979
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.3726483509364695,
           "z": -0.21097942155254154
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000004,
           "y": 0.37195633445411747,
           "z": -0.21003916160483577
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999997,
           "y": 0.3649378262674885,
           "z": -0.19937788856538902
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000003,
           "y": 0.36841843627534554,
           "z": -0.20471791177352916
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.3610600614804109,
           "z": -0.19333361987824407
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.36093807621290447,
           "z": -0.1930966732095723
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999963,
           "y": 0.35539174413960356,
           "z": -0.18398392970099406
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.35754382342078234,
           "z": -0.18759294874587182
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.3512403909167813,
           "z": -0.17689502133673152
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.3519260312244283,
           "z": -0.1781864365567287
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000074,
           "y": 0.3446295710869891,
           "z": -0.16499928408171885
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999993,
           "y": 0.3487227572001936,
           "z": -0.1724627806168287
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.3414266830399149,
           "z": -0.15902994631516373
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.34170840349536746,
           "z": -0.1593495113061035
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000024,
           "y": 0.3376636504722835,
           "z": -0.15146829405574705
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999998,
           "y": 0.33685828963272413,
           "z": -0.1496991461245822
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.33513915478340467,
           "z": -0.1462334203208288
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 0.33234627600623956,
           "z": -0.1402089135904953
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.33057865911232737,
           "z": -0.13631169748463218
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.32784333519631775,
           "z": -0.13001374460496778
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.40000000000000013,
           "y": 0.3266326254552205,
           "z": -0.12707709066587797
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999997,
           "y": 0.3254656299617883,
           "z": -0.12428424378400432
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.32295822248790745,
           "z": -0.11801005595104573
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.3211703150741408,
           "z": -0.11319253915298784
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.3196793782953643,
           "z": -0.10923045131253892
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 0.31711421925832495,
           "z": -0.10174243379227596
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000001,
           "y": 0.3167799447325479,
           "z": -0.10069258535797225
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.3999999999999999,
           "y": 0.3152181093577954,
           "z": -0.09595742371104506
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.3135791251854181,
           "z": -0.09058983089856115
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000002,
           "y": 0.31145685401879125,
           "z": -0.08330504600451018
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999974,
           "y": 0.30967224169745183,
           "z": -0.07656752845247558
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4000000000000005,
           "y": 0.30836125825969646,
           "z": -0.07110857519445776
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.39999999999999986,
           "y": 0.30736443047686535,
           "z": -0.06669070226272236
         },
         {
-          "object_class": "volmdlr.Point3D",
+          "object_class": "design3d.Point3D",
           "x": 0.4,
           "y": 0.306532663316583,
           "z": -0.06269865103351574
@@ -4015,13 +4015,13 @@
       "weights": null
     },
     {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 0.4,
       "y": 0.30554974726700995,
       "z": -0.05778029041995819
     },
     {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 0.4,
       "y": 0.30480314584516477,
       "z": -0.0537552041847665

@@ -7,12 +7,12 @@ import os
 
 import matplotlib.pyplot as plt
 
-import volmdlr as vm
+import volmdlr as d3d
 import volmdlr.cloud
 import volmdlr.core
-import volmdlr.edges as vme
-import volmdlr.faces as vmf
-import volmdlr.wires as vmw
+import volmdlr.edges as d3de
+import volmdlr.faces as d3df
+import volmdlr.wires as d3dw
 
 faces = []
 for file in os.listdir("E:/path/to/folder") :

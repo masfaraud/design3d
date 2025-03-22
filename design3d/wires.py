@@ -20,7 +20,7 @@ from triangle import triangulate
 
 import design3d
 import design3d.core
-import design3d.display as vmd
+import design3d.display as d3dd
 import design3d.geometry
 from design3d import curves, edges, PATH_ROOT
 from design3d.core_compiled import polygon_point_belongs, points_in_polygon
@@ -2448,7 +2448,7 @@ class Contour2D(ContourMixin, Wire2D):
                 elif len(points_in) == 3:
                     triangles.append([point_index[point] for point in points_in])
 
-        return vmd.Mesh2D(points, triangles)
+        return d3dd.Mesh2D(points, triangles)
 
     def intersection_points(self, contour2d):
         """Returns the intersections points with other specified contour."""
@@ -3558,7 +3558,7 @@ class ClosedPolygon2D(ClosedPolygonMixin, Contour2D):
         :param tri_opt: (Optional) Triangulation preferences.
         :type tri_opt: str
         :return: A 2D mesh.
-        :rtype: :class:`vmd.Mesh2D`
+        :rtype: :class:`d3dd.Mesh2D`
         """
         # Converting points to nodes for performance
         vertices = [(point.x, point.y) for point in self.points]
@@ -3572,7 +3572,7 @@ class ClosedPolygon2D(ClosedPolygonMixin, Contour2D):
         if len(tri['vertices']) < 3:
             return None
         triangulate_result = triangulate(tri, tri_opt)
-        mesh = vmd.Mesh2D(triangulate_result['vertices'], triangles=triangulate_result['triangles'])
+        mesh = d3dd.Mesh2D(triangulate_result['vertices'], triangles=triangulate_result['triangles'])
         return mesh
 
     def grid_triangulation_points(self, number_points_x: int = 25, number_points_y: int = 25,

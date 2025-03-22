@@ -2,7 +2,7 @@
 STL
 ---
 
-.. automodule:: volmdlr.stl
+.. automodule:: design3d.stl
    :members:
    :undoc-members:
    :show-inheritance:

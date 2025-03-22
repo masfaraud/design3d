@@ -1,11 +1,11 @@
 Volmdlr: the absolute basics for beginners
 ------------------------------------------
-Welcome to the absolute beginner’s guide to volmdlr! If you have comments or suggestions, please don’t hesitate to reach out!
+Welcome to the absolute beginner’s guide to design3d! If you have comments or suggestions, please don’t hesitate to reach out!
 
-Welcome to volmdlr!
+Welcome to design3d!
 ^^^^^^^^^^^^^^^^^^^
 
-The volmdlr library is an open-source Python library primarily developed by Dessia Technologies,
+The design3d library is an open-source Python library primarily developed by Dessia Technologies,
 aimed at providing 3D modeling capabilities based on Boundary Representation (B-Rep) purely in Python.
 The library is designed to be easy to use, efficient, and customizable.
 
@@ -14,7 +14,7 @@ manufacturing (CAM) systems to represent the geometry of a solid object as a col
 and curves. B-Rep is widely used in CAD and CAM due to its ability to accurately represent complex
 shapes and to provide a rich set of operations for manipulating and analyzing these shapes.
 
-Installing volmdlr through pip (Windows and Linux users)
+Installing design3d through pip (Windows and Linux users)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This package requires Python 3.9 or above. Please follow the instructions
@@ -24,25 +24,25 @@ two types of installation.
 To install the latest version of the package you need to run the following
 command::
 
-  pip install volmdlr
+  pip install design3d
   # or
-  pip3 install volmdlr
+  pip3 install design3d
 
 To install a specific version of the package you would issue the following
 command::
 
-  pip install volmdlr==0.1.0
+  pip install design3d==0.1.0
   # or
-  pip3 install volmdlr==0.1.0
+  pip3 install design3d==0.1.0
 
 Developer installation
 ^^^^^^^^^^^^^^^^^^^^^^
 
-First, clone the package. Then, enter the newly created volmdlr repository. Finally, develop the setup.py file, and you are good to go ! ::
+First, clone the package. Then, enter the newly created design3d repository. Finally, develop the setup.py file, and you are good to go ! ::
 
-  git clone https://github.com/Dessia-tech/volmdlr.git
+  git clone https://github.com/Dessia-tech/design3d.git
 
-  cd volmdlr
+  cd design3d
 
   python3 setup.py develop --user
   # or whatever version you are using :
@@ -51,9 +51,9 @@ First, clone the package. Then, enter the newly created volmdlr repository. Fina
 Requirements
 ^^^^^^^^^^^^
 
-The installation of volmdlr requires the installation of other packages listed
+The installation of design3d requires the installation of other packages listed
 in the file setup.py and in the table below. These libraries will be
-automatically installed when you install volmdlr.
+automatically installed when you install design3d.
 
 =============  ===============  ===========
 Dependency     Minimum Version  Usage
@@ -88,7 +88,7 @@ that you have selected the desired Python version in your IDE.
 You can force the installation of the package on a given Python version by
 executing this command::
 
-  python -m pip install volmdlr
+  python -m pip install design3d
 
 You have to specify the Python version you are working with by replacing
 `python` by the Python of your choice. For example, `python3`, `python3.8`,

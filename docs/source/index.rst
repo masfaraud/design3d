@@ -14,7 +14,7 @@ Volmdlr Documentation
    Tutorials <tutorials>
 
 
-The volmdlr library is an open-source Python library primarily developed by Dessia Technologies,
+The design3d library is an open-source Python library primarily developed by Dessia Technologies,
 aimed at providing 3D modeling capabilities based on Boundary Representation (B-Rep) purely in Python.
 The library is designed to be easy to use, efficient, and customizable.
 
@@ -32,8 +32,8 @@ shapes and to provide a rich set of operations for manipulating and analyzing th
         Getting Started
         ^^^^^^^^^^^^^^^
 
-        New to volmdlr? Check out the Absolute Beginner’s Guide. It contains an
-        introduction to volmdlr’s main concepts and links to additional tutorials.
+        New to design3d? Check out the Absolute Beginner’s Guide. It contains an
+        introduction to design3d’s main concepts and links to additional tutorials.
 
         +++
 

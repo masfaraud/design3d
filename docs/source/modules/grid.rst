@@ -2,7 +2,7 @@
 Grid
 ----
 
-.. automodule:: volmdlr.grid
+.. automodule:: design3d.grid
    :members:
    :undoc-members:
    :show-inheritance:

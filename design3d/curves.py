@@ -15,7 +15,7 @@ from packaging import version
 import design3d
 from design3d import core, geometry, get_minimum_distance_points_lines
 from design3d.nurbs.helpers import generate_knot_vector
-import design3d.utils.common_operations as vm_common_operations
+import design3d.utils.common_operations as d3d_common_operations
 import design3d.utils.intersections as design3d_intersections
 from design3d.core import EdgeStyle
 
@@ -155,11 +155,11 @@ class ClosedCurve(Curve):
         if point1.is_close(point2) and point1.is_close(self.point_at_abscissa(0.0)):
             abscissa1 = 0.0
             abscissa2 = self.length()
-            points = vm_common_operations.get_abscissa_discretization(self, abscissa1, abscissa2, number_points, False)
+            points = d3d_common_operations.get_abscissa_discretization(self, abscissa1, abscissa2, number_points, False)
             return points + [points[0]]
         if abscissa1 > abscissa2 <= 1e-6:
             abscissa2 = self.length()
-        return vm_common_operations.get_abscissa_discretization(self, abscissa1, abscissa2, number_points, False)
+        return d3d_common_operations.get_abscissa_discretization(self, abscissa1, abscissa2, number_points, False)
 
 
 class Line(Curve):
@@ -1464,7 +1464,7 @@ class Circle2D(CircleMixin, ClosedCurve):
 
     def plot(self, ax=None, edge_style: EdgeStyle = EdgeStyle()):
         """Plots the circle using Matplotlib."""
-        return vm_common_operations.plot_circle(self, ax, edge_style)
+        return d3d_common_operations.plot_circle(self, ax, edge_style)
 
 
     def area(self):
@@ -1817,7 +1817,7 @@ class Circle3D(CircleMixin, ClosedCurve):
         :param return_points: boolean to decide weather to return the corresponding minimal distance points or not.
         :return: minimum distance / minimal distance with corresponding points.
         """
-        point1, point2 = vm_common_operations.minimum_distance_points_circle3d_linesegment3d(self, linesegment3d)
+        point1, point2 = d3d_common_operations.minimum_distance_points_circle3d_linesegment3d(self, linesegment3d)
         if return_points:
             return point1.point_distance(point2), point1, point2
         return point1.point_distance(point2)
@@ -1832,7 +1832,7 @@ class Circle3D(CircleMixin, ClosedCurve):
         """
         point1 = self.center + self.frame.u * self.radius
         other_point1 = other_circle.center + other_circle.frame.u * other_circle.radius
-        return vm_common_operations.generic_minimum_distance(
+        return d3d_common_operations.generic_minimum_distance(
             self, other_circle, point1, point1, other_point1, other_point1, return_points)
 
     def split(self, split_start, split_end):
@@ -1941,7 +1941,7 @@ class Circle3D(CircleMixin, ClosedCurve):
         if ax is None:
             fig = plt.figure()
             ax = fig.add_subplot(111, projection='3d')
-        return vm_common_operations.plot_from_discretization_points(ax, edge_style, self, 100, close_plot=True)
+        return d3d_common_operations.plot_from_discretization_points(ax, edge_style, self, 100, close_plot=True)
 
     def extrusion(self, extrusion_vector):
         """
@@ -2290,7 +2290,7 @@ class Ellipse2D(EllipseMixin, ClosedCurve):
         u1, u2 = initial_point.x / self.major_axis, initial_point.y / self.minor_axis
         initial_angle = geometry.sin_cos_angle(u1, u2)
         angle_start = 0
-        abscissa_angle = vm_common_operations.ellipse_abscissa_angle_integration(
+        abscissa_angle = d3d_common_operations.ellipse_abscissa_angle_integration(
             self, abscissa, angle_start, initial_angle)
         return self.frame.local_to_global_coordinates(
             design3d.Point2D(self.major_axis * math.cos(abscissa_angle),
@@ -2347,7 +2347,7 @@ class Ellipse2D(EllipseMixin, ClosedCurve):
         :rtype: float.
         """
         start = self.point_at_abscissa(0.0)
-        return vm_common_operations.get_point_distance_to_edge(self, point, start, start)
+        return d3d_common_operations.get_point_distance_to_edge(self, point, start, start)
 
     def line_intersections(self, line: 'Line2D', abs_tol: float = 1e-6):
         """
@@ -2438,7 +2438,7 @@ class Ellipse2D(EllipseMixin, ClosedCurve):
         """
         if ax is None:
             _, ax = plt.subplots()
-        ax = vm_common_operations.plot_from_discretization_points(ax, edge_style, self,
+        ax = d3d_common_operations.plot_from_discretization_points(ax, edge_style, self,
                                                                   number_points=100, close_plot=True)
         if edge_style.equal_aspect:
             ax.set_aspect('equal')
@@ -2769,7 +2769,7 @@ class Ellipse3D(ConicMixin, EllipseMixin, ClosedCurve):
         if ax is None:
             ax = plt.figure().add_subplot(111, projection='3d')
 
-        return vm_common_operations.plot_from_discretization_points(ax, edge_style, self, close_plot=True,
+        return d3d_common_operations.plot_from_discretization_points(ax, edge_style, self, close_plot=True,
                                                                     number_points=100)
 
     def to_2d(self, plane_origin, x, y):
@@ -3022,7 +3022,7 @@ class Hyperbola2D(HyperbolaMixin):
         if ax is None:
             _, ax = plt.subplots()
         points_positive_branch = self.get_points()
-        components_positive_branch = vm_common_operations.plot_components_from_points(points_positive_branch)
+        components_positive_branch = d3d_common_operations.plot_components_from_points(points_positive_branch)
         ax.plot(*components_positive_branch, color=edge_style.color, alpha=edge_style.alpha)
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
@@ -3141,7 +3141,7 @@ class Hyperbola3D(ConicMixin, HyperbolaMixin):
         if ax is None:
             ax = plt.figure().add_subplot(111, projection='3d')
         points_positive_branch = self.get_points()
-        components_positive_branch = vm_common_operations.plot_components_from_points(points_positive_branch)
+        components_positive_branch = d3d_common_operations.plot_components_from_points(points_positive_branch)
         ax.plot(*components_positive_branch, color=edge_style.color, alpha=edge_style.alpha)
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
@@ -3341,7 +3341,7 @@ class Parabola2D(ParabolaMixin):
             _, ax = plt.subplots()
 
         points_positive_branch = self.get_points()
-        components_positive_branch = vm_common_operations.plot_components_from_points(points_positive_branch)
+        components_positive_branch = d3d_common_operations.plot_components_from_points(points_positive_branch)
         ax.plot(*components_positive_branch, color=edge_style.color, alpha=edge_style.alpha)
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
@@ -3469,7 +3469,7 @@ class Parabola3D(ConicMixin, ParabolaMixin):
         if ax is None:
             ax = plt.figure().add_subplot(111, projection='3d')
         points_positive_branch = self.get_points()
-        components_positive_branch = vm_common_operations.plot_components_from_points(points_positive_branch)
+        components_positive_branch = d3d_common_operations.plot_components_from_points(points_positive_branch)
         ax.plot(*components_positive_branch, color=edge_style.color, alpha=edge_style.alpha)
         ax.set_xlabel('X')
         ax.set_ylabel('Y')

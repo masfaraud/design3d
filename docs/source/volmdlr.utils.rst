@@ -2,34 +2,34 @@ Subpackage utils
 ================
 
 
-volmdlr.utils.common\_operations module
+design3d.utils.common\_operations module
 ---------------------------------------
 
-.. automodule:: volmdlr.utils.common_operations
+.. automodule:: design3d.utils.common_operations
    :members:
    :undoc-members:
    :show-inheritance:
 
-volmdlr.utils.intersections module
+design3d.utils.intersections module
 ----------------------------------
 
-.. automodule:: volmdlr.utils.intersections
+.. automodule:: design3d.utils.intersections
    :members:
    :undoc-members:
    :show-inheritance:
 
-volmdlr.utils.parametric module
+design3d.utils.parametric module
 -------------------------------
 
-.. automodule:: volmdlr.utils.parametric
+.. automodule:: design3d.utils.parametric
    :members:
    :undoc-members:
    :show-inheritance:
 
-volmdlr.utils.step\_writer module
+design3d.utils.step\_writer module
 ---------------------------------
 
-.. automodule:: volmdlr.utils.step_writer
+.. automodule:: design3d.utils.step_writer
    :members:
    :undoc-members:
    :show-inheritance:

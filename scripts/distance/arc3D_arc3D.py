@@ -9,26 +9,26 @@ import random
 
 import matplotlib.pyplot as plt
 
-import volmdlr as vm
-import volmdlr.edges as vme
+import volmdlr as d3d
+import volmdlr.edges as d3de
 
 ##### cas 9 arc/arc
 
 mini, maxi = -5, 5
 rad_min, rad_max = 1, 3
 
-pt1 = vm.Point3D.random(mini, maxi, mini, maxi, mini, maxi)
+pt1 = d3d.Point3D.random(mini, maxi, mini, maxi, mini, maxi)
 rad1 = random.randint(rad_min, rad_max)
-start1, interior1, end1 = pt1, pt1 + vm.Point3D(0,-rad1,rad1), pt1 + vm.Point3D(0,-2*rad1,0)
-arc1 = vme.Arc3D.from_3_points(start1, interior1, end1)
+start1, interior1, end1 = pt1, pt1 + d3d.Point3D(0,-rad1,rad1), pt1 + d3d.Point3D(0,-2*rad1,0)
+arc1 = d3de.Arc3D.from_3_points(start1, interior1, end1)
 
-pt2 = vm.Point3D.random(mini, maxi, mini, maxi, mini, maxi)
+pt2 = d3d.Point3D.random(mini, maxi, mini, maxi, mini, maxi)
 rad2 = random.randint(rad_min, rad_max)
-start2, interior2, end2 = pt2, pt2 + vm.Point3D(-2*rad2,0,0), pt2 + vm.Point3D(-rad2,rad2,0)
+start2, interior2, end2 = pt2, pt2 + d3d.Point3D(-2*rad2,0,0), pt2 + d3d.Point3D(-rad2,rad2,0)
 
 # TODO testcase to make robust
 try:
-    arc2 = vme.Arc3D.from_3_points(start2, interior2, end2)
+    arc2 = d3de.Arc3D.from_3_points(start2, interior2, end2)
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')

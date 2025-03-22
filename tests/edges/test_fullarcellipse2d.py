@@ -1,6 +1,6 @@
 import unittest
 import design3d
-import design3d.edges as vme
+import design3d.edges as d3de
 from design3d import curves
 
 
@@ -11,7 +11,7 @@ class TestFullArcEllipse2D(unittest.TestCase):
     center = design3d.O2D
     major_dir = design3d.X2D
     ellispe2d = curves.Ellipse2D(major_axis, minor_axis, design3d.OXY)
-    fullarcellipse = vme.FullArcEllipse2D(ellispe2d, start_end)
+    fullarcellipse = d3de.FullArcEllipse2D(ellispe2d, start_end)
 
     def test_init(self):
         self.assertAlmostEqual(self.fullarcellipse.ellipse.major_axis, 0.0225, places=4)
@@ -48,7 +48,7 @@ class TestFullArcEllipse2D(unittest.TestCase):
         self.assertAlmostEqual(self.fullarcellipse.abscissa(point1), 0.75*self.fullarcellipse.length())
         self.assertAlmostEqual(self.fullarcellipse.abscissa(point2), 0.0)
 
-        ellipse = vme.FullArcEllipse2D(curves.Ellipse2D(0.000500289037421, 0.00050027520242, design3d.OXY),
+        ellipse = d3de.FullArcEllipse2D(curves.Ellipse2D(0.000500289037421, 0.00050027520242, design3d.OXY),
                                        design3d.Point2D(0.0005002890374210534, 0))
         point = design3d.Point2D(-0.00018416867811365376, 0.00046514411968310123)
         self.assertAlmostEqual(ellipse.abscissa(point), 0.00098248885770749, 4)

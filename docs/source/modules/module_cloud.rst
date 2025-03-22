@@ -2,7 +2,7 @@
 Cloud
 -----
 
-.. automodule:: volmdlr.cloud
+.. automodule:: design3d.cloud
    :members:
    :undoc-members:
    :show-inheritance:

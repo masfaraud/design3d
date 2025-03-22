@@ -2,7 +2,7 @@
 Cad Simplification
 -----------------
 
-.. automodule:: volmdlr.cad_simplification
+.. automodule:: design3d.cad_simplification
    :members:
    :undoc-members:
    :show-inheritance:

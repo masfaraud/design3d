@@ -9,11 +9,11 @@ from scipy.optimize import bisect, minimize
 
 import design3d
 import design3d.cloud
-import design3d.faces as vmf
+import design3d.faces as d3df
 import design3d.primitives3d as p3d
-import design3d.stl as vms
+import design3d.stl as d3ds
 
-stl = vms.Stl.from_file('C:\\Users\\Mack_Pro\\Documents\\git\\Renault\\DynamicLoop\Mise a jour GMP S30\\jeu2\\forbi_disc\\new_HR18 FDU piece chaude.stl')
+stl = d3ds.Stl.from_file('C:\\Users\\Mack_Pro\\Documents\\git\\Renault\\DynamicLoop\Mise a jour GMP S30\\jeu2\\forbi_disc\\new_HR18 FDU piece chaude.stl')
 shell3d = stl.to_closed_shell()
 
 points1 = stl.extract_points()

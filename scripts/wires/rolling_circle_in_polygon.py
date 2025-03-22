@@ -11,13 +11,13 @@
 #
 # import matplotlib.pyplot as plt
 #
-# import volmdlr as vm
+# import volmdlr as d3d
 #
 #
 # def circle_3_segments(segment1, segment2, segment3):
 #
 #
-#     return vm.Circle2D
+#     return d3d.Circle2D
 #
 # def circle_1_point_2_segments(point, line1, line2):
 #
@@ -25,17 +25,17 @@
 #     # semgent1 will be [AB]
 #     # segment2 will be [CD]
 #
-#     I = vm.Vector2D((point[0], point[1]))
-#     A = vm.Vector2D((line1.points[0][0], line1.points[0][1]))
-#     B = vm.Vector2D((line1.points[1][0], line1.points[1][1]))
-#     C = vm.Vector2D((line2.points[0][0], line2.points[0][1]))
-#     D = vm.Vector2D((line2.points[1][0], line2.points[1][1]))
+#     I = d3d.Vector2D((point[0], point[1]))
+#     A = d3d.Vector2D((line1.points[0][0], line1.points[0][1]))
+#     B = d3d.Vector2D((line1.points[1][0], line1.points[1][1]))
+#     C = d3d.Vector2D((line2.points[0][0], line2.points[0][1]))
+#     D = d3d.Vector2D((line2.points[1][0], line2.points[1][1]))
 #
 #     # CHANGEMENT DE REPAIRE
-#     new_u = vm.Vector2D((B-A))
+#     new_u = d3d.Vector2D((B-A))
 #     new_u.Normalize()
 #     new_v = new_u.NormalVector(unit=True)
-#     new_basis = vm.Frame2D(I, new_u, new_v)
+#     new_basis = d3d.Frame2D(I, new_u, new_v)
 #
 #     new_A = new_basis.NewCoordinates(A)
 #     new_B = new_basis.NewCoordinates(B)
@@ -58,9 +58,9 @@
 #
 #         segments_distance = abs(new_C[1] - new_A[1])
 #         r = segments_distance / 2
-#         new_circle_center = vm.Point2D((0, r))
+#         new_circle_center = d3d.Point2D((0, r))
 #         circle_center = new_basis.OldCoordinates(new_circle_center)
-#         circle = vm.Circle2D(circle_center, r)
+#         circle = d3d.Circle2D(circle_center, r)
 #
 #         return circle, None
 # # =============================================================================
@@ -69,17 +69,17 @@
 # # =============================================================================
 #     elif math.isclose(line1.DirectionVector(unit=True).Dot(line2.DirectionVector(unit=True)), 0, abs_tol=1e-06):
 #
-#         line_AB = vm.Line2D(vm.Point2D(new_A), vm.Point2D(new_B))
-#         line_CD = vm.Line2D(vm.Point2D(new_C), vm.Point2D(new_D))
-#         new_pt_K = vm.Point2D.LinesIntersection(line_AB ,line_CD)
+#         line_AB = d3d.Line2D(d3d.Point2D(new_A), d3d.Point2D(new_B))
+#         line_CD = d3d.Line2D(d3d.Point2D(new_C), d3d.Point2D(new_D))
+#         new_pt_K = d3d.Point2D.LinesIntersection(line_AB ,line_CD)
 #
 #         r = abs(new_pt_K[0])
-#         new_circle_center1 = vm.Point2D((0, r))
-#         new_circle_center2 = vm.Point2D((0, -r))
+#         new_circle_center1 = d3d.Point2D((0, r))
+#         new_circle_center2 = d3d.Point2D((0, -r))
 #         circle_center1 = new_basis.OldCoordinates(new_circle_center1)
 #         circle_center2 = new_basis.OldCoordinates(new_circle_center2)
-#         circle1 = vm.Circle2D(circle_center1, r)
-#         circle2 = vm.Circle2D(circle_center2, r)
+#         circle1 = d3d.Circle2D(circle_center1, r)
+#         circle2 = d3d.Circle2D(circle_center2, r)
 #
 #         return circle1, circle2
 #
@@ -89,16 +89,16 @@
 # # =============================================================================
 #     else:
 #
-#         line_AB = vm.Line2D(vm.Point2D(new_A), vm.Point2D(new_B))
-#         line_CD = vm.Line2D(vm.Point2D(new_C), vm.Point2D(new_D))
-#         new_pt_K = vm.Point2D.LinesIntersection(line_AB ,line_CD)
-#         pt_K = vm.Point2D(new_basis.OldCoordinates(new_pt_K))
+#         line_AB = d3d.Line2D(d3d.Point2D(new_A), d3d.Point2D(new_B))
+#         line_CD = d3d.Line2D(d3d.Point2D(new_C), d3d.Point2D(new_D))
+#         new_pt_K = d3d.Point2D.LinesIntersection(line_AB ,line_CD)
+#         pt_K = d3d.Point2D(new_basis.OldCoordinates(new_pt_K))
 #
 #         # CHANGEMENT DE REPERE:
-#         new_u2 = vm.Vector2D(pt_K-I)
+#         new_u2 = d3d.Vector2D(pt_K-I)
 #         new_u2.Normalize()
 #         new_v2 = new_u2.NormalVector(unit=True)
-#         new_basis2 = vm.Frame2D(I, new_u2, new_v2)
+#         new_basis2 = d3d.Frame2D(I, new_u2, new_v2)
 #
 #         new_A = new_basis2.NewCoordinates(A)
 #         new_B = new_basis2.NewCoordinates(B)
@@ -125,18 +125,18 @@
 #         r1 = new_pt_K[0] * math.sin(teta) / (1 + math.cos(teta))
 #         r2 = new_pt_K[0] * math.sin(teta) / (1 - math.cos(teta))
 #
-#         new_circle_center1 = vm.Point2D((0, -r1))
-#         new_circle_center2 = vm.Point2D((0, r2))
+#         new_circle_center1 = d3d.Point2D((0, -r1))
+#         new_circle_center2 = d3d.Point2D((0, r2))
 #
 #         circle_center1 = new_basis2.OldCoordinates(new_circle_center1)
 #         circle_center2 = new_basis2.OldCoordinates(new_circle_center2)
 #
 #         if new_basis.NewCoordinates(circle_center1)[1] > 0:
-#             circle1 = vm.Circle2D(circle_center1, r1)
-#             circle2 = vm.Circle2D(circle_center2, r2)
+#             circle1 = d3d.Circle2D(circle_center1, r1)
+#             circle2 = d3d.Circle2D(circle_center2, r2)
 #         else:
-#             circle1 = vm.Circle2D(circle_center2, r2)
-#             circle2 = vm.Circle2D(circle_center1, r1)
+#             circle1 = d3d.Circle2D(circle_center2, r2)
+#             circle2 = d3d.Circle2D(circle_center1, r1)
 #
 #         return circle1, circle2
 #
@@ -156,8 +156,8 @@
 #     polygon_mesh = []
 #     # on partcourt les arrêtes
 #     for (vertice1, vertice2) in zip(polygon.points, polygon.points[1:]+[polygon.points[0]]):
-#         side_direction = vm.Vector2D((vertice2[0] - vertice1[0], vertice2[1] - vertice1[1]))
-#         normalized_side_direction = vm.Vector2D((vertice2[0] - vertice1[0], vertice2[1] - vertice1[1]))
+#         side_direction = d3d.Vector2D((vertice2[0] - vertice1[0], vertice2[1] - vertice1[1]))
+#         normalized_side_direction = d3d.Vector2D((vertice2[0] - vertice1[0], vertice2[1] - vertice1[1]))
 #         normalized_side_direction.Normalize()
 #         pt_number = 0
 #         # on ajoute les points un par un sans dépasser la longueur du côté
@@ -177,8 +177,8 @@
 #             if index2-index1 >= 2 and index2-index1 < len(polygon_mesh)-1:
 #
 #                 for point1 in segment1[1:]:
-#                     seg1 = vm.LineSegment2D(segment1[0], segment1[-1])
-#                     seg2 = vm.LineSegment2D(segment2[0], segment2[-1])
+#                     seg1 = d3d.LineSegment2D(segment1[0], segment1[-1])
+#                     seg2 = d3d.LineSegment2D(segment2[0], segment2[-1])
 #
 #                     circle1, circle2  = seg2.create_tangent_circle(point1, seg1)
 #
@@ -194,8 +194,8 @@
 #                         min_seg2 = index2
 #
 #                 for point2 in segment2[1:]:
-#                     seg1 = vm.LineSegment2D(segment1[0], segment1[-1])
-#                     seg2 = vm.LineSegment2D(segment2[0], segment2[-1])
+#                     seg1 = d3d.LineSegment2D(segment1[0], segment1[-1])
+#                     seg2 = d3d.LineSegment2D(segment2[0], segment2[-1])
 #
 #                     circle1, circle2  = seg1.create_tangent_circle(point2, seg2)
 #
@@ -219,16 +219,16 @@
 # # TEST
 # # =============================================================================
 #
-# #point = vm.Point2D((0,2))
-# ##point = vm.Point2D((1,0.5))
+# #point = d3d.Point2D((0,2))
+# ##point = d3d.Point2D((1,0.5))
 # #
-# ##segment1 = vm.LineSegment2D(vm.Point2D((0,0.5)), vm.Point2D((0,2)))
-# ##segment1 = vm.LineSegment2D(vm.Point2D((0,2)), vm.Point2D((0,0.5)))
-# #segment1 = vm.LineSegment2D(vm.Point2D((0,2)), vm.Point2D((1,0.5)))
+# ##segment1 = d3d.LineSegment2D(d3d.Point2D((0,0.5)), d3d.Point2D((0,2)))
+# ##segment1 = d3d.LineSegment2D(d3d.Point2D((0,2)), d3d.Point2D((0,0.5)))
+# #segment1 = d3d.LineSegment2D(d3d.Point2D((0,2)), d3d.Point2D((1,0.5)))
 # #
-# ##segment2 = vm.LineSegment2D(vm.Point2D((-3,2)), vm.Point2D((-1,0)))
-# ##segment2 = vm.LineSegment2D(vm.Point2D((-1,0)), vm.Point2D((-3,2)))
-# #segment2 = vm.LineSegment2D(vm.Point2D((-2,2)), vm.Point2D((-4,-1)))
+# ##segment2 = d3d.LineSegment2D(d3d.Point2D((-3,2)), d3d.Point2D((-1,0)))
+# ##segment2 = d3d.LineSegment2D(d3d.Point2D((-1,0)), d3d.Point2D((-3,2)))
+# #segment2 = d3d.LineSegment2D(d3d.Point2D((-2,2)), d3d.Point2D((-4,-1)))
 # #
 # #f = plt.figure()
 # ##axe = plt.Axes(f, [-5, -5, 10, 10])
@@ -263,8 +263,8 @@
 #
 # points=[]
 # for pt in pts:
-#     points.append(vm.Point2D(*pt))
-# polygon = vm.Polygon2D(points)
+#     points.append(d3d.Point2D(*pt))
+# polygon = d3d.Polygon2D(points)
 # min_radius, min_circle, other_circle, min_point, min_seg1, min_seg2 = rolling_circle_in_polygon(polygon)
 # print(min_radius)
 #

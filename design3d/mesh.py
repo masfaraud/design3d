@@ -13,10 +13,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-import design3d as vm
-import design3d.edges as vme
-import design3d.gmsh_vm
-import design3d.wires as vmw
+import design3d as d3d
+import design3d.edges as d3de
+import design3d.gmsh_d3d
+import design3d.wires as d3dw
 from design3d.core import EdgeStyle
 
 
@@ -32,7 +32,7 @@ class FlatElementError(Exception):
 #     return duplicates
 
 
-class Node2D(vm.Point2D):
+class Node2D(d3d.Point2D):
     """
     A node is a Point2D with some hash capabilities for performance used for Mesh.
 
@@ -41,7 +41,7 @@ class Node2D(vm.Point2D):
     def __init__(self, x: float, y: float, name: str = ""):
         self.x = x
         self.y = y
-        vm.Point2D.__init__(self, x, y, name)
+        d3d.Point2D.__init__(self, x, y, name)
 
     def __hash__(self):
         return int(1e6 * (self.x + self.y))
@@ -59,7 +59,7 @@ class Node2D(vm.Point2D):
         Defines a node2d from a point2d.
 
         :param point2d: A point2d
-        :type point2d: vm.Point2D.
+        :type point2d: d3d.Point2D.
         :param name: object's name.
         :return: A node2d
         :rtype: Node2D
@@ -68,7 +68,7 @@ class Node2D(vm.Point2D):
         return cls(point2d.x, point2d.y, name=name)
 
 
-class Node3D(vm.Point3D):
+class Node3D(d3d.Point3D):
     """
     A node is a Point3D with some hash capabilities for performance used for Mesh.
     """
@@ -77,7 +77,7 @@ class Node3D(vm.Point3D):
         self.x = x
         self.y = y
         self.z = z
-        vm.Point3D.__init__(self, x, y, z, name)
+        d3d.Point3D.__init__(self, x, y, z, name)
 
     def __hash__(self):
         return int(1e6 * (self.x + self.y + self.z))
@@ -95,7 +95,7 @@ class Node3D(vm.Point3D):
         Defines a node3d from a point3d.
 
         :param point3d: A point3d
-        :type point3d: vm.Point3D.
+        :type point3d: d3d.Point3D.
         :param name: object's name.
         :return: A node3d
         :rtype: Node3D
@@ -104,7 +104,7 @@ class Node3D(vm.Point3D):
         return cls(point3d.x, point3d.y, point3d.z, name=name)
 
 
-class LinearElement(vme.LineSegment2D):
+class LinearElement(d3de.LineSegment2D):
     """ A class that defines a linear element. """
     _standalone_in_db = False
     _non_serializable_attributes = []
@@ -112,12 +112,12 @@ class LinearElement(vme.LineSegment2D):
     _non_data_hash_attributes = ['name']
     _generic_eq = True
 
-    def __init__(self, start: vm.Point2D, end: vm.Point2D,
-                 interior_normal: vm.Vector2D, name: str = ''):
+    def __init__(self, start: d3d.Point2D, end: d3d.Point2D,
+                 interior_normal: d3d.Vector2D, name: str = ''):
         self.points = [start, end]
         self.interior_normal = interior_normal
 
-        vme.LineSegment2D.__init__(self, start=start, end=end, name=name)
+        d3de.LineSegment2D.__init__(self, start=start, end=end, name=name)
 
     # def __hash__(self):
     #     return self.start.__hash__() + self.end.__hash__()
@@ -141,7 +141,7 @@ class LinearElement(vme.LineSegment2D):
     #     return ax
 
 
-class TriangularElement(vmw.Triangle):
+class TriangularElement(d3dw.Triangle):
     """
     A mesh element defined with 3 nodes.
     """
@@ -163,7 +163,7 @@ class TriangularElement(vmw.Triangle):
 
         # self.area = self._area()
 
-        vmw.Triangle.__init__(self, *points)
+        d3dw.Triangle.__init__(self, *points)
 
     def _to_linear_elements(self):
         """
@@ -172,15 +172,15 @@ class TriangularElement(vmw.Triangle):
         :return: The linear elements corresponding to the sides of the triangle.
         :rtype: List[LinearElement]
         """
-        vec1 = vm.Vector2D(self.points[1].x - self.points[0].x,
+        vec1 = d3d.Vector2D(self.points[1].x - self.points[0].x,
                            self.points[1].y - self.points[0].y)
-        vec2 = vm.Vector2D(self.points[2].x - self.points[1].x,
+        vec2 = d3d.Vector2D(self.points[2].x - self.points[1].x,
                            self.points[2].y - self.points[1].y)
-        vec3 = vm.Vector2D(self.points[0].x - self.points[2].x,
+        vec3 = d3d.Vector2D(self.points[0].x - self.points[2].x,
                            self.points[0].y - self.points[2].y)
-        normal1 = vm.Vector2D(-vec1.y, vec1.x)
-        normal2 = vm.Vector2D(-vec2.y, vec2.x)
-        normal3 = vm.Vector2D(-vec3.y, vec3.x)
+        normal1 = d3d.Vector2D(-vec1.y, vec1.x)
+        normal2 = d3d.Vector2D(-vec2.y, vec2.x)
+        normal3 = d3d.Vector2D(-vec3.y, vec3.x)
         normal1 = normal1.unit_vector()
         normal2 = normal2.unit_vector()
         normal3 = normal3.unit_vector()
@@ -199,7 +199,7 @@ class TriangularElement(vmw.Triangle):
         return [linear_element_1, linear_element_2, linear_element_3]
 
     def _form_functions(self):
-        a_matrix = vm.Matrix33(1, self.points[0].x, self.points[0].y,
+        a_matrix = d3d.Matrix33(1, self.points[0].x, self.points[0].y,
                                1, self.points[1].x, self.points[1].y,
                                1, self.points[2].x, self.points[2].y)
         try:
@@ -208,9 +208,9 @@ class TriangularElement(vmw.Triangle):
             # self.plot()
             print('buggy element area', self._area())
             raise FlatElementError('form function bug') from expt
-        x_1 = inv_a.vector_multiplication(vm.X3D)
-        x_2 = inv_a.vector_multiplication(vm.Y3D)
-        x_3 = inv_a.vector_multiplication(vm.Z3D)
+        x_1 = inv_a.vector_multiplication(d3d.X3D)
+        x_2 = inv_a.vector_multiplication(d3d.Y3D)
+        x_3 = inv_a.vector_multiplication(d3d.Z3D)
         return x_1, x_2, x_3
 
 
@@ -237,7 +237,7 @@ class TriangularElement(vmw.Triangle):
         return self.__class__(new_points)
 
 
-class TriangularElement2D(TriangularElement, vmw.ClosedPolygon2D):
+class TriangularElement2D(TriangularElement, d3dw.ClosedPolygon2D):
     """ Class to define a 2D triangular element. """
     _standalone_in_db = False
     _non_serializable_attributes = []
@@ -257,7 +257,7 @@ class TriangularElement2D(TriangularElement, vmw.ClosedPolygon2D):
         self.center = (self.points[0] + self.points[1] + self.points[2]) / 3
 
         self.area = self._area()
-        # vmw.Triangle.__init__(self, points)
+        # d3dw.Triangle.__init__(self, points)
 
     def _to_linear_elements(self):
         """
@@ -266,15 +266,15 @@ class TriangularElement2D(TriangularElement, vmw.ClosedPolygon2D):
         :return: The linear elements corresponding to the sides of the triangle.
         :rtype: List[LinearElement]
         """
-        vec1 = vm.Vector2D(self.points[1].x - self.points[0].x,
+        vec1 = d3d.Vector2D(self.points[1].x - self.points[0].x,
                            self.points[1].y - self.points[0].y)
-        vec2 = vm.Vector2D(self.points[2].x - self.points[1].x,
+        vec2 = d3d.Vector2D(self.points[2].x - self.points[1].x,
                            self.points[2].y - self.points[1].y)
-        vec3 = vm.Vector2D(self.points[0].x - self.points[2].x,
+        vec3 = d3d.Vector2D(self.points[0].x - self.points[2].x,
                            self.points[0].y - self.points[2].y)
-        normal1 = vm.Vector2D(-vec1.y, vec1.x)
-        normal2 = vm.Vector2D(-vec2.y, vec2.x)
-        normal3 = vm.Vector2D(-vec3.y, vec3.x)
+        normal1 = d3d.Vector2D(-vec1.y, vec1.x)
+        normal2 = d3d.Vector2D(-vec2.y, vec2.x)
+        normal3 = d3d.Vector2D(-vec3.y, vec3.x)
         normal1 = normal1.unit_vector()
         normal2 = normal2.unit_vector()
         normal3 = normal3.unit_vector()
@@ -293,7 +293,7 @@ class TriangularElement2D(TriangularElement, vmw.ClosedPolygon2D):
         return [linear_element_1, linear_element_2, linear_element_3]
 
     def _form_functions(self):
-        a_matrix = vm.Matrix33(1, self.points[0].x, self.points[0].y,
+        a_matrix = d3d.Matrix33(1, self.points[0].x, self.points[0].y,
                                1, self.points[1].x, self.points[1].y,
                                1, self.points[2].x, self.points[2].y)
         try:
@@ -302,9 +302,9 @@ class TriangularElement2D(TriangularElement, vmw.ClosedPolygon2D):
             self.plot()
             print('buggy element area', self.area)
             raise FlatElementError('form function bug') from expt
-        x_1 = inv_a.vector_multiplication(vm.X3D)
-        x_2 = inv_a.vector_multiplication(vm.Y3D)
-        x_3 = inv_a.vector_multiplication(vm.Z3D)
+        x_1 = inv_a.vector_multiplication(d3d.X3D)
+        x_2 = inv_a.vector_multiplication(d3d.Y3D)
+        x_3 = inv_a.vector_multiplication(d3d.Z3D)
         return x_1, x_2, x_3
 
     def _area(self):
@@ -355,7 +355,7 @@ class TriangularElement2D(TriangularElement, vmw.ClosedPolygon2D):
         return ax
 
 
-class QuadrilateralElement2D(vmw.ClosedPolygon2D):
+class QuadrilateralElement2D(d3dw.ClosedPolygon2D):
     """ Class to define a 2D quadrilateral element. """
 
     _standalone_in_db = False
@@ -373,10 +373,10 @@ class QuadrilateralElement2D(vmw.ClosedPolygon2D):
 
         self.area = self.area()
         self._line_segments = None
-        vmw.ClosedPolygon2D.__init__(self, points)
+        d3dw.ClosedPolygon2D.__init__(self, points)
 
 
-class TriangularElement3D(TriangularElement, vmw.ClosedPolygon3D):
+class TriangularElement3D(TriangularElement, d3dw.ClosedPolygon3D):
     """ Class to define a 3D triangular element. """
 
     def __init__(self, points):
@@ -734,7 +734,7 @@ class Mesh:
         :type gmsh_parser: GmshParser
         """
 
-        if not isinstance(gmsh_parser, design3d.gmsh_vm.GmshParser):
+        if not isinstance(gmsh_parser, design3d.gmsh_d3d.GmshParser):
             raise ValueError("It must be design3d.GmshParser class")
         self._gmsh = gmsh_parser
 

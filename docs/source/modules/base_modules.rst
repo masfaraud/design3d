@@ -5,7 +5,7 @@ Base Modules
 Core Compiled
 -------------
 
-.. automodule:: volmdlr.core_compiled
+.. automodule:: design3d.core_compiled
    :members:
    :undoc-members:
    :show-inheritance:
@@ -14,7 +14,7 @@ Core Compiled
 Core
 ----
 
-.. automodule:: volmdlr.core
+.. automodule:: design3d.core
    :members:
    :undoc-members:
    :show-inheritance:

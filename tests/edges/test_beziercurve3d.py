@@ -3,7 +3,7 @@ Unit tests for design3d.faces.BSplineCurve
 """
 import unittest
 import design3d
-import design3d.edges as vme
+import design3d.edges as d3de
 
 
 class TestBezierCurve3D(unittest.TestCase):
@@ -13,7 +13,7 @@ class TestBezierCurve3D(unittest.TestCase):
               design3d.Point3D(1, 1, 2),
               design3d.Point3D(2, 1, 1),
               design3d.Point3D(3, 0, 4)]
-    bezier_curve3d = vme.BezierCurve3D(degree=degree,
+    bezier_curve3d = d3de.BezierCurve3D(degree=degree,
                                        control_points=ctrlpts,
                                        name='bezier curve 1')
 

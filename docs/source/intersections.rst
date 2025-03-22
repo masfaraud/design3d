@@ -20,12 +20,12 @@ For example, to calculate the intersections between a Ellipse2D and Circle2D you
     :include-source:
     :align: center
 
-    import volmdlr
-    from volmdlr import edges, curves
-    from volmdlr.core import EdgeStyle
+    import design3d
+    from design3d import edges, curves
+    from design3d.core import EdgeStyle
 
-    circle = curves.Circle2D(frame=volmdlr.Frame2D(origin=volmdlr.Point2D(0.0, 0.0), u=volmdlr.Vector2D(1.0, -2.2204460492503126e-16), v=volmdlr.Vector2D(-2.4980018054066027e-16, 1.0)), radius=1)
-    ellipse2d = curves.Ellipse2D(frame=volmdlr.Frame2D(origin=volmdlr.Point2D(1.6329931618544102, -1.1547005383785152), u=volmdlr.Vector2D(-0.8164965809277259, 0.5773502691896258), v=volmdlr.Vector2D(0.5773502691896258, 0.8164965809277259)),
+    circle = curves.Circle2D(frame=design3d.Frame2D(origin=design3d.Point2D(0.0, 0.0), u=design3d.Vector2D(1.0, -2.2204460492503126e-16), v=design3d.Vector2D(-2.4980018054066027e-16, 1.0)), radius=1)
+    ellipse2d = curves.Ellipse2D(frame=design3d.Frame2D(origin=design3d.Point2D(1.6329931618544102, -1.1547005383785152), u=design3d.Vector2D(-0.8164965809277259, 0.5773502691896258), v=design3d.Vector2D(0.5773502691896258, 0.8164965809277259)),
                                  major_axis=1.7320508075677725, minor_axis=0.9999999999993615)
 
     intersections = circle.curve_intersections(ellipse2d)
@@ -51,18 +51,18 @@ For example, to calculate the intersections between a BSplineCurve2D and Arc2D y
     :include-source:
     :align: center
 
-    import volmdlr
-    from volmdlr import curves, edges
+    import design3d
+    from design3d import curves, edges
     from geomdl import utilities
-    from volmdlr.core import EdgeStyle
+    from design3d.core import EdgeStyle
 
     degree = 3
-    points = [volmdlr.Point2D(0, 0), volmdlr.Point2D(1, 1), volmdlr.Point2D(2, -1), volmdlr.Point2D(3, 0)]
+    points = [design3d.Point2D(0, 0), design3d.Point2D(1, 1), design3d.Point2D(2, -1), design3d.Point2D(3, 0)]
     knotvector = utilities.generate_knot_vector(degree, len(points))
     knot_multiplicity = [1] * len(knotvector)
     bspline1 = edges.BSplineCurve2D(degree, points, knot_multiplicity, knotvector, None, False)
 
-    arc = edges.Arc2D.from_3_points(volmdlr.Point2D(0, 0.3), volmdlr.Point2D(1, -0.3), volmdlr.Point2D(2, 2))
+    arc = edges.Arc2D.from_3_points(design3d.Point2D(0, 0.3), design3d.Point2D(1, -0.3), design3d.Point2D(2, 2))
     intersections = bspline1.intersections(arc)
     ax = bspline1.plot()
     arc.plot(ax, EdgeStyle('r'))
@@ -76,10 +76,10 @@ Another example in 3D: BSplineCurve3D and LineSegment3D:
     :include-source:
     :align: center
 
-    import volmdlr
-    from volmdlr import edges
-    from volmdlr.core import EdgeStyle
-    from volmdlr.models.edges import bspline_curve3d
+    import design3d
+    from design3d import edges
+    from design3d.core import EdgeStyle
+    from design3d.models.edges import bspline_curve3d
 
     #Here we are using a bspline curve previously defined as a model curve.
     bs3d = bspline_curve3d()
@@ -117,15 +117,15 @@ Example:
     :include-source:
     :align: center
 
-    import volmdlr
-    from volmdlr.models.contours import contour2_unittest
-    from volmdlr.models.edges import bspline1
-    from volmdlr.core import EdgeStyle
+    import design3d
+    from design3d.models.contours import contour2_unittest
+    from design3d.models.edges import bspline1
+    from design3d.core import EdgeStyle
 
     # Here we are going to use a model contour2d and also a model bsplinecurve2d.
 
     contour2d = contour2_unittest.copy()
-    contour2d = contour2d.translation(volmdlr.Vector2D(1, 0.0))
+    contour2d = contour2d.translation(design3d.Vector2D(1, 0.0))
 
     #search for intersections betweeen a contour2d and an edge.
     edge_intersections = contour2d.edge_intersections(bspline1)
@@ -147,16 +147,16 @@ any type using the same command: `edge_intersections` . #todo: structure for met
     :include-source:
     :align: center
 
-    import volmdlr
-    from volmdlr import edges, primitives3d, wires, surfaces
-    from volmdlr.core import EdgeStyle
-    from volmdlr.utils.common_operations import random_color
+    import design3d
+    from design3d import edges, primitives3d, wires, surfaces
+    from design3d.core import EdgeStyle
+    from design3d.utils.common_operations import random_color
 
 
-    spherical_surface3d = surfaces.SphericalSurface3D(volmdlr.OXYZ, 1)
+    spherical_surface3d = surfaces.SphericalSurface3D(design3d.OXYZ, 1)
     ax = spherical_surface3d.plot(color='b')
 
-    linesegment = edges.LineSegment3D(volmdlr.Point3D(-0.8, -0.8, -0.8), volmdlr.Point3D(0.8, 0.8, 0.8))
+    linesegment = edges.LineSegment3D(design3d.Point3D(-0.8, -0.8, -0.8), design3d.Point3D(0.8, 0.8, 0.8))
     linesegment_intersections = spherical_surface3d.linesegment_intersections(linesegment)
     linesegment.plot(ax, EdgeStyle('g'))
     for p in linesegment_intersections:
@@ -169,14 +169,14 @@ Intersections between two surfaces
     :include-source:
     :align: center
 
-    import volmdlr
-    from volmdlr import faces, surfaces, edges
-    from volmdlr.core import EdgeStyle
+    import design3d
+    from design3d import faces, surfaces, edges
+    from design3d.core import EdgeStyle
 
     R = 0.15
-    cylindricalsurface = surfaces.CylindricalSurface3D(volmdlr.OXYZ, R)
+    cylindricalsurface = surfaces.CylindricalSurface3D(design3d.OXYZ, R)
 
-    plane = surfaces.Plane3D(volmdlr.Frame3D(volmdlr.O3D, volmdlr.Vector3D(0.0, 0.7071067811865475, -0.7071067811865476), volmdlr.Vector3D(1.0, 0.0, 0.0), volmdlr.Vector3D(0.0, -0.7071067811865476, -0.7071067811865475)))
+    plane = surfaces.Plane3D(design3d.Frame3D(design3d.O3D, design3d.Vector3D(0.0, 0.7071067811865475, -0.7071067811865476), design3d.Vector3D(1.0, 0.0, 0.0), design3d.Vector3D(0.0, -0.7071067811865476, -0.7071067811865475)))
     intersections = cylindricalsurface.plane_intersections(plane)
     ax = cylindricalsurface.plot(edge_style=EdgeStyle('k'))
     plane.plot(ax, edge_style=EdgeStyle('b'))
@@ -195,9 +195,9 @@ Example:
     :include-source:
     :align: center
 
-    import volmdlr
-    from volmdlr import faces, surfaces, edges
-    from volmdlr.core import EdgeStyle
+    import design3d
+    from design3d import faces, surfaces, edges
+    from design3d.core import EdgeStyle
 
 Intersections between two faces
 *******************************
@@ -210,12 +210,12 @@ Example:
     :include-source:
     :align: center
 
-    import volmdlr
-    from volmdlr import surfaces, faces
-    from volmdlr.core import EdgeStyle
+    import design3d
+    from design3d import surfaces, faces
+    from design3d.core import EdgeStyle
 
-    face1 = faces.PlaneFace3D.from_surface_rectangular_cut(surfaces.Plane3D(volmdlr.OXYZ), -1, 1, -1, 1)
-    face2 = faces.PlaneFace3D.from_surface_rectangular_cut(surfaces.Plane3D(volmdlr.OYZX), -1, 1, -1, 1)
+    face1 = faces.PlaneFace3D.from_surface_rectangular_cut(surfaces.Plane3D(design3d.OXYZ), -1, 1, -1, 1)
+    face2 = faces.PlaneFace3D.from_surface_rectangular_cut(surfaces.Plane3D(design3d.OYZX), -1, 1, -1, 1)
     face_intersections = face1.face_intersections(face2)
     ax = face1.plot()
     face2.plot(ax, 'r')
@@ -235,12 +235,12 @@ Example:
     :include-source:
     :align: center
 
-    import volmdlr
-    from volmdlr import faces, surfaces, edges
-    from volmdlr.core import EdgeStyle
+    import design3d
+    from design3d import faces, surfaces, edges
+    from design3d.core import EdgeStyle
 
-    face1 = faces.PlaneFace3D.from_surface_rectangular_cut(surfaces.Plane3D(volmdlr.OXYZ), -1, 1, -1, 1)
-    lineseg = edges.LineSegment3D(volmdlr.Point3D(-.5, -.5, -.5), volmdlr.Point3D(.5, .5, .5))
+    face1 = faces.PlaneFace3D.from_surface_rectangular_cut(surfaces.Plane3D(design3d.OXYZ), -1, 1, -1, 1)
+    lineseg = edges.LineSegment3D(design3d.Point3D(-.5, -.5, -.5), design3d.Point3D(.5, .5, .5))
     linseg_intersections = face1.linesegment_intersections(lineseg)
 
     ax = face1.plot()

@@ -1,7 +1,7 @@
 GMSH
 ----
 
-.. automodule:: volmdlr.gmsh_vm
+.. automodule:: design3d.gmsh_d3d
    :members:
    :undoc-members:
    :show-inheritance:

@@ -8,7 +8,7 @@ It is a widely used format in the field of engineering, manufacturing, and produ
 A STEP file is designed to facilitate the seamless exchange of complex 3D product information across various software platforms.
 It provides a standardized way to represent geometric and non-geometric data associated with a product's design, such as its shape, dimensions, assembly structure, materials, and other attributes.
 
-To help users coming from another CAD software, the Volmdlr library provides a module called `step.py that enables you to import STEP files and perform powerfull analysis within volmdlr features.
+To help users coming from another CAD software, the Volmdlr library provides a module called `step.py that enables you to import STEP files and perform powerfull analysis within design3d features.
 
 Import a STEP file
 *****************
@@ -18,7 +18,7 @@ Here's a example of how you can do it:
 
 .. code-block:: python
 
-    from volmdlr import step
+    from design3d import step
 
     stepfile = step.Step.from_file('/path/to/your/step/file.step')
 
@@ -33,9 +33,9 @@ If we break it down we have:
 
 .. code-block:: python
 
-    from volmdlr import step
+    from design3d import step
 
-The script imports the step module from the volmdlr library.
+The script imports the step module from the design3d library.
 This module provides functionality to work with STEP (Standard for the Exchange of Product model data) files, which are used for exchanging 3D CAD models and associated information.
 
 2. **Loading a STEP File:**
@@ -55,7 +55,7 @@ This file contains the 3D CAD model and its data.
     volume = stepfile.to_volume_model()
 
 The loaded STEP file is converted into a volume model using the ``to_volume_model()`` method.
-A volume model represents the geometry of the CAD model in volmdlr.
+A volume model represents the geometry of the CAD model in design3d.
 This conversion allows you to manipulate and visualize the 3D geometry.
 
 4. **Adjusting Visual Properties:**

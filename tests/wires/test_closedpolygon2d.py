@@ -4,14 +4,14 @@ Unittest for ClosedPolygon2D class
 import unittest
 import numpy as np
 import design3d
-import design3d.display as vmd
-import design3d.wires as vmw
+import design3d.display as d3dd
+import design3d.wires as d3dw
 
 
 class TestClosedPolygon2D(unittest.TestCase):
     # Create a ClosedPolygon2D object with a list of points
     points = [design3d.Point2D(0, 0), design3d.Point2D(1, 0), design3d.Point2D(1, 1), design3d.Point2D(0, 1)]
-    polygon = vmw.ClosedPolygon2D(points)
+    polygon = d3dw.ClosedPolygon2D(points)
     def test_triangulation(self):
 
 
@@ -20,10 +20,10 @@ class TestClosedPolygon2D(unittest.TestCase):
         mesh2 = self.polygon.triangulation('p')
         mesh3 = self.polygon.triangulation('pa0.25')  # No triangles with area greter than 0.25
 
-        # Assert that the returned object is a vmd.DisplayMesh2D
-        self.assertIsInstance(mesh1, vmd.Mesh2D)
-        self.assertIsInstance(mesh2, vmd.Mesh2D)
-        self.assertIsInstance(mesh3, vmd.Mesh2D)
+        # Assert that the returned object is a d3dd.DisplayMesh2D
+        self.assertIsInstance(mesh1, d3dd.Mesh2D)
+        self.assertIsInstance(mesh2, d3dd.Mesh2D)
+        self.assertIsInstance(mesh3, d3dd.Mesh2D)
 
         # Assert that the mesh has the correct number of points and triangles
         self.assertEqual(len(mesh1.vertices), 4)
@@ -35,7 +35,7 @@ class TestClosedPolygon2D(unittest.TestCase):
 
     def test_point_belongs(self):
         # create a star-shaped polygon with 5 points
-        polygon = vmw.ClosedPolygon2D([design3d.Point2D(0, 0), design3d.Point2D(1, 2), design3d.Point2D(3, 0),
+        polygon = d3dw.ClosedPolygon2D([design3d.Point2D(0, 0), design3d.Point2D(1, 2), design3d.Point2D(3, 0),
                                        design3d.Point2D(2, -2), design3d.Point2D(0, -1)])
 
         # test points inside the polygon
@@ -57,7 +57,7 @@ class TestClosedPolygon2D(unittest.TestCase):
         point = design3d.Point2D(4, 0)
         self.assertFalse(polygon.point_inside(point))
         self.assertFalse(polygon.point_inside(point, include_edge_points=True))
-        polygon = vmw.ClosedPolygon2D([design3d.Point2D(0.025066533673536538, 0.0257663365438965),
+        polygon = d3dw.ClosedPolygon2D([design3d.Point2D(0.025066533673536538, 0.0257663365438965),
                                        design3d.Point2D(0.02895747485348258, 0.026481373525337516),
                                        design3d.Point2D(0.03197047286753098, 0.03014226404424863),
                                        design3d.Point2D(0.031092529701331955, 0.03308811758234674),

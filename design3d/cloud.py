@@ -12,15 +12,15 @@ import random
 import matplotlib.pyplot as plt
 from trimesh.proximity import closest_point
 
-import design3d as vm
-import design3d.faces as vmf
-from design3d import shells as vmshells
+import design3d as d3d
+import design3d.faces as d3df
+from design3d import shells as d3dshells
 from design3d import surfaces
 import design3d.primitives3d as p3d
 import design3d.step as vstep
-import design3d.stl as vmstl
+import design3d.stl as d3dstl
 # import design3d.core
-import design3d.wires as vmw
+import design3d.wires as d3dw
 
 
 class PointCloud3D:
@@ -30,7 +30,7 @@ class PointCloud3D:
     :param points: a list of points.
     """
 
-    def __init__(self, points: List[vm.Point3D], name: str = ''):
+    def __init__(self, points: List[d3d.Point3D], name: str = ''):
         self.points = points
         self.__bounding_box = None
         self.name = name
@@ -44,7 +44,7 @@ class PointCloud3D:
         :param name: object's name.
         :return: point cloud 3d object.
         """
-        list_points = vmstl.Stl.from_file(file_path).extract_points_bis()
+        list_points = d3dstl.Stl.from_file(file_path).extract_points_bis()
 
         return cls(list_points, name=name)
 
@@ -54,7 +54,7 @@ class PointCloud3D:
 
         :return: Bounding box object.
         """
-        return vm.core.BoundingBox.from_points(self.points)
+        return d3d.core.BoundingBox.from_points(self.points)
 
     @property
     def bounding_box(self):
@@ -104,7 +104,7 @@ class PointCloud3D:
         bbox = self._bounding_box()
         xyz_bbox = [[bbox.xmin, bbox.xmax], [bbox.ymin, bbox.ymax], [bbox.zmin, bbox.zmax]]
         xyz_list = [l[1] - l[0] for l in xyz_bbox]
-        absxyz_list, xyz_vect = [abs(length) for length in xyz_list], [vm.X3D, vm.Y3D, vm.Z3D]
+        absxyz_list, xyz_vect = [abs(length) for length in xyz_list], [d3d.X3D, d3d.Y3D, d3d.Z3D]
         posmax = xyz_list.index(max(absxyz_list))
         normal = xyz_vect[posmax]
         vec1, vec2 = xyz_vect[posmax - 2], xyz_vect[posmax - 1]
@@ -150,7 +150,7 @@ class PointCloud3D:
             if poly is None or (poly.area() < avg_area / 10) and (n not in [0, len(initial_polygons2d) - 1]):
                 continue
             if poly.area() < avg_area / 10:
-                new_poly = vmw.ClosedPolygon2D.concave_hull(poly.points, -1, 0.000005)
+                new_poly = d3dw.ClosedPolygon2D.concave_hull(poly.points, -1, 0.000005)
                 new_polygon = new_poly.to_3d(position_plane[n] * normal, vec1,
                                              vec2)
                 polygons_3d.append(new_polygon)
@@ -181,10 +181,10 @@ class PointCloud3D:
             posmax, normal, vec1, vec2 = self.determine_extrusion_vector()
         else:
             posmax = 0
-            for n, vect in enumerate([vm.X3D, vm.Y3D, vm.Z3D]):
+            for n, vect in enumerate([d3d.X3D, d3d.Y3D, d3d.Z3D]):
                 if vect == normal:
                     posmax = n
-            vec1, vec2 = [vm.X3D, vm.Y3D, vm.Z3D][posmax - 2], [vm.X3D, vm.Y3D, vm.Z3D][posmax - 1]
+            vec1, vec2 = [d3d.X3D, d3d.Y3D, d3d.Z3D][posmax - 2], [d3d.X3D, d3d.Y3D, d3d.Z3D][posmax - 1]
 
         dist_between_plane, position_plane = self.position_plane(posmax=posmax,
                                                                  resolution=resolution)
@@ -207,8 +207,8 @@ class PointCloud3D:
         return self.generate_shell(polygons_3d, normal, vec1, vec2)
 
     @classmethod
-    def generate_shell(cls, polygons_3d: List[vm.wires.ClosedPolygon3D],
-                       normal: vm.Vector3D, vec1: vm.Vector3D, vec2: vm.Vector3D, name: str = ''):
+    def generate_shell(cls, polygons_3d: List[d3d.wires.ClosedPolygon3D],
+                       normal: d3d.Vector3D, vec1: d3d.Vector3D, vec2: d3d.Vector3D, name: str = ''):
         """
         Generates a shell from a list of polygon 3d, using a sewing algorithm.
 
@@ -231,7 +231,7 @@ class PointCloud3D:
                 if n == 0:
                     vec2_ = -vec2
                 faces.append(
-                    vmf.PlaneFace3D(
+                    d3df.PlaneFace3D(
                         surface3d=surfaces.Plane3D.from_plane_vectors((position_plane[n] * normal).to_point(),
                                                                       vec1, vec2_),
                         surface2d=cls._poly_to_surf2d(poly1_simplified, position_plane[n], normal, vec1, vec2_)))
@@ -241,10 +241,10 @@ class PointCloud3D:
                 poly2_simplified = cls._helper_simplify_polygon(poly2, position_plane[n + 1], normal, vec1, vec2)
 
                 list_triangles_points = cls._helper_sew_polygons(poly1_simplified, poly2_simplified, vec1, vec2)
-                list_faces = [vmf.Triangle3D(*triangle_points, alpha=0.9, color=(1, 0.1, 0.1))
+                list_faces = [d3df.Triangle3D(*triangle_points, alpha=0.9, color=(1, 0.1, 0.1))
                               for triangle_points in list_triangles_points]
                 faces.extend(list_faces)
-        return vmshells.ClosedShell3D(faces, name=name)
+        return d3dshells.ClosedShell3D(faces, name=name)
 
     @staticmethod
     def _helper_simplify_polygon(polygon, position_plane, normal, vec1, vec2):
@@ -262,7 +262,7 @@ class PointCloud3D:
     def _helper_sew_polygons(poly1, poly2, vec1, vec2):
         return poly1.sewing(poly2, vec1, vec2)
 
-    def shell_distances(self, shells: vmshells.OpenTriangleShell3D) -> Tuple['PointCloud3D', List[float], List[int]]:
+    def shell_distances(self, shells: d3dshells.OpenTriangleShell3D) -> Tuple['PointCloud3D', List[float], List[int]]:
         """
         Computes distance of point to shell for each point in self.points.
 
@@ -271,11 +271,11 @@ class PointCloud3D:
         :rtype: Tuple[PointCloud3D, List[float], List[int]]
         """
         nearest_coords, distances, triangles_idx = self.shell_distances_ndarray(shells)
-        return (PointCloud3D([vm.Point3D(*coords) for coords in nearest_coords]),
+        return (PointCloud3D([d3d.Point3D(*coords) for coords in nearest_coords]),
                 distances.tolist(),
                 triangles_idx.tolist())
 
-    def shell_distances_ndarray(self, shells: vmshells.OpenTriangleShell3D):
+    def shell_distances_ndarray(self, shells: d3dshells.OpenTriangleShell3D):
         """
         Computes distance of point to shell for each point in self.points in a numpy formatted data.
 
@@ -342,12 +342,12 @@ class PointCloud3D:
 
     @staticmethod
     def offset_to_shell(positions_plane: List[surfaces.Plane3D],
-                        polygons2d: List[vmw.ClosedPolygon2D], offset: float):
+                        polygons2d: List[d3dw.ClosedPolygon2D], offset: float):
         """Offsets a Shell."""
         origin_f, origin_l = positions_plane[0], positions_plane[-1]
 
         new_position_plane = [origin_f - offset] + positions_plane[1:-1] + [origin_l + offset]
-        polyconvexe = [vmw.ClosedPolygon2D.points_convex_hull(poly.points) for poly in polygons2d]
+        polyconvexe = [d3dw.ClosedPolygon2D.points_convex_hull(poly.points) for poly in polygons2d]
         new_poly = [poly.offset(offset) for poly in polyconvexe]
 
         return new_position_plane, new_poly
@@ -382,11 +382,11 @@ class PointCloud2D:
         if not self.points:
             return None
 
-        # polygon = vmw.ClosedPolygon2D.convex_hull_points(self.points)
+        # polygon = d3dw.ClosedPolygon2D.convex_hull_points(self.points)
         if convex:
-            polygon = vmw.ClosedPolygon2D.convex_hull_points(self.points)
+            polygon = d3dw.ClosedPolygon2D.convex_hull_points(self.points)
         else:
-            polygon = vmw.ClosedPolygon2D.concave_hull(self.points, -0.2, 0.000005)
+            polygon = d3dw.ClosedPolygon2D.concave_hull(self.points, -0.2, 0.000005)
         polygon = polygon.simplify(min_distance=0.002)
         if polygon is None or math.isclose(polygon.area(), 0, abs_tol=1e-6):
             return None
@@ -421,7 +421,7 @@ class PointCloud2D:
                             box_points.append(point)
                 points.append(box_points)
 
-        polys = [vmw.ClosedPolygon2D.points_convex_hull(pts) for pts in points]
+        polys = [d3dw.ClosedPolygon2D.points_convex_hull(pts) for pts in points]
         clean_points = []
         for poly in polys:
             if poly is not None:

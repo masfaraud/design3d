@@ -9,7 +9,7 @@ Subpackages
 .. toctree::
    :maxdepth: 2
 
-   volmdlr.utils
+   design3d.utils
 
 Submodules
 ----------

@@ -1,33 +1,33 @@
 {
   "name": "",
-  "object_class": "volmdlr.surfaces.ConicalSurface3D",
+  "object_class": "design3d.surfaces.ConicalSurface3D",
   "package_version": "0.7.1.dev905+g8a826d99",
   "frame": {
-    "object_class": "volmdlr.Frame3D",
+    "object_class": "design3d.Frame3D",
     "name": "",
     "origin": {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 0.0,
       "y": 0.0,
       "z": -0.0022143719324716786,
       "name": ""
     },
     "u": {
-      "object_class": "volmdlr.Vector3D",
+      "object_class": "design3d.Vector3D",
       "x": 1.0,
       "y": 0.0,
       "z": 0.0,
       "name": ""
     },
     "v": {
-      "object_class": "volmdlr.Vector3D",
+      "object_class": "design3d.Vector3D",
       "x": 0.0,
       "y": 1.0,
       "z": 0.0,
       "name": ""
     },
     "w": {
-      "object_class": "volmdlr.Vector3D",
+      "object_class": "design3d.Vector3D",
       "x": 0.0,
       "y": 0.0,
       "z": 1.0,

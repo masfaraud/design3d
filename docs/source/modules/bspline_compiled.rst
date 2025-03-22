@@ -1,26 +1,26 @@
 BSpline Compiled
 ================
 
-volmdlr.bspline\_compiled
+design3d.bspline\_compiled
 -------------------------
 
-.. automodule:: volmdlr.bspline_compiled
+.. automodule:: design3d.bspline_compiled
    :members:
    :undoc-members:
    :show-inheritance:
 
-volmdlr.bspline\_evaluators
+design3d.bspline\_evaluators
 ---------------------------
 
-.. automodule:: volmdlr.bspline_evaluators
+.. automodule:: design3d.bspline_evaluators
    :members:
    :undoc-members:
    :show-inheritance:
 
-volmdlr.bspline\_fitting
+design3d.bspline\_fitting
 ------------------------
 
-.. automodule:: volmdlr.bspline_fitting
+.. automodule:: design3d.bspline_fitting
    :members:
    :undoc-members:
    :show-inheritance:

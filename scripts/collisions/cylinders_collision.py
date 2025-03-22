@@ -5,42 +5,42 @@ Generate random cylinders and create the casing for them
 
 from time import perf_counter
 
-import volmdlr as vm
+import volmdlr as d3d
 import volmdlr.core
 from volmdlr.primitives3d import Cylinder
 
 cylinders = [
     Cylinder(
-        position=vm.Point3D(0, 0.1, 0),
-        axis=vm.Vector3D(1, 0, 0),
+        position=d3d.Point3D(0, 0.1, 0),
+        axis=d3d.Vector3D(1, 0, 0),
         radius=0.01,
         length=0.1,
         color=(1, 0, 0),
     ),
     Cylinder(
-        position=vm.Point3D(0, 0.05, 0),
-        axis=vm.Vector3D(1, 1, 0),
+        position=d3d.Point3D(0, 0.05, 0),
+        axis=d3d.Vector3D(1, 1, 0),
         radius=0.005,
         length=0.1,
         color=(0, 1, 0),
     ),
     Cylinder(
-        position=vm.Point3D(0, 0.159, 0),
-        axis=vm.Vector3D(1, 1, 0),
+        position=d3d.Point3D(0, 0.159, 0),
+        axis=d3d.Vector3D(1, 1, 0),
         radius=0.02,
         length=0.1,
         color=(0, 0, 1),
     ),
     Cylinder(
-        position=vm.Point3D(0, 0.1, 0.016),
-        axis=vm.Vector3D(0, 1, 0),
+        position=d3d.Point3D(0, 0.1, 0.016),
+        axis=d3d.Vector3D(0, 1, 0),
         radius=0.01,
         length=0.1,
         color=(1, 0, 1),
     ),
 ]
 
-volume_model = vm.core.VolumeModel(cylinders)
+volume_model = d3d.core.VolumeModel(cylinders)
 volume_model.babylonjs()
 
 print("Collision detection methods")

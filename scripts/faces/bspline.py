@@ -4,20 +4,20 @@
 
 """
 
-import design3d as vm
-import design3d.faces as vmf
+import design3d as d3d
+import design3d.faces as d3df
 from design3d import surfaces
 
 # 2D
-control_points = [vm.Point3D(0, 0, 0),
-                  vm.Point3D(0.1, 0.02, 0),
-                  vm.Point3D(0.2, 0.02, 0),
-                  vm.Point3D(0, 0, 0.15),
-                  vm.Point3D(0.1, 0.02, 0.15),
-                  vm.Point3D(0.2, 0.02, 0.15),
-                  vm.Point3D(0, 0, 0.3),
-                  vm.Point3D(0.1, 0.021, 0.3),
-                  vm.Point3D(0.2, 0.022, 0.3),
+control_points = [d3d.Point3D(0, 0, 0),
+                  d3d.Point3D(0.1, 0.02, 0),
+                  d3d.Point3D(0.2, 0.02, 0),
+                  d3d.Point3D(0, 0, 0.15),
+                  d3d.Point3D(0.1, 0.02, 0.15),
+                  d3d.Point3D(0.2, 0.02, 0.15),
+                  d3d.Point3D(0, 0, 0.3),
+                  d3d.Point3D(0.1, 0.021, 0.3),
+                  d3d.Point3D(0.2, 0.022, 0.3),
                   ]
 
 
@@ -31,7 +31,7 @@ surface = surfaces.BSplineSurface3D(degree_u=2,
                                u_knots=[0.1, 0.3, 0.5, 0.7],
                                v_knots=[0.1, 0.3, 0.5, 0.7])
 
-face = vmf.BSplineFace3D.from_surface_rectangular_cut(surface, 0, 1, 0, 1)
+face = d3df.BSplineFace3D.from_surface_rectangular_cut(surface, 0, 1, 0, 1)
 
 face.babylonjs()
                  # degree=2,

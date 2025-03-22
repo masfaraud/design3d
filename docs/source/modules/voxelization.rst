@@ -1,7 +1,7 @@
 Voxelization Compiled
 ---------------------
 
-.. automodule:: volmdlr.voxelization_compiled
+.. automodule:: design3d.voxelization_compiled
    :members:
    :undoc-members:
    :show-inheritance:

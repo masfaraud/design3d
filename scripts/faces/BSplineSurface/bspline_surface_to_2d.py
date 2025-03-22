@@ -17,7 +17,7 @@ from design3d import faces
 
 # file_path = 'bspline_surface_2.step'
 
-# step_file = vms.Step.from_file(file_path)
+# step_file = d3ds.Step.from_file(file_path)
 
 # model = step_file.to_volume_model()
 # primitives = model.primitives

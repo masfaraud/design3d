@@ -1,30 +1,30 @@
 {
-  "object_class": "volmdlr.surfaces.ToroidalSurface3D",
+  "object_class": "design3d.surfaces.ToroidalSurface3D",
   "name": "NONE",
   "frame": {
-    "object_class": "volmdlr.Frame3D",
+    "object_class": "design3d.Frame3D",
     "name": "NONE",
     "origin": {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 0.2527095032079815,
       "y": -0.0683,
       "z": 0.435822726011444,
       "name": "NONE"
     },
     "u": {
-      "object_class": "volmdlr.Vector3D",
+      "object_class": "design3d.Vector3D",
       "x": -0.9483196146266086,
       "y": 0.0,
       "z": 0.3173167321690435
     },
     "v": {
-      "object_class": "volmdlr.Vector3D",
+      "object_class": "design3d.Vector3D",
       "x": -0.3173167321690435,
       "y": -0.0,
       "z": -0.9483196146266086
     },
     "w": {
-      "object_class": "volmdlr.Vector3D",
+      "object_class": "design3d.Vector3D",
       "x": 0.0,
       "y": -1.0,
       "z": 0.0,

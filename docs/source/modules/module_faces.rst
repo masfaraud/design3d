@@ -2,7 +2,7 @@
 Faces
 ====
 
-.. automodule:: volmdlr.faces
+.. automodule:: design3d.faces
    :members:
    :undoc-members:
    :show-inheritance:

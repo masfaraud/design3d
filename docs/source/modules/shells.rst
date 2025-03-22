@@ -2,7 +2,7 @@
 Shells
 ------
 
-.. automodule:: volmdlr.shells
+.. automodule:: design3d.shells
    :members:
    :undoc-members:
    :show-inheritance:

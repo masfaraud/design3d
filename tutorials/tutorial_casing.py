@@ -49,7 +49,7 @@ outer_contour = inner_contour.offset(-thickness)
 height = 0.080
 
 sides = primitives3d.ExtrudedProfile(
-    frame=vm.OXYZ,
+    frame=d3d.OXYZ,
     outer_contour2d=outer_contour,
     inner_contours2d=[inner_contour],
     extrusion_length=(height - 2 * thickness),
@@ -60,7 +60,7 @@ sides.save_babylonjs_to_file(filename='/tmp/sides')
 
 
 bottom = primitives3d.ExtrudedProfile(
-    frame=vm.OXYZ,
+    frame=d3d.OXYZ,
     outer_contour2d=outer_contour,
     inner_contours2d=[],
     extrusion_length=-thickness,
@@ -74,7 +74,7 @@ belt_width = 0.011
 belt_outer_contour = inner_contour.offset(-belt_width)
 
 belt = primitives3d.ExtrudedProfile(
-    frame=vm.Frame3D((vm.Z3D*(height - 2*thickness)).to_point(), vm.X3D, vm.Y3D, vm.Z3D),
+    frame=d3d.Frame3D((d3d.Z3D*(height - 2*thickness)).to_point(), d3d.X3D, d3d.Y3D, d3d.Z3D),
     outer_contour2d=belt_outer_contour,
     inner_contours2d=[inner_contour],
     extrusion_length=thickness,
@@ -91,7 +91,7 @@ casing.save_babylonjs_to_file(filename='/tmp/casing')
 
 
 lid = primitives3d.ExtrudedProfile(
-    frame=vm.Frame3D((vm.Z3D*(height - thickness)).to_point(), vm.X3D, vm.Y3D, vm.Z3D),
+    frame=d3d.Frame3D((d3d.Z3D*(height - thickness)).to_point(), d3d.X3D, d3d.Y3D, d3d.Z3D),
     outer_contour2d=belt_outer_contour,
     inner_contours2d=[],
     extrusion_length=thickness,

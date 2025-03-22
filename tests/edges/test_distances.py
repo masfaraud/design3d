@@ -2,7 +2,7 @@ import unittest
 from itertools import product
 
 import design3d
-import design3d.edges as vme
+import design3d.edges as d3de
 import design3d.models.edges as edges_models
 
 
