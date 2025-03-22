@@ -3,10 +3,10 @@ import unittest
 import os
 import numpy as np
 from dessia_common.core import DessiaObject
-import volmdlr
-from volmdlr import edges, surfaces, curves, wires
-from volmdlr.surfaces import Plane3D
-from volmdlr.models.edges import bspline_curve3d
+import design3d
+from design3d import edges, surfaces, curves, wires
+from design3d.surfaces import Plane3D
+from design3d.models.edges import bspline_curve3d
 
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_plane_test")
@@ -14,29 +14,29 @@ folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_plan
 
 class TestPlane3D(unittest.TestCase):
 
-    plane1 = surfaces.Plane3D(volmdlr.OXYZ)
+    plane1 = surfaces.Plane3D(design3d.OXYZ)
     plane2 = surfaces.Plane3D(
-        volmdlr.OYZX.translation(volmdlr.Vector3D(1, 2, 1)).rotation(
-            volmdlr.Point3D(1, 2, 1), volmdlr.Y3D, math.pi / 4
+        design3d.OYZX.translation(design3d.Vector3D(1, 2, 1)).rotation(
+            design3d.Point3D(1, 2, 1), design3d.Y3D, math.pi / 4
         )
     )
     plane3 = surfaces.Plane3D(
-        volmdlr.OXYZ.translation(volmdlr.Vector3D(0, 0, 1)).rotation(
-            volmdlr.O3D, volmdlr.Vector3D(0, 0, 1), math.pi / 4
+        design3d.OXYZ.translation(design3d.Vector3D(0, 0, 1)).rotation(
+            design3d.O3D, design3d.Vector3D(0, 0, 1), math.pi / 4
         )
     )
-    plane4 = surfaces.Plane3D(volmdlr.OXYZ.rotation(volmdlr.O3D, volmdlr.Vector3D(0, 0, 1), math.pi / 4))
+    plane4 = surfaces.Plane3D(design3d.OXYZ.rotation(design3d.O3D, design3d.Vector3D(0, 0, 1), math.pi / 4))
 
     def setUp(self):
-        self.point1 = volmdlr.Point3D(0, 0, 0)
-        self.point2 = volmdlr.Point3D(1, 0, 0)
-        self.point3 = volmdlr.Point3D(0, 1, 0)
-        self.point4 = volmdlr.Point3D(0, 0, 1)
-        self.vector1 = volmdlr.Vector3D(1, 0, 0)
-        self.vector2 = volmdlr.Vector3D(0, 1, 0)
-        self.vector3 = volmdlr.Vector3D(0, 0, 1)
+        self.point1 = design3d.Point3D(0, 0, 0)
+        self.point2 = design3d.Point3D(1, 0, 0)
+        self.point3 = design3d.Point3D(0, 1, 0)
+        self.point4 = design3d.Point3D(0, 0, 1)
+        self.vector1 = design3d.Vector3D(1, 0, 0)
+        self.vector2 = design3d.Vector3D(0, 1, 0)
+        self.vector3 = design3d.Vector3D(0, 0, 1)
         self.plane5 = Plane3D.from_plane_vectors(
-            volmdlr.Point3D(1, 2, 3), volmdlr.Vector3D(1, 0, 0), volmdlr.Vector3D(0, 1, 0)
+            design3d.Point3D(1, 2, 3), design3d.Vector3D(1, 0, 0), design3d.Vector3D(0, 1, 0)
         )
 
     def test_parametric_points_to_3d(self):
@@ -52,11 +52,11 @@ class TestPlane3D(unittest.TestCase):
 
     def test_from_normal(self):
         plane = Plane3D.from_normal(self.point1, self.vector3)
-        self.assertEqual(plane.frame, volmdlr.Frame3D(volmdlr.O3D, volmdlr.X3D, -volmdlr.Y3D, volmdlr.Z3D))
+        self.assertEqual(plane.frame, design3d.Frame3D(design3d.O3D, design3d.X3D, -design3d.Y3D, design3d.Z3D))
 
     def test_from_plane_vectors(self):
         plane = Plane3D.from_plane_vectors(self.point1, self.vector1, self.vector2)
-        self.assertEqual(plane.frame, volmdlr.OXYZ)
+        self.assertEqual(plane.frame, design3d.OXYZ)
 
     def test_from_points(self):
         # Test with only two points
@@ -66,12 +66,12 @@ class TestPlane3D(unittest.TestCase):
 
         # Test with three points
         plane = Plane3D.from_points([self.point1, self.point2, self.point3])
-        self.assertEqual(plane.frame, volmdlr.OXYZ)
+        self.assertEqual(plane.frame, design3d.OXYZ)
 
         # Test with more than three points
         points = [self.point1, self.point2, self.point3, self.point4]
         plane = Plane3D.from_points(points)
-        self.assertEqual(plane.frame, volmdlr.OXYZ)
+        self.assertEqual(plane.frame, design3d.OXYZ)
 
     def test_angle_between_planes(self):
         # Test with two orthogonal planes
@@ -93,24 +93,24 @@ class TestPlane3D(unittest.TestCase):
         self.assertTrue(plane.point_belongs(point))
 
         # Test with point above the plane
-        point = volmdlr.Point3D(0, 0, 1)
+        point = design3d.Point3D(0, 0, 1)
         self.assertFalse(plane.point_belongs(point))
 
         # Test with point below the plane
-        point = volmdlr.Point3D(0, 0, -1)
+        point = design3d.Point3D(0, 0, -1)
         self.assertFalse(plane.point_belongs(point))
 
     def test_point_distance(self):
         # test point above the plane
-        point = volmdlr.Point3D(1, 2, 4)
+        point = design3d.Point3D(1, 2, 4)
         self.assertAlmostEqual(self.plane5.point_distance(point), 1.0)
 
         # test point below the plane
-        point = volmdlr.Point3D(1, 2, 2)
+        point = design3d.Point3D(1, 2, 2)
         self.assertAlmostEqual(self.plane5.point_distance(point), 1.0)
 
         # test point on the plane
-        point = volmdlr.Point3D(1, 2, 3)
+        point = design3d.Point3D(1, 2, 3)
         self.assertAlmostEqual(self.plane5.point_distance(point), 0.0)
 
     def test_is_parallel(self):
@@ -125,28 +125,28 @@ class TestPlane3D(unittest.TestCase):
         plane_intersections = self.plane1.plane_intersections(self.plane2)
         self.assertEqual(len(plane_intersections), 1)
         self.assertTrue(plane_intersections[0].is_close(
-            curves.Line3D(volmdlr.O3D, volmdlr.Point3D(0, 0.7071067811865476, 0))))
+            curves.Line3D(design3d.O3D, design3d.Point3D(0, 0.7071067811865476, 0))))
         no_plane_intersections = self.plane1.plane_intersections(self.plane3)
         self.assertFalse(no_plane_intersections)
         plane1 = surfaces.Plane3D(
-            volmdlr.Frame3D(
-                volmdlr.Point3D(2.47172762684, 0.709056119825, 0.533657243895),
-                volmdlr.Vector3D(0.08730196938518492, 0.9961818941044193, 0.0),
-                volmdlr.Vector3D(-0.36467438001762453, 0.031958813694844, -0.9305864982826579),
-                volmdlr.Vector3D(-0.9270334204872172, 0.08124203398333905, 0.3660720819920861),
+            design3d.Frame3D(
+                design3d.Point3D(2.47172762684, 0.709056119825, 0.533657243895),
+                design3d.Vector3D(0.08730196938518492, 0.9961818941044193, 0.0),
+                design3d.Vector3D(-0.36467438001762453, 0.031958813694844, -0.9305864982826579),
+                design3d.Vector3D(-0.9270334204872172, 0.08124203398333905, 0.3660720819920861),
             )
         )
         plane2 = surfaces.Plane3D(
-            volmdlr.Frame3D(
-                volmdlr.Point3D(2.535691031746372, 0.7426189496471666, 0.6712946669810791),
-                volmdlr.Vector3D(0.08730196938518722, 0.9961818941044189, 0.0),
-                volmdlr.Vector3D(0.9270334204872168, -0.08124203398334119, -0.36607208199208596),
-                volmdlr.Vector3D(-0.3646743800176244, 0.03195881369484484, -0.9305864982826579),
+            design3d.Frame3D(
+                design3d.Point3D(2.535691031746372, 0.7426189496471666, 0.6712946669810791),
+                design3d.Vector3D(0.08730196938518722, 0.9961818941044189, 0.0),
+                design3d.Vector3D(0.9270334204872168, -0.08124203398334119, -0.36607208199208596),
+                design3d.Vector3D(-0.3646743800176244, 0.03195881369484484, -0.9305864982826579),
             )
         )
         expected_line = curves.Line3D(
-            volmdlr.Point3D(2.4648333822539743, 0.0, 0.6735585604963772),
-            volmdlr.Point3D(2.377531412868789, -0.9961818941044192, 0.6735585604963764),
+            design3d.Point3D(2.4648333822539743, 0.0, 0.6735585604963772),
+            design3d.Point3D(2.377531412868789, -0.9961818941044192, 0.6735585604963764),
         )
         plane_intersections2 = plane1.plane_intersections(plane2)
         self.assertEqual(expected_line, plane_intersections2[0])
@@ -154,29 +154,29 @@ class TestPlane3D(unittest.TestCase):
             os.path.join(folder, "test_plane_plane_intersections301123.json")
         ).primitives
         plane_intersections = plane1.plane_intersections(plane2)
-        self.assertTrue(plane_intersections[0].point1.is_close(volmdlr.Point3D(0.0, 0.303510045726, 0.0)))
+        self.assertTrue(plane_intersections[0].point1.is_close(design3d.Point3D(0.0, 0.303510045726, 0.0)))
         self.assertTrue(plane_intersections[0].point2.is_close(
-            volmdlr.Point3D(1.0000000000000002, 0.3035100457150452, 0.0)))
+            design3d.Point3D(1.0000000000000002, 0.3035100457150452, 0.0)))
 
     def test_line_intersections(self):
         # test line intersects the plane
-        line = curves.Line3D(volmdlr.Point3D(1, 2, 1), volmdlr.Point3D(1, 2, 5))
-        expected_intersection = [volmdlr.Point3D(1.0, 2.0, 3.0)]
+        line = curves.Line3D(design3d.Point3D(1, 2, 1), design3d.Point3D(1, 2, 5))
+        expected_intersection = [design3d.Point3D(1.0, 2.0, 3.0)]
         self.assertEqual(self.plane5.line_intersections(line), expected_intersection)
 
         # test line is parallel to the plane
-        line = curves.Line3D(volmdlr.Point3D(1, 1, 3), volmdlr.Point3D(2, 2, 3))
+        line = curves.Line3D(design3d.Point3D(1, 1, 3), design3d.Point3D(2, 2, 3))
         expected_intersection = []
         self.assertEqual(self.plane5.line_intersections(line), expected_intersection)
 
     def test_linesegment_intersections(self):
         # test linesegment intersects the plane
-        linesegment = edges.LineSegment3D(volmdlr.Point3D(1, 2, 1), volmdlr.Point3D(1, 2, 5))
-        expected_intersection = [volmdlr.Point3D(1.0, 2.0, 3.0)]
+        linesegment = edges.LineSegment3D(design3d.Point3D(1, 2, 1), design3d.Point3D(1, 2, 5))
+        expected_intersection = [design3d.Point3D(1.0, 2.0, 3.0)]
         self.assertEqual(self.plane5.linesegment_intersections(linesegment), expected_intersection)
 
         # test linesegment does not intersect the plane
-        linesegment = edges.LineSegment3D(volmdlr.Point3D(1, 1, 3), volmdlr.Point3D(2, 2, 3))
+        linesegment = edges.LineSegment3D(design3d.Point3D(1, 1, 3), design3d.Point3D(2, 2, 3))
         expected_intersection = []
         self.assertEqual(self.plane5.linesegment_intersections(linesegment), expected_intersection)
 
@@ -189,33 +189,33 @@ class TestPlane3D(unittest.TestCase):
         fullarc2 = edges.FullArc3D(circle2, start_end2)
         fullarc_intersections = self.plane1.fullarc_intersections(fullarc1)
         self.assertEqual(len(fullarc_intersections), 2)
-        self.assertTrue(fullarc_intersections[0].is_close(volmdlr.Point3D(0, 4.645751311, 0)))
-        self.assertTrue(fullarc_intersections[1].is_close(volmdlr.Point3D(0, -0.645751311, 0)))
+        self.assertTrue(fullarc_intersections[0].is_close(design3d.Point3D(0, 4.645751311, 0)))
+        self.assertTrue(fullarc_intersections[1].is_close(design3d.Point3D(0, -0.645751311, 0)))
         fullarc_intersections2 = self.plane1.fullarc_intersections(fullarc2)
         self.assertFalse(fullarc_intersections2)
 
     def test_arc_intersections(self):
         plane = Plane3D.from_plane_vectors(
-            volmdlr.Point3D(1, 2, 3), volmdlr.Vector3D(1, 0, 0), volmdlr.Vector3D(0, 1, 0)
+            design3d.Point3D(1, 2, 3), design3d.Vector3D(1, 0, 0), design3d.Vector3D(0, 1, 0)
         )
-        arc = edges.Arc3D.from_3_points(volmdlr.Point3D(2, 2, 4), volmdlr.Point3D(2, 3, 3), volmdlr.Point3D(2, 2, 2))
+        arc = edges.Arc3D.from_3_points(design3d.Point3D(2, 2, 4), design3d.Point3D(2, 3, 3), design3d.Point3D(2, 2, 2))
         arc_intersections = plane.arc_intersections(arc)
         self.assertEqual(len(arc_intersections), 1)
-        self.assertTrue(arc_intersections[0].is_close(volmdlr.Point3D(2.0, 3.0, 3.0)))
+        self.assertTrue(arc_intersections[0].is_close(design3d.Point3D(2.0, 3.0, 3.0)))
         arc2 = edges.Arc3D.from_3_points(
-            volmdlr.Point3D(2, 1, 2.5), volmdlr.Point3D(2, 2, 3.5), volmdlr.Point3D(2, 3, 2.5)
+            design3d.Point3D(2, 1, 2.5), design3d.Point3D(2, 2, 3.5), design3d.Point3D(2, 3, 2.5)
         )
         arc_intersections2 = plane.arc_intersections(arc2)
         self.assertEqual(len(arc_intersections2), 2)
-        self.assertTrue(arc_intersections2[0].is_close(volmdlr.Point3D(2.0, 1.1339745962155614, 3.0)))
-        self.assertTrue(arc_intersections2[1].is_close(volmdlr.Point3D(2.0, 2.8660254037844384, 3.0)))
+        self.assertTrue(arc_intersections2[0].is_close(design3d.Point3D(2.0, 1.1339745962155614, 3.0)))
+        self.assertTrue(arc_intersections2[1].is_close(design3d.Point3D(2.0, 2.8660254037844384, 3.0)))
 
     def test_bspline_intersections(self):
-        plane = Plane3D(volmdlr.OZXY)
+        plane = Plane3D(design3d.OZXY)
         intersections = plane.bsplinecurve_intersections(bspline_curve=bspline_curve3d())
         self.assertTrue(len(intersections), 2)
-        self.assertTrue(intersections[0].is_close(volmdlr.Point3D(3.4032921805712286, 0.0, 1.5267489712255913)))
-        self.assertTrue(intersections[1].is_close(volmdlr.Point3D(-0.49607254405814866, 0.0, -0.6842127097914265)))
+        self.assertTrue(intersections[0].is_close(design3d.Point3D(3.4032921805712286, 0.0, 1.5267489712255913)))
+        self.assertTrue(intersections[1].is_close(design3d.Point3D(-0.49607254405814866, 0.0, -0.6842127097914265)))
 
     def test_from_3_points(self):
         """
@@ -223,19 +223,19 @@ class TestPlane3D(unittest.TestCase):
         """
         for p1, p2, p3 in [
             (
-                volmdlr.Point3D(-0.18141727653547446, -0.3129888988150751, -0.7869168525937733),
-                volmdlr.Point3D(0.1756754261634219, -0.22088840984091496, -0.2482699866635696),
-                volmdlr.Point3D(0.7373327193311012, -0.8849251090904118, -0.9464563060452031),
+                design3d.Point3D(-0.18141727653547446, -0.3129888988150751, -0.7869168525937733),
+                design3d.Point3D(0.1756754261634219, -0.22088840984091496, -0.2482699866635696),
+                design3d.Point3D(0.7373327193311012, -0.8849251090904118, -0.9464563060452031),
             ),
             (
-                volmdlr.Point3D(9.80579460566209, 6.917108655469294, 0.0),
-                volmdlr.Point3D(12.0, 0.0, 0.6956521739130439),
-                volmdlr.Point3D(12.0, 0.0, 0.5217391304347831),
+                design3d.Point3D(9.80579460566209, 6.917108655469294, 0.0),
+                design3d.Point3D(12.0, 0.0, 0.6956521739130439),
+                design3d.Point3D(12.0, 0.0, 0.5217391304347831),
             ),
             (
-                volmdlr.Point3D(8.773150355532506, 8.18729704110092, 0.0),
-                volmdlr.Point3D(12.0, 0.0, 0.8695652173913047),
-                volmdlr.Point3D(12.0, 0.0, 0.6956521739130439),
+                design3d.Point3D(8.773150355532506, 8.18729704110092, 0.0),
+                design3d.Point3D(12.0, 0.0, 0.8695652173913047),
+                design3d.Point3D(12.0, 0.0, 0.6956521739130439),
             ),
         ]:
 
@@ -248,25 +248,25 @@ class TestPlane3D(unittest.TestCase):
             self.assertAlmostEqual(surface.frame.w.dot(p3 - p1), 0.0)
 
     def test_plane_between_two_planes(self):
-        plane1 = Plane3D(volmdlr.OXYZ)
-        plane2 = Plane3D(volmdlr.OYZX)
+        plane1 = Plane3D(design3d.OXYZ)
+        plane2 = Plane3D(design3d.OYZX)
         plane_b = Plane3D.plane_between_two_planes(plane1, plane2)
-        expected_frame = volmdlr.Frame3D(
-            volmdlr.O3D,
-            volmdlr.Vector3D(0, 1, 0),
-            volmdlr.Vector3D(0.7071067811865475, 0.0, -0.7071067811865475),
-            volmdlr.Vector3D(0.7071067811865475, 0.0, 0.7071067811865475),
+        expected_frame = design3d.Frame3D(
+            design3d.O3D,
+            design3d.Vector3D(0, 1, 0),
+            design3d.Vector3D(0.7071067811865475, 0.0, -0.7071067811865475),
+            design3d.Vector3D(0.7071067811865475, 0.0, 0.7071067811865475),
         )
         self.assertEqual(plane_b.frame, expected_frame)
 
     def test_rotation(self):
-        plane1 = Plane3D(volmdlr.OXYZ)
-        rotated_plane1 = plane1.rotation(volmdlr.O3D, volmdlr.Vector3D(0, 1, 0), math.pi / 4)
-        expected_frame = volmdlr.Frame3D(
-            volmdlr.O3D,
-            volmdlr.Vector3D(0.7071067811865476, 0.0, -0.7071067811865475),
-            volmdlr.Vector3D(0, 1, 0),
-            volmdlr.Vector3D(0.7071067811865475, 0.0, 0.7071067811865476),
+        plane1 = Plane3D(design3d.OXYZ)
+        rotated_plane1 = plane1.rotation(design3d.O3D, design3d.Vector3D(0, 1, 0), math.pi / 4)
+        expected_frame = design3d.Frame3D(
+            design3d.O3D,
+            design3d.Vector3D(0.7071067811865476, 0.0, -0.7071067811865475),
+            design3d.Vector3D(0, 1, 0),
+            design3d.Vector3D(0.7071067811865475, 0.0, 0.7071067811865476),
         )
         self.assertEqual(rotated_plane1.frame, expected_frame)
 

@@ -1,33 +1,33 @@
 import unittest
 from itertools import product
 
-import volmdlr
-from volmdlr.models.edges import bspline1, lineseg, arc, arc_ellipse2d
+import design3d
+from design3d.models.edges import bspline1, lineseg, arc, arc_ellipse2d
 
 
 class TestEdge2DIntersections(unittest.TestCase):
 
     def test_edge_intersections(self):
-        expected_results = [[volmdlr.Point2D(0.2154767869546837, 0.17126976173937553),
-                             volmdlr.Point2D(1.5, 0.0),
-                             volmdlr.Point2D(2.7845232130453157, -0.17126976173937541)],
-                            [volmdlr.Point2D(0.13933368620308095, 0.12052092182572971),
-                             volmdlr.Point2D(1.7686123664971742, -0.12999927610320117)],
-                            [volmdlr.Point2D(1.3169500371767962, 0.0901619768300107)],
-                            [volmdlr.Point2D(0.2154767869546837, 0.17126976173937553),
-                             volmdlr.Point2D(1.5, 0.0),
-                             volmdlr.Point2D(2.7845232130453157, -0.17126976173937541)],
-                            [volmdlr.Point2D(1.8893801268948387, -0.05191735025264532),
-                             volmdlr.Point2D(0.07997689764965754, 0.18933641364671217)],
-                            [volmdlr.Point2D(1.2821273688601553, 0.029049684151979283)],
-                            [volmdlr.Point2D(0.13933368620308095, 0.12052092182572971),
-                             volmdlr.Point2D(1.7686123664971742, -0.12999927610320117)],
-                            [volmdlr.Point2D(1.8893801268948387, -0.05191735025264532),
-                             volmdlr.Point2D(0.07997689764965754, 0.18933641364671217)],
-                            [volmdlr.Point2D(1.059165466205527, -0.3036640978242126)],
-                            [volmdlr.Point2D(1.3169500371767962, 0.0901619768300107)],
-                            [volmdlr.Point2D(1.2821273688601553, 0.029049684151979283)],
-                            [volmdlr.Point2D(1.059165466205527, -0.3036640978242126)]]
+        expected_results = [[design3d.Point2D(0.2154767869546837, 0.17126976173937553),
+                             design3d.Point2D(1.5, 0.0),
+                             design3d.Point2D(2.7845232130453157, -0.17126976173937541)],
+                            [design3d.Point2D(0.13933368620308095, 0.12052092182572971),
+                             design3d.Point2D(1.7686123664971742, -0.12999927610320117)],
+                            [design3d.Point2D(1.3169500371767962, 0.0901619768300107)],
+                            [design3d.Point2D(0.2154767869546837, 0.17126976173937553),
+                             design3d.Point2D(1.5, 0.0),
+                             design3d.Point2D(2.7845232130453157, -0.17126976173937541)],
+                            [design3d.Point2D(1.8893801268948387, -0.05191735025264532),
+                             design3d.Point2D(0.07997689764965754, 0.18933641364671217)],
+                            [design3d.Point2D(1.2821273688601553, 0.029049684151979283)],
+                            [design3d.Point2D(0.13933368620308095, 0.12052092182572971),
+                             design3d.Point2D(1.7686123664971742, -0.12999927610320117)],
+                            [design3d.Point2D(1.8893801268948387, -0.05191735025264532),
+                             design3d.Point2D(0.07997689764965754, 0.18933641364671217)],
+                            [design3d.Point2D(1.059165466205527, -0.3036640978242126)],
+                            [design3d.Point2D(1.3169500371767962, 0.0901619768300107)],
+                            [design3d.Point2D(1.2821273688601553, 0.029049684151979283)],
+                            [design3d.Point2D(1.059165466205527, -0.3036640978242126)]]
 
         intersection_results = []
         for edge1, edge2 in product([bspline1, lineseg, arc, arc_ellipse2d], repeat=2):

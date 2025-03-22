@@ -2,24 +2,24 @@ import unittest
 import math
 import os
 import numpy as np
-import volmdlr
-import volmdlr.edges as vme
-import volmdlr.wires as vmw
-import volmdlr.faces
-from volmdlr import surfaces
+import design3d
+import design3d.edges as vme
+import design3d.wires as vmw
+import design3d.faces
+from design3d import surfaces
 
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'objects_revolution_tests')
 
 
 class TestRevolutionSurface3D(unittest.TestCase):
-    linesegment = vme.LineSegment3D(volmdlr.Point3D(0.5, 0, 0), volmdlr.Point3D(0.5, 0, 0.5))
-    arc = vme.Arc3D.from_3_points(volmdlr.Point3D(0.5, 0, 0.5),
-                    volmdlr.Point3D(0.3 + 0.2 * math.cos(math.pi / 6), 0, 0.5 + 0.2 * math.sin(math.pi / 6)),
-                    volmdlr.Point3D(0.3 + 0.2 * math.cos(math.pi / 3), 0, 0.5 + 0.2 * math.sin(math.pi / 3)))
+    linesegment = vme.LineSegment3D(design3d.Point3D(0.5, 0, 0), design3d.Point3D(0.5, 0, 0.5))
+    arc = vme.Arc3D.from_3_points(design3d.Point3D(0.5, 0, 0.5),
+                    design3d.Point3D(0.3 + 0.2 * math.cos(math.pi / 6), 0, 0.5 + 0.2 * math.sin(math.pi / 6)),
+                    design3d.Point3D(0.3 + 0.2 * math.cos(math.pi / 3), 0, 0.5 + 0.2 * math.sin(math.pi / 3)))
 
-    axis_point = volmdlr.O3D
-    axis = volmdlr.Z3D
+    axis_point = design3d.O3D
+    axis = design3d.Z3D
     surface = surfaces.RevolutionSurface3D(arc, axis_point, axis)
 
     def test_parametric_points_to_3d(self):
@@ -36,48 +36,48 @@ class TestRevolutionSurface3D(unittest.TestCase):
     def test_point2d_to_3d(self):
         surface = surfaces.RevolutionSurface3D(self.arc, self.axis_point, self.axis)
 
-        point2d = volmdlr.Point2D(math.pi, 0.2)
+        point2d = design3d.Point2D(math.pi, 0.2)
         point3d = surface.point2d_to_3d(point2d)
-        expected_point3d = volmdlr.Point3D(-0.4080604, 0, 0.66829419)
+        expected_point3d = design3d.Point3D(-0.4080604, 0, 0.66829419)
 
         self.assertTrue(point3d.is_close(expected_point3d))
 
     def test_point3d_to_2d(self):
         surface = surfaces.RevolutionSurface3D(self.arc, self.axis_point, self.axis)
 
-        point3d = volmdlr.Point3D(-0.4080604, 0, 0.66829419)
+        point3d = design3d.Point3D(-0.4080604, 0, 0.66829419)
         point2d = surface.point3d_to_2d(point3d)
-        expected_point2d = volmdlr.Point2D(math.pi, 0.2)
+        expected_point2d = design3d.Point2D(math.pi, 0.2)
 
         self.assertTrue(point2d.is_close(expected_point2d))
 
     def test_rectangular_cut(self):
         surface = surfaces.RevolutionSurface3D(edge=self.arc, axis_point=self.axis_point, axis=self.axis)
-        rectangular_cut = volmdlr.faces.RevolutionFace3D.from_surface_rectangular_cut(
-            surface, 0, volmdlr.TWO_PI, 0, 1)
-        self.assertEqual(rectangular_cut.surface2d.area(), volmdlr.TWO_PI)
+        rectangular_cut = design3d.faces.RevolutionFace3D.from_surface_rectangular_cut(
+            surface, 0, design3d.TWO_PI, 0, 1)
+        self.assertEqual(rectangular_cut.surface2d.area(), design3d.TWO_PI)
 
     def arc3d_to_2d(self):
         surface = surfaces.RevolutionSurface3D.from_json(os.path.join(folder, "revolution_surface_bug_0.json"))
         contour = vmw.Contour3D.from_json(os.path.join(folder, "revolution_contour_bug_0.json"))
         arc = contour.primitives[3]
         linesegment2d = surface.arc3d_to_2d(arc)[0]
-        self.assertTrue(linesegment2d.start.is_close(volmdlr.Point2D(-2.6665730021726306, 0.0003141532401719152)))
-        self.assertTrue(linesegment2d.end.is_close(volmdlr.Point2D(-2.6665730021726324, 0)))
+        self.assertTrue(linesegment2d.start.is_close(design3d.Point2D(-2.6665730021726306, 0.0003141532401719152)))
+        self.assertTrue(linesegment2d.end.is_close(design3d.Point2D(-2.6665730021726324, 0)))
 
         surface = surfaces.RevolutionSurface3D.from_json(os.path.join(folder, "revolution_surface_bug_1.json"))
         contour = vmw.Contour3D.from_json(os.path.join(folder, "revolution_contour_bug_1.json"))
         arc = contour.primitives[3]
         linesegment2d = surface.arc3d_to_2d(arc)[0]
-        self.assertTrue(linesegment2d.start.is_close(volmdlr.Point2D(1.0582040468439544, 0.0)))
-        self.assertTrue(linesegment2d.end.is_close(volmdlr.Point2D(6.0956438652626925, 0.0)))
+        self.assertTrue(linesegment2d.start.is_close(design3d.Point2D(1.0582040468439544, 0.0)))
+        self.assertTrue(linesegment2d.end.is_close(design3d.Point2D(6.0956438652626925, 0.0)))
 
     def test_frame_mapping(self):
         surface = self.surface
-        new_frame = volmdlr.Frame3D(volmdlr.Point3D(0, 1, 0), volmdlr.X3D, volmdlr.Y3D, volmdlr.Z3D)
+        new_frame = design3d.Frame3D(design3d.Point3D(0, 1, 0), design3d.X3D, design3d.Y3D, design3d.Z3D)
         new_surface = surface.frame_mapping(new_frame, "old")
         self.assertEqual(new_surface.edge.start.y, 1)
-        self.assertTrue(new_surface.frame.origin.is_close(volmdlr.Point3D(0, 1, 0)))
+        self.assertTrue(new_surface.frame.origin.is_close(design3d.Point3D(0, 1, 0)))
 
     def test_simplify(self):
         rev1 = surfaces.RevolutionSurface3D.from_json(
@@ -121,7 +121,7 @@ class TestRevolutionSurface3D(unittest.TestCase):
             os.path.join(folder, "revolutionsurface_periodical_linesegment2d_to_3d_linesegment2d.json"))
         arc = surface.linesegment2d_to_3d(linesegment)[0]
         self.assertAlmostEqual(arc.radius, 0.017000000000019)
-        self.assertTrue(arc.center.is_close(volmdlr.Point3D(0.0, 0.007299999999984744, -8.104628079745562e-19)))
+        self.assertTrue(arc.center.is_close(design3d.Point3D(0.0, 0.007299999999984744, -8.104628079745562e-19)))
 
     def test_contour3d_to_2d(self):
         surface = surfaces.RevolutionSurface3D.from_json(os.path.join(folder, "revolutionface_surface.json"))
@@ -161,14 +161,14 @@ class TestRevolutionSurface3D(unittest.TestCase):
         surface = surfaces.RevolutionSurface3D.from_json(os.path.join(folder, "arc3d_to_2d_surface.json"))
         arc3d = vme.Arc3D.from_json(os.path.join(folder, "arc3d_to_2d_arc3d.json"))
         brep = surface.arc3d_to_2d(arc3d)[0]
-        self.assertTrue(brep.start.is_close(volmdlr.Point2D(-math.pi, 0.0)))
-        self.assertTrue(brep.end.is_close(volmdlr.Point2D(-math.pi, 0.0038322109949349634)))
+        self.assertTrue(brep.start.is_close(design3d.Point2D(-math.pi, 0.0)))
+        self.assertTrue(brep.end.is_close(design3d.Point2D(-math.pi, 0.0038322109949349634)))
 
         surface = surfaces.RevolutionSurface3D.from_json(os.path.join(folder, "arc3d_to_2d_surface_2.json"))
         arc3d = vme.Arc3D.from_json(os.path.join(folder, "arc3d_to_2d_arc3d_2.json"))
         brep = surface.arc3d_to_2d(arc3d)[0]
-        self.assertTrue(brep.start.is_close(volmdlr.Point2D(-math.pi, 0.0038322109949349634)))
-        self.assertTrue(brep.end.is_close(volmdlr.Point2D(-math.pi, 0.0)))
+        self.assertTrue(brep.start.is_close(design3d.Point2D(-math.pi, 0.0038322109949349634)))
+        self.assertTrue(brep.end.is_close(design3d.Point2D(-math.pi, 0.0)))
 
     def test_v_iso(self):
         surface = surfaces.RevolutionSurface3D.from_json(
@@ -176,7 +176,7 @@ class TestRevolutionSurface3D(unittest.TestCase):
         v = 0.023550776716126855
         arc = surface.v_iso(v)
         self.assertAlmostEqual(arc.radius, 0.017000000000019)
-        self.assertTrue(arc.center.is_close(volmdlr.Point3D(0.0, 0.007299999999984744, -8.104628079745562e-19)))
+        self.assertTrue(arc.center.is_close(design3d.Point3D(0.0, 0.007299999999984744, -8.104628079745562e-19)))
 
 
 

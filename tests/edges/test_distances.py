@@ -1,9 +1,9 @@
 import unittest
 from itertools import product
 
-import volmdlr
-import volmdlr.edges as vme
-import volmdlr.models.edges as edges_models
+import design3d
+import design3d.edges as vme
+import design3d.models.edges as edges_models
 
 
 class TestEdgesDistances(unittest.TestCase):
@@ -13,13 +13,13 @@ class TestEdgesDistances(unittest.TestCase):
                               3.3500730304603152, 1.4456832294800965, 2.8575751838382266, 1.0000000009680357,
                               1.2027923774744735, 0.0, 1.2597969896641665]
 
-        vector1 = volmdlr.Vector2D(1, 1)
+        vector1 = design3d.Vector2D(1, 1)
         vector1 = vector1.unit_vector()
         vector2 = vector1.deterministic_unit_normal_vector()
         distances = []
         for edge1, edge2 in product([edges_models.bspline1, edges_models.lineseg,
                                      edges_models.arc, edges_models.arc_ellipse2d], repeat=2):
-            edge2 = edge2.frame_mapping(volmdlr.Frame2D(volmdlr.Point2D(3, 3), vector1, vector2), 'new')
+            edge2 = edge2.frame_mapping(design3d.Frame2D(design3d.Point2D(3, 3), vector1, vector2), 'new')
             dist, min_dist_point_arc, min_dist_point_lineseg = edge1.minimum_distance(edge2, True)
             distances.append(dist)
         for distance, expected_distance in zip(distances, expected_distances):
@@ -30,7 +30,7 @@ class TestEdgesDistances(unittest.TestCase):
                               0.6600032792406747, 6.117055924652082, 2.6674164255110373, 1.2247448713912275,
                               0.019318579007616275, 2.6674164255110373, 5.084297068558137, 0.8731527317517747,
                               0.6383061445002628, 1.2247448713912275, 0.8731527317517747, 4.289502509060332]
-        vector1 = volmdlr.Vector3D(1, 1, 1)
+        vector1 = design3d.Vector3D(1, 1, 1)
         vector1 = vector1.unit_vector()
         vector2 = vector1.deterministic_unit_normal_vector()
         vector3 = vector1.cross(vector2)
@@ -39,7 +39,7 @@ class TestEdgesDistances(unittest.TestCase):
         for edge1, edge2 in product([edges_models.bspline_curve3d(), edges_models.linesegment3d(),
                                      edges_models.arc3d(), edges_models.arc_ellipse3d()], repeat=2):
             if edge1 == edge2:
-                edge2 = edge2.frame_mapping(volmdlr.Frame3D(volmdlr.Point3D(2, 5, -3), vector1, vector2, vector3),
+                edge2 = edge2.frame_mapping(design3d.Frame3D(design3d.Point3D(2, 5, -3), vector1, vector2, vector3),
                                             'new')
             dist, min_dist_point_arc, min_dist_point_lineseg = edge1.minimum_distance(edge2, True)
             distances.append(dist)

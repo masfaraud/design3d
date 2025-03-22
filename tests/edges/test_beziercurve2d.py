@@ -1,15 +1,15 @@
 """
-Unit tests for volmdlr.faces.BSplineCurve
+Unit tests for design3d.faces.BSplineCurve
 """
 import unittest
-import volmdlr
-import volmdlr.edges as vme
+import design3d
+import design3d.edges as vme
 
 
 class TestBezierCurve2D(unittest.TestCase):
     # Set up the Bézier curve
     degree = 2
-    ctrlpts = [volmdlr.Point2D(10, 0), volmdlr.Point2D(20, 15), volmdlr.Point2D(30, 0)]
+    ctrlpts = [design3d.Point2D(10, 0), design3d.Point2D(20, 15), design3d.Point2D(30, 0)]
 
     curve1 = vme.BezierCurve2D(degree, ctrlpts)
 

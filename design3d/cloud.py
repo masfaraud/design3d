@@ -12,15 +12,15 @@ import random
 import matplotlib.pyplot as plt
 from trimesh.proximity import closest_point
 
-import volmdlr as vm
-import volmdlr.faces as vmf
-from volmdlr import shells as vmshells
-from volmdlr import surfaces
-import volmdlr.primitives3d as p3d
-import volmdlr.step as vstep
-import volmdlr.stl as vmstl
-# import volmdlr.core
-import volmdlr.wires as vmw
+import design3d as vm
+import design3d.faces as vmf
+from design3d import shells as vmshells
+from design3d import surfaces
+import design3d.primitives3d as p3d
+import design3d.step as vstep
+import design3d.stl as vmstl
+# import design3d.core
+import design3d.wires as vmw
 
 
 class PointCloud3D:
