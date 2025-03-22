@@ -137,10 +137,12 @@ for script_name in scripts:
     time_start_script = time.time()
 
     with open(file_name, "r", encoding="utf-8") as script:
-        # Call babylon_data instead of babylonjs to avoid opening browser windows
-        pattern = r'\.babylonjs\(.*?\)'
-        replacement = r'.volmdlr_volume_model().babylon_data()'
-        exec(re.sub(pattern, replacement, script.read()))
+        # # Call babylon_data instead of babylonjs to avoid opening browser windows
+        # pattern = r'\.babylonjs\(.*?\)'
+        # replacement = r'.volmdlr_volume_model().babylon_data()'
+        # exec(re.sub(pattern, replacement, script.read()))
+        exec(script.read())
+        
 
     time_start_script = time.time() - time_start_script
     times[script_name] = time_start_script

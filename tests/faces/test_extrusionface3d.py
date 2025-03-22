@@ -1,7 +1,7 @@
 import unittest
-from volmdlr.core import VolumeModel
-from volmdlr.step import Step
-from volmdlr import faces, surfaces, wires
+from design3d.core import VolumeModel
+from design3d.step import Step
+from design3d import faces, surfaces, wires
 import os
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'objects_extrusion_tests')

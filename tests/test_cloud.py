@@ -2,21 +2,21 @@ import unittest
 
 import numpy as npy
 
-import volmdlr as vm
-from volmdlr import cloud, faces, shells
+import design3d as d3d
+from design3d import cloud, faces, shells
 
 
 class TestCloud(unittest.TestCase):
-    points_cloud = cloud.PointCloud3D([vm.Point3D(0, 0, 0), vm.Point3D(10, 10, 10),vm.Point3D(-2.5, 1.2, 0)])
+    points_cloud = cloud.PointCloud3D([d3d.Point3D(0, 0, 0), d3d.Point3D(10, 10, 10),d3d.Point3D(-2.5, 1.2, 0)])
 
-    point1 = vm.Point3D(1, 1, 1)
-    point2 = vm.Point3D(1, 2, 1)
-    point3 = vm.Point3D(1, 1, 2)
-    point4 = vm.Point3D(2, 1, 1)
-    point5 = vm.Point3D(2, 2, 1)
-    point6 = vm.Point3D(1, 2, 2)
-    point7 = vm.Point3D(2, 1, 2)
-    point8 = vm.Point3D(2, 2, 2)
+    point1 = d3d.Point3D(1, 1, 1)
+    point2 = d3d.Point3D(1, 2, 1)
+    point3 = d3d.Point3D(1, 1, 2)
+    point4 = d3d.Point3D(2, 1, 1)
+    point5 = d3d.Point3D(2, 2, 1)
+    point6 = d3d.Point3D(1, 2, 2)
+    point7 = d3d.Point3D(2, 1, 2)
+    point8 = d3d.Point3D(2, 2, 2)
     open_triangle_shell = shells.OpenTriangleShell3D([faces.Triangle3D(point1, point2, point3),
                                                      faces.Triangle3D(point3, point4, point5),
                                                      faces.Triangle3D(point5, point6, point7),

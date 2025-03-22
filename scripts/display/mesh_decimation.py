@@ -4,7 +4,7 @@ Showcase of decimation of a STL file.
 import os
 import urllib.request
 
-from volmdlr.display import Mesh3D
+from design3d.display import Mesh3D
 
 # Stanfrod Bunny model
 MODEL_URL = "https://upload.wikimedia.org/wikipedia/commons/4/43/Stanford_Bunny.stl"
@@ -17,7 +17,7 @@ if not os.path.exists(FILE_NAME):
 else:
     print(f"File already exists at {FILE_NAME}. Skipping download.")
 
-# Load STL model using volmdlr
+# Load STL model using design3d
 mesh = Mesh3D.from_stl_file(FILE_NAME)
 
 # Decimate and show model

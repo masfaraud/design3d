@@ -1,6 +1,6 @@
 import math
 import unittest
-from volmdlr import Point3D, Vector3D
+from design3d import Point3D, Vector3D
 
 
 class TestPoint3D(unittest.TestCase):
@@ -59,7 +59,7 @@ class TestPoint3D(unittest.TestCase):
     def test_to_dict(self):
         point = Point3D(1, 2, 3, "test_point")
         point_dict = point.to_dict()
-        self.assertEqual(point_dict["object_class"], "volmdlr.Point3D")
+        self.assertEqual(point_dict["object_class"], "design3d.Point3D")
         self.assertEqual(point_dict["x"], 1)
         self.assertEqual(point_dict["y"], 2)
         self.assertEqual(point_dict["z"], 3)

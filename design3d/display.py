@@ -10,9 +10,6 @@ from typing import List, Tuple, TypeVar, Union
 import numpy as np
 import pyfqmr
 import trimesh
-from dessia_common.core import DessiaObject
-from dessia_common.serialization import BinaryFile
-from dessia_common.typings import JsonSerializable
 from numpy.typing import NDArray
 from scipy.spatial import cKDTree
 from trimesh import Trimesh
@@ -31,9 +28,6 @@ class MeshMixin:
     """
 
     MeshType = TypeVar("MeshType", bound="MeshMixin")
-
-    _standalone_in_db = True
-    _non_serializable_attributes = ["vertices", "triangles"]
 
     @property
     def n_vertices(self) -> int:
@@ -134,7 +128,11 @@ class MeshMixin:
             return self
 
         merged_vertices = np.concatenate((self.vertices, other.vertices))
-        merged_triangles = np.concatenate((self.triangles, other.triangles + len(self.vertices)))
+        # merged_triangles = np.concatenate((self.triangles, other.triangles + len(self.vertices).astype(np.int32)))
+        merged_triangles = np.concatenate((
+            self.triangles.astype(np.int32), 
+            (other.triangles.astype(np.int32) + len(self.vertices))
+        ), dtype=np.int32)
 
         mesh = self.__class__(merged_vertices, merged_triangles, name=self.name)
 
@@ -307,7 +305,7 @@ class MeshMixin:
         return dict_
 
     @classmethod
-    def dict_to_object(cls, dict_: JsonSerializable, *args, **kwargs) -> MeshType:
+    def dict_to_object(cls, dict_, *args, **kwargs) -> MeshType:
         """Overload of 'dict_to_object' for numpy usage and memory perf."""
 
         vertices = np.array(dict_["vertices"]).reshape(-1, 3)
@@ -336,7 +334,7 @@ class MeshMixin:
         return self == other_object
 
 
-class Mesh2D(MeshMixin, DessiaObject):
+class Mesh2D(MeshMixin):
     """
     2D triangle mesh.
     """
@@ -358,7 +356,7 @@ class Mesh2D(MeshMixin, DessiaObject):
         self.vertices = vertices
         self.triangles = triangles
 
-        DessiaObject.__init__(self, name=name)
+        self.name = name
 
     def area(self) -> float:
         """
@@ -702,7 +700,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         return cls.from_trimesh(trimesh.load(filepath, "stl")).resize(scale_factor)
 
     @classmethod
-    def from_stl_stream(cls, stream: BinaryFile, scale_factor: float = 0.001) -> "Mesh3D":
+    def from_stl_stream(cls, stream, scale_factor: float = 0.001) -> "Mesh3D":
         """
         Create a 3D mesh from an STL stream.
 
@@ -733,7 +731,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         return cls.from_trimesh(trimesh.load(filepath, "obj")).resize(scale_factor)
 
     @classmethod
-    def from_obj_stream(cls, stream: BinaryFile, scale_factor: float = 0.001) -> "Mesh3D":
+    def from_obj_stream(cls, stream, scale_factor: float = 0.001) -> "Mesh3D":
         """
         Create a 3D mesh from an OBJ stream.
 
@@ -764,7 +762,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         return cls.from_trimesh(trimesh.load(filepath, "ply")).resize(scale_factor)
 
     @classmethod
-    def from_ply_stream(cls, stream: BinaryFile, scale_factor: float = 0.001) -> "Mesh3D":
+    def from_ply_stream(cls, stream, scale_factor: float = 0.001) -> "Mesh3D":
         """
         Create a 3D mesh from an PLY stream.
 
@@ -795,7 +793,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         return cls.from_trimesh(trimesh.load(filepath, "off")).resize(scale_factor)
 
     @classmethod
-    def from_off_stream(cls, stream: BinaryFile, scale_factor: float = 0.001) -> "Mesh3D":
+    def from_off_stream(cls, stream, scale_factor: float = 0.001) -> "Mesh3D":
         """
         Create a 3D mesh from an OFF stream.
 
@@ -833,7 +831,7 @@ class Mesh3D(MeshMixin, Primitive3D):
 
     @classmethod
     def from_3mf_stream(
-        cls, stream: BinaryFile, scale_factor: float = 0.001, merge_meshes: bool = True
+        cls, stream, scale_factor: float = 0.001, merge_meshes: bool = True
     ) -> Union["Mesh3D", List["Mesh3D"]]:
         """
         Create a 3D mesh from an 3MF stream.

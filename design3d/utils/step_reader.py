@@ -4,7 +4,7 @@ design3d utils for importing step files.
 import re
 
 import design3d
-import design3d.shells as vmshells
+import design3d.shells as d3dshells
 from design3d import surfaces
 from design3d.geometry import get_transfer_matrix_from_basis
 
@@ -534,7 +534,7 @@ def manifold_surface_shape_representation(arguments, object_dict, *args, **kwarg
     primitives = []
     for arg in arguments[1]:
         primitive = object_dict[int(arg[1:])]
-        if isinstance(primitive, vmshells.Shell3D):
+        if isinstance(primitive, d3dshells.Shell3D):
             primitives.append(primitive)
         if isinstance(primitive, design3d.core.Compound):
             counter = 0
@@ -566,7 +566,7 @@ def faceted_brep_shape_representation(arguments, object_dict, *args, **kwargs):
     shells = []
     for arg in arguments[1]:
         if isinstance(object_dict[int(arg[1:])],
-                      vmshells.Shell3D):
+                      d3dshells.Shell3D):
             shell = object_dict[int(arg[1:])]
             shells.append(shell)
     return design3d.core.Compound(shells)
@@ -613,7 +613,7 @@ def shape_representation(arguments, object_dict, *args, **kwargs):
             shells.append(*object_dict[int(arg[1:])])
         elif int(arg[1:]) in object_dict and \
                 isinstance(object_dict[int(arg[1:])],
-                           vmshells.Shell3D):
+                           d3dshells.Shell3D):
             shells.append(object_dict[int(arg[1:])])
         elif int(arg[1:]) in object_dict and isinstance(object_dict[int(arg[1:])], design3d.Frame3D):
             # TODO: Is there something to read here ?
@@ -650,7 +650,7 @@ def advanced_brep_shape_representation(arguments, object_dict, *args, **kwargs):
     primitives = []
     for arg in arguments[1]:
         primitive = object_dict[int(arg[1:])]
-        if isinstance(primitive, vmshells.Shell3D):
+        if isinstance(primitive, d3dshells.Shell3D):
             primitives.append(primitive)
         if isinstance(primitive, design3d.core.Compound):
             counter = 0
@@ -716,7 +716,7 @@ def frame_map_closed_shell(closed_shells, item_defined_transformation_frames, sh
     Frame maps a closed shell in an assembly to its good position.
 
     :param closed_shells: DESCRIPTION
-    :type closed_shells: vmshells.OpenShell3D
+    :type closed_shells: d3dshells.OpenShell3D
     :param item_defined_transformation_frames: DESCRIPTION
     :type item_defined_transformation_frames: TYPE
     :param shape_representation_frames: DESCRIPTION
@@ -954,10 +954,10 @@ STEP_TO_design3d = {
     'ADVANCED_FACE': design3d.faces.Face3D,
     'FACE_SURFACE': design3d.faces.Face3D,
 
-    'CLOSED_SHELL': vmshells.ClosedShell3D,
-    'OPEN_SHELL': vmshells.OpenShell3D,
+    'CLOSED_SHELL': d3dshells.ClosedShell3D,
+    'OPEN_SHELL': d3dshells.OpenShell3D,
     #        'ORIENTED_CLOSED_SHELL': None,
-    'CONNECTED_FACE_SET': vmshells.OpenShell3D,
+    'CONNECTED_FACE_SET': d3dshells.OpenShell3D,
     'GEOMETRIC_CURVE_SET': None,
 
     # step sub-functions
@@ -970,7 +970,7 @@ STEP_TO_design3d = {
     'NAMED_UNIT, PLANE_ANGLE_UNIT, SI_UNIT': None,
     'CONVERSION_BASED_UNIT, NAMED_UNIT, PLANE_ANGLE_UNIT': None,
     'GEOMETRIC_REPRESENTATION_CONTEXT, GLOBAL_UNCERTAINTY_ASSIGNED_CONTEXT, GLOBAL_UNIT_ASSIGNED_CONTEXT, REPRESENTATION_CONTEXT': None,
-    'REPRESENTATION_RELATIONSHIP, REPRESENTATION_RELATIONSHIP_WITH_TRANSFORMATION, SHAPE_REPRESENTATION_RELATIONSHIP': vmshells.OpenShell3D.translation,
+    'REPRESENTATION_RELATIONSHIP, REPRESENTATION_RELATIONSHIP_WITH_TRANSFORMATION, SHAPE_REPRESENTATION_RELATIONSHIP': d3dshells.OpenShell3D.translation,
     'SHELL_BASED_SURFACE_MODEL': None,
     'MANIFOLD_SURFACE_SHAPE_REPRESENTATION': None,
     'MANIFOLD_SOLID_BREP': None,

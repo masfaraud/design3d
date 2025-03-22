@@ -7,10 +7,9 @@
 
 # %% Libraries
 
-# import volmdlr.step as vms
 import numpy as npy
-from volmdlr import faces
-from volmdlr.models import bspline_surfaces
+from design3d import faces
+from design3d.models import bspline_surfaces
 
 # %% Read Step file
 
@@ -18,7 +17,7 @@ from volmdlr.models import bspline_surfaces
 # bspline_faces = []
 
 # for file_path in files_path:
-#     step_file = vms.Step.from_file(file_path)
+#     step_file = d3ds.Step.from_file(file_path)
 
 #     model = step_file.to_volume_model()
 #     primitives = model.primitives
@@ -50,4 +49,4 @@ for i, face in enumerate(bspline_faces):
     face.color = random_colors[i]
     face.plot(ax=ax, color=face.color)
 
-# vm.core.VolumeModel(bspline_faces).babylonjs()
+# d3d.core.VolumeModel(bspline_faces).babylonjs()

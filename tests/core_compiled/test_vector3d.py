@@ -1,10 +1,10 @@
 """
-Unittest for volmdlr.Vector3D
+Unittest for design3d.Vector3D
 """
 import unittest
 
-import volmdlr
-from volmdlr import Vector3D, Point3D
+import design3d
+from design3d import Vector3D, Point3D
 
 
 class TestVector3D(unittest.TestCase):
@@ -127,10 +127,10 @@ class TestVector3D(unittest.TestCase):
         self.assertAlmostEqual(rotated_vector.z, expected_vector.z)
 
     def test_vector_projection(self):
-        v1 = volmdlr.Z3D
+        v1 = design3d.Z3D
         v2 = Vector3D(1, 1, 1)
         v3 = Vector3D(1, 1, -1)
-        v4 = volmdlr.X3D
+        v4 = design3d.X3D
         p1 = v2.vector_projection(v1)
         p2 = v3.vector_projection(v1)
         p3 = v4.vector_projection(v1)

@@ -1,36 +1,36 @@
 {
-  "object_class": "volmdlr.core.VolumeModel",
+  "object_class": "design3d.core.VolumeModel",
   "name": "",
   "primitives": [
     {
-      "object_class": "volmdlr.faces.PlaneFace3D",
+      "object_class": "design3d.faces.PlaneFace3D",
       "name": "",
       "surface3d": {
-        "object_class": "volmdlr.surfaces.Plane3D",
+        "object_class": "design3d.surfaces.Plane3D",
         "name": "",
         "frame": {
-          "object_class": "volmdlr.Frame3D",
+          "object_class": "design3d.Frame3D",
           "name": "",
           "origin": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": 49.9445,
             "y": 2.45277568136,
             "z": 2.279
           },
           "u": {
-            "object_class": "volmdlr.Vector3D",
+            "object_class": "design3d.Vector3D",
             "x": 0.0,
             "y": -1.0,
             "z": 0.0
           },
           "v": {
-            "object_class": "volmdlr.Vector3D",
+            "object_class": "design3d.Vector3D",
             "x": 1.0,
             "y": -0.0,
             "z": -0.0
           },
           "w": {
-            "object_class": "volmdlr.Vector3D",
+            "object_class": "design3d.Vector3D",
             "x": 0.0,
             "y": 0.0,
             "z": 1.0
@@ -38,64 +38,64 @@
         }
       },
       "surface2d": {
-        "object_class": "volmdlr.surfaces.Surface2D",
+        "object_class": "design3d.surfaces.Surface2D",
         "name": "name",
         "outer_contour": {
-          "object_class": "volmdlr.wires.Contour2D",
+          "object_class": "design3d.wires.Contour2D",
           "name": "",
           "primitives": [
             {
-              "object_class": "volmdlr.edges.LineSegment2D",
+              "object_class": "design3d.edges.LineSegment2D",
               "name": "",
               "start": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": 0.0,
                 "y": 0.0
               },
               "end": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": 2.44527568136,
                 "y": 0.0
               }
             },
             {
-              "object_class": "volmdlr.edges.LineSegment2D",
+              "object_class": "design3d.edges.LineSegment2D",
               "name": "",
               "start": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": 2.44527568136,
                 "y": 0.0
               },
               "end": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": 2.44527568136,
                 "y": 0.2
               }
             },
             {
-              "object_class": "volmdlr.edges.LineSegment2D",
+              "object_class": "design3d.edges.LineSegment2D",
               "name": "",
               "start": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": 2.44527568136,
                 "y": 0.2
               },
               "end": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": 0.0,
                 "y": 0.2
               }
             },
             {
-              "object_class": "volmdlr.edges.LineSegment2D",
+              "object_class": "design3d.edges.LineSegment2D",
               "name": "",
               "start": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": 0.0,
                 "y": 0.2
               },
               "end": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": 0.0,
                 "y": 0.0
               }
@@ -108,16 +108,16 @@
       "alpha": 1.0
     },
     {
-      "object_class": "volmdlr.faces.ToroidalFace3D",
+      "object_class": "design3d.faces.ToroidalFace3D",
       "name": "",
       "center": {
-        "object_class": "volmdlr.Point3D",
+        "object_class": "design3d.Point3D",
         "x": 50.0,
         "y": 1.263999,
         "z": 2.236001
       },
       "normal": {
-        "object_class": "volmdlr.Vector3D",
+        "object_class": "design3d.Vector3D",
         "x": -1.0,
         "y": -0.0,
         "z": 0.0
@@ -127,31 +127,31 @@
       "phi_min": -3.9871802111478813,
       "phi_max": -0.8455875575580872,
       "surface3d": {
-        "object_class": "volmdlr.surfaces.ToroidalSurface3D",
+        "object_class": "design3d.surfaces.ToroidalSurface3D",
         "name": "",
         "frame": {
-          "object_class": "volmdlr.Frame3D",
+          "object_class": "design3d.Frame3D",
           "name": "",
           "origin": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": 50.0,
             "y": 1.263999,
             "z": 2.236001
           },
           "u": {
-            "object_class": "volmdlr.Vector3D",
+            "object_class": "design3d.Vector3D",
             "x": 0.0,
             "y": -1.0,
             "z": 0.0
           },
           "v": {
-            "object_class": "volmdlr.Vector3D",
+            "object_class": "design3d.Vector3D",
             "x": 0.0,
             "y": 0.0,
             "z": 1.0
           },
           "w": {
-            "object_class": "volmdlr.Vector3D",
+            "object_class": "design3d.Vector3D",
             "x": -1.0,
             "y": -0.0,
             "z": 0.0
@@ -163,29 +163,29 @@
         "inner_radius": 0.05599900000000014
       },
       "surface2d": {
-        "object_class": "volmdlr.surfaces.Surface2D",
+        "object_class": "design3d.surfaces.Surface2D",
         "name": "name",
         "outer_contour": {
-          "object_class": "volmdlr.wires.ClosedPolygon2D",
+          "object_class": "design3d.wires.ClosedPolygon2D",
           "name": "",
           "points": [
             {
-              "object_class": "volmdlr.Point2D",
+              "object_class": "design3d.Point2D",
               "x": 0.0,
               "y": -3.9871802111478813
             },
             {
-              "object_class": "volmdlr.Point2D",
+              "object_class": "design3d.Point2D",
               "x": 1.5707963267948948,
               "y": -3.9871802111478813
             },
             {
-              "object_class": "volmdlr.Point2D",
+              "object_class": "design3d.Point2D",
               "x": 1.5707963267948948,
               "y": -0.8455875575580872
             },
             {
-              "object_class": "volmdlr.Point2D",
+              "object_class": "design3d.Point2D",
               "x": 0.0,
               "y": -0.8455875575580872
             }

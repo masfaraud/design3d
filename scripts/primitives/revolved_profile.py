@@ -115,7 +115,6 @@ conical_rim = RevolvedProfile(frame2, rim_contour, 0.5*d3d.X3D.to_point(), d3d.X
 
 
 model = d3d.core.VolumeModel([profile1, profile5, conical_rim])
-model.check_platform()
 
 translated_model = model.translation(d3d.Point3D.random(0, 1, 0, 1, 0, 1))
 turned_model = model.rotation(0.3*d3d.X3D.to_point(), d3d.Z3D, 0.4)

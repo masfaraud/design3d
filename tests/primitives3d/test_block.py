@@ -1,13 +1,13 @@
 import unittest
 
-import volmdlr
-from volmdlr.primitives3d import Block
-from volmdlr.core import BoundingBox
+import design3d
+from design3d.primitives3d import Block
+from design3d.core import BoundingBox
 
 
 class TestBlock(unittest.TestCase):
     def setUp(self) -> None:
-        self.block = Block(frame=volmdlr.OXYZ)
+        self.block = Block(frame=design3d.OXYZ)
 
     def test_from_bounding_box(self):
         bounding_box = BoundingBox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5)

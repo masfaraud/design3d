@@ -8,25 +8,25 @@ Created on Fri Mar 10 17:02:36 2017
 import math
 import time
 
-import design3d as vm
+import design3d as d3d
 import design3d.primitives2d as primitives2d
-import design3d.wires as vmw
+import design3d.wires as d3dw
 
-p1 = vm.Point2D(0, 0)
-p2 = vm.Point2D(1, 0)
-p3 = vm.Point2D(2, 1)
-p4 = vm.Point2D(1, 0.5)
-p5 = vm.Point2D(-0.5, 1)
-polygon1 = vm.wires.ClosedPolygon2D([p1, p2, p3, p4, p5])
+p1 = d3d.Point2D(0, 0)
+p2 = d3d.Point2D(1, 0)
+p3 = d3d.Point2D(2, 1)
+p4 = d3d.Point2D(1, 0.5)
+p5 = d3d.Point2D(-0.5, 1)
+polygon1 = d3d.wires.ClosedPolygon2D([p1, p2, p3, p4, p5])
 
 
 r1 = 1.78*0.5
 r2 = r1+0.3
 theta1 = 12*2*math.pi/360
 theta2 = 33*2*math.pi/360
-pm1=vm.Point2D(0, -r1)
-pm2=vm.Point2D(0, -r2)
-pc=vm.Point2D(0, 0)
+pm1=d3d.Point2D(0, -r1)
+pm2=d3d.Point2D(0, -r2)
+pc=d3d.Point2D(0, 0)
 p1=pm1.rotation(pc,-theta2)
 p2=pm1.rotation(pc,-theta1)
 p3=pm1.rotation(pc,theta1)
@@ -36,16 +36,16 @@ p7=pm2.rotation(pc,-theta1)
 p6=pm2.rotation(pc,theta1)
 p5=pm2.rotation(pc,theta2)
 
-polygon2 = vmw.ClosedPolygon2D([p1,p2,p3,p4,p5,p6,p7,p8], name='border')
+polygon2 = d3dw.ClosedPolygon2D([p1,p2,p3,p4,p5,p6,p7,p8], name='border')
 
-polygon3 = vmw.ClosedPolygon2D([vm.Point2D(-0.4518626885964, 0.45),
-                                vm.Point2D(-0.4518626885964, 0.85),
-                                vm.Point2D(-0.9518626885964, 0.85),
-                                vm.Point2D(-0.9518626885964, -0.85),
-                                vm.Point2D(-0.4518626885964, -0.85),
-                                vm.Point2D(-0.4518626885964, -0.45),
-                                vm.Point2D(1.5481373114036, -0.15),
-                                vm.Point2D(1.5481373114036, 0.15)])
+polygon3 = d3dw.ClosedPolygon2D([d3d.Point2D(-0.4518626885964, 0.45),
+                                d3d.Point2D(-0.4518626885964, 0.85),
+                                d3d.Point2D(-0.9518626885964, 0.85),
+                                d3d.Point2D(-0.9518626885964, -0.85),
+                                d3d.Point2D(-0.4518626885964, -0.85),
+                                d3d.Point2D(-0.4518626885964, -0.45),
+                                d3d.Point2D(1.5481373114036, -0.15),
+                                d3d.Point2D(1.5481373114036, 0.15)])
 
 for polygon in [polygon1, polygon2, polygon3]:
 
@@ -58,7 +58,7 @@ for polygon in [polygon1, polygon2, polygon3]:
     
     for i in range(100):
 
-        pt = vm.Point2D.random(xmin, xmax, ymin, ymax)
+        pt = d3d.Point2D.random(xmin, xmax, ymin, ymax)
         if polygon.point_inside(pt):
             points_inside.append(pt)
         else:
@@ -71,18 +71,18 @@ for polygon in [polygon1, polygon2, polygon3]:
     for point in points_outside:
         point.plot(ax=a, color = 'r')
     #
-    #c2=vm.CompositePrimitive2D([polygon, *points_outside])
+    #c2=d3d.CompositePrimitive2D([polygon, *points_outside])
     #c2.MPLPlot()
     #
     #cog_p = polygon.CenterOfMass()
-    #c3 = vm.CompositePrimitive2D([polygon, cog_p])
+    #c3 = d3d.CompositePrimitive2D([polygon, cog_p])
     #c3.MPLPlot()
     
     # Speed test
     t = time.time()
     n = 100000
     for i in range(n):
-        pt=vm.Point2D.random(-0.3, 0.7, -0.3, 0.7)
+        pt=d3d.Point2D.random(-0.3, 0.7, -0.3, 0.7)
     #    print(p.PointDistance(pt))
         polygon.point_inside(pt)
     t= time.time() - t 

@@ -1,15 +1,15 @@
 import math
 import unittest
 from copy import deepcopy
-import volmdlr
-from volmdlr.primitives3d import Block
-from volmdlr.core import VolumeModel, BoundingBox
+import design3d
+from design3d.primitives3d import Block
+from design3d.core import VolumeModel, BoundingBox
 
 
 class TestVolumeModel(unittest.TestCase):
     def setUp(self):
-        self.frame = volmdlr.Frame3D.from_point_and_vector(volmdlr.O3D, volmdlr.Vector3D(1.0, 1.0, 1.0))
-        self.block1 = Block(volmdlr.OXYZ)
+        self.frame = design3d.Frame3D.from_point_and_vector(design3d.O3D, design3d.Vector3D(1.0, 1.0, 1.0))
+        self.block1 = Block(design3d.OXYZ)
         self.block2 = Block(self.frame)
         self.primitives = [self.block1, self.block2]
         self.volume_model = VolumeModel(deepcopy(self.primitives))
@@ -23,8 +23,8 @@ class TestVolumeModel(unittest.TestCase):
         self.assertEqual(self.volume_model.volume(), sum(p.volume() for p in self.primitives))
 
     def test_rotation(self):
-        center = volmdlr.Point3D(0.0, 0.0, 0.0)
-        axis = volmdlr.Vector3D(0.0, 0.0, 1.0)
+        center = design3d.Point3D(0.0, 0.0, 0.0)
+        axis = design3d.Vector3D(0.0, 0.0, 1.0)
         angle = math.pi / 4
         rotated_volume_model = self.volume_model.rotation(center, axis, angle)
 
@@ -34,7 +34,7 @@ class TestVolumeModel(unittest.TestCase):
             self.assertEqual(p1, p2)
 
     def test_translation(self):
-        offset = volmdlr.Vector3D(1.0, 1.0, 1.0)
+        offset = design3d.Vector3D(1.0, 1.0, 1.0)
         translated_volume_model = self.volume_model.translation(offset)
 
         for p1, p2 in zip(translated_volume_model.primitives, self.primitives):
@@ -43,7 +43,7 @@ class TestVolumeModel(unittest.TestCase):
             self.assertEqual(p1, p2)
 
     def test_frame_mapping(self):
-        frame = volmdlr.Frame3D.from_point_and_vector(volmdlr.Point3D(1.0, 1.0, 1.0), volmdlr.Vector3D(1.0, 1.0, 1.0))
+        frame = design3d.Frame3D.from_point_and_vector(design3d.Point3D(1.0, 1.0, 1.0), design3d.Vector3D(1.0, 1.0, 1.0))
         side = "old"
         mapped_volume_model = self.volume_model.frame_mapping(frame, side)
 

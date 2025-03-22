@@ -4,9 +4,9 @@ import unittest
 
 from dessia_common.core import DessiaObject
 
-import volmdlr
-from volmdlr import edges, wires, curves
-from volmdlr.models.contours import contour2d_1, contour2d_2, contour1_cut_by_wire, contour2_cut_by_wire,\
+import design3d
+from design3d import edges, wires, curves
+from design3d.models.contours import contour2d_1, contour2d_2, contour1_cut_by_wire, contour2_cut_by_wire,\
     contour2_unittest, unordered_contour2_unittest, invalid_unordered_contour2_unittest
 
 
@@ -14,31 +14,31 @@ folder = os.path.dirname(os.path.realpath(__file__))
 
 
 class TestContour2D(unittest.TestCase):
-    contour1 = wires.Contour2D([edges.FullArc2D(circle=curves.Circle2D(volmdlr.OXY, 0.029999999),
-                                                start_end=volmdlr.Point2D(0.029999999, 0))])
+    contour1 = wires.Contour2D([edges.FullArc2D(circle=curves.Circle2D(design3d.OXY, 0.029999999),
+                                                start_end=design3d.Point2D(0.029999999, 0))])
     not_ordered_contour = DessiaObject.from_json(os.path.join(folder, "contour_not_ordered.json"))
     # ordered_contour = DessiaObject.from_json('wires/contour_ordered.json')
     contour_to_extract_from = contour = wires.Contour2D.from_points(
-        [volmdlr.Point2D(-.15, .15), volmdlr.Point2D(-.15, -.15), volmdlr.Point2D(.15, -.15),
-         volmdlr.Point2D(.15, .15)])
-    point1_ = volmdlr.Point2D(0.12500000000000003, 0.15)
-    point2_ = volmdlr.Point2D(0.12500000000000003, -0.15)
-    point_to_extract_with = [(point1_, point2_), (volmdlr.Point2D(0.15, -0.05), volmdlr.Point2D(0.15, 0.05)),
-                       (volmdlr.Point2D(-0.15, 0.15), point2_), (volmdlr.Point2D(-0.15, 0.15), point1_)]
-    contour3 = contour2_unittest.rotation(volmdlr.Point2D(0.5, 0.5), math.pi / 1.5)
-    contour3 = contour3.translation(volmdlr.Vector2D(-0.3, 0))
+        [design3d.Point2D(-.15, .15), design3d.Point2D(-.15, -.15), design3d.Point2D(.15, -.15),
+         design3d.Point2D(.15, .15)])
+    point1_ = design3d.Point2D(0.12500000000000003, 0.15)
+    point2_ = design3d.Point2D(0.12500000000000003, -0.15)
+    point_to_extract_with = [(point1_, point2_), (design3d.Point2D(0.15, -0.05), design3d.Point2D(0.15, 0.05)),
+                       (design3d.Point2D(-0.15, 0.15), point2_), (design3d.Point2D(-0.15, 0.15), point1_)]
+    contour3 = contour2_unittest.rotation(design3d.Point2D(0.5, 0.5), math.pi / 1.5)
+    contour3 = contour3.translation(design3d.Vector2D(-0.3, 0))
 
     def test_point_inside(self):
-        point1 = volmdlr.Point2D(0.0144822, 0.00595264)
-        point2 = volmdlr.Point2D(0.02, 0.02)
+        point1 = design3d.Point2D(0.0144822, 0.00595264)
+        point2 = design3d.Point2D(0.02, 0.02)
         self.assertTrue(self.contour1.point_inside(point1))
         self.assertTrue(self.contour1.point_inside(point2))
 
-        point3 = volmdlr.Point2D(0, 0.013)
+        point3 = design3d.Point2D(0, 0.013)
         self.assertTrue(contour2d_1.point_inside(point3))
         self.assertFalse(contour2d_1.point_inside(point1))
 
-        point4 = volmdlr.Point2D(0.745, 0.0685)
+        point4 = design3d.Point2D(0.745, 0.0685)
         self.assertTrue(contour2d_2.point_inside(point4))
 
         contour, point = DessiaObject.from_json(os.path.join(folder, "test_contour_point_belongs.json")).primitives
@@ -69,10 +69,10 @@ class TestContour2D(unittest.TestCase):
         self.assertEqual(len(results) + len(results1), 10)
         for i, contour in enumerate(results + results1):
             self.assertAlmostEqual(contour.length(), list_expected_contour_lengths[i])
-        contour1 = wires.ClosedPolygon2D([volmdlr.Point2D(0, 0), volmdlr.Point2D(1, 0),
-                                          volmdlr.Point2D(1, 1), volmdlr.Point2D(0, 1)])
+        contour1 = wires.ClosedPolygon2D([design3d.Point2D(0, 0), design3d.Point2D(1, 0),
+                                          design3d.Point2D(1, 1), design3d.Point2D(0, 1)])
         contour1 = wires.Contour2D(contour1.line_segments)
-        contour2 = contour1.translation(volmdlr.Vector2D(0.3, 0))
+        contour2 = contour1.translation(design3d.Vector2D(0.3, 0))
         wire_crossings = contour1.cut_by_wire(contour2)
         self.assertEqual(len(wire_crossings), 2)
         self.assertAlmostEqual(wire_crossings[0].length(), 2.6)
@@ -91,56 +91,56 @@ class TestContour2D(unittest.TestCase):
         self.assertAlmostEqual(stringer_contour_offset.area(), 546.1486677646164)
 
     def test_edge_crossings(self):
-        points = [volmdlr.Point2D(-0.3, -0.2), volmdlr.Point2D(0.3, -0.2),
-                  volmdlr.Point2D(0.2, 0.2), volmdlr.Point2D(0, 0.35), volmdlr.Point2D(-0.2, 0.2)]
+        points = [design3d.Point2D(-0.3, -0.2), design3d.Point2D(0.3, -0.2),
+                  design3d.Point2D(0.2, 0.2), design3d.Point2D(0, 0.35), design3d.Point2D(-0.2, 0.2)]
         contour = wires.ClosedPolygon2D(points)
-        lineseg = edges.LineSegment2D(volmdlr.Point2D(-.3, -.3), volmdlr.Point2D(.3, .3))
-        lineseg1 = edges.LineSegment2D(volmdlr.Point2D(-.3, -.3), volmdlr.Point2D(.2, .2))
+        lineseg = edges.LineSegment2D(design3d.Point2D(-.3, -.3), design3d.Point2D(.3, .3))
+        lineseg1 = edges.LineSegment2D(design3d.Point2D(-.3, -.3), design3d.Point2D(.2, .2))
         edge_crossings = contour.edge_crossings(lineseg)
         edge_crossings1 = contour.edge_crossings(lineseg1)
         wire = wires.Wire2D([edges.LineSegment2D(p1, p2) for p1, p2 in (points[:2], points[1:3])])
         wire_edge_crossings = wire.edge_crossings(lineseg)
         self.assertEqual(len(edge_crossings), 2)
-        self.assertTrue(edge_crossings[0].is_close(volmdlr.Point2D(-0.2, -0.2)))
-        self.assertTrue(edge_crossings[1].is_close(volmdlr.Point2D(0.2, 0.2)))
+        self.assertTrue(edge_crossings[0].is_close(design3d.Point2D(-0.2, -0.2)))
+        self.assertTrue(edge_crossings[1].is_close(design3d.Point2D(0.2, 0.2)))
         self.assertEqual(len(edge_crossings1), 1)
-        self.assertTrue(edge_crossings1[0].is_close(volmdlr.Point2D(-0.2, -0.2)))
+        self.assertTrue(edge_crossings1[0].is_close(design3d.Point2D(-0.2, -0.2)))
         self.assertEqual(len(wire_edge_crossings), 1)
-        self.assertTrue(wire_edge_crossings[0].is_close(volmdlr.Point2D(-0.2, -0.2)))
+        self.assertTrue(wire_edge_crossings[0].is_close(design3d.Point2D(-0.2, -0.2)))
 
     def test_crossings(self):
         contour_crossings = contour2_unittest.wire_crossings(self.contour3)
-        expected_crossings = [volmdlr.Point2D(0.003455042474764269, 0.010365521626940934),
-                              volmdlr.Point2D(-0.08592141662920678, -0.26441019657119236),
-                              volmdlr.Point2D(1.3565385114925572, 0.4261540459702289),
-                              volmdlr.Point2D(1.062649150008717, 1.6296941038180754),
-                              volmdlr.Point2D(-0.8413589025398691, 1.0502025995770785),
-                              volmdlr.Point2D(-0.16551404839994044, -0.5695209737217725),
-                              volmdlr.Point2D(0.3497299962331255, -1.1558059537665162),
-                              volmdlr.Point2D(0.5885392751147405, -1.116467059799847)]
+        expected_crossings = [design3d.Point2D(0.003455042474764269, 0.010365521626940934),
+                              design3d.Point2D(-0.08592141662920678, -0.26441019657119236),
+                              design3d.Point2D(1.3565385114925572, 0.4261540459702289),
+                              design3d.Point2D(1.062649150008717, 1.6296941038180754),
+                              design3d.Point2D(-0.8413589025398691, 1.0502025995770785),
+                              design3d.Point2D(-0.16551404839994044, -0.5695209737217725),
+                              design3d.Point2D(0.3497299962331255, -1.1558059537665162),
+                              design3d.Point2D(0.5885392751147405, -1.116467059799847)]
         self.assertEqual(len(contour_crossings), len(expected_crossings))
         for crossing, expected_crossing in zip(contour_crossings, expected_crossings):
             self.assertTrue(crossing.is_close(expected_crossing))
-        points = [volmdlr.Point2D(-0.3, -0.2), volmdlr.Point2D(0.3, -0.2),
-                  volmdlr.Point2D(0.2, 0.2), volmdlr.Point2D(0, 0.3), volmdlr.Point2D(-0.2, 0.2)]
-        contour = volmdlr.wires.ClosedPolygon2D(points)
-        primitives = [volmdlr.edges.LineSegment2D(volmdlr.Point2D(-0.35, -0.1), volmdlr.Point2D(-0.1, 0)),
-                      volmdlr.edges.LineSegment2D(volmdlr.Point2D(-0.1, 0), volmdlr.Point2D(0.2, 0.2)),
-                      volmdlr.edges.LineSegment2D(volmdlr.Point2D(0.2, 0.2), volmdlr.Point2D(0.3, 0.3))]
-        wire = volmdlr.wires.Wire2D(primitives)
-        wire2 = volmdlr.wires.Wire2D(primitives[:-1])
-        wire3 = volmdlr.wires.Wire2D(primitives[:-1] + [volmdlr.edges.LineSegment2D(
-            volmdlr.Point2D(0.2, 0.2), volmdlr.Point2D(0.1, 0.0))])
+        points = [design3d.Point2D(-0.3, -0.2), design3d.Point2D(0.3, -0.2),
+                  design3d.Point2D(0.2, 0.2), design3d.Point2D(0, 0.3), design3d.Point2D(-0.2, 0.2)]
+        contour = design3d.wires.ClosedPolygon2D(points)
+        primitives = [design3d.edges.LineSegment2D(design3d.Point2D(-0.35, -0.1), design3d.Point2D(-0.1, 0)),
+                      design3d.edges.LineSegment2D(design3d.Point2D(-0.1, 0), design3d.Point2D(0.2, 0.2)),
+                      design3d.edges.LineSegment2D(design3d.Point2D(0.2, 0.2), design3d.Point2D(0.3, 0.3))]
+        wire = design3d.wires.Wire2D(primitives)
+        wire2 = design3d.wires.Wire2D(primitives[:-1])
+        wire3 = design3d.wires.Wire2D(primitives[:-1] + [design3d.edges.LineSegment2D(
+            design3d.Point2D(0.2, 0.2), design3d.Point2D(0.1, 0.0))])
         wire_crossings = contour.wire_crossings(wire)
         wire_crossings2 = contour.wire_crossings(wire2)
         wire_crossings3 = contour.wire_crossings(wire3)
         self.assertEqual(len(wire_crossings), 2)
-        self.assertTrue(wire_crossings[0].is_close(volmdlr.Point2D(-0.26666666666666666, -0.0666666666666666)))
-        self.assertTrue(wire_crossings[1].is_close(volmdlr.Point2D(0.2, 0.19999999999999996)))
+        self.assertTrue(wire_crossings[0].is_close(design3d.Point2D(-0.26666666666666666, -0.0666666666666666)))
+        self.assertTrue(wire_crossings[1].is_close(design3d.Point2D(0.2, 0.19999999999999996)))
         self.assertEqual(len(wire_crossings2), 1)
-        self.assertTrue(wire_crossings2[0].is_close(volmdlr.Point2D(-0.26666666666666666, -0.0666666666666666)))
+        self.assertTrue(wire_crossings2[0].is_close(design3d.Point2D(-0.26666666666666666, -0.0666666666666666)))
         self.assertEqual(len(wire_crossings3), 1)
-        self.assertTrue(wire_crossings3[0].is_close(volmdlr.Point2D(-0.26666666666666666, -0.0666666666666666)))
+        self.assertTrue(wire_crossings3[0].is_close(design3d.Point2D(-0.26666666666666666, -0.0666666666666666)))
 
     def test_split_with_two_points(self):
         expected_results = [(3, 0.3499999999999999, 3, 0.85),
@@ -155,9 +155,9 @@ class TestContour2D(unittest.TestCase):
             self.assertAlmostEqual(sum(prim.length() for prim in inside_prims), expected_inside_[1])
             self.assertEqual(len(outside_prims), expected_outside_[0])
             self.assertAlmostEqual(sum(prim.length() for prim in outside_prims), expected_outside_[1])
-            contour1 = wires.ClosedPolygon2D([volmdlr.Point2D(0, 0), volmdlr.Point2D(1, 0),
-                                              volmdlr.Point2D(1, 1), volmdlr.Point2D(0, 1)])
-            contour2 = contour1.translation(volmdlr.Vector2D(0.3, 0))
+            contour1 = wires.ClosedPolygon2D([design3d.Point2D(0, 0), design3d.Point2D(1, 0),
+                                              design3d.Point2D(1, 1), design3d.Point2D(0, 1)])
+            contour2 = contour1.translation(design3d.Vector2D(0.3, 0))
             self.assertFalse(contour1.wire_crossings(contour2))
 
     def test_extract_with_points(self):
@@ -172,7 +172,7 @@ class TestContour2D(unittest.TestCase):
             self.assertAlmostEqual(sum(prim.length() for prim in outside_prims), list_expected_outside_params[i][1])
 
     def test_split_by_line(self):
-        line = curves.Line2D(volmdlr.Point2D(volmdlr.TWO_PI, 0.1), volmdlr.Point2D(volmdlr.TWO_PI, -0.1))
+        line = curves.Line2D(design3d.Point2D(design3d.TWO_PI, 0.1), design3d.Point2D(design3d.TWO_PI, -0.1))
         contour = wires.Contour2D.from_json(os.path.join(folder, "contour_to_split.json"))
         intersection = contour.line_intersections(line)[0][0]
         contour1, contour2 = contour.split_by_line(line)
@@ -180,20 +180,20 @@ class TestContour2D(unittest.TestCase):
         self.assertTrue(contour2.primitives[0].start.is_close(intersection))
 
     def test_closest_point_to_point2(self):
-        point1 = volmdlr.Point2D(1.5, -1.5)
-        point2 = volmdlr.Point2D(-1, -1)
+        point1 = design3d.Point2D(1.5, -1.5)
+        point2 = design3d.Point2D(-1, -1)
         closest_point1 = contour2_unittest.closest_point_to_point2(point1)
-        self.assertEqual(closest_point1, volmdlr.Point2D(1.0, -1.0))
+        self.assertEqual(closest_point1, design3d.Point2D(1.0, -1.0))
         closest_point2 = contour2_unittest.closest_point_to_point2(point2)
-        self.assertEqual(closest_point2, volmdlr.Point2D(-2.0, 0.7))
+        self.assertEqual(closest_point2, design3d.Point2D(-2.0, 0.7))
 
     def test_furthest_point_to_point2(self):
-        point1 = volmdlr.Point2D(1.5, -1.5)
-        point2 = volmdlr.Point2D(-1, -1)
+        point1 = design3d.Point2D(1.5, -1.5)
+        point2 = design3d.Point2D(-1, -1)
         furthest_point1 = contour2_unittest.get_furthest_point_to_point2(point1)
-        self.assertEqual(furthest_point1, volmdlr.Point2D(-2.0, 1.0))
+        self.assertEqual(furthest_point1, design3d.Point2D(-2.0, 1.0))
         furthest_point2 = contour2_unittest.get_furthest_point_to_point2(point2)
-        self.assertEqual(furthest_point2, volmdlr.Point2D(1.5, 1.0))
+        self.assertEqual(furthest_point2, design3d.Point2D(1.5, 1.0))
 
     def test_intersection_contour_with(self):
         vol = DessiaObject.from_json(os.path.join(folder, "test_intersection_contour_with.json"))
@@ -259,9 +259,9 @@ class TestContour2D(unittest.TestCase):
         self.assertAlmostEqual(merge_not_adjacent_contour.length(), 0.1589126915239475)
         merge_not_adjacent_contour = contour1.merge_not_adjacent_contour(contour2)
         self.assertAlmostEqual(merge_not_adjacent_contour.length(), 0.1589126915239475)
-        contour2 = volmdlr.wires.Contour2D.from_points(
-            [volmdlr.Point2D(-0.014284827066811355, 0.00644881122080076), volmdlr.Point2D(-0.008, 0.0060),
-             volmdlr.Point2D(-0.01438263879891807, 0.005871523081583764)])
+        contour2 = design3d.wires.Contour2D.from_points(
+            [design3d.Point2D(-0.014284827066811355, 0.00644881122080076), design3d.Point2D(-0.008, 0.0060),
+             design3d.Point2D(-0.01438263879891807, 0.005871523081583764)])
         contours[0] = contour2
         contour1, contour2 = contours
         merge_not_adjacent_contour1 = contour2.merge_not_adjacent_contour(contour1)

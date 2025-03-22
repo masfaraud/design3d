@@ -13,16 +13,13 @@ from typing import List
 from binaryornot.check import is_binary
 from kaitaistruct import KaitaiStream
 
-import dessia_common.core as dc  # isort: skip
-from dessia_common.files import BinaryFile, StringFile  # isort: skip
-
-import design3d as vm
-import design3d.core as vmc
-import design3d.faces as vmf
+import design3d as d3d
+import design3d.core as d3dc
+import design3d.faces as d3df
 from design3d import shells
 
 
-class Stl(dc.DessiaObject):
+class Stl:
     """
     STL files are used to represent simple 3D models, defined using triangular 3D faces.
 
@@ -45,14 +42,14 @@ class Stl(dc.DessiaObject):
 
     _dessia_methods = ['from_text_stream', 'from_text_stream', 'to_closed_shell', 'to_open_shell']
 
-    def __init__(self, triangles: List[vmf.Triangle3D], name: str = ''):
+    def __init__(self, triangles: List[d3df.Triangle3D], name: str = ''):
         warnings.warn(
             "'design3d.stl.Stl' class is deprecated. Use 'design3d.display.Mesh3D' instead",
             DeprecationWarning
         )
 
         self.triangles = triangles
-        dc.DessiaObject.__init__(self, name=name)
+        self.name=name
 
         self.normals = None
 
@@ -67,7 +64,7 @@ class Stl(dc.DessiaObject):
         :type distance_multiplier: float
 
         :return: A list of Point3D objects.
-        :rtype: List[vm.Point3D]
+        :rtype: List[d3d.Point3D]
         """
         if is_binary(filename):
             with open(filename, 'rb') as file:
@@ -81,16 +78,16 @@ class Stl(dc.DessiaObject):
                         print('reading stl',
                               round(i / num_triangles * 100, 2), '%')
                     # First is normal, unused
-                    _ = vm.Vector3D(stream.read_f4le(),
+                    _ = d3d.Vector3D(stream.read_f4le(),
                                     stream.read_f4le(),
                                     stream.read_f4le())
-                    p1 = vm.Point3D(distance_multiplier * stream.read_f4le(),
+                    p1 = d3d.Point3D(distance_multiplier * stream.read_f4le(),
                                     distance_multiplier * stream.read_f4le(),
                                     distance_multiplier * stream.read_f4le())
-                    p2 = vm.Point3D(distance_multiplier * stream.read_f4le(),
+                    p2 = d3d.Point3D(distance_multiplier * stream.read_f4le(),
                                     distance_multiplier * stream.read_f4le(),
                                     distance_multiplier * stream.read_f4le())
-                    p3 = vm.Point3D(distance_multiplier * stream.read_f4le(),
+                    p3 = d3d.Point3D(distance_multiplier * stream.read_f4le(),
                                     distance_multiplier * stream.read_f4le(),
                                     distance_multiplier * stream.read_f4le())
                     all_points.extend([p1, p2, p3])
@@ -99,7 +96,7 @@ class Stl(dc.DessiaObject):
         return all_points
 
     @classmethod
-    def from_binary_stream(cls, stream: BinaryFile, distance_multiplier: float = 0.001):
+    def from_binary_stream(cls, stream, distance_multiplier: float = 0.001):
         """
         Create an STL object from a binary stream.
 
@@ -128,20 +125,20 @@ class Stl(dc.DessiaObject):
             if i % 5000 == 0:
                 print('reading stl',
                       round(i / num_triangles * 100, 2), '%')
-            _ = vm.Vector3D(stream.read_f4le(),
+            _ = d3d.Vector3D(stream.read_f4le(),
                             stream.read_f4le(),
                             stream.read_f4le())
-            p1 = vm.Point3D(distance_multiplier * stream.read_f4le(),
+            p1 = d3d.Point3D(distance_multiplier * stream.read_f4le(),
                             distance_multiplier * stream.read_f4le(),
                             distance_multiplier * stream.read_f4le())
-            p2 = vm.Point3D(distance_multiplier * stream.read_f4le(),
+            p2 = d3d.Point3D(distance_multiplier * stream.read_f4le(),
                             distance_multiplier * stream.read_f4le(),
                             distance_multiplier * stream.read_f4le())
-            p3 = vm.Point3D(distance_multiplier * stream.read_f4le(),
+            p3 = d3d.Point3D(distance_multiplier * stream.read_f4le(),
                             distance_multiplier * stream.read_f4le(),
                             distance_multiplier * stream.read_f4le())
             try:
-                triangles[i] = vmf.Triangle3D(p1, p2, p3)
+                triangles[i] = d3df.Triangle3D(p1, p2, p3)
             except ZeroDivisionError:
                 invalid_triangles.append(i)
             except NotImplementedError:
@@ -156,7 +153,7 @@ class Stl(dc.DessiaObject):
         return cls(triangles, name=name)
 
     @classmethod
-    def from_text_stream(cls, stream: StringFile,
+    def from_text_stream(cls, stream,
                          distance_multiplier: float = 0.001):
         """
         Create an STL object from a text stream.
@@ -180,12 +177,12 @@ class Stl(dc.DessiaObject):
                 line = line.lstrip(' ')
                 x, y, z = [i for i in line.split(' ') if i]
 
-                points.append(vm.Point3D(distance_multiplier * float(x),
+                points.append(d3d.Point3D(distance_multiplier * float(x),
                                          distance_multiplier * float(y),
                                          distance_multiplier * float(z)))
             if 'endfacet' in line:
                 try:
-                    triangles.append(vmf.Triangle3D(points[0],
+                    triangles.append(d3df.Triangle3D(points[0],
                                                     points[1],
                                                     points[2]))
                 except (ZeroDivisionError, NotImplementedError):  # NotImplementedError comes from equal points
@@ -298,23 +295,23 @@ class Stl(dc.DessiaObject):
         Convert the STL object to a volume model.
 
         :return: A volume model representation of the STL object.
-        :rtype: vmc.VolumeModel
+        :rtype: d3dc.VolumeModel
         """
         closed_shell = self.to_closed_shell()
-        return vmc.VolumeModel([closed_shell], name=self.name)
+        return d3dc.VolumeModel([closed_shell], name=self.name)
 
     def extract_points(self):
         """
         Extract the unique points from the STL object.
 
         :return: A list of unique Point3D objects.
-        :rtype: List[vm.Point3D]
+        :rtype: List[d3d.Point3D]
         """
         points1 = [triangle.point1 for triangle in self.triangles]
         points2 = [triangle.point2 for triangle in self.triangles]
         points3 = [triangle.point3 for triangle in self.triangles]
 
-        valid_points = vm.Vector3D.remove_duplicate(points1 + points2 + points3)
+        valid_points = d3d.Vector3D.remove_duplicate(points1 + points2 + points3)
         return valid_points
 
     # TODO: decide which algorithm to be used (no _BIS)
@@ -323,7 +320,7 @@ class Stl(dc.DessiaObject):
         Extract the unique points from the STL object.
 
         :return: A list of unique Point3D objects.
-        :rtype: List[vm.Point3D]
+        :rtype: List[d3d.Point3D]
         """
         points = []
         for triangle in self.triangles:
@@ -346,25 +343,25 @@ class Stl(dc.DessiaObject):
                     new_point = triangle.point2 + (triangle.point3 - triangle.point2) * n / n_div
                     points.append(new_point)
 
-        valid_points = vm.Vector3D.remove_duplicate(points)
+        valid_points = d3d.Vector3D.remove_duplicate(points)
         return valid_points
 
     @classmethod
-    def from_display_mesh(cls, mesh: vm.display.Mesh3D):
+    def from_display_mesh(cls, mesh: d3d.display.Mesh3D):
         """
         Create an STL object from a display mesh.
 
         :param mesh: The display mesh to convert to an STL object.
-        :type mesh: vm.display.DisplayMesh3D
+        :type mesh: d3d.display.DisplayMesh3D
         :return: An instance of the Stl class.
         :rtype: Stl
         """
         triangles = []
         for vertex1, vertex2, vertex3 in mesh.triangles_vertices:
-            point1 = vm.Point3D(*vertex1)
-            point2 = vm.Point3D(*vertex2)
-            point3 = vm.Point3D(*vertex3)
-            triangles.append(vmf.Triangle3D(point1, point2, point3))
+            point1 = d3d.Point3D(*vertex1)
+            point2 = d3d.Point3D(*vertex2)
+            point3 = d3d.Point3D(*vertex3)
+            triangles.append(d3df.Triangle3D(point1, point2, point3))
         return cls(triangles)
 
     def get_normals(self):
@@ -385,7 +382,7 @@ class Stl(dc.DessiaObject):
                     points_normals[point] = [normal]
 
         for key, value in points_normals.items():
-            point_normal = vm.O3D
+            point_normal = d3d.O3D
             for point in value:
                 point_normal += point
             points_normals[key] = point_normal

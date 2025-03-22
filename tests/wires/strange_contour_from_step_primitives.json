@@ -1,34 +1,34 @@
 {
-  "object_class": "volmdlr.core.VolumeModel",
+  "object_class": "design3d.core.VolumeModel",
   "name": "",
   "primitives": [
     {
-      "object_class": "volmdlr.edges.LineSegment3D",
+      "object_class": "design3d.edges.LineSegment3D",
       "name": "",
       "start": {
-        "object_class": "volmdlr.Point3D",
+        "object_class": "design3d.Point3D",
         "x": 0.344020971284,
         "y": 0.150247152124,
         "z": 0.362454876962
       },
       "end": {
-        "object_class": "volmdlr.Point3D",
+        "object_class": "design3d.Point3D",
         "x": 0.344020971919,
         "y": 0.15036965205800001,
         "z": 0.362454876697
       }
     },
     {
-      "object_class": "volmdlr.edges.LineSegment3D",
+      "object_class": "design3d.edges.LineSegment3D",
       "name": "",
       "start": {
-        "object_class": "volmdlr.Point3D",
+        "object_class": "design3d.Point3D",
         "x": 0.344020971919,
         "y": 0.15036965205800001,
         "z": 0.362454876697
       },
       "end": {
-        "object_class": "volmdlr.Point3D",
+        "object_class": "design3d.Point3D",
         "x": 0.344020971284,
         "y": 0.150247152124,
         "z": 0.362454876962

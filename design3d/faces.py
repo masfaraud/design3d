@@ -11,13 +11,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import triangle as triangle_lib
 
-from dessia_common.core import DessiaObject
-
 import design3d.core
 from design3d.core import EdgeStyle
 import design3d.core_compiled
-import design3d.display as vmd
-import design3d.edges as vme
+import design3d.display as d3dd
+import design3d.edges as d3de
 import design3d.curves as design3d_curves
 import design3d.geometry
 import design3d.grid
@@ -99,9 +97,9 @@ class Face3D(design3d.core.Primitive3D):
 
         design3d.core.Primitive3D.__init__(self, reference_path=reference_path, name=name)
 
-    def to_dict(self, *args, **kwargs):
-        """Avoids storing points in memo that makes serialization slow."""
-        return DessiaObject.to_dict(self, use_pointers=False)
+    # def to_dict(self, *args, **kwargs):
+    #     """Avoids storing points in memo that makes serialization slow."""
+    #     return DessiaObject.to_dict(self, use_pointers=False)
 
     def __hash__(self):
         """Computes the hash."""
@@ -341,10 +339,10 @@ class Face3D(design3d.core.Primitive3D):
     def helper_repair_inner_contours_periodicity(surface, outer_contour2d, inner_contours2d, primitives_mapping):
         """Translate inner contours if it's not inside the outer contour of the face."""
         outer_contour2d_brec = outer_contour2d.bounding_rectangle
-        umin_bound, umax_bound, vmin_bound, vmax_bound = outer_contour2d_brec.bounds()
+        umin_bound, umax_bound, d3din_bound, d3dax_bound = outer_contour2d_brec.bounds()
 
         def helper_translate_contour(inner_contour, inner_contour_brec):
-            umin, umax, vmin, vmax = inner_contour_brec.bounds()
+            umin, umax, d3din, d3dax = inner_contour_brec.bounds()
             delta_x = 0.0
             delta_y = 0.0
             if surface.x_periodicity:
@@ -354,9 +352,9 @@ class Face3D(design3d.core.Primitive3D):
                     delta_x = surface.x_periodicity
 
             if surface.y_periodicity:
-                if vmin > vmax_bound:
+                if d3din > d3dax_bound:
                     delta_y = -surface.y_periodicity
-                elif vmax < vmin_bound:
+                elif d3dax < d3din_bound:
                     delta_y = surface.y_periodicity
             translation_vector = design3d.Vector2D(delta_x, delta_y)
             return inner_contour.translation(translation_vector)
@@ -508,8 +506,8 @@ class Face3D(design3d.core.Primitive3D):
         tri = {'vertices': np.array(vertices).reshape((-1, 2)),
                'segments': np.array(segments).reshape((-1, 2)),
                }
-        triagulation = triangle_lib.triangulate(tri, tri_opt)
-        return vmd.Mesh2D(triagulation['vertices'], triangles=triagulation['triangles'])
+        triangulation = triangle_lib.triangulate(tri, tri_opt)
+        return d3dd.Mesh2D(triangulation['vertices'], triangles=triangulation['triangles'])
 
     def helper_to_mesh(self, polygon_data=None) -> design3d.display.Mesh2D:
         """
@@ -572,7 +570,7 @@ class Face3D(design3d.core.Primitive3D):
                'holes': np.array(holes).reshape((-1, 2))
                }
         triangulation = triangle_lib.triangulate(tri, tri_opt)
-        return vmd.Mesh2D(triangulation['vertices'], triangles=triangulation['triangles'])
+        return d3dd.Mesh2D(triangulation['vertices'], triangles=triangulation['triangles'].astype(np.int32))
 
     def triangulation(self):
         """Triangulates the face."""
@@ -580,7 +578,7 @@ class Face3D(design3d.core.Primitive3D):
         mesh2d = self.helper_to_mesh([outer_polygon, inner_polygons])
         if mesh2d is None:
             return None
-        return vmd.Mesh3D(self.surface3d.parametric_points_to_3d(mesh2d.vertices), mesh2d.triangles)
+        return d3dd.Mesh3D(self.surface3d.parametric_points_to_3d(mesh2d.vertices), mesh2d.triangles)
 
     def plot2d(self, ax=None, color="k", alpha=1):
         """Plot 2D of the face using matplotlib."""
@@ -693,7 +691,7 @@ class Face3D(design3d.core.Primitive3D):
 
         return intersections
 
-    def linesegment_intersections(self, linesegment: vme.LineSegment3D, abs_tol: float = 1e-6) -> List[design3d.Point3D]:
+    def linesegment_intersections(self, linesegment: d3de.LineSegment3D, abs_tol: float = 1e-6) -> List[design3d.Point3D]:
         """
         Get intersections between a face 3d and a Line Segment 3D.
 
@@ -709,7 +707,7 @@ class Face3D(design3d.core.Primitive3D):
                 linesegment_intersections.append(intersection)
         return linesegment_intersections
 
-    def fullarc_intersections(self, fullarc: vme.FullArc3D) -> List[design3d.Point3D]:
+    def fullarc_intersections(self, fullarc: d3de.FullArc3D) -> List[design3d.Point3D]:
         """
         Get intersections between a face 3d and a Full Arc 3D.
 
@@ -1395,7 +1393,7 @@ class Face3D(design3d.core.Primitive3D):
                     face_intersecting_primitives2d.append(primitive2d)
         return face_intersecting_primitives2d
 
-    def _is_linesegment_intersection_possible(self, linesegment: vme.LineSegment3D):
+    def _is_linesegment_intersection_possible(self, linesegment: d3de.LineSegment3D):
         """
         Verifies if intersection of face with line segment is possible or not.
 
@@ -1411,7 +1409,7 @@ class Face3D(design3d.core.Primitive3D):
             return False
         return True
 
-    def _get_linesegment_intersections_approximation(self, linesegment: vme.LineSegment3D):
+    def _get_linesegment_intersections_approximation(self, linesegment: d3de.LineSegment3D):
         """Generator line segment intersections approximation."""
         if self.__class__ == PlaneFace3D:
             faces_triangulation = [self]
@@ -1431,7 +1429,7 @@ class Face3D(design3d.core.Primitive3D):
             return True
         return False
 
-    def linesegment_intersections_approximation(self, linesegment: vme.LineSegment3D,
+    def linesegment_intersections_approximation(self, linesegment: d3de.LineSegment3D,
                                                 abs_tol: float = 1e-6) -> List[design3d.Point3D]:
         """Approximation of intersections face 3D and a line segment 3D."""
         if not self._is_linesegment_intersection_possible(linesegment):
@@ -1646,12 +1644,6 @@ class PlaneFace3D(Face3D):
     :type surface2d: Surface2D.
     """
 
-    _standalone_in_db = False
-    _generic_eq = True
-    _non_serializable_attributes = ["bounding_box", "polygon2D"]
-    _non_data_eq_attributes = ["name", "bounding_box", "outer_contour3d", "inner_contours3d"]
-    _non_data_hash_attributes = []
-
     def __init__(self, surface3d: surfaces.Plane3D, surface2d: surfaces.Surface2D,
                  reference_path: str = design3d.PATH_ROOT, name: str = ""):
         self._bbox = None
@@ -1731,7 +1723,7 @@ class PlaneFace3D(Face3D):
             return min_distance, point1, point2
         return min_distance
 
-    def linesegment_inside(self, linesegment: vme.LineSegment3D):
+    def linesegment_inside(self, linesegment: d3de.LineSegment3D):
         """
         Verifies if a line segment 3D is completely inside the plane face.
 
@@ -1777,7 +1769,7 @@ class PlaneFace3D(Face3D):
         points_intersections = face2_plane_intersections[0].sort_points_along_curve(points_intersections)
         planeface_intersections = []
         for point1, point2 in zip(points_intersections[:-1], points_intersections[1:]):
-            linesegment3d = vme.LineSegment3D(point1, point2)
+            linesegment3d = d3de.LineSegment3D(point1, point2)
             over_self_outer_contour = self.outer_contour3d.primitive_over_contour(linesegment3d)
             over_planeface_outer_contour = planeface.outer_contour3d.primitive_over_contour(linesegment3d)
             over_self_inner_contour = any(
@@ -2244,8 +2236,6 @@ class Triangle3D(PlaneFace3D):
     :type point3: design3d.Point3D.
     """
 
-    _standalone_in_db = False
-
     def __init__(
         self,
         point1: design3d.Point3D,
@@ -2311,9 +2301,9 @@ class Triangle3D(PlaneFace3D):
             plane3d = self.surface3d
             contour3d = design3d.wires.Contour3D(
                 [
-                    vme.LineSegment3D(self.point1, self.point2),
-                    vme.LineSegment3D(self.point2, self.point3),
-                    vme.LineSegment3D(self.point3, self.point1),
+                    d3de.LineSegment3D(self.point1, self.point2),
+                    d3de.LineSegment3D(self.point2, self.point3),
+                    d3de.LineSegment3D(self.point3, self.point1),
                 ]
             )
             contour2d = contour3d.to_2d(plane3d.frame.origin, plane3d.frame.u, plane3d.frame.v)
@@ -2413,7 +2403,7 @@ class Triangle3D(PlaneFace3D):
 
     def triangulation(self):
         """Computes the triangulation of the Triangle3D, basically returns itself."""
-        return vmd.Mesh3D(np.array([self.point1, self.point2, self.point3]), np.array([[0, 1, 2]], dtype=np.int8))
+        return d3dd.Mesh3D(np.array([self.point1, self.point2, self.point3]), np.array([[0, 1, 2]], dtype=np.int8))
 
     def translation(self, offset: design3d.Vector3D):
         """
@@ -2647,7 +2637,7 @@ class CylindricalFace3D(PeriodicalFaceMixin, Face3D):
 
         return "Surface(" + str(tag) + ") = {" + str(line_loop_tag)[1:-1] + "};"
 
-    def arc_inside(self, arc: vme.Arc3D):
+    def arc_inside(self, arc: d3de.Arc3D):
         """
         Verifies if Arc3D is inside a CylindricalFace3D.
 
@@ -2660,7 +2650,7 @@ class CylindricalFace3D(PeriodicalFaceMixin, Face3D):
             return False
         return self.arcellipse_inside(arc)
 
-    def arcellipse_inside(self, arcellipse: vme.ArcEllipse3D):
+    def arcellipse_inside(self, arcellipse: d3de.ArcEllipse3D):
         """
         Verifies if ArcEllipse3D is inside a CylindricalFace3D.
 
@@ -2709,7 +2699,7 @@ class CylindricalFace3D(PeriodicalFaceMixin, Face3D):
 
         point1 = self.surface3d.frame.origin + self.surface3d.frame.w * zmin
         point2 = self.surface3d.frame.origin + self.surface3d.frame.w * zmax
-        return design3d.wires.Wire3D([vme.LineSegment3D(point1, point2)])
+        return design3d.wires.Wire3D([d3de.LineSegment3D(point1, point2)])
 
 
 class ToroidalFace3D(PeriodicalFaceMixin, Face3D):
@@ -2951,9 +2941,9 @@ class ConicalFace3D(PeriodicalFaceMixin, Face3D):
         contour2d = conical_surface3d.contour3d_to_2d(contour)
         start_contour2d = contour2d.primitives[0].start
         end_contour2d = contour2d.primitives[-1].end
-        linesegment2d_1 = vme.LineSegment2D(end_contour2d, design3d.Point2D(end_contour2d.x, 0))
-        linesegment2d_2 = vme.LineSegment2D(design3d.Point2D(end_contour2d.x, 0), design3d.Point2D(start_contour2d.x, 0))
-        linesegment2d_3 = vme.LineSegment2D(design3d.Point2D(start_contour2d.x, 0), start_contour2d)
+        linesegment2d_1 = d3de.LineSegment2D(end_contour2d, design3d.Point2D(end_contour2d.x, 0))
+        linesegment2d_2 = d3de.LineSegment2D(design3d.Point2D(end_contour2d.x, 0), design3d.Point2D(start_contour2d.x, 0))
+        linesegment2d_3 = d3de.LineSegment2D(design3d.Point2D(start_contour2d.x, 0), start_contour2d)
 
         primitives2d = contour2d.primitives + [linesegment2d_1, linesegment2d_2, linesegment2d_3]
         outer_contour2d = design3d.wires.Contour2D(primitives2d)
@@ -2969,7 +2959,7 @@ class ConicalFace3D(PeriodicalFaceMixin, Face3D):
 
         point1 = self.surface3d.frame.origin + self.surface3d.frame.w * zmin
         point2 = self.surface3d.frame.origin + self.surface3d.frame.w * zmax
-        return design3d.wires.Wire3D([vme.LineSegment3D(point1, point2)])
+        return design3d.wires.Wire3D([d3de.LineSegment3D(point1, point2)])
 
     def circle_inside(self, circle: design3d_curves.Circle3D):
         """
@@ -3395,7 +3385,7 @@ class RevolutionFace3D(Face3D):
             return None
         if scale_factor != 1:
             mesh2d.vertices[:, 1] /= scale_factor
-        return vmd.Mesh3D(self.surface3d.parametric_points_to_3d(mesh2d.vertices), mesh2d.triangles)
+        return d3dd.Mesh3D(self.surface3d.parametric_points_to_3d(mesh2d.vertices), mesh2d.triangles)
 
 
 class BSplineFace3D(Face3D):
@@ -3849,13 +3839,13 @@ class BSplineFace3D(Face3D):
             vector2 = interior - end
             if vector1.is_colinear_to(vector2) or vector1.norm() == 0 or vector2.norm() == 0:
                 return None
-            return vme.Arc3D.from_3_points(start, interior, end)
+            return d3de.Arc3D.from_3_points(start, interior, end)
         interior = edge.point_at_abscissa(0.5 * edge.length())
         vector1 = interior - edge.start
         vector2 = interior - edge.end
         if vector1.is_colinear_to(vector2) or vector1.norm() == 0 or vector2.norm() == 0:
             return None
-        return vme.Arc3D.from_3_points(edge.start, interior, edge.end)
+        return d3de.Arc3D.from_3_points(edge.start, interior, edge.end)
 
     def get_approximating_arc_parameters(self, curve_list):
         """
@@ -3889,10 +3879,10 @@ class BSplineFace3D(Face3D):
         u_curves = surface_curves["u"]
         v_curves = surface_curves["v"]
         u_curves = [
-            primitive.simplify for primitive in u_curves if not isinstance(primitive.simplify, vme.LineSegment3D)
+            primitive.simplify for primitive in u_curves if not isinstance(primitive.simplify, d3de.LineSegment3D)
         ]
         v_curves = [
-            primitive.simplify for primitive in v_curves if not isinstance(primitive.simplify, vme.LineSegment3D)
+            primitive.simplify for primitive in v_curves if not isinstance(primitive.simplify, d3de.LineSegment3D)
         ]
         u_radius, u_centers = self.get_approximating_arc_parameters(u_curves)
         v_radius, v_centers = self.get_approximating_arc_parameters(v_curves)
@@ -3919,25 +3909,25 @@ class BSplineFace3D(Face3D):
         is_line = False
         neutral_fiber = None
         if not neutral_fiber_points[0].is_close(neutral_fiber_points[-1]):
-            neutral_fiber = vme.LineSegment3D(neutral_fiber_points[0], neutral_fiber_points[-1])
+            neutral_fiber = d3de.LineSegment3D(neutral_fiber_points[0], neutral_fiber_points[-1])
             is_line = all(neutral_fiber.point_belongs(point) for point in neutral_fiber_points)
         if not is_line:
-            neutral_fiber = vme.BSplineCurve3D.from_points_interpolation(
+            neutral_fiber = d3de.BSplineCurve3D.from_points_interpolation(
                 neutral_fiber_points, min(self.surface3d.degree_u, self.surface3d.degree_v)
             )
-        umin, umax, vmin, vmax = self.surface2d.outer_contour.bounding_rectangle.bounds()
+        umin, umax, d3din, d3dax = self.surface2d.outer_contour.bounding_rectangle.bounds()
         min_bound_u, max_bound_u, min_bound_v, max_bound_v = self.surface3d.domain
-        if not math.isclose(umin, min_bound_u, rel_tol=0.01) or not math.isclose(vmin, min_bound_v, rel_tol=0.01):
-            point3d_min = self.surface3d.point2d_to_3d(design3d.Point2D(umin, vmin))
+        if not math.isclose(umin, min_bound_u, rel_tol=0.01) or not math.isclose(d3din, min_bound_v, rel_tol=0.01):
+            point3d_min = self.surface3d.point2d_to_3d(design3d.Point2D(umin, d3din))
             point1 = neutral_fiber.point_projection(point3d_min)[0]
         else:
             point1 = neutral_fiber.start
-        if not math.isclose(umax, max_bound_u, rel_tol=0.01) or not math.isclose(vmax, max_bound_v, rel_tol=0.01):
-            point3d_max = self.surface3d.point2d_to_3d(design3d.Point2D(umax, vmax))
+        if not math.isclose(umax, max_bound_u, rel_tol=0.01) or not math.isclose(d3dax, max_bound_v, rel_tol=0.01):
+            point3d_max = self.surface3d.point2d_to_3d(design3d.Point2D(umax, d3dax))
             return design3d.wires.Wire3D([neutral_fiber.trim(point1, neutral_fiber.point_projection(point3d_max)[0])])
         return design3d.wires.Wire3D([neutral_fiber.trim(point1, neutral_fiber.end)])
 
-    def linesegment_intersections(self, linesegment: vme.LineSegment3D, abs_tol: float = 1e-6) -> List[design3d.Point3D]:
+    def linesegment_intersections(self, linesegment: d3de.LineSegment3D, abs_tol: float = 1e-6) -> List[design3d.Point3D]:
         """
         Get intersections between a BSpline face 3d and a Line Segment 3D.
 

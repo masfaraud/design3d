@@ -7,17 +7,17 @@
 
 # %% Libraries
 
-# import volmdlr.step as vms
+
 import matplotlib.pyplot as plt
 
-import volmdlr.grid
-from volmdlr.models import bspline_surfaces
-from volmdlr import faces
+import design3d.grid
+from design3d.models import bspline_surfaces
+from design3d import faces
 # %% Read Step file
 
 # file_path = 'bspline_surface_2.step'
 
-# step_file = vms.Step.from_file(file_path)
+# step_file = d3ds.Step.from_file(file_path)
 
 # model = step_file.to_volume_model()
 # primitives = model.primitives
@@ -42,7 +42,7 @@ contour2d = bspline_surface.contour3d_to_2d(contour3d)
 
 # %%% Dimensionned frame
 
-grid2d = volmdlr.grid.Grid2D.from_properties((0,1),(0,1),(10,10))
+grid2d = design3d.grid.Grid2D.from_properties((0,1),(0,1),(10,10))
 contour2d_dim = bspline_surface.contour2d_parametric_to_dimension(contour2d, grid2d)
 
 # %%% Display

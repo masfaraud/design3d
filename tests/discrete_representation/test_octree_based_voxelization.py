@@ -3,11 +3,11 @@ Unit testing of 'OctreeBasedVoxelization' class.
 """
 import unittest
 
-import volmdlr
-from volmdlr.core import BoundingBox, VolumeModel
-from volmdlr.discrete_representation import OctreeBasedVoxelization
-from volmdlr.primitives3d import Block, Cylinder, Sphere
-from volmdlr.shells import ClosedTriangleShell3D
+import design3d
+from design3d.core import BoundingBox, VolumeModel
+from design3d.discrete_representation import OctreeBasedVoxelization
+from design3d.primitives3d import Block, Cylinder, Sphere
+from design3d.shells import ClosedTriangleShell3D
 
 SHOW_BABYLONJS = False
 
@@ -18,9 +18,9 @@ class TestOctreeBasedVoxelizationCreation(unittest.TestCase):
     """
 
     def setUp(self):
-        self.block = Block(frame=volmdlr.OXYZ, name="block")
-        self.sphere = Sphere(center=volmdlr.Point3D(0.0, 0.0, 0.1), radius=0.1, name="sphere")
-        self.cylinder = Cylinder(frame=volmdlr.OXYZ, radius=0.1, length=0.2, name="cylinder")
+        self.block = Block(frame=design3d.OXYZ, name="block")
+        self.sphere = Sphere(center=design3d.Point3D(0.0, 0.0, 0.1), radius=0.1, name="sphere")
+        self.cylinder = Cylinder(frame=design3d.OXYZ, radius=0.1, length=0.2, name="cylinder")
         self.volume_model = VolumeModel(primitives=[self.sphere, self.cylinder], name="volume model")
 
     def test_voxelize_block(self):
@@ -32,7 +32,7 @@ class TestOctreeBasedVoxelizationCreation(unittest.TestCase):
             volume_model.babylonjs()
 
     def test_voxelize_translated_block(self):
-        translated_block = self.block.translation(volmdlr.Vector3D(11, 1.8, 4.8))
+        translated_block = self.block.translation(design3d.Vector3D(11, 1.8, 4.8))
         translated_block_voxelization = OctreeBasedVoxelization.from_shell(translated_block, 0.1, name="voxelization")
         self.assertEqual(1216, len(translated_block_voxelization))
 
@@ -75,8 +75,8 @@ class TestOctreeBasedVoxelizationBooleanOperation(unittest.TestCase):
     """
 
     def setUp(self):
-        self.sphere = Sphere(center=volmdlr.Point3D(0.0, 0.0, 0.1), radius=0.1, name="sphere")
-        self.cylinder = Cylinder(frame=volmdlr.OXYZ, radius=0.1, length=0.2, name="cylinder")
+        self.sphere = Sphere(center=design3d.Point3D(0.0, 0.0, 0.1), radius=0.1, name="sphere")
+        self.cylinder = Cylinder(frame=design3d.OXYZ, radius=0.1, length=0.2, name="cylinder")
         self.volume_model = VolumeModel(primitives=[self.sphere, self.cylinder], name="volume model")
 
         self.sphere_voxelization = OctreeBasedVoxelization.from_shell(self.sphere, 0.01, name="sphere voxelization")
@@ -100,8 +100,8 @@ class TestOctreeBasedVoxelizationBooleanOperation(unittest.TestCase):
             volume_model.babylonjs()
 
     def test_union_2(self):
-        block_1 = Block(frame=volmdlr.OXYZ)
-        block_2 = block_1.translation(volmdlr.Vector3D(0.5, 0.5, 0.5))
+        block_1 = Block(frame=design3d.OXYZ)
+        block_2 = block_1.translation(design3d.Vector3D(0.5, 0.5, 0.5))
 
         voxelization_1 = OctreeBasedVoxelization.from_shell(block_1, 0.1)
         voxelization_2 = OctreeBasedVoxelization.from_shell(block_2, 0.1)
@@ -163,7 +163,7 @@ class TestOctreeBasedVoxelizationManipulation(unittest.TestCase):
     """
 
     def setUp(self):
-        self.cylinder = Cylinder(frame=volmdlr.OXYZ, radius=0.1, length=0.2, name="cylinder")
+        self.cylinder = Cylinder(frame=design3d.OXYZ, radius=0.1, length=0.2, name="cylinder")
         self.cylinder_voxelization = OctreeBasedVoxelization.from_shell(
             self.cylinder, 0.01, name="cylinder voxelization"
         )
@@ -203,7 +203,7 @@ class TestOctreeBasedVoxelizationExport(unittest.TestCase):
     """
 
     def setUp(self):
-        self.sphere = Sphere(center=volmdlr.O3D, radius=0.1, name="sphere")
+        self.sphere = Sphere(center=design3d.O3D, radius=0.1, name="sphere")
         self.sphere_voxelization = OctreeBasedVoxelization.from_shell(self.sphere, 0.01, name="sphere voxelization")
 
     def test_min_grid_center(self):

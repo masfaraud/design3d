@@ -1,8 +1,8 @@
 import math
 import unittest
 import os
-import volmdlr
-from volmdlr import edges, faces, surfaces, wires
+import design3d
+from design3d import edges, faces, surfaces, wires
 from dessia_common.core import DessiaObject
 
 
@@ -10,25 +10,25 @@ folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'objects_cyli
 
 
 class TestCylindricalFace3D(unittest.TestCase):
-    cylindrical_surface1 = surfaces.CylindricalSurface3D(volmdlr.OXYZ, 0.32)
+    cylindrical_surface1 = surfaces.CylindricalSurface3D(design3d.OXYZ, 0.32)
     cylindrical_face1 = faces.CylindricalFace3D.from_surface_rectangular_cut(
         cylindrical_surface1, -0.01, 1.3, -0.1, 0.3)
 
-    cylindrical_surface2 = surfaces.CylindricalSurface3D(volmdlr.OXYZ, 12.0)
+    cylindrical_surface2 = surfaces.CylindricalSurface3D(design3d.OXYZ, 12.0)
     cylindrical_face2 = faces.CylindricalFace3D.from_surface_rectangular_cut(cylindrical_surface2, 0, 3.14, 0., 8.)
 
     def test_linesegment_intersections(self):
-        lineseg3d = edges.LineSegment3D(volmdlr.O3D, volmdlr.Point3D(0.3, 0.3, .3))
+        lineseg3d = edges.LineSegment3D(design3d.O3D, design3d.Point3D(0.3, 0.3, .3))
         line_inters = self.cylindrical_face1.linesegment_intersections(lineseg3d)
         self.assertEqual(len(line_inters), 1)
-        self.assertTrue(line_inters[0].is_close(volmdlr.Point3D(0.22627416, 0.22627416, 0.22627416)))
+        self.assertTrue(line_inters[0].is_close(design3d.Point3D(0.22627416, 0.22627416, 0.22627416)))
         cylindrical_face1 = faces.CylindricalFace3D.from_surface_rectangular_cut(
             self.cylindrical_surface1, -math.pi / 4, 1.5 * math.pi, -0.1, 0.3)
-        lineseg3d_2 = edges.LineSegment3D(volmdlr.Point3D(-0.3, -0.3, -.1), volmdlr.Point3D(0.3, 0.3, .3))
+        lineseg3d_2 = edges.LineSegment3D(design3d.Point3D(-0.3, -0.3, -.1), design3d.Point3D(0.3, 0.3, .3))
         line_inters_2 = cylindrical_face1.linesegment_intersections(lineseg3d_2)
         self.assertEqual(len(line_inters_2), 2)
-        self.assertTrue(line_inters_2[0].is_close(volmdlr.Point3D(0.2262741, 0.2262741, 0.2508494)))
-        self.assertTrue(line_inters_2[1].is_close(volmdlr.Point3D(-0.2262741, -0.2262741, -0.0508494)))
+        self.assertTrue(line_inters_2[0].is_close(design3d.Point3D(0.2262741, 0.2262741, 0.2508494)))
+        self.assertTrue(line_inters_2[1].is_close(design3d.Point3D(-0.2262741, -0.2262741, -0.0508494)))
 
     def test_triangulation_quality(self):
         """
@@ -37,9 +37,9 @@ class TestCylindricalFace3D(unittest.TestCase):
         triangulation = self.cylindrical_face2.triangulation()
         # ax = self.cylindrical_surface2.plot()
         for i1, i2, i3 in triangulation.triangles:
-            point1 = volmdlr.Point3D(*triangulation.vertices[i1])
-            point2 = volmdlr.Point3D(*triangulation.vertices[i2])
-            point3 = volmdlr.Point3D(*triangulation.vertices[i3])
+            point1 = design3d.Point3D(*triangulation.vertices[i1])
+            point2 = design3d.Point3D(*triangulation.vertices[i2])
+            point3 = design3d.Point3D(*triangulation.vertices[i3])
 
             triangle = faces.Triangle3D(point1, point2, point3)
             # triangle.plot(ax=ax)
@@ -91,12 +91,12 @@ class TestCylindricalFace3D(unittest.TestCase):
 
         self.assertEqual(face.surface2d.area(), 0.00077 * 2 * math.pi)
 
-        frame = volmdlr.Frame3D(volmdlr.O3D, volmdlr.X3D, volmdlr.Y3D, volmdlr.Z3D)
+        frame = design3d.Frame3D(design3d.O3D, design3d.X3D, design3d.Y3D, design3d.Z3D)
         cylindrical = surfaces.CylindricalSurface3D(frame, 0.2)
         fullarc1 = edges.FullArc3D.from_center_normal(
-            center=volmdlr.O3D, start_end=volmdlr.Point3D(0.2, 0.0, 0.0), normal=volmdlr.Z3D)
+            center=design3d.O3D, start_end=design3d.Point3D(0.2, 0.0, 0.0), normal=design3d.Z3D)
         fullarc2 = edges.FullArc3D.from_center_normal(
-            center=volmdlr.O3D, start_end=volmdlr.Point3D(-0.2, 0.0, 0.2), normal=volmdlr.Z3D)
+            center=design3d.O3D, start_end=design3d.Point3D(-0.2, 0.0, 0.2), normal=design3d.Z3D)
         contour1 = wires.Contour3D([fullarc1])
         contour2 = wires.Contour3D([fullarc2])
         face = faces.CylindricalFace3D.from_contours3d(cylindrical, [contour1, contour2])
@@ -117,7 +117,7 @@ class TestCylindricalFace3D(unittest.TestCase):
         self.assertEqual(neutral_fiber.length(), 0.4)
 
     def test_number_triangles(self):
-        cylindrical_surface1 = surfaces.CylindricalSurface3D(volmdlr.OXYZ, 0.32)
+        cylindrical_surface1 = surfaces.CylindricalSurface3D(design3d.OXYZ, 0.32)
         cylindrical_face1 = faces.CylindricalFace3D.from_surface_rectangular_cut(cylindrical_surface1,
                                                                                  -0.01, 1.3, -0.1, 0.3)
         triangulation = cylindrical_face1.triangulation()
@@ -129,12 +129,12 @@ class TestCylindricalFace3D(unittest.TestCase):
 
     def test_split_by_plane(self):
         R = 0.15
-        cylindricalsurface = surfaces.CylindricalSurface3D(volmdlr.OXYZ, R)
-        cylindricalface = faces.CylindricalFace3D.from_surface_rectangular_cut(cylindricalsurface, 0, volmdlr.TWO_PI,
+        cylindricalsurface = surfaces.CylindricalSurface3D(design3d.OXYZ, R)
+        cylindricalface = faces.CylindricalFace3D.from_surface_rectangular_cut(cylindricalsurface, 0, design3d.TWO_PI,
                                                                                -.25, .25)
         plane_face_cylindricalface_intersec = DessiaObject.from_json(
             os.path.join(folder, "plane_face_cylindrical_face_intersec.json"))
-        plane_face_3 = plane_face_cylindricalface_intersec.rotation(volmdlr.O3D, volmdlr.X3D, math.pi / 7)
+        plane_face_3 = plane_face_cylindricalface_intersec.rotation(design3d.O3D, design3d.X3D, math.pi / 7)
         split_by_plane = cylindricalface.split_by_plane(plane_face_3.surface3d)
         self.assertTrue(len(split_by_plane), 4)
         list_expected_points = DessiaObject.from_json(
@@ -164,51 +164,51 @@ class TestCylindricalFace3D(unittest.TestCase):
                              [0.6888878220595716, 0.6888878220595696, 0.1984154951054974, 0.19841549510549764],
                              [0.49133092691300395, 1.0377142752022748, 0.5464208749923458], [2.569944707187624],
                              []]]
-        conical_surface = surfaces.ConicalSurface3D(volmdlr.OXYZ, math.pi / 6)
+        conical_surface = surfaces.ConicalSurface3D(design3d.OXYZ, math.pi / 6)
         conical_face = faces.ConicalFace3D.from_surface_rectangular_cut(
-            conical_surface, 0, volmdlr.TWO_PI, 0, 2)
+            conical_surface, 0, design3d.TWO_PI, 0, 2)
 
-        cylindrical_surface1 = surfaces.CylindricalSurface3D(volmdlr.Frame3D(volmdlr.Point3D(.3, .3, 0.8),
-                                                                             volmdlr.Y3D, volmdlr.Z3D, volmdlr.X3D),
+        cylindrical_surface1 = surfaces.CylindricalSurface3D(design3d.Frame3D(design3d.Point3D(.3, .3, 0.8),
+                                                                             design3d.Y3D, design3d.Z3D, design3d.X3D),
                                                              0.3)
-        cylindrical_surface2 = surfaces.CylindricalSurface3D(volmdlr.Frame3D(volmdlr.Point3D(0, 0, 0.5),
-                                                                             volmdlr.Y3D, volmdlr.Z3D, volmdlr.X3D),
+        cylindrical_surface2 = surfaces.CylindricalSurface3D(design3d.Frame3D(design3d.Point3D(0, 0, 0.5),
+                                                                             design3d.Y3D, design3d.Z3D, design3d.X3D),
                                                              0.3)
-        cylindrical_surface3 = surfaces.CylindricalSurface3D(volmdlr.Frame3D(volmdlr.Point3D(0, 0, 1),
-                                                                             volmdlr.Y3D, volmdlr.Z3D, volmdlr.X3D),
+        cylindrical_surface3 = surfaces.CylindricalSurface3D(design3d.Frame3D(design3d.Point3D(0, 0, 1),
+                                                                             design3d.Y3D, design3d.Z3D, design3d.X3D),
                                                              0.3)
-        point = volmdlr.Point3D(0, math.tan(conical_surface.semi_angle), 1)
-        normal = volmdlr.Vector3D(0.0, -0.5773502691896256, 1.0)
+        point = design3d.Point3D(0, math.tan(conical_surface.semi_angle), 1)
+        normal = design3d.Vector3D(0.0, -0.5773502691896256, 1.0)
         center = point + normal * math.tan(conical_surface.semi_angle) / 2
-        cylindrical_surface4 = surfaces.CylindricalSurface3D(volmdlr.Frame3D(center,
-                                                                             volmdlr.Y3D, volmdlr.Z3D, volmdlr.X3D),
+        cylindrical_surface4 = surfaces.CylindricalSurface3D(design3d.Frame3D(center,
+                                                                             design3d.Y3D, design3d.Z3D, design3d.X3D),
                                                              math.tan(conical_surface.semi_angle) / 2)
-        vector1 = volmdlr.Vector3D(1, 1, 1)
+        vector1 = design3d.Vector3D(1, 1, 1)
         vector1 = vector1.unit_vector()
         vector2 = vector1.deterministic_unit_normal_vector()
         vector3 = vector1.cross(vector2)
-        frame = volmdlr.Frame3D(volmdlr.O3D, vector1, vector2, vector3)
+        frame = design3d.Frame3D(design3d.O3D, vector1, vector2, vector3)
         cylindrical_surface5 = surfaces.CylindricalSurface3D(frame, math.tan(conical_surface.semi_angle) / 2)
 
         for i, z in enumerate([-1, -0.5, 0]):
             for j, cylindrical_surface in enumerate([cylindrical_surface1, cylindrical_surface2, cylindrical_surface3,
                                                      cylindrical_surface4, cylindrical_surface5]):
                 cyl_face = faces.CylindricalFace3D.from_surface_rectangular_cut(
-                    cylindrical_surface, 0, volmdlr.TWO_PI, z, 2)
+                    cylindrical_surface, 0, design3d.TWO_PI, z, 2)
                 list_curves = cyl_face.face_intersections(conical_face)
                 self.assertEqual(len(list_curves), len(expected_results[i][j]))
                 for curve_solution, expected_result in zip(list_curves, expected_results[i][j]):
                     self.assertAlmostEqual(curve_solution.length(), expected_result, 6)
 
     def test_normal_at_point(self):
-        cylindricalsurface = surfaces.CylindricalSurface3D(volmdlr.OXYZ, 0.15)
+        cylindricalsurface = surfaces.CylindricalSurface3D(design3d.OXYZ, 0.15)
         cylindricalface = faces.CylindricalFace3D.from_surface_rectangular_cut(
-            cylindricalsurface, 0, volmdlr.TWO_PI, -.25, .25)
+            cylindricalsurface, 0, design3d.TWO_PI, -.25, .25)
 
-        point = volmdlr.Point3D(-0.15, 0.0, 0.0)
+        point = design3d.Point3D(-0.15, 0.0, 0.0)
 
         normal = cylindricalface.normal_at_point(point)
-        self.assertTrue(normal.is_close(volmdlr.Vector3D(-1, 0, 0)))
+        self.assertTrue(normal.is_close(design3d.Vector3D(-1, 0, 0)))
       
     def test_face_inside(self):
         face1, face2 = DessiaObject.from_json(
