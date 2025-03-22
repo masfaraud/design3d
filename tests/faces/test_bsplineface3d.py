@@ -1,9 +1,9 @@
 import unittest
 import os
 from time import perf_counter
-import volmdlr
-from volmdlr import edges, surfaces, wires, faces, core
-from volmdlr.models.bspline_surfaces import bspline_surface_1
+import design3d
+from design3d import edges, surfaces, wires, faces, core
+from design3d.models.bspline_surfaces import bspline_surface_1
 
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'objects_bspline_test')
@@ -18,15 +18,15 @@ class TestBSplineFace3D(unittest.TestCase):
         self.assertAlmostEqual(bbox.volume(), 0.00018, 5)
 
     def test_is_linesegment_crossing(self):
-        linesegment = edges.LineSegment3D(volmdlr.Point3D(4, 0, 0), volmdlr.Point3D(4, 2, 2))
+        linesegment = edges.LineSegment3D(design3d.Point3D(4, 0, 0), design3d.Point3D(4, 2, 2))
         self.assertTrue(self.bspline_face.is_linesegment_crossing(linesegment=linesegment))
 
     def test_linesegment_intersections_approximation(self):
         bsplineface = faces.BSplineFace3D.from_json(os.path.join(folder, 'bspline_face1.json'))
-        lineseg = edges.LineSegment3D(volmdlr.Point3D(0, 0, 00.0015), volmdlr.Point3D(0, 0.005, 0.0025))
+        lineseg = edges.LineSegment3D(design3d.Point3D(0, 0, 00.0015), design3d.Point3D(0, 0.005, 0.0025))
         intersections = bsplineface.linesegment_intersections(lineseg)
         self.assertEqual(len(intersections), 1)
-        self.assertTrue(intersections[0], volmdlr.Point3D(0.0, 0.002350000000000002, 0.0019700000000000004))
+        self.assertTrue(intersections[0], design3d.Point3D(0.0, 0.002350000000000002, 0.0019700000000000004))
 
     def test_from_contours3d(self):
         surface = surfaces.BSplineSurface3D.from_json(

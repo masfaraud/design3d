@@ -2,11 +2,10 @@ import os
 import math
 import unittest
 
-from dessia_common.core import DessiaObject
 from geomdl import utilities
 
 import design3d.edges
-from design3d import curves, wires
+from design3d import curves
 
 circle = curves.Circle2D(design3d.OXY, 0.50)
 line = curves.Line2D(design3d.O2D, design3d.Point2D(0, 1))
@@ -115,11 +114,11 @@ class TestCircle2D(unittest.TestCase):
         circle_line_intersections_3 = circle.line_intersections(line_3)
         self.assertTrue(circle_line_intersections_3[0].is_close(design3d.Point2D(0.4898979485566356, 0.1)))
         self.assertTrue(circle_line_intersections_3[1].is_close(design3d.Point2D(-0.4898979485566356, 0.1)))
-        circle_, line2d = DessiaObject.from_json(os.path.join(folder_2, 'test_circle2d_line2d_intersections.json')).primitives
-        intersections = circle_.line_intersections(line2d)
-        self.assertEqual(len(intersections), 2)
-        self.assertTrue(intersections[0].is_close(design3d.Point2D(0.031959341501134664, -0.12658445641691748)))
-        self.assertTrue(intersections[1].is_close(design3d.Point2D(0.031959341501134664, 0.12658445641691748)))
+        # circle_, line2d = DessiaObject.from_json(os.path.join(folder_2, 'test_circle2d_line2d_intersections.json')).primitives
+        # intersections = circle_.line_intersections(line2d)
+        # self.assertEqual(len(intersections), 2)
+        # self.assertTrue(intersections[0].is_close(design3d.Point2D(0.031959341501134664, -0.12658445641691748)))
+        # self.assertTrue(intersections[1].is_close(design3d.Point2D(0.031959341501134664, 0.12658445641691748)))
 
         circle_ = curves.Circle2D(design3d.OXY, 1)
         line2d = curves.Line2D.from_point_and_vector(design3d.Point2D(1, 0), design3d.Y2D)

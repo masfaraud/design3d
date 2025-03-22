@@ -2,9 +2,9 @@ import unittest
 import math
 import os
 
-import volmdlr
-from volmdlr.faces import SphericalFace3D
-from volmdlr import surfaces, wires
+import design3d
+from design3d.faces import SphericalFace3D
+from design3d import surfaces, wires
 from dessia_common.core import DessiaObject
 
 
@@ -59,10 +59,10 @@ class TestSphericalFace3D(unittest.TestCase):
         self.assertTrue(face.triangulation())
 
     def test_grid_points(self):
-        surface3d = surfaces.SphericalSurface3D(volmdlr.OXYZ, 1)
+        surface3d = surfaces.SphericalSurface3D(design3d.OXYZ, 1)
         outer_contour2d = wires.Contour2D.rectangle(-math.pi, math.pi, -0.5 * math.pi, 0.5 * math.pi)
         inner_contour2d = wires.Contour2D.rectangle_from_center_and_sides(
-            volmdlr.Point2D(0.0, 0.0), 0.5 * math.pi, 0.5 * math.pi, False)
+            design3d.Point2D(0.0, 0.0), 0.5 * math.pi, 0.5 * math.pi, False)
         surface2d = surfaces.Surface2D(outer_contour2d, [inner_contour2d])
         face = SphericalFace3D(surface3d, surface2d)
         grid_points = face.grid_points([10, 10])

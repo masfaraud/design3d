@@ -5,13 +5,13 @@ Unit testing of displaying various geomertry.
 import os
 import unittest
 
-import volmdlr.primitives3d as p3d
-from volmdlr import O2D, O3D, OXYZ, X3D, Point2D, Point3D
-from volmdlr.core import VolumeModel
-from volmdlr.curves import Circle2D
-from volmdlr.display import Mesh3D
-from volmdlr.step import Step
-from volmdlr.wires import Contour2D
+import design3d.primitives3d as p3d
+from design3d import O2D, O3D, OXYZ, X3D, Point2D, Point3D
+from design3d.core import VolumeModel
+from design3d.curves import Circle2D
+from design3d.display import Mesh3D
+from design3d.step import Step
+from design3d.wires import Contour2D
 
 FOLDER = os.path.dirname(os.path.realpath(__file__))
 SHOW_BABYLONJS = False

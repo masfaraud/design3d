@@ -1,10 +1,10 @@
 import os
 import unittest
-import volmdlr
-from volmdlr.wires import Contour3D
-from volmdlr.step import Step
-from volmdlr import edges, core
-from volmdlr.models.contours import contour3d
+import design3d
+from design3d.wires import Contour3D
+from design3d.step import Step
+from design3d import edges, core
+from design3d.models.contours import contour3d
 
 
 folder = os.path.dirname(os.path.realpath(__file__))
@@ -77,21 +77,21 @@ class TestContour3D(unittest.TestCase):
         self.assertTrue(contour.is_ordered(5e-6))
 
     def test_edge_intersections(self):
-        points = [volmdlr.Point3D(1.2918566581549966, 2.3839907440191492, 0.5678759590090421),
-                  volmdlr.Point3D(1.2067665579541171, -1.246879774203074, -0.4359328108960321),
-                  volmdlr.Point3D(-1.2905737351068276, -5.961765089244547, -0.9872550297481824),
-                  volmdlr.Point3D(7.33260591629263, -4.272128323147327, -0.4240427743824422),
-                  volmdlr.Point3D(7.115095014105684, 0.40888620982702983, 1.1362954032756774),
-                  volmdlr.Point3D(-3.0, 1.022248896290622, 0.5746069851843745),
-                  volmdlr.Point3D(2.739350840642852, -5.869347626045908, -0.7880999427201254)]
+        points = [design3d.Point3D(1.2918566581549966, 2.3839907440191492, 0.5678759590090421),
+                  design3d.Point3D(1.2067665579541171, -1.246879774203074, -0.4359328108960321),
+                  design3d.Point3D(-1.2905737351068276, -5.961765089244547, -0.9872550297481824),
+                  design3d.Point3D(7.33260591629263, -4.272128323147327, -0.4240427743824422),
+                  design3d.Point3D(7.115095014105684, 0.40888620982702983, 1.1362954032756774),
+                  design3d.Point3D(-3.0, 1.022248896290622, 0.5746069851843745),
+                  design3d.Point3D(2.739350840642852, -5.869347626045908, -0.7880999427201254)]
         bspline = edges.BSplineCurve3D.from_points_interpolation(points, 3)
         edge_intersections = contour3d.edge_intersections(bspline, abs_tol=1e-6)
-        expected_results = [volmdlr.Point3D(1.2918566581549966, 2.3839907440191492, 0.5678759590090421),
-                            volmdlr. Point3D(1.206766559907027, -1.2468797685507946, -0.4359328046874991),
-                            volmdlr. Point3D(-3.0, 1.0222488954206392, 0.5746069850600913),
-                            volmdlr. Point3D(-1.2905737300311637, -5.9617650927233345, -0.9872550300602736),
-                            volmdlr. Point3D(7.332606025327417, -4.272128068303522, -0.42404268513457977),
-                            volmdlr. Point3D(7.115095100684387, 0.408886063311686, 1.136295354437229)]
+        expected_results = [design3d.Point3D(1.2918566581549966, 2.3839907440191492, 0.5678759590090421),
+                            design3d. Point3D(1.206766559907027, -1.2468797685507946, -0.4359328046874991),
+                            design3d. Point3D(-3.0, 1.0222488954206392, 0.5746069850600913),
+                            design3d. Point3D(-1.2905737300311637, -5.9617650927233345, -0.9872550300602736),
+                            design3d. Point3D(7.332606025327417, -4.272128068303522, -0.42404268513457977),
+                            design3d. Point3D(7.115095100684387, 0.408886063311686, 1.136295354437229)]
         for intersection, expected_result in zip(edge_intersections, expected_results):
             self.assertTrue(intersection.is_close(expected_result))
 

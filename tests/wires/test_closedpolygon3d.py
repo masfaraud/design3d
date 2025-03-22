@@ -5,30 +5,30 @@ import unittest
 import math
 import random
 
-import volmdlr
-import volmdlr.core as vmc
-import volmdlr.display as vmd
-import volmdlr.wires as vmw
-import volmdlr.faces as vmf
+import design3d
+import design3d.core as vmc
+import design3d.display as vmd
+import design3d.wires as vmw
+import design3d.faces as vmf
 
 random.seed(781)
 
 class TestClosedPolygon3D(unittest.TestCase):
     
     def circular_polygon(self, mean_radius:float, delta_radius, expected_number_points:int,
-                         x:volmdlr.Vector3D, y:volmdlr.Vector3D, theta0:float=0.):
+                         x:design3d.Vector3D, y:design3d.Vector3D, theta0:float=0.):
         """
         Create a polygon around a circular pattern
         """
         theta = theta0
         points = []
-        theta_r = volmdlr.TWO_PI / expected_number_points
-        theta_end = theta0 + volmdlr.TWO_PI
+        theta_r = design3d.TWO_PI / expected_number_points
+        theta_end = theta0 + design3d.TWO_PI
         z = x.cross(y)
         initial_point = x.to_point()
         while theta < theta_end:
             radius = mean_radius + 2*(random.random() - 0.5)*delta_radius
-            points.append((radius * initial_point).rotation(volmdlr.O3D, z, theta))
+            points.append((radius * initial_point).rotation(design3d.O3D, z, theta))
             theta += theta_r + (random.random() - 0.5)*theta_r
         return vmw.ClosedPolygon3D(points)
 
@@ -36,16 +36,16 @@ class TestClosedPolygon3D(unittest.TestCase):
         z1 = 0.1
         z2 = 0.18
 
-        polygon1 = self.circular_polygon(0.15, 0.07, 12, volmdlr.X3D, volmdlr.Y3D)
-        polygon1 = polygon1.translation(z1*volmdlr.Z3D)
+        polygon1 = self.circular_polygon(0.15, 0.07, 12, design3d.X3D, design3d.Y3D)
+        polygon1 = polygon1.translation(z1*design3d.Z3D)
 
-        polygon2 = self.circular_polygon(0.17, 0.03, 25, volmdlr.X3D, volmdlr.Y3D)
-        polygon2 = polygon2.translation(z2*volmdlr.Z3D)
+        polygon2 = self.circular_polygon(0.17, 0.03, 25, design3d.X3D, design3d.Y3D)
+        polygon2 = polygon2.translation(z2*design3d.Z3D)
 
         ax = polygon1.plot()
         polygon2.plot(ax=ax, edge_style=vmc.EdgeStyle(color='r'))
 
-        sewing_triangles = polygon1.sewing(polygon2, volmdlr.X3D, volmdlr.Y3D)
+        sewing_triangles = polygon1.sewing(polygon2, design3d.X3D, design3d.Y3D)
         poly1_normal_out = 0.
         poly2_normal_out = 0.
 
