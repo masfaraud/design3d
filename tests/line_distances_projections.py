@@ -26,4 +26,3 @@ for i in range(100):
 
     assert point_projection_line.PointDistance(point) == line.PointDistance(point)
     assert point_projection_line_segment.PointDistance(point) == line_segment.PointDistance(point)
-
