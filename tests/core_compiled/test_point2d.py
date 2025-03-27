@@ -1,14 +1,14 @@
 """
-Unittest for volmdlr.Point2D
+Unittest for design3d.Point2D
 """
 import unittest
 
 import matplotlib
 
-import volmdlr
+import design3d
 
 import unittest
-from volmdlr import Point2D, Vector2D, Vector3D
+from design3d import Point2D, Vector2D, Vector3D
 
 
 class TestPoint2D(unittest.TestCase):
@@ -56,7 +56,7 @@ class TestPoint2D(unittest.TestCase):
         result = self.point1.to_dict()
         self.assertIsInstance(result, dict)
         self.assertIn("object_class", result)
-        self.assertEqual(result["object_class"], "volmdlr.Point2D")
+        self.assertEqual(result["object_class"], "design3d.Point2D")
         self.assertIn("x", result)
         self.assertEqual(result["x"], self.point1.x)
         self.assertIn("y", result)

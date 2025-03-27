@@ -1,6 +1,6 @@
 {
   "name": "",
-  "object_class": "volmdlr.surfaces.BSplineSurface3D",
+  "object_class": "design3d.surfaces.BSplineSurface3D",
   "package_version": "0.9.2.dev421+gb87a301e",
   "degree_u": 3,
   "degree_v": 3,
@@ -8,7 +8,7 @@
   "nb_v": 4,
   "control_points": [
     {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 0.29851599999999,
       "y": 0.45774099653199,
       "z": 0.31114886258063
@@ -23,7 +23,7 @@
       "$ref": "#/control_points/0"
     },
     {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 0.29851599999999,
       "y": 0.45774099653199,
       "z": 0.31068761433964
@@ -38,49 +38,49 @@
       "$ref": "#/control_points/4"
     },
     {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 0.29822040612105005,
       "y": 0.45760315884254,
       "z": 0.31036146258063
     },
     {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 0.29820019775080997,
       "y": 0.45764649583236,
       "z": 0.31036146258063
     },
     {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 0.29818984824098,
       "y": 0.45769317945435,
       "z": 0.31036146258063
     },
     {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 0.29818984824098,
       "y": 0.45774099653199,
       "z": 0.31036146258063
     },
     {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 0.29780237324848,
       "y": 0.4574082269127,
       "z": 0.31036146258063
     },
     {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 0.29775358592698004,
       "y": 0.45751285166128997,
       "z": 0.31036146258063
     },
     {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 0.29772859999999,
       "y": 0.45762555589462,
       "z": 0.31036146258063
     },
     {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 0.29772859999999,
       "y": 0.45774099653199,
       "z": 0.31036146258063

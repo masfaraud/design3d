@@ -9,20 +9,20 @@
 
 import matplotlib.pyplot as plt
 
-import design3d as vm
+import design3d as d3d
 import design3d.edges
 import design3d.wires
 import design3d.curves
 from design3d.core import EdgeStyle
 # %% Initial Data
 
-points = [vm.Point2D(6, 0), vm.Point2D(6, 2),
-          vm.Point2D(3, 2), vm.Point2D(3, 1),
-          vm.Point2D(1, 1), vm.Point2D(1, 2), 
-          vm.Point2D(0, 2), vm.Point2D(0, 0)]
+points = [d3d.Point2D(6, 0), d3d.Point2D(6, 2),
+          d3d.Point2D(3, 2), d3d.Point2D(3, 1),
+          d3d.Point2D(1, 1), d3d.Point2D(1, 2), 
+          d3d.Point2D(0, 2), d3d.Point2D(0, 0)]
 
-contour = vm.wires.Contour2D.from_points(points)
-line = design3d.curves.Line2D(vm.Point2D(-1, 3), vm.Point2D(7, 3))
+contour = d3d.wires.Contour2D.from_points(points)
+line = design3d.curves.Line2D(d3d.Point2D(-1, 3), d3d.Point2D(7, 3))
 
 # %% Symmetry
 

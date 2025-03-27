@@ -4,16 +4,16 @@ from dessia_common.workflow.blocks import (CadView, ClassMethod,
                                            ModelMethod)
 from dessia_common.workflow.core import Pipe, Workflow
 
-import volmdlr as vm
+import volmdlr as d3d
 from volmdlr import step
 
 read_step_method_type = ClassMethodType(
-    class_=vm.step.Step, name="from_stream"
+    class_=d3d.step.Step, name="from_stream"
 )
 cls_method_step = ClassMethod(read_step_method_type, name="Stepfile")
 
 to_volumemodel_method_type = MethodType(
-    class_=vm.step.Step, name="to_volume_model"
+    class_=d3d.step.Step, name="to_volume_model"
 )
 method_volumemodel = ModelMethod(
     to_volumemodel_method_type, name="VolumeModel"
@@ -23,7 +23,7 @@ method_volumemodel = ModelMethod(
 cadview_block = CadView(name="Display3D")
 
 export_html = Export(
-    method_type=MethodType(vm.core.VolumeModel, "to_html_stream"),
+    method_type=MethodType(d3d.core.VolumeModel, "to_html_stream"),
     filename="VolumeModel.html",
     extension="html",
     text=True,

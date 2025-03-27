@@ -10,24 +10,24 @@ import random
 
 import matplotlib.pyplot as plt
 
-import volmdlr as vm
-import volmdlr.edges as vme
+import volmdlr as d3d
+import volmdlr.edges as d3de
 from volmdlr.utils.common_operations import minimum_distance_points_circle3d_linesegment3d
 ### Cas arc/LS
 
 mini, maxi = -5, 5
 
-pt1 = vm.Point3D.random(mini, maxi, mini, maxi, mini, maxi)
-pt2 = vm.Point3D.random(mini, maxi, mini, maxi, mini, maxi)
+pt1 = d3d.Point3D.random(mini, maxi, mini, maxi, mini, maxi)
+pt2 = d3d.Point3D.random(mini, maxi, mini, maxi, mini, maxi)
 ptmid = ( pt1 + pt2 )/2
 pt_midmid = pt1 + (pt2-pt1)/4
 pt_midmid2 = pt2 + (pt1-pt2)/4
-LS1 = vme.LineSegment3D(pt1, pt2)
+LS1 = d3de.LineSegment3D(pt1, pt2)
 
-pt = vm.Point3D.random(mini, maxi, mini, maxi, mini, maxi)
+pt = d3d.Point3D.random(mini, maxi, mini, maxi, mini, maxi)
 radius = 2
-start, interior, end = pt, pt + vm.Point3D(0,-radius,radius),pt + vm.Point3D(0,-radius,-radius)
-arc = vme.Arc3D.from_3_points(start, interior, end)
+start, interior, end = pt, pt + d3d.Point3D(0,-radius,radius),pt + d3d.Point3D(0,-radius,-radius)
+arc = d3de.Arc3D.from_3_points(start, interior, end)
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')

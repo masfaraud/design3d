@@ -1,29 +1,29 @@
 {
-  "object_class": "volmdlr.edges.Arc2D",
+  "object_class": "design3d.edges.Arc2D",
   "name": "_reverse",
   "circle": {
-    "object_class": "volmdlr.curves.Circle2D",
+    "object_class": "design3d.curves.Circle2D",
     "name": "",
     "center": {
       "$ref": "#/_references/63c5c30d-150f-11ee-a569-68545aefcc97"
     },
     "radius": 3.22798446159,
     "frame": {
-      "object_class": "volmdlr.Frame2D",
+      "object_class": "design3d.Frame2D",
       "name": "",
       "origin": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": -3.202390890400004,
         "y": -0.2780888335399998
       },
       "u": {
-        "object_class": "volmdlr.Vector2D",
+        "object_class": "design3d.Vector2D",
         "x": 1.0,
         "y": 0.0,
         "name": ""
       },
       "v": {
-        "object_class": "volmdlr.Vector2D",
+        "object_class": "design3d.Vector2D",
         "x": 0.0,
         "y": 1.0,
         "name": ""
@@ -32,12 +32,12 @@
   },
   "is_trigo": true,
   "start": {
-    "object_class": "volmdlr.Point2D",
+    "object_class": "design3d.Point2D",
     "x": 0.013587951599994597,
     "y": 5.4663760000073225e-05
   },
   "end": {
-    "object_class": "volmdlr.Point2D",
+    "object_class": "design3d.Point2D",
     "x": 0.013021370999993565,
     "y": 0.006529636830000074
   },
@@ -48,7 +48,7 @@
   "angle2": 0.08828684169077536,
   "_references": {
     "63c5c30d-150f-11ee-a569-68545aefcc97": {
-      "object_class": "volmdlr.Point2D",
+      "object_class": "design3d.Point2D",
       "x": -3.202390890400004,
       "y": -0.2780888335399998
     }

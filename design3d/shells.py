@@ -9,8 +9,6 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import pyfqmr
-from dessia_common.core import DessiaObject
-from dessia_common.typings import JsonSerializable
 from numpy.typing import NDArray
 from trimesh import Trimesh
 
@@ -87,10 +85,6 @@ class Shell3D(design3d.core.CompositePrimitive3D):
     :param bounding_box: The bounding box of the shell.
     :type bounding_box: :class:`design3d.core.BoundingBox`
     """
-    _standalone_in_db = True
-    _non_serializable_attributes = ['primitives']
-    _non_data_eq_attributes = ['name', 'color', 'alpha', 'bounding_box', 'primitives']
-    _non_data_hash_attributes = []
     STEP_FUNCTION = None
 
     def __init__(self, faces: List[design3d.faces.Face3D],
@@ -294,7 +288,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
 
         """
-        dict_ = DessiaObject.base_dict(self)
+        dict_ = {}
         dict_.update({'color': self.color,
                       'alpha': self.alpha,
                       'faces': [f.to_dict(use_pointers=False) for f in self.faces]})
@@ -1967,7 +1961,7 @@ class OpenTriangleShell3D(OpenShell3D):
         return dict_
 
     @classmethod
-    def dict_to_object(cls, dict_: JsonSerializable, **kwargs) -> "OpenTriangleShell3D":
+    def dict_to_object(cls, dict_, **kwargs) -> "OpenTriangleShell3D":
         """Overload of 'dict_to_object' for performance."""
         vertices = dict_["vertices"]
         faces = dict_["faces"]
@@ -2133,7 +2127,7 @@ class DisplayTriangleShell3D(Shell3D):
         return dict_
 
     @classmethod
-    def dict_to_object(cls, dict_: JsonSerializable, **kwargs) -> 'DisplayTriangleShell3D':
+    def dict_to_object(cls, dict_, **kwargs) -> 'DisplayTriangleShell3D':
         """Overload of 'dict_to_object' for performance."""
         positions = np.array(dict_["positions"])
         indices = np.array(dict_["indices"])

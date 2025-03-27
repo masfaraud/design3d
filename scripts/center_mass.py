@@ -10,15 +10,15 @@ import math
 
 import plot_data
 
-import volmdlr as vm
+import volmdlr as d3d
 import volmdlr.edges as edges
 import volmdlr.wires as wires
 
 r = 0.23
 
-p1 = vm.Point2D(0, 0)
-p2 = vm.Point2D(r, r)
-p3 = vm.Point2D(2*r, 0)
+p1 = d3d.Point2D(0, 0)
+p2 = d3d.Point2D(r, r)
+p3 = d3d.Point2D(2*r, 0)
 
 a = edges.Arc2D(p1, p2, p3)
 l = edges.LineSegment2D(p3, p1)

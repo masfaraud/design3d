@@ -1,31 +1,31 @@
 {
   "name": "",
-  "object_class": "volmdlr.wires.Contour2D",
+  "object_class": "design3d.wires.Contour2D",
   "package_version": "0.6.1.dev420+g2c11c1cb",
   "primitives": [
     {
-      "object_class": "volmdlr.edges.Arc2D",
+      "object_class": "design3d.edges.Arc2D",
       "name": "",
       "circle": {
-        "object_class": "volmdlr.curves.Circle2D",
+        "object_class": "design3d.curves.Circle2D",
         "name": "",
         "radius": 2.000000000000002,
         "frame": {
-          "object_class": "volmdlr.Frame2D",
+          "object_class": "design3d.Frame2D",
           "name": "",
           "origin": {
-          "object_class": "volmdlr.Point2D",
+          "object_class": "design3d.Point2D",
           "x": 10.000000000000002,
           "y": 1.4000000000000021
           },
           "u": {
-            "object_class": "volmdlr.Vector2D",
+            "object_class": "design3d.Vector2D",
             "x": 1.0,
             "y": 0.0,
             "name": ""
           },
           "v": {
-            "object_class": "volmdlr.Vector2D",
+            "object_class": "design3d.Vector2D",
             "x": 0.0,
             "y": 1.0,
             "name": ""
@@ -34,88 +34,88 @@
       },
       "is_trigo": true,
       "start": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 10.0,
         "y": -0.6
       },
       "end": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 12.0,
         "y": 1.4
       },
       "_references": {}
     },
     {
-      "object_class": "volmdlr.edges.LineSegment2D",
+      "object_class": "design3d.edges.LineSegment2D",
       "name": "",
       "start": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 12.0,
         "y": 1.4,
         "name": ""
       },
       "end": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 12.0,
         "y": 9.4,
         "name": ""
       }
     },
     {
-      "object_class": "volmdlr.edges.LineSegment2D",
+      "object_class": "design3d.edges.LineSegment2D",
       "name": "",
       "start": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 12.0,
         "y": 9.4,
         "name": ""
       },
       "end": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 9.5,
         "y": 9.4,
         "name": ""
       }
     },
     {
-      "object_class": "volmdlr.edges.LineSegment2D",
+      "object_class": "design3d.edges.LineSegment2D",
       "name": "",
       "start": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 9.5,
         "y": 9.4,
         "name": ""
       },
       "end": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 9.5,
         "y": 1.1,
         "name": ""
       }
     },
     {
-      "object_class": "volmdlr.edges.Arc2D",
+      "object_class": "design3d.edges.Arc2D",
       "name": "",
       "circle": {
-        "object_class": "volmdlr.curves.Circle2D",
+        "object_class": "design3d.curves.Circle2D",
         "name": "",
         "radius": 0.5000000000000195,
         "frame": {
-          "object_class": "volmdlr.Frame2D",
+          "object_class": "design3d.Frame2D",
           "name": "",
           "origin": {
-          "object_class": "volmdlr.Point2D",
+          "object_class": "design3d.Point2D",
           "x": 8.99999999999998,
           "y": 1.1000000000000192
           },
           "u": {
-            "object_class": "volmdlr.Vector2D",
+            "object_class": "design3d.Vector2D",
             "x": 1.0,
             "y": 0.0,
             "name": ""
           },
           "v": {
-            "object_class": "volmdlr.Vector2D",
+            "object_class": "design3d.Vector2D",
             "x": 0.0,
             "y": -1.0,
             "name": ""
@@ -123,56 +123,56 @@
         }
       },
       "start": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 9.5,
         "y": 1.1
       },
       "end": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 9.0,
         "y": 0.6
       },
       "_references": {}
     },
     {
-      "object_class": "volmdlr.edges.LineSegment2D",
+      "object_class": "design3d.edges.LineSegment2D",
       "name": "",
       "start": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 9.0,
         "y": 0.6,
         "name": ""
       },
       "end": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": -10.0,
         "y": 0.6,
         "name": ""
       }
     },
     {
-      "object_class": "volmdlr.edges.Arc2D",
+      "object_class": "design3d.edges.Arc2D",
       "name": "",
       "circle": {
-        "object_class": "volmdlr.curves.Circle2D",
+        "object_class": "design3d.curves.Circle2D",
         "name": "",
         "radius": 2.000000000000002,
         "frame": {
-          "object_class": "volmdlr.Frame2D",
+          "object_class": "design3d.Frame2D",
           "name": "",
           "origin": {
-          "object_class": "volmdlr.Point2D",
+          "object_class": "design3d.Point2D",
           "x": -10.000000000000002,
           "y": -1.4000000000000021
           },
           "u": {
-            "object_class": "volmdlr.Vector2D",
+            "object_class": "design3d.Vector2D",
             "x": 1.0,
             "y": 0.0,
             "name": ""
           },
           "v": {
-            "object_class": "volmdlr.Vector2D",
+            "object_class": "design3d.Vector2D",
             "x": 0.0,
             "y": 1.0,
             "name": ""
@@ -180,88 +180,88 @@
         }
       },
       "start": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": -10.0,
         "y": 0.6
       },
       "end": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": -12.0,
         "y": -1.4
       },
       "_references": {}
     },
     {
-      "object_class": "volmdlr.edges.LineSegment2D",
+      "object_class": "design3d.edges.LineSegment2D",
       "name": "",
       "start": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": -12.0,
         "y": -1.4,
         "name": ""
       },
       "end": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": -12.0,
         "y": -19.6,
         "name": ""
       }
     },
     {
-      "object_class": "volmdlr.edges.LineSegment2D",
+      "object_class": "design3d.edges.LineSegment2D",
       "name": "",
       "start": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": -12.0,
         "y": -19.6,
         "name": ""
       },
       "end": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": -10.8,
         "y": -19.6,
         "name": ""
       }
     },
     {
-      "object_class": "volmdlr.edges.LineSegment2D",
+      "object_class": "design3d.edges.LineSegment2D",
       "name": "",
       "start": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": -10.8,
         "y": -19.6,
         "name": ""
       },
       "end": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": -10.8,
         "y": -1.1,
         "name": ""
       }
     },
     {
-      "object_class": "volmdlr.edges.Arc2D",
+      "object_class": "design3d.edges.Arc2D",
       "name": "",
       "circle": {
-        "object_class": "volmdlr.curves.Circle2D",
+        "object_class": "design3d.curves.Circle2D",
         "name": "",
         "radius": 0.49999998495448694,
         "frame": {
-          "object_class": "volmdlr.Frame2D",
+          "object_class": "design3d.Frame2D",
           "name": "",
           "origin": {
-          "object_class": "volmdlr.Point2D",
+          "object_class": "design3d.Point2D",
           "x": -10.300000015045514,
           "y": -1.0999999849544846
           },
           "u": {
-            "object_class": "volmdlr.Vector2D",
+            "object_class": "design3d.Vector2D",
             "x": 1.0,
             "y": 0.0,
             "name": ""
           },
           "v": {
-            "object_class": "volmdlr.Vector2D",
+            "object_class": "design3d.Vector2D",
             "x": 0.0,
             "y": -1.0,
             "name": ""
@@ -269,28 +269,28 @@
         }
       },
       "start": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": -10.8,
         "y": -1.1
       },
       "end": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": -10.3,
         "y": -0.6
       },
       "_references": {}
     },
     {
-      "object_class": "volmdlr.edges.LineSegment2D",
+      "object_class": "design3d.edges.LineSegment2D",
       "name": "",
       "start": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": -10.3,
         "y": -0.6,
         "name": ""
       },
       "end": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 10.0,
         "y": -0.6,
         "name": ""

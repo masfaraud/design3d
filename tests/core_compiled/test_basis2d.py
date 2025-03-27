@@ -1,13 +1,13 @@
 import unittest
 
-import volmdlr
+import design3d
 
 
 class TestBasis2D(unittest.TestCase):
-    local_basis = volmdlr.Basis2D(volmdlr.Y2D, volmdlr.X2D)
+    local_basis = design3d.Basis2D(design3d.Y2D, design3d.X2D)
 
     def test_global_to_local_coordinates(self):
-        vector_global = volmdlr.Vector2D(3, 4)
+        vector_global = design3d.Vector2D(3, 4)
         vector_local = self.local_basis.global_to_local_coordinates(vector_global)
 
         # Check that the converted vector has the expected coordinates
@@ -15,7 +15,7 @@ class TestBasis2D(unittest.TestCase):
         self.assertEqual(vector_local.y, 3)
 
     def test_local_to_global_coordinates(self):
-        vector_local = volmdlr.Vector2D(4, 3)
+        vector_local = design3d.Vector2D(4, 3)
         vector_global = self.local_basis.local_to_global_coordinates(vector_local)
 
         # Check that the converted vector has the expected coordinates

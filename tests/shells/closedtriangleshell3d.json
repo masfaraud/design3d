@@ -1,5 +1,5 @@
 {
-  "object_class": "volmdlr.shells.ClosedTriangleShell3D",
+  "object_class": "design3d.shells.ClosedTriangleShell3D",
   "name": "",
   "vertices": [
     [

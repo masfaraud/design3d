@@ -7,24 +7,24 @@ Created on Wed Jun 15 2022
 """
 
 import volmdlr
-import volmdlr as vm
+import volmdlr as d3d
 import volmdlr.primitives3d as primitives3d
 
 # import gmsh
 
 # %% Extrusion
 
-points = [vm.Point2D(0, 0),
-          vm.Point2D(0.1, 0.),
-          vm.Point2D(0.1, 0.2),
-          vm.Point2D(0.03, 0.15),
-          vm.Point2D(0.,0.21)]
+points = [d3d.Point2D(0, 0),
+          d3d.Point2D(0.1, 0.),
+          d3d.Point2D(0.1, 0.2),
+          d3d.Point2D(0.03, 0.15),
+          d3d.Point2D(0.,0.21)]
 
-outer_profile = vm.wires.Contour2D.from_points(points)
+outer_profile = d3d.wires.Contour2D.from_points(points)
 
-profile=primitives3d.ExtrudedProfile(vm.O3D, vm.Y3D, vm.Z3D, outer_profile, [], vm.X3D*0.1, name = 'extrusion')
+profile=primitives3d.ExtrudedProfile(d3d.O3D, d3d.Y3D, d3d.Z3D, outer_profile, [], d3d.X3D*0.1, name = 'extrusion')
 
-model=vm.core.VolumeModel([profile])
+model=d3d.core.VolumeModel([profile])
 model.to_geo(file_name = 'model_1_geo',
              factor = 0.5,
              curvature_mesh_size = 0,

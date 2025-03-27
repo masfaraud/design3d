@@ -7,7 +7,7 @@ Created on Thu Jun 16 2022
 """
 
 import volmdlr
-import volmdlr as vm
+import volmdlr as d3d
 import volmdlr.edges
 import volmdlr.primitives3d as primitives3d
 
@@ -15,19 +15,19 @@ import volmdlr.primitives3d as primitives3d
 
 # %% Extrusion
 
-edges = [volmdlr.edges.LineSegment2D(vm.Point2D(0, 0), vm.Point2D(0.1, 0.)),
-         volmdlr.edges.LineSegment2D(vm.Point2D(0.1, 0.), vm.Point2D(0.1, 0.2)),
-         volmdlr.edges.Arc2D(start=vm.Point2D(0.1, 0.2),
-                             end=vm.Point2D(0.,0.2),
-                             interior=vm.Point2D(0.05,0.25)),
-         volmdlr.edges.LineSegment2D(vm.Point2D(0.,0.2), vm.Point2D(0, 0))]
+edges = [volmdlr.edges.LineSegment2D(d3d.Point2D(0, 0), d3d.Point2D(0.1, 0.)),
+         volmdlr.edges.LineSegment2D(d3d.Point2D(0.1, 0.), d3d.Point2D(0.1, 0.2)),
+         volmdlr.edges.Arc2D(start=d3d.Point2D(0.1, 0.2),
+                             end=d3d.Point2D(0.,0.2),
+                             interior=d3d.Point2D(0.05,0.25)),
+         volmdlr.edges.LineSegment2D(d3d.Point2D(0.,0.2), d3d.Point2D(0, 0))]
 
-outer_profile = vm.wires.Contour2D(edges)
+outer_profile = d3d.wires.Contour2D(edges)
 
 
-profile=primitives3d.ExtrudedProfile(vm.O3D, vm.Y3D, vm.Z3D, outer_profile, [], vm.X3D*0.1, name = 'extrusion')
+profile=primitives3d.ExtrudedProfile(d3d.O3D, d3d.Y3D, d3d.Z3D, outer_profile, [], d3d.X3D*0.1, name = 'extrusion')
 
-model=vm.core.VolumeModel([profile])
+model=d3d.core.VolumeModel([profile])
 
 model.to_geo(file_name = 'model_2_geo',
              factor = 0.5,

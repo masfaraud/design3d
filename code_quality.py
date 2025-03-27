@@ -22,12 +22,12 @@ my_redefined_options = {
     'verbose': 1,
 }
 # relative path of the directory in which pylama should check
-# vm_path = '.'
-vm_path = os.getcwd()
-print(vm_path)
-print(os.listdir(vm_path))
+# d3d_path = '.'
+d3d_path = os.getcwd()
+print(d3d_path)
+print(os.listdir(d3d_path))
 
-options = parse_options([vm_path], **my_redefined_options)
+options = parse_options([d3d_path], **my_redefined_options)
 print('options', options)
 errors = list(check_paths('volmdlr', options=options))
 

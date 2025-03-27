@@ -4,10 +4,10 @@ Unit testing for pixelization.
 
 import unittest
 
-from volmdlr import Point2D, Vector2D
-from volmdlr.discrete_representation import MatrixBasedPixelization, PointBasedPixelization
-from volmdlr.edges import LineSegment2D
-from volmdlr.wires import ClosedPolygon2D
+from design3d import Point2D, Vector2D
+from design3d.discrete_representation import MatrixBasedPixelization, PointBasedPixelization
+from design3d.edges import LineSegment2D
+from design3d.wires import ClosedPolygon2D
 
 
 class TestPixelization(unittest.TestCase):

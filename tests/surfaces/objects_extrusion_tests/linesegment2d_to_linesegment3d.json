@@ -1,13 +1,13 @@
 {
-  "object_class": "volmdlr.edges.LineSegment2D",
+  "object_class": "design3d.edges.LineSegment2D",
   "name": "",
   "start": {
-    "object_class": "volmdlr.Point2D",
+    "object_class": "design3d.Point2D",
     "x": 0.0,
     "y": 0.0022999999994890528
   },
   "end": {
-    "object_class": "volmdlr.Point2D",
+    "object_class": "design3d.Point2D",
     "x": 0.0,
     "y": 0.0
   }

@@ -1,58 +1,58 @@
 {
   "name": "",
-  "object_class": "volmdlr.surfaces.RevolutionSurface3D",
+  "object_class": "design3d.surfaces.RevolutionSurface3D",
   "package_version": "0.9.2.dev1050+g45192f1d",
   "edge": {
-    "object_class": "volmdlr.edges.LineSegment3D",
+    "object_class": "design3d.edges.LineSegment3D",
     "name": "",
     "start": {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 0.572919165039,
       "y": 0.64589672659,
       "z": 0.000771852970123
     },
     "end": {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 0.597825969484,
       "y": 0.64589672659,
       "z": 0.000771852970123
     }
   },
   "axis_point": {
-    "object_class": "volmdlr.Point3D",
+    "object_class": "design3d.Point3D",
     "x": 4.68141916504,
     "y": 0.63764672659,
     "z": 0.000771852970136
   },
   "axis": {
-    "object_class": "volmdlr.Vector3D",
+    "object_class": "design3d.Vector3D",
     "x": 1.0,
     "y": 0.0,
     "z": 0.0
   },
   "frame": {
-    "object_class": "volmdlr.Frame3D",
+    "object_class": "design3d.Frame3D",
     "name": "",
     "origin": {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 4.68141916504,
       "y": 0.63764672659,
       "z": 0.000771852970136
     },
     "u": {
-      "object_class": "volmdlr.Point3D",
+      "object_class": "design3d.Point3D",
       "x": 0.0,
       "y": 1.0,
       "z": 0.0
     },
     "v": {
-      "object_class": "volmdlr.Vector3D",
+      "object_class": "design3d.Vector3D",
       "x": 0.0,
       "y": 0.0,
       "z": 1.0
     },
     "w": {
-      "object_class": "volmdlr.Vector3D",
+      "object_class": "design3d.Vector3D",
       "x": 1.0,
       "y": 0.0,
       "z": 0.0

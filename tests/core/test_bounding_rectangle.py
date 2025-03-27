@@ -1,6 +1,6 @@
 import unittest
-import volmdlr
-from volmdlr.core import BoundingRectangle
+import design3d
+from design3d.core import BoundingRectangle
 
 
 class TestBoundingRectangle(unittest.TestCase):
@@ -38,10 +38,10 @@ class TestBoundingRectangle(unittest.TestCase):
         self.assertEqual(self.b_rectangle1.area(), 2.25)
 
     def test_center(self):
-        self.assertEqual(self.br.center(), volmdlr.Point2D(2.5, 3.0))
-        self.assertNotEqual(self.br.center(), volmdlr.O2D)
+        self.assertEqual(self.br.center(), design3d.Point2D(2.5, 3.0))
+        self.assertNotEqual(self.br.center(), design3d.O2D)
 
-        self.assertEqual(self.b_rectangle1.center(), volmdlr.Point2D(0.25, 0.25))
+        self.assertEqual(self.b_rectangle1.center(), design3d.Point2D(0.25, 0.25))
 
     def test_is_intersecting(self):
         br2 = BoundingRectangle(-1.0, 2.0, -1.0, 2.0)
@@ -64,11 +64,11 @@ class TestBoundingRectangle(unittest.TestCase):
         self.assertFalse(self.b_rectangle1.is_inside_b_rectangle(self.b_rectangle3))
 
     def test_point_belongs(self):
-        self.assertTrue(self.br.point_inside(volmdlr.Point2D(3.0, 4.0)))
-        self.assertFalse(self.br.point_inside(volmdlr.Point2D(6.0, 7.0)))
+        self.assertTrue(self.br.point_inside(design3d.Point2D(3.0, 4.0)))
+        self.assertFalse(self.br.point_inside(design3d.Point2D(6.0, 7.0)))
 
-        self.assertTrue(self.b_rectangle1.point_inside(volmdlr.Point2D(0.25, 0.25)))
-        self.assertFalse(self.b_rectangle1.point_inside(volmdlr.Point2D(1.0, 1.0)))
+        self.assertTrue(self.b_rectangle1.point_inside(design3d.Point2D(0.25, 0.25)))
+        self.assertFalse(self.b_rectangle1.point_inside(design3d.Point2D(1.0, 1.0)))
 
     def test_intersection_area(self):
         br2 = BoundingRectangle(1.0, 4.0, 1.0, 4.0)
@@ -95,19 +95,19 @@ class TestBoundingRectangle(unittest.TestCase):
         self.assertEqual(self.b_rectangle2.distance_to_b_rectangle(self.b_rectangle3), 3)
 
     def test_distance_to_point(self):
-        p0 = volmdlr.O2D
+        p0 = design3d.O2D
         self.assertEqual(self.br.distance_to_point(p0), 0.0)
-        p1 = volmdlr.Point2D(1.0, 1.0)
+        p1 = design3d.Point2D(1.0, 1.0)
         self.assertEqual(self.br.distance_to_point(p1), 1.0)
-        p3 = volmdlr.Point2D(-3.0, 0.0)
+        p3 = design3d.Point2D(-3.0, 0.0)
         self.assertEqual(self.br.distance_to_point(p3), 3.0)
-        p4 = volmdlr.Point2D(2.0, -5.0)
+        p4 = design3d.Point2D(2.0, -5.0)
         self.assertEqual(self.br.distance_to_point(p4), 3.0)
-        p5 = volmdlr.Point2D(6.0, 9.0)
+        p5 = design3d.Point2D(6.0, 9.0)
         self.assertEqual(self.br.distance_to_point(p5), 2**0.5)
 
-        self.assertEqual(self.b_rectangle1.distance_to_point(volmdlr.Point2D(0.25, 0.25)), 0.75)
-        self.assertEqual(self.b_rectangle1.distance_to_point(volmdlr.Point2D(0.25, 2)), 1)
+        self.assertEqual(self.b_rectangle1.distance_to_point(design3d.Point2D(0.25, 0.25)), 0.75)
+        self.assertEqual(self.b_rectangle1.distance_to_point(design3d.Point2D(0.25, 2)), 1)
 
 
 if __name__ == "__main__":

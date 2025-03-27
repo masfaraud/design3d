@@ -10,7 +10,7 @@ from typing import Tuple
 from numpy import array, zeros
 from numpy.linalg import solve as np_solve
 
-import design3d as vm
+import design3d as d3d
 
 
 def euler_angles_to_transfer_matrix(psi, theta, phi):
@@ -62,12 +62,12 @@ def get_transfer_matrix_from_basis(basis_a, basis_b):
     return np_solve(matrix_a, matrix_b)
 
 
-def direction_to_euler_angles(u: vm.Vector3D, v=None):
+def direction_to_euler_angles(u: d3d.Vector3D, v=None):
     """
     Returns one possibility of euler angles from a vector indicating a direction.
     """
     if v is None:
-        v = vm.Vector3D.random(0, 1, 0, 1, 0, 1)
+        v = d3d.Vector3D.random(0, 1, 0, 1, 0, 1)
 
     u = u.copy()
     u = u.unit_vector()
@@ -164,13 +164,13 @@ def sin_cos_angle(u1, u2):
         if u2 >= 0:
             theta = math.acos(u1)
         else:
-            theta = vm.TWO_PI + math.asin(u2)
+            theta = d3d.TWO_PI + math.asin(u2)
     else:
         if u2 >= 0:
             theta = math.acos(u1)
         else:
-            theta = vm.TWO_PI - math.acos(u1)
-    if math.isclose(theta, vm.TWO_PI, abs_tol=1e-9):
+            theta = d3d.TWO_PI - math.acos(u1)
+    if math.isclose(theta, d3d.TWO_PI, abs_tol=1e-9):
         return 0.
     return theta
 
@@ -194,14 +194,14 @@ def clockwise_interior_from_circle3d(start, end, circle):
     if theta1 > theta2:
         theta3 = (theta1 + theta2) / 2
     elif theta2 >= theta1:
-        theta3 = (theta1 + theta2) / 2 + vm.TWO_PI / 2
+        theta3 = (theta1 + theta2) / 2 + d3d.TWO_PI / 2
     else:
         raise NotImplementedError
 
-    if theta3 > vm.TWO_PI:
-        theta3 -= vm.TWO_PI
+    if theta3 > d3d.TWO_PI:
+        theta3 -= d3d.TWO_PI
 
-    interior2d = vm.Point2D(circle.radius * math.cos(theta3),
+    interior2d = d3d.Point2D(circle.radius * math.cos(theta3),
                             circle.radius * math.sin(theta3))
     interior3d = interior2d.to_3d(plane_origin=circle.frame.origin,
                                   vx=circle.frame.u, vy=circle.frame.v)
@@ -229,8 +229,8 @@ def angle_principal_measure(angle, min_angle=-math.pi):
     """
     Returns angle between O and 2 pi.
     """
-    max_angle = min_angle + vm.TWO_PI
-    angle = angle % vm.TWO_PI
+    max_angle = min_angle + d3d.TWO_PI
+    angle = angle % d3d.TWO_PI
 
     if math.isclose(angle, min_angle, abs_tol=1e-9):
         return min_angle
@@ -244,7 +244,7 @@ def clockwise_angle(vector1, vector2):
     """
     Return the clockwise angle in radians between vector1 and vector2.
     """
-    vector0 = vm.O2D
+    vector0 = d3d.O2D
     if vector0 in (vector1, vector2):
         return 0
 
@@ -259,4 +259,4 @@ def clockwise_angle(vector1, vector2):
     if cross_v1v2 < 0:
         return inner_angle
 
-    return vm.TWO_PI - inner_angle
+    return d3d.TWO_PI - inner_angle

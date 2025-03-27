@@ -9,9 +9,6 @@ import warnings
 from random import uniform
 from typing import Dict, List, Tuple
 
-import plot_data
-
-import dessia_common.core as dc
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import Bounds, NonlinearConstraint, minimize
@@ -157,11 +154,6 @@ class Block(shells.ClosedShell3D):
     :param frame: a frame 3D. The origin of the frame is the center of the block,
      the 3 vectors are defining the edges. The frame has not to be orthogonal
     """
-    _standalone_in_db = True
-    _non_serializable_attributes = ['size', 'bounding_box', 'faces', 'contours', 'plane', 'points', 'polygon2D']
-    _non_data_eq_attributes = ['name', 'color', 'alpha', 'size', 'bounding_box',
-                               'faces', 'contours', 'plane', 'points', 'polygon2D']
-    _non_data_hash_attributes = []
 
     def __init__(self, frame: design3d.Frame3D, *,
                  color: Tuple[float, float, float] = None, alpha: float = 1.,
@@ -193,7 +185,7 @@ class Block(shells.ClosedShell3D):
         Custom to_dict for performance.
 
         """
-        dict_ = dc.DessiaObject.base_dict(self)
+        dict_ = {"name": self.name}
         dict_.update({'color': self.color,
                       'alpha': self.alpha,
                       'frame': self.frame.to_dict(),
@@ -402,14 +394,6 @@ class Block(shells.ClosedShell3D):
         new_frame = design3d.Frame3D(new_origin, new_u, new_v, new_w)
         return Block(new_frame, color=self.color, alpha=self.alpha, reference_path=self.reference_path, name=self.name)
 
-    def plot_data(self, x3d, y3d, edge_style=plot_data.EdgeStyle):
-        """Plot the 2D projections of a block."""
-        lines = []
-        for edge3d in self.edges():
-            lines.append(edge3d.plot_data(x3d, y3d, edge_style))
-
-        return lines
-
     def plot2d(self, x3d, y3d, ax=None):
         """
         Plot 2d with Matplotlib.
@@ -505,7 +489,7 @@ class ExtrudedProfile(shells.ClosedShell3D):
         Serialize the ExtrudedProfile.
 
         """
-        dict_ = dc.DessiaObject.base_dict(self)
+        dict_ = shells.ClosedShell3D.base_dict(self)
         dict_.update({'color': self.color,
                       'alpha': self.alpha,
                       'frame': self.frame.to_dict(),
@@ -623,7 +607,6 @@ class RevolvedProfile(shells.ClosedShell3D):
     Revolve a 2D profile along an axis around a certain angle.
 
     """
-    _non_serializable_attributes = ['faces', 'contour3D']
 
     def __init__(self, frame: design3d.Frame3D,
                  contour2d: design3d.wires.Contour2D,
@@ -675,7 +658,7 @@ class RevolvedProfile(shells.ClosedShell3D):
         """
         Custom to dict for performance.
         """
-        dict_ = dc.DessiaObject.base_dict(self)
+        dict_ = shells.ClosedShell3D.base_dict(self)
         dict_.update({'color': self.color,
                       'alpha': self.alpha,
                       'frame': self.frame.to_dict(),
@@ -1961,7 +1944,7 @@ class Sweep(shells.ClosedShell3D):
 
     def to_dict(self, *args, **kwargs):
         """Custom serialization for performance."""
-        dict_ = dc.DessiaObject.base_dict(self)
+        dict_ = shells.ClosedShell3D.base_dict(self)
         dict_.update({'color': self.color,
                       'alpha': self.alpha,
                       'wire3d': self.wire3d.to_dict(),

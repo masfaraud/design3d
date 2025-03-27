@@ -2,7 +2,7 @@ import os
 
 import volmdlr.cloud
 import volmdlr.core
-import volmdlr.stl as vmstl
+import volmdlr.stl as d3dstl
 
 
 path = os.getcwd()
@@ -15,7 +15,7 @@ for stl_file in [
                   ]:
 
     shells = []
-    stl = vmstl.Stl.load_from_file(stl_file)
+    stl = d3dstl.Stl.load_from_file(stl_file)
     shell = stl.to_closed_shell()
     shell.alpha = 0.3
     assert len(shell.faces)

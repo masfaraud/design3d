@@ -4,20 +4,17 @@
 Testing core module functions
 """
 
-import math
 import unittest
 
-import numpy as npy
-
-import volmdlr as vm
-import volmdlr.wires
+import design3d as d3d
+import design3d.wires
 
 
 class TestContour(unittest.TestCase):
 
     def test_is_overlapping(self):
 
-        v2D_1 = vm.Vector2D.random(-3, 3, -3, 3)
+        v2D_1 = d3d.Vector2D.random(-3, 3, -3, 3)
 
         # Testing if normalized vector has norm ==1 and is still colinear to original vector
         v2D_1_normalized = v2D_1.copy()

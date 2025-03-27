@@ -3,12 +3,15 @@
 """
 A sweep using a bspline.
 """
+import math
 
+import matplotlib.pyplot as plt
 
 import design3d as d3d
 import design3d.edges as d3de
 import design3d.wires as d3dw
 from design3d import primitives3d, curves
+from design3d.core import EdgeStyle
 
 degree = 5
 control_points = [d3d.Point3D(0, 0, 0),
@@ -30,11 +33,12 @@ bspline_curve3d = d3de.BSplineCurve3D(degree=degree,
 circle = curves.Circle2D(d3d.OXY, 0.015)
 contour = d3dw.Contour2D(circle.split_at_abscissa(circle.length()*.5))
 
+# rl = primitives3d.OpenRoundedLineSegments3D(points, radius, adapt_radius=True, name='wire')
+
 
 sweep = primitives3d.Sweep(contour, d3dw.Wire3D([bspline_curve3d]), name='Random pipe')
 
 model = d3d.core.VolumeModel([sweep])
-model._check_platform()
 model.babylonjs()
 
 model.to_step('bspline_sweep.step')

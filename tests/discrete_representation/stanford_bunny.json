@@ -1,5 +1,5 @@
 {
-  "object_class": "volmdlr.shells.DisplayTriangleShell3D",
+  "object_class": "design3d.shells.DisplayTriangleShell3D",
   "name": "Stanford Bunny",
   "positions": [
     [

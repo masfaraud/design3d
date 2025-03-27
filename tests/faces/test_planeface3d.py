@@ -8,8 +8,8 @@ import unittest
 import dessia_common.core
 import dessia_common.core as dc
 
-import volmdlr
-from volmdlr import edges, wires, faces, surfaces, curves
+import design3d
+from design3d import edges, wires, faces, surfaces, curves
 
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_planeface_tests")
@@ -39,14 +39,14 @@ class TestPlaneFace3D(unittest.TestCase):
             os.path.join(folder, 'test_planef_inters291123.json')).primitives
         face_intersections = face1.face_intersections(face2)
         line_seg = edges.LineSegment3D(
-            volmdlr.Point3D(0.034031786272172244, 0.019018077708099396, 0.07196336225667499),
-            volmdlr.Point3D(0.03756212352555941, 0.022324611455208112, 0.07196336225667499)
+            design3d.Point3D(0.034031786272172244, 0.019018077708099396, 0.07196336225667499),
+            design3d.Point3D(0.03756212352555941, 0.022324611455208112, 0.07196336225667499)
         )
         self.assertTrue(face_intersections[0].primitives[0], line_seg)
 
     def test_face_inside(self):
-        face2 = self.face.frame_mapping(volmdlr.Frame3D(volmdlr.Point3D(0, 0, 0), volmdlr.Vector3D(0.5, 0, 0),
-                                        volmdlr.Vector3D(0, 0.5, 0), volmdlr.Vector3D(0, 0, 0.5)), 'old')
+        face2 = self.face.frame_mapping(design3d.Frame3D(design3d.Point3D(0, 0, 0), design3d.Vector3D(0.5, 0, 0),
+                                        design3d.Vector3D(0, 0.5, 0), design3d.Vector3D(0, 0, 0.5)), 'old')
         self.assertEqual(self.face.face_inside(face2), True)
         self.assertEqual(face2.face_inside(self.face), False)
         face1, face2 = dc.DessiaObject.from_json(os.path.join(folder, 'test_face_inside.json')).primitives
@@ -59,8 +59,8 @@ class TestPlaneFace3D(unittest.TestCase):
         self.assertEqual(len(face_intersections), 4)
 
     def test_line_intersections(self):
-        line_inside_hole = curves.Line3D(volmdlr.Point3D(0.1, 0.0, -.3), volmdlr.Point3D(-0.1, 0.0, 0.3))
-        line_inside_face = curves.Line3D(volmdlr.Point3D(-0.05, 0.0, -.3), volmdlr.Point3D(-0.1, 0.0, 0.3))
+        line_inside_hole = curves.Line3D(design3d.Point3D(0.1, 0.0, -.3), design3d.Point3D(-0.1, 0.0, 0.3))
+        line_inside_face = curves.Line3D(design3d.Point3D(-0.05, 0.0, -.3), design3d.Point3D(-0.1, 0.0, 0.3))
         self.assertEqual([], self.face_with_3holes.line_intersections(line_inside_hole))
         self.assertEqual(1, len(self.face_with_3holes.line_intersections(line_inside_face)))
 
@@ -71,9 +71,9 @@ class TestPlaneFace3D(unittest.TestCase):
         new_faces = self.face_with_3holes.divide_face(cutting_contours)
         self.assertEqual(len(new_faces), 2)
         cutting_contour = wires.Wire2D.from_points([
-            volmdlr.Point2D(0.5, 1.), volmdlr.Point2D(0.5, 0.75),
-            volmdlr.Point2D(1, 0.75), volmdlr.Point2D(1, 1), volmdlr.Point2D(1.25, 1),
-            volmdlr.Point2D(1.25, 1.5), volmdlr.Point2D(1, 1.5)
+            design3d.Point2D(0.5, 1.), design3d.Point2D(0.5, 0.75),
+            design3d.Point2D(1, 0.75), design3d.Point2D(1, 1), design3d.Point2D(1.25, 1),
+            design3d.Point2D(1.25, 1.5), design3d.Point2D(1, 1.5)
         ])
         face_tobe_divided = dc.DessiaObject.from_json(os.path.join(folder, 'face_tobe_divided.json'))
         divided_faces = face_tobe_divided.divide_face([cutting_contour])
@@ -119,62 +119,62 @@ class TestPlaneFace3D(unittest.TestCase):
 
     def test_cylindricalface_intersections(self):
         R = 0.15
-        cylindricalsurface = surfaces.CylindricalSurface3D(volmdlr.OXYZ, R)
-        face = faces.CylindricalFace3D.from_surface_rectangular_cut(cylindricalsurface, 0, volmdlr.TWO_PI, -.25, .25)
+        cylindricalsurface = surfaces.CylindricalSurface3D(design3d.OXYZ, R)
+        face = faces.CylindricalFace3D.from_surface_rectangular_cut(cylindricalsurface, 0, design3d.TWO_PI, -.25, .25)
         """ ========== CIRCLE3D ========="""
-        plane_face_3 = self.plane_face_cylindricalface_intersec.rotation(volmdlr.O3D, volmdlr.X3D, math.pi / 2)
+        plane_face_3 = self.plane_face_cylindricalface_intersec.rotation(design3d.O3D, design3d.X3D, math.pi / 2)
         face_intersections = plane_face_3.face_intersections(face)
         self.assertEqual(len(face_intersections), 1)
         self.assertIsInstance(face_intersections[0].primitives[0], edges.FullArc3D)
-        self.assertEqual(face_intersections[0].primitives[0].circle.center, volmdlr.O3D)
+        self.assertEqual(face_intersections[0].primitives[0].circle.center, design3d.O3D)
         self.assertEqual(face_intersections[0].primitives[0].circle.radius, 0.15)
         """ ========== FULL ELLIPSE3D ========="""
-        plane_face_3 = self.plane_face_cylindricalface_intersec.rotation(volmdlr.O3D, volmdlr.X3D, math.pi / 4)
+        plane_face_3 = self.plane_face_cylindricalface_intersec.rotation(design3d.O3D, design3d.X3D, math.pi / 4)
         face_intersections = plane_face_3.face_intersections(face)
         self.assertEqual(len(face_intersections), 1)
         self.assertIsInstance(face_intersections[0].primitives[0], edges.FullArcEllipse3D)
-        self.assertEqual(face_intersections[0].primitives[0].ellipse.center, volmdlr.O3D)
+        self.assertEqual(face_intersections[0].primitives[0].ellipse.center, design3d.O3D)
         self.assertAlmostEqual(face_intersections[0].primitives[0].ellipse.major_axis, 0.21213203435596426)
         self.assertTrue(face_intersections[0].primitives[0].ellipse.major_dir.is_close(
-            volmdlr.Vector3D(0, -0.7071067811865475, 0.7071067811865475)))
+            design3d.Vector3D(0, -0.7071067811865475, 0.7071067811865475)))
         """ ========== THREE ARC ELLIPSES ========="""
-        plane_face_3 = self.plane_face_cylindricalface_intersec.rotation(volmdlr.O3D, volmdlr.X3D, math.pi / 7)
+        plane_face_3 = self.plane_face_cylindricalface_intersec.rotation(design3d.O3D, design3d.X3D, math.pi / 7)
         face_intersections = plane_face_3.face_intersections(face)
         self.assertEqual(len(face_intersections), 3)
         for inter in face_intersections:
             self.assertIsInstance(inter.primitives[0], edges.ArcEllipse3D)
-        self.assertEqual(face_intersections[0].primitives[0].ellipse.center, volmdlr.O3D)
-        self.assertTrue(face_intersections[0].primitives[0].ellipse.major_dir.is_close(volmdlr.Point3D(
+        self.assertEqual(face_intersections[0].primitives[0].ellipse.center, design3d.O3D)
+        self.assertTrue(face_intersections[0].primitives[0].ellipse.major_dir.is_close(design3d.Point3D(
             2.6567716615652136e-17, -0.4338837391180807, 0.9009688679021675)))
         self.assertAlmostEqual(face_intersections[0].primitives[0].ellipse.major_axis, 0.3457147306439571)
-        list_expected_points = [[volmdlr.Point3D(0.08947272158306664, -0.12039365470206077, 0.25),
-                                 volmdlr.Point3D(0.136637076048, -0.061889493851, 0.128514858204),
-                                 volmdlr.Point3D(0.15, -0.0, 0.0)],
-                                [volmdlr.Point3D(0.15, -0.0, 0.0),
-                                 volmdlr.Point3D(0.136637075473, 0.06188949512, -0.128514860839),
-                                 volmdlr.Point3D(0.08947272158306664, 0.12039365470206077, -0.25)],
-                                [volmdlr.Point3D(-0.08947272158306664, 0.12039365470206077, -0.25),
-                                 volmdlr.Point3D(-0.15, 0, 0),
-                                 volmdlr.Point3D(-0.08947272158306664, -0.12039365470206077, 0.25)]]
+        list_expected_points = [[design3d.Point3D(0.08947272158306664, -0.12039365470206077, 0.25),
+                                 design3d.Point3D(0.136637076048, -0.061889493851, 0.128514858204),
+                                 design3d.Point3D(0.15, -0.0, 0.0)],
+                                [design3d.Point3D(0.15, -0.0, 0.0),
+                                 design3d.Point3D(0.136637075473, 0.06188949512, -0.128514860839),
+                                 design3d.Point3D(0.08947272158306664, 0.12039365470206077, -0.25)],
+                                [design3d.Point3D(-0.08947272158306664, 0.12039365470206077, -0.25),
+                                 design3d.Point3D(-0.15, 0, 0),
+                                 design3d.Point3D(-0.08947272158306664, -0.12039365470206077, 0.25)]]
         for expected_points, wire in zip(list_expected_points, face_intersections):
             arcellipse = wire.primitives[0]
             self.assertTrue(expected_points[0].is_close(arcellipse.start))
             self.assertTrue(expected_points[1].is_close(arcellipse.middle_point()))
             self.assertTrue(expected_points[2].is_close(arcellipse.end))
         """ ========== TWO PARALLEL LINES ========="""
-        plane_face_3 = self.plane_face_cylindricalface_intersec.rotation(volmdlr.O3D, volmdlr.X3D, math.pi)
+        plane_face_3 = self.plane_face_cylindricalface_intersec.rotation(design3d.O3D, design3d.X3D, math.pi)
         face_intersections = plane_face_3.face_intersections(face)
         self.assertTrue(face_intersections[0].primitives[0].is_close(
-            edges.LineSegment3D(volmdlr.Point3D(0.15, 0.0, -0.25),
-                                volmdlr.Point3D(0.15, 0.0, 0.25))))
+            edges.LineSegment3D(design3d.Point3D(0.15, 0.0, -0.25),
+                                design3d.Point3D(0.15, 0.0, 0.25))))
         self.assertTrue(face_intersections[1].primitives[0].is_close(
-            edges.LineSegment3D(volmdlr.Point3D(-0.15, 0.0, -0.25),
-                                volmdlr.Point3D(-0.15, 0.0, 0.25))))
+            edges.LineSegment3D(design3d.Point3D(-0.15, 0.0, -0.25),
+                                design3d.Point3D(-0.15, 0.0, 0.25))))
         """ ========== ONE LINE ========="""
-        plane_face_3 = self.plane_face_cylindricalface_intersec.translation(R * volmdlr.Y3D)
+        plane_face_3 = self.plane_face_cylindricalface_intersec.translation(R * design3d.Y3D)
         face_intersections = plane_face_3.face_intersections(face)
-        self.assertEqual(face_intersections[0].primitives[0], edges.LineSegment3D(volmdlr.Point3D(0.0, 0.15, -0.25),
-                                                                                  volmdlr.Point3D(0.0, 0.15, 0.25)))
+        self.assertEqual(face_intersections[0].primitives[0], edges.LineSegment3D(design3d.Point3D(0.0, 0.15, -0.25),
+                                                                                  design3d.Point3D(0.0, 0.15, 0.25)))
         """======= [] ==========="""
         planeface, cylface = dessia_common.core.DessiaObject.from_json(
             os.path.join(folder, 'test_planeface_cylindricalface_intersections_none.json')).primitives
@@ -183,12 +183,12 @@ class TestPlaneFace3D(unittest.TestCase):
     def test_conical_face_intersections(self):
         def get_face(plane, x1=-1, x2=1, y1=-1, y2=1):
             return faces.PlaneFace3D.from_surface_rectangular_cut(plane, x1, x2, y1, y2)
-        conical_surface = surfaces.ConicalSurface3D(volmdlr.OXYZ, math.pi / 6)
+        conical_surface = surfaces.ConicalSurface3D(design3d.OXYZ, math.pi / 6)
         conical_face = faces.ConicalFace3D.from_surface_rectangular_cut(conical_surface,
                                                                         0, 1.5 * math.pi, 0., 1)
         """======== Arc3D ========="""
-        plane1 = surfaces.Plane3D(volmdlr.Frame3D(volmdlr.Point3D(0, 0, 0.5),
-                                                  volmdlr.X3D, volmdlr.Y3D, volmdlr.Z3D))
+        plane1 = surfaces.Plane3D(design3d.Frame3D(design3d.Point3D(0, 0, 0.5),
+                                                  design3d.X3D, design3d.Y3D, design3d.Z3D))
         face = get_face(plane1)
         intersections = face.face_intersections(conical_face)
         self.assertEqual(len(intersections), 1)
@@ -196,7 +196,7 @@ class TestPlaneFace3D(unittest.TestCase):
         self.assertAlmostEqual(intersections[0].length(), 1.360349523175663)
         """========= Hyperbola (BSpline3D) ======="""
         plane2 = surfaces.Plane3D(
-            volmdlr.Frame3D(volmdlr.Point3D(0, 0.25, 0.5), volmdlr.Z3D, volmdlr.X3D, volmdlr.Y3D))
+            design3d.Frame3D(design3d.Point3D(0, 0.25, 0.5), design3d.Z3D, design3d.X3D, design3d.Y3D))
         face = get_face(plane2)
         intersections = face.face_intersections(conical_face)
         self.assertEqual(len(intersections), 1)
@@ -204,8 +204,8 @@ class TestPlaneFace3D(unittest.TestCase):
         self.assertAlmostEqual(intersections[0].length(), 1.5797706721593943)
 
         """============== Two LineSegments ==================="""
-        plane3 = surfaces.Plane3D(volmdlr.Frame3D(volmdlr.Point3D(0, 0.0, 0.5),
-                                                  volmdlr.Z3D, volmdlr.X3D, volmdlr.Y3D))
+        plane3 = surfaces.Plane3D(design3d.Frame3D(design3d.Point3D(0, 0.0, 0.5),
+                                                  design3d.Z3D, design3d.X3D, design3d.Y3D))
         face = get_face(plane3)
         intersections = face.face_intersections(conical_face)
         self.assertEqual(len(intersections), 2)
@@ -213,11 +213,11 @@ class TestPlaneFace3D(unittest.TestCase):
         self.assertAlmostEqual(intersections[0].length(), 1.1547005383794386)
         self.assertAlmostEqual(intersections[1].length(), 1.1547005383794386)
         """===================== Ellipse 3D ============================="""
-        vector1 = volmdlr.Vector3D(1, 1, 1)
+        vector1 = design3d.Vector3D(1, 1, 1)
         vector1 = vector1.unit_vector()
         vector2 = vector1.deterministic_unit_normal_vector()
         vector3 = vector1.cross(vector2)
-        frame = volmdlr.Frame3D(volmdlr.Point3D(0, 0, 0.5), vector1, vector2, vector3)
+        frame = design3d.Frame3D(design3d.Point3D(0, 0, 0.5), vector1, vector2, vector3)
         plane4 = surfaces.Plane3D(frame)
         face = get_face(plane4)
         intersections = face.face_intersections(conical_face)
@@ -229,7 +229,7 @@ class TestPlaneFace3D(unittest.TestCase):
         """================== Parabola ===================="""
         point1 = conical_surface.frame.origin
         point2 = conical_surface.frame.local_to_global_coordinates(
-            volmdlr.Point3D(10 * math.tan(conical_surface.semi_angle), 0, 10))
+            design3d.Point3D(10 * math.tan(conical_surface.semi_angle), 0, 10))
         generatrix = edges.LineSegment3D(point1, point2)
         normal = generatrix.unit_normal_vector()
         plane_origin = frame.origin - normal * .5
@@ -241,15 +241,15 @@ class TestPlaneFace3D(unittest.TestCase):
         self.assertAlmostEqual(intersections[0].length(), 1.19097843887217)
 
     def test_linesegment_inside(self):
-        lineseg = volmdlr.edges.LineSegment3D(volmdlr.Point3D(0.2, 0, -0.2), volmdlr.Point3D(0.1, 0.0, 0.2))
+        lineseg = design3d.edges.LineSegment3D(design3d.Point3D(0.2, 0, -0.2), design3d.Point3D(0.1, 0.0, 0.2))
         self.assertTrue(self.plane_face_cylindricalface_intersec.linesegment_inside(lineseg))
-        lineseg1 = volmdlr.edges.LineSegment3D(volmdlr.Point3D(0.2, 0, -0.2), volmdlr.Point3D(0.1, 0.1, 0.2))
+        lineseg1 = design3d.edges.LineSegment3D(design3d.Point3D(0.2, 0, -0.2), design3d.Point3D(0.1, 0.1, 0.2))
         self.assertFalse(self.plane_face_cylindricalface_intersec.linesegment_inside(lineseg1))
 
     def test_circle_inside(self):
-        circle = curves.Circle3D(volmdlr.OZXY, 0.1)
+        circle = curves.Circle3D(design3d.OZXY, 0.1)
         self.assertTrue(self.plane_face_cylindricalface_intersec.circle_inside(circle))
-        circle2 = curves.Circle3D(volmdlr.OYZX, 0.1)
+        circle2 = curves.Circle3D(design3d.OYZX, 0.1)
         self.assertFalse(self.plane_face_cylindricalface_intersec.circle_inside(circle2))
 
     def test_merges_faces(self):
@@ -277,9 +277,9 @@ class TestPlaneFace3D(unittest.TestCase):
                 self.assertAlmostEqual(solution_area, expected_solution_area)
 
     def test_grid_points(self):
-        surface3d = surfaces.Plane3D(volmdlr.OXYZ)
-        outer_contour2d = wires.Contour2D.from_circle(curves.Circle2D.from_center_and_radius(volmdlr.O2D, 1.0))
-        inner_contour2d = wires.Contour2D.from_circle(curves.Circle2D.from_center_and_radius(volmdlr.O2D, 0.25,
+        surface3d = surfaces.Plane3D(design3d.OXYZ)
+        outer_contour2d = wires.Contour2D.from_circle(curves.Circle2D.from_center_and_radius(design3d.O2D, 1.0))
+        inner_contour2d = wires.Contour2D.from_circle(curves.Circle2D.from_center_and_radius(design3d.O2D, 0.25,
                                                                                              is_trigo=False))
         surface2d = surfaces.Surface2D(outer_contour2d, [inner_contour2d])
         face = faces.PlaneFace3D(surface3d, surface2d)

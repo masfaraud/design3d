@@ -3,10 +3,10 @@
 import io
 import os
 
-# import volmdlr as vm
+# import volmdlr as d3d
 import volmdlr.step
 
-# import volmdlr.cloud as vmcd
+# import volmdlr.cloud as d3dcd
 
 for step_file in [
     'tore1.step',

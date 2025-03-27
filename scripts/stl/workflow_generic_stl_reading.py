@@ -3,18 +3,18 @@ from dessia_common.workflow.blocks import (CadView, ClassMethod,
                                            ModelMethod)
 from dessia_common.workflow.core import Pipe, Workflow
 
-import volmdlr as vm
+import volmdlr as d3d
 from volmdlr import stl
 
-read_stl_method_type = ClassMethodType(class_=vm.stl.Stl, name='from_binary_stream')
+read_stl_method_type = ClassMethodType(class_=d3d.stl.Stl, name='from_binary_stream')
 cls_method_stl = ClassMethod(read_stl_method_type, name='STLFile')
 
-to_volumemodel_method_type = MethodType(class_=vm.stl.Stl, name='to_volume_model')
+to_volumemodel_method_type = MethodType(class_=d3d.stl.Stl, name='to_volume_model')
 method_volumemodel = ModelMethod(to_volumemodel_method_type, name='VolumeModel')
 
 cadview_block = CadView(name='Display3D')
 
-export_html = Export(method_type=MethodType(vm.core.VolumeModel, 'to_html_stream'), filename='VolumeModel.html',
+export_html = Export(method_type=MethodType(d3d.core.VolumeModel, 'to_html_stream'), filename='VolumeModel.html',
                      extension='html', text=True, name='Export_html')
 
 pipes = [

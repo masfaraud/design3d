@@ -4,13 +4,13 @@ import unittest
 import numpy as np
 
 from dessia_common.core import DessiaObject
-from volmdlr.shells import (
+from design3d.shells import (
     OpenTriangleShell3D,
     ClosedTriangleShell3D,
     DisplayTriangleShell3D,
 )
-from volmdlr.primitives3d import Block
-from volmdlr import OXYZ
+from design3d.primitives3d import Block
+from design3d import OXYZ
 
 SHOW_BABYLONJS = False
 

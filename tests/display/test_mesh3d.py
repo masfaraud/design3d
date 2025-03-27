@@ -1,5 +1,5 @@
 """
-Unit testing of volmdlr.display.Mesh3D class.
+Unit testing of design3d.display.Mesh3D class.
 """
 import math
 import os
@@ -9,10 +9,10 @@ import unittest
 import numpy as np
 import trimesh
 from dessia_common.serialization import BinaryFile
-from volmdlr import Point3D
-from volmdlr.display import Mesh3D
-from volmdlr.faces import Triangle3D
-from volmdlr.shells import ClosedTriangleShell3D, OpenTriangleShell3D
+from design3d import Point3D
+from design3d.display import Mesh3D
+from design3d.faces import Triangle3D
+from design3d.shells import ClosedTriangleShell3D, OpenTriangleShell3D
 
 SHOW_BABYLONJS = False
 

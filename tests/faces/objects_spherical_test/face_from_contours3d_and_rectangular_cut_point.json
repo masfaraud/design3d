@@ -1,5 +1,5 @@
 {
-  "object_class": "volmdlr.Point3D",
+  "object_class": "design3d.Point3D",
   "x": 3e-18,
   "y": 8.2e-17,
   "z": 0.026296372000000002

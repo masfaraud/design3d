@@ -1,8 +1,8 @@
 """
-Unittest for volmdlr.Vector2D
+Unittest for design3d.Vector2D
 """
 import unittest
-from volmdlr import Vector2D
+from design3d import Vector2D
 
 
 class TestVector2D(unittest.TestCase):

@@ -10,13 +10,12 @@ from typing import List
 
 import numpy as np
 
-from dessia_common.core import DessiaObject  # isort: skip
 
 import design3d
 import design3d.wires
 
 
-class Grid2D(DessiaObject):
+class Grid2D:
     """
     A class defined with a list of points and characterized with a chosen direction.
 
@@ -32,7 +31,7 @@ class Grid2D(DessiaObject):
 
         self.lists_points = lists_points
         self.direction = direction
-        DessiaObject.__init__(self, name=name)
+        self.name = name
 
     def displacement_compared_to(self, initial_grid2d):
         """

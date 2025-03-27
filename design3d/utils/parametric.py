@@ -7,7 +7,7 @@ import math
 import numpy as np
 
 import design3d
-import design3d.edges as vme
+import design3d.edges as d3de
 from design3d import curves
 
 
@@ -61,7 +61,7 @@ def is_undefined_brep_primitive(primitive, periodicity):
     right position when it's placed on the boundary representation, by analyzing the continuity of the 2D contour.
 
     :param primitive: primitive to perform verification.
-    :type primitive: vme.Edge
+    :type primitive: d3de.Edge
     :param periodicity: list with periodicity in x and y direction
     :type periodicity: list
     """
@@ -107,12 +107,12 @@ def repair_singularity(primitive, last_primitive):
     if cross == 0 and dot == 0:
         if primitive.start.x == math.pi:
             primitive = primitive.translation(design3d.Vector2D(-2 * math.pi, 0))
-            new = vme.LineSegment2D(last_primitive.end, primitive.start)
+            new = d3de.LineSegment2D(last_primitive.end, primitive.start)
         elif primitive.start.x == -math.pi:
             primitive = primitive.translation(design3d.Vector2D(2 * math.pi, 0))
-            new = vme.LineSegment2D(last_primitive.end, primitive.start)
+            new = d3de.LineSegment2D(last_primitive.end, primitive.start)
         else:
-            new = vme.LineSegment2D(last_primitive.end, primitive.start)
+            new = d3de.LineSegment2D(last_primitive.end, primitive.start)
 
         new_primitives.append(new)
         new_primitives.append(primitive)
@@ -339,7 +339,7 @@ def contour2d_healing_close_gaps(contour2d, contour3d):
                                                 contour2d.primitives[1:] + [contour2d.primitives[0]]):
         if prim1 and prim2:
             if not prim1_3d.end.is_close(prim2_3d.start) and not prim1.end.is_close(prim2.start):
-                new_primitives.append(vme.LineSegment2D(prim1.end, prim2.start))
+                new_primitives.append(d3de.LineSegment2D(prim1.end, prim2.start))
 
             new_primitives.append(prim2)
     contour2d.primitives = new_primitives
@@ -381,16 +381,16 @@ def find_parametric_point_at_singularity(edge, abscissa, singularity_line, domai
     intersections = direction_line.line_intersections(singularity_line)
     if intersections:
         point = intersections[0]
-        umin, umax, vmin, vmax = domain
+        umin, umax, d3din, d3dax = domain
         point.x = min(umax, max(point.x, umin))
-        point.y = min(vmax, max(point.y, vmin))
+        point.y = min(d3dax, max(point.y, d3din))
         return point
     return None
 
 
 def is_isocurve(points, tol: float = 1e-6):
     """Test if the parametric points of the edge fits into a line segment."""
-    linesegment = vme.LineSegment2D(points[0], points[-1])
+    linesegment = d3de.LineSegment2D(points[0], points[-1])
     return all(linesegment.point_belongs(point, tol) for point in points)
 
 

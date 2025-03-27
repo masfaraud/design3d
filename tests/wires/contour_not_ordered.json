@@ -1,114 +1,114 @@
 {
-  "object_class": "volmdlr.wires.Contour2D",
+  "object_class": "design3d.wires.Contour2D",
   "name": "",
   "primitives": [
     {
-      "object_class": "volmdlr.edges.LineSegment2D",
+      "object_class": "design3d.edges.LineSegment2D",
       "name": "",
       "start": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": -0.125,
         "y": -0.125
       },
       "end": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 0.125,
         "y": -0.125
       }
     },
     {
-      "object_class": "volmdlr.edges.LineSegment2D",
+      "object_class": "design3d.edges.LineSegment2D",
       "name": "",
       "start": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 0.125,
         "y": -0.125
       },
       "end": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 0.125,
         "y": 0.125
       }
     },
     {
-      "object_class": "volmdlr.edges.LineSegment2D",
+      "object_class": "design3d.edges.LineSegment2D",
       "name": "",
       "start": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 0.125,
         "y": 0.125
       },
       "end": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 0.05983588939565973,
         "y": 0.125
       }
     },
     {
-      "object_class": "volmdlr.edges.LineSegment2D",
+      "object_class": "design3d.edges.LineSegment2D",
       "name": "",
       "start": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": -0.125,
         "y": -0.022915072608544196
       },
       "end": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": -0.125,
         "y": -0.125
       }
     },
     {
-      "object_class": "volmdlr.edges.ArcEllipse2D",
+      "object_class": "design3d.edges.ArcEllipse2D",
       "name": "",
       "start": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": -0.125,
         "y": -0.022915072608544196
       },
       "end": {
-        "object_class": "volmdlr.Point2D",
+        "object_class": "design3d.Point2D",
         "x": 0.05983588939565973,
         "y": 0.125
       },
       "ellipse": {
-        "object_class": "volmdlr.curves.Ellipse2D",
+        "object_class": "design3d.curves.Ellipse2D",
         "name": "",
         "major_axis": 0.15000000000000605,
         "minor_axis": 0.21213203435596045,
         "center": {
-          "object_class": "volmdlr.Point2D",
+          "object_class": "design3d.Point2D",
           "x": -0.15,
           "y": 0.12500000000000003
         },
         "major_dir": {
-          "object_class": "volmdlr.Vector2D",
+          "object_class": "design3d.Vector2D",
           "x": -0.14834045293024462,
           "y": 0.9889363528682975,
           "name": ""
         },
         "minor_dir": {
-          "object_class": "volmdlr.Vector2D",
+          "object_class": "design3d.Vector2D",
           "x": -0.9889363528682975,
           "y": -0.14834045293024462,
           "name": ""
         },
         "frame": {
-          "object_class": "volmdlr.Frame2D",
+          "object_class": "design3d.Frame2D",
           "name": "",
           "origin": {
-            "object_class": "volmdlr.Point2D",
+            "object_class": "design3d.Point2D",
             "x": -0.15,
             "y": 0.12500000000000003
           },
           "u": {
-            "object_class": "volmdlr.Vector2D",
+            "object_class": "design3d.Vector2D",
             "x": -0.14834045293024462,
             "y": 0.9889363528682975,
             "name": ""
           },
           "v": {
-            "object_class": "volmdlr.Vector2D",
+            "object_class": "design3d.Vector2D",
             "x": -0.9889363528682975,
             "y": -0.14834045293024462,
             "name": ""

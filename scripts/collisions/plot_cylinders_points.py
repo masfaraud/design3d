@@ -2,12 +2,12 @@
 Test script for cylinder discretization
 """
 
-import volmdlr as vm
+import volmdlr as d3d
 from volmdlr.primitives3d import Cylinder
 
 c = Cylinder(
-    position=vm.Point3D(0, 0.1, 0),
-    axis=vm.Vector3D(1, 0, 0),
+    position=d3d.Point3D(0, 0.1, 0),
+    axis=d3d.Vector3D(1, 0, 0),
     radius=0.01,
     length=0.1,
     color=(1, 0, 0),

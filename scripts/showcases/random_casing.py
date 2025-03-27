@@ -12,7 +12,7 @@ import random
 import matplotlib.pyplot as plt
 import numpy as npy
 
-import volmdlr as vm
+import volmdlr as d3d
 import volmdlr.primitives2D as primitives2D
 import volmdlr.primitives3D as primitives3D
 
@@ -21,10 +21,10 @@ with_borders = False
 xmax, xmin, ymax, ymin = 10, -10, 10, -10
 c_min, c_max = 0.5, 6
 h_min, h_max = 5, 20
-extrusion_vector = vm.Z3D
-x, y = vm.X3D, vm.Y3D
-origin = vm.Point3D((0,0,0))
-basis_plane = vm.Plane3D(origin, x, y)
+extrusion_vector = d3d.Z3D
+x, y = d3d.X3D, d3d.Y3D
+origin = d3d.Point3D((0,0,0))
+basis_plane = d3d.Plane3D(origin, x, y)
 alpha = 0.8
 
 nb_step = 1
@@ -47,9 +47,9 @@ class Component :
         self.plane = plane
         
         self.points = self.compo_points()
-        self.primitives = [vm.LineSegment2D(self.points[0], self.points[1]), vm.LineSegment2D(self.points[1], self.points[2]),
-                           vm.LineSegment2D(self.points[2], self.points[3]), vm.LineSegment2D(self.points[3], self.points[0])]
-        self.contour = vm.Contour2D(self.primitives)
+        self.primitives = [d3d.LineSegment2D(self.points[0], self.points[1]), d3d.LineSegment2D(self.points[1], self.points[2]),
+                           d3d.LineSegment2D(self.points[2], self.points[3]), d3d.LineSegment2D(self.points[3], self.points[0])]
+        self.contour = d3d.Contour2D(self.primitives)
         self.solid = self.compo_solid()
         
     def compo_points(self) :
@@ -68,9 +68,9 @@ class Component :
         return Component(self.center, new_side, self.vectors[0], self.vectors[1], new_height, self.plane)
         
         self.points = self.compo_points()
-        self.primitives = [vm.LineSegment2D(self.points[0], self.points[1]), vm.LineSegment2D(self.points[1], self.points[2]),
-                           vm.LineSegment2D(self.points[2], self.points[3]), vm.LineSegment2D(self.points[3], self.points[0])]
-        self.contour = vm.Contour2D(self.primitives)
+        self.primitives = [d3d.LineSegment2D(self.points[0], self.points[1]), d3d.LineSegment2D(self.points[1], self.points[2]),
+                           d3d.LineSegment2D(self.points[2], self.points[3]), d3d.LineSegment2D(self.points[3], self.points[0])]
+        self.contour = d3d.Contour2D(self.primitives)
         self.solid = self.compo_solid()
         return 
     
@@ -85,11 +85,11 @@ def generate_param_component(xmin, xmax, ymin, ymax, c_min, c_max, h_min, h_max)
     x, y = random.randrange(xmin*100, xmax*100, 1)/100, random.randrange(ymin*100, ymax*100, 1)/100
     c = random.randrange(c_min*100, c_max*100, 1)/100 
     x_vec, y_vec = random.randrange(xmin*100, xmax*100, 1)/100, random.randrange(ymin*100, ymax*100, 1)/100
-    vec1 = vm.Vector2D((x_vec, y_vec))
+    vec1 = d3d.Vector2D((x_vec, y_vec))
     vec1 = vec1.unit_vector()
     vec2 = vec1.deterministic_unit_normal_vector()
     
-    center = vm.Point2D((x, y))
+    center = d3d.Point2D((x, y))
     height = random.randrange(h_min*100, h_max*100, 1)/100
     return center, c, vec1, vec2, height
 
@@ -106,7 +106,7 @@ for k in range(0, nb_components) :
     x_size, y_size = random.randrange(10, 100, 1)/100, random.randrange(10, 100, 1)/100
     center, c, vec1, vec2, height = generate_param_component(xmin, xmax, ymin, ymax, c_min, c_max, h_min, h_max)
     if k==0 or nb_components%k == 0 :
-        vec1, vec2 = vm.Vector2D((1,0)), vm.Vector2D((0,1))
+        vec1, vec2 = d3d.Vector2D((1,0)), d3d.Vector2D((0,1))
     component = Component(center, c, vec1*x_size, vec2*y_size, height, basis_plane)
     list_component_init.append(component)
     all_solid_init.append(component.solid)
@@ -142,7 +142,7 @@ for step in range(0, nb_step) :
         component.center.MPLPlot(ax=ax, color='r')
         [prim.MPLPlot(ax=ax) for prim in component.primitives]
     
-    poly = vm.Polygon2D.points_convex_hull(all_points)
+    poly = d3d.Polygon2D.points_convex_hull(all_points)
     poly.MPLPlot(ax=ax)
     [pt.MPLPlot(ax=ax, color='m') for pt in poly.points]
     
@@ -157,7 +157,7 @@ for step in range(0, nb_step) :
         for component in list_component :
                 if component.height >= h :
                     points_test.extend(component.points)
-        poly_test = vm.Polygon2D.points_convex_hull(points_test)
+        poly_test = d3d.Polygon2D.points_convex_hull(points_test)
         
         if h > initial_height + minimum_stepfloor or k==len(height_sorted)-2:
             if poly_test.Area() < delta_surface*initial_area or k==len(height_sorted)-2: 
@@ -196,7 +196,7 @@ for step in range(0, nb_step) :
                                                        adapt_radius=True)
     offset_radius = []
     for prim in contour.primitives :
-        if prim.__class__ is vm.core.Arc2D :
+        if prim.__class__ is d3d.core.Arc2D :
             offset_radius.append(prim.radius)
             
     inner_contour = contour.Offset(-min(offset_radius))
@@ -215,7 +215,7 @@ for step in range(0, nb_step) :
     for i in range(n_screws):
         s = i * l/n_screws
         p = screw_holes_rl.PointAtCurvilinearAbscissa(s)
-        screw_holes.append(vm.Circle2D(p, screw_holes_diameter*0.5))  
+        screw_holes.append(d3d.Circle2D(p, screw_holes_diameter*0.5))  
     
     # Belt
     belt_outer_contour = inner_contour.Offset(-(2*screw_holes_clearance + screw_holes_diameter + thickness))
@@ -240,7 +240,7 @@ for step in range(0, nb_step) :
         
         offset_radius_floor = []
         for prim in contour_floor.primitives :
-            if prim.__class__ is vm.core.Arc2D :
+            if prim.__class__ is d3d.core.Arc2D :
                 offset_radius_floor.append(prim.radius)
                 
         inner_contour_floor = contour_floor.Offset(-min(offset_radius_floor))
@@ -269,12 +269,12 @@ for step in range(0, nb_step) :
         
         if with_borders :
             r = 0.15
-            arc = vm.Arc2D(vm.Point2D((0,0)), vm.Point2D(((-1+math.sqrt(2)/2)*r,r*math.sqrt(2)/2)), vm.Point2D((-r,r)))
+            arc = d3d.Arc2D(d3d.Point2D((0,0)), d3d.Point2D(((-1+math.sqrt(2)/2)*r,r*math.sqrt(2)/2)), d3d.Point2D((-r,r)))
             
             contour_sweep = outer_contour_floor.Offset(r)
             
-            contour = vm.Contour2D([arc])
-            wire_sweep = vm.Wire3D([p.To3D(origin + extrusion_vector*list_height_polyfloor[enum+1], x, y) for p in contour_sweep.primitives])
+            contour = d3d.Contour2D([arc])
+            wire_sweep = d3d.Wire3D([p.To3D(origin + extrusion_vector*list_height_polyfloor[enum+1], x, y) for p in contour_sweep.primitives])
             sweep = primitives3D.Sweep(contour, wire_sweep, alpha=alpha, name = 'congé')
             
             list_component_hat.append(sweep)
@@ -286,11 +286,11 @@ for step in range(0, nb_step) :
             if with_borders :
                 list_component_hat.pop()
                 r_top = thickness_min
-                arc_top = vm.Arc2D(vm.Point2D((0,0)), vm.Point2D(((-1+math.sqrt(2)/2)*r_top,r_top*math.sqrt(2)/2)), vm.Point2D((-r_top,r_top)))
-                contour_top = vm.Contour2D([arc_top])
+                arc_top = d3d.Arc2D(d3d.Point2D((0,0)), d3d.Point2D(((-1+math.sqrt(2)/2)*r_top,r_top*math.sqrt(2)/2)), d3d.Point2D((-r_top,r_top)))
+                contour_top = d3d.Contour2D([arc_top])
                 contour_sweep_top = outer_contour_floor.Offset(r_top)
             
-                new_wire_sweep = vm.Wire3D([p.To3D(origin + extrusion_vector*(list_height_polyfloor[enum+1]), x, y) for p in contour_sweep_top.primitives])
+                new_wire_sweep = d3d.Wire3D([p.To3D(origin + extrusion_vector*(list_height_polyfloor[enum+1]), x, y) for p in contour_sweep_top.primitives])
                 sweep = primitives3D.Sweep(contour_top, new_wire_sweep, alpha=alpha, name = 'congé')
                 list_component_hat.append(sweep)
             
@@ -340,26 +340,26 @@ for step in range(0, nb_step) :
                                                        thickness_min*basis_plane.normal, alpha=alpha, name='rooftop')
             list_component_hat.append(rooftop)
     
-    # m = vm.VolumeModel(all_solid+[bottom])
+    # m = d3d.VolumeModel(all_solid+[bottom])
     # m.babylonjs(debug=True)  
         
-    # m = vm.VolumeModel(all_solid+[sides,bottom, belt])
+    # m = d3d.VolumeModel(all_solid+[sides,bottom, belt])
     # m.babylonjs(debug=True) 
     
-    # m = vm.VolumeModel(all_solid+list_component_hat)
+    # m = d3d.VolumeModel(all_solid+list_component_hat)
     # m.babylonjs(debug=True)
     
-    # m = vm.VolumeModel(all_solid+[sides,bottom, belt]+list_component_hat)
+    # m = d3d.VolumeModel(all_solid+[sides,bottom, belt]+list_component_hat)
     # m.babylonjs()  
     primitives = all_solid+[bottom, sides, belt]+list_component_hat
     
 nb_primitives = len(primitives)
-away_frame = vm.Frame3D(vm.Point3D((100,100,100)), vm.X3D, vm.Y3D, vm.Z3D)
-steps = [[vm.OXYZ]*nb_components+[away_frame]*(nb_primitives-nb_components),
-         [vm.OXYZ]*(nb_components+1)+[away_frame]*(nb_primitives-nb_components-1), 
-         [vm.OXYZ]*(nb_components+3)+[away_frame]*(nb_primitives-nb_components-3),
-         [vm.OXYZ]*(nb_components+3+len(primitives_floor[0]))+[away_frame]*(nb_primitives-nb_components-3-len(primitives_floor[0])),
-         [vm.OXYZ]*(nb_components+3+len(primitives_floor[0])+len(primitives_floor[1]))+[away_frame]*(nb_primitives-nb_components-3-len(primitives_floor[0])-len(primitives_floor[1])),
-         [vm.OXYZ]*nb_primitives]
-volmod = vm.MovingVolumeModel(primitives, steps)
+away_frame = d3d.Frame3D(d3d.Point3D((100,100,100)), d3d.X3D, d3d.Y3D, d3d.Z3D)
+steps = [[d3d.OXYZ]*nb_components+[away_frame]*(nb_primitives-nb_components),
+         [d3d.OXYZ]*(nb_components+1)+[away_frame]*(nb_primitives-nb_components-1), 
+         [d3d.OXYZ]*(nb_components+3)+[away_frame]*(nb_primitives-nb_components-3),
+         [d3d.OXYZ]*(nb_components+3+len(primitives_floor[0]))+[away_frame]*(nb_primitives-nb_components-3-len(primitives_floor[0])),
+         [d3d.OXYZ]*(nb_components+3+len(primitives_floor[0])+len(primitives_floor[1]))+[away_frame]*(nb_primitives-nb_components-3-len(primitives_floor[0])-len(primitives_floor[1])),
+         [d3d.OXYZ]*nb_primitives]
+volmod = d3d.MovingVolumeModel(primitives, steps)
 volmod.babylonjs()

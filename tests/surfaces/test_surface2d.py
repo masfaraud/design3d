@@ -1,13 +1,13 @@
 import unittest
 
-import volmdlr
+import design3d
 
-from volmdlr import surfaces, wires
+from design3d import surfaces, wires
 
 
 class TestSurface2D(unittest.TestCase):
-    contour = wires.Contour2D.from_points([volmdlr.O2D, volmdlr.Point2D(1, 0), volmdlr.Point2D(1, 1),
-                                           volmdlr.Point2D(0, 1)])
+    contour = wires.Contour2D.from_points([design3d.O2D, design3d.Point2D(1, 0), design3d.Point2D(1, 1),
+                                           design3d.Point2D(0, 1)])
     surface2d = surfaces.Surface2D(contour, [])
 
     def test_triangulation(self):

@@ -33,16 +33,15 @@ jobs:
         run: |
           pre-commit run --all-files
       
-      - name: Build Package
-        run: |
-          python -m build
-
       - name: Install Package
         run: |
-          pip install dist/*.whl
+          pip install .[test]
 
       - name: Run Scripts
         run: |
-          cd scripts
-          python ci_scripts.py 
+          cd tests
+          coverage run --rcfile=../.coveragerc --data-file=../.coverage --source design3d -m unittest discover -v
+          cd ../scripts
+          coverage run --rcfile=../.coveragerc --data-file=../.coverage --source design3d -a ci_scripts.py
+          coverage report
           done

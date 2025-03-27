@@ -1,17 +1,17 @@
 import matplotlib.pyplot as plt
 
-import volmdlr as vm
-import volmdlr.edges as vme
-import volmdlr.wires as vmw
+import volmdlr as d3d
+import volmdlr.edges as d3de
+import volmdlr.wires as d3dw
 from volmdlr.core import BoundingRectangle
 
-line_seg1 = vme.LineSegment2D(vm.Point2D(-0.5, -0.2), vm.O2D)
-line_seg2 = vme.LineSegment2D(vm.O2D, vm.Point2D(0.3, 1))
-line_seg3 = vme.LineSegment2D(vm.Point2D(0.3, 1), vm.Point2D(1, 1))
-line_seg4 = vme.LineSegment2D(vm.Point2D(1, 1), vm.Point2D(1, -0.5))
-line_seg5 = vme.LineSegment2D(vm.Point2D(1, -0.5), vm.Point2D(-0.5, -0.2))
+line_seg1 = d3de.LineSegment2D(d3d.Point2D(-0.5, -0.2), d3d.O2D)
+line_seg2 = d3de.LineSegment2D(d3d.O2D, d3d.Point2D(0.3, 1))
+line_seg3 = d3de.LineSegment2D(d3d.Point2D(0.3, 1), d3d.Point2D(1, 1))
+line_seg4 = d3de.LineSegment2D(d3d.Point2D(1, 1), d3d.Point2D(1, -0.5))
+line_seg5 = d3de.LineSegment2D(d3d.Point2D(1, -0.5), d3d.Point2D(-0.5, -0.2))
 
-contour1 = vmw.Contour2D([line_seg1, line_seg2, line_seg3, line_seg4, line_seg5])
+contour1 = d3dw.Contour2D([line_seg1, line_seg2, line_seg3, line_seg4, line_seg5])
 
 bd_rectangle = contour1.bounding_rectangle
 
@@ -33,18 +33,18 @@ center = b_rec.center()
 area = b_rec.area()
 ax.scatter(center[0], center[1], color='r', marker='+')
 
-line_fig2_seg1 = vme.LineSegment2D(vm.Point2D(0, 1), vm.Point2D(0.25, 0.5))
-line_fig2_seg2 = vme.LineSegment2D(vm.Point2D(0.25, 0.5), vm.Point2D(1, 0.5))
-line_fig2_seg3 = vme.LineSegment2D(vm.Point2D(1, 0.5), vm.Point2D(0.45, 0))
-line_fig2_seg4 = vme.LineSegment2D(vm.Point2D(0.45, 0), vm.Point2D(1, -1))
-line_fig2_seg5 = vme.LineSegment2D(vm.Point2D(1, -1), vm.Point2D(0, -0.5))
-line_fig2_seg6 = vme.LineSegment2D(vm.Point2D(0, -0.5), vm.Point2D(-1, -1))
-line_fig2_seg7 = vme.LineSegment2D(vm.Point2D(-1, -1), vm.Point2D(-0.45, 0))
-line_fig2_seg8 = vme.LineSegment2D(vm.Point2D(-0.45, 0), vm.Point2D(-1, 0.5))
-line_fig2_seg9 = vme.LineSegment2D(vm.Point2D(-1, 0.5), vm.Point2D(-0.25, 0.5))
-line_fig2_seg10 = vme.LineSegment2D(vm.Point2D(-0.25, 0.5), vm.Point2D(0, 1))
+line_fig2_seg1 = d3de.LineSegment2D(d3d.Point2D(0, 1), d3d.Point2D(0.25, 0.5))
+line_fig2_seg2 = d3de.LineSegment2D(d3d.Point2D(0.25, 0.5), d3d.Point2D(1, 0.5))
+line_fig2_seg3 = d3de.LineSegment2D(d3d.Point2D(1, 0.5), d3d.Point2D(0.45, 0))
+line_fig2_seg4 = d3de.LineSegment2D(d3d.Point2D(0.45, 0), d3d.Point2D(1, -1))
+line_fig2_seg5 = d3de.LineSegment2D(d3d.Point2D(1, -1), d3d.Point2D(0, -0.5))
+line_fig2_seg6 = d3de.LineSegment2D(d3d.Point2D(0, -0.5), d3d.Point2D(-1, -1))
+line_fig2_seg7 = d3de.LineSegment2D(d3d.Point2D(-1, -1), d3d.Point2D(-0.45, 0))
+line_fig2_seg8 = d3de.LineSegment2D(d3d.Point2D(-0.45, 0), d3d.Point2D(-1, 0.5))
+line_fig2_seg9 = d3de.LineSegment2D(d3d.Point2D(-1, 0.5), d3d.Point2D(-0.25, 0.5))
+line_fig2_seg10 = d3de.LineSegment2D(d3d.Point2D(-0.25, 0.5), d3d.Point2D(0, 1))
 
-contour2 = vmw.Contour2D([line_fig2_seg1, line_fig2_seg2, line_fig2_seg3, line_fig2_seg4,
+contour2 = d3dw.Contour2D([line_fig2_seg1, line_fig2_seg2, line_fig2_seg3, line_fig2_seg4,
                           line_fig2_seg5, line_fig2_seg6, line_fig2_seg7, line_fig2_seg8, line_fig2_seg9,
                           line_fig2_seg10])
 
@@ -70,18 +70,18 @@ ax3.scatter(center2[0], center2[1])
 print(b_rec.is_intersecting(b_rec2))
 
 # test boundingbox intersection flase
-line_fig3_seg1 = vme.LineSegment2D(vm.Point2D(5, 1), vm.Point2D(5.25, 0.5))
-line_fig3_seg2 = vme.LineSegment2D(vm.Point2D(5.25, 0.5), vm.Point2D(6, 0.5))
-line_fig3_seg3 = vme.LineSegment2D(vm.Point2D(6, 0.5), vm.Point2D(5.45, 0))
-line_fig3_seg4 = vme.LineSegment2D(vm.Point2D(5.45, 0), vm.Point2D(6, -1))
-line_fig3_seg5 = vme.LineSegment2D(vm.Point2D(6, -1), vm.Point2D(5, -0.5))
-line_fig3_seg6 = vme.LineSegment2D(vm.Point2D(5, -0.5), vm.Point2D(4, -1))
-line_fig3_seg7 = vme.LineSegment2D(vm.Point2D(4, -1), vm.Point2D(4.55, 0))
-line_fig3_seg8 = vme.LineSegment2D(vm.Point2D(4.55, 0), vm.Point2D(4, 0.5))
-line_fig3_seg9 = vme.LineSegment2D(vm.Point2D(4, 0.5), vm.Point2D(4.75, 0.5))
-line_fig3_seg10 = vme.LineSegment2D(vm.Point2D(4.75, 0.5), vm.Point2D(5, 1))
+line_fig3_seg1 = d3de.LineSegment2D(d3d.Point2D(5, 1), d3d.Point2D(5.25, 0.5))
+line_fig3_seg2 = d3de.LineSegment2D(d3d.Point2D(5.25, 0.5), d3d.Point2D(6, 0.5))
+line_fig3_seg3 = d3de.LineSegment2D(d3d.Point2D(6, 0.5), d3d.Point2D(5.45, 0))
+line_fig3_seg4 = d3de.LineSegment2D(d3d.Point2D(5.45, 0), d3d.Point2D(6, -1))
+line_fig3_seg5 = d3de.LineSegment2D(d3d.Point2D(6, -1), d3d.Point2D(5, -0.5))
+line_fig3_seg6 = d3de.LineSegment2D(d3d.Point2D(5, -0.5), d3d.Point2D(4, -1))
+line_fig3_seg7 = d3de.LineSegment2D(d3d.Point2D(4, -1), d3d.Point2D(4.55, 0))
+line_fig3_seg8 = d3de.LineSegment2D(d3d.Point2D(4.55, 0), d3d.Point2D(4, 0.5))
+line_fig3_seg9 = d3de.LineSegment2D(d3d.Point2D(4, 0.5), d3d.Point2D(4.75, 0.5))
+line_fig3_seg10 = d3de.LineSegment2D(d3d.Point2D(4.75, 0.5), d3d.Point2D(5, 1))
 
-contour3 = vmw.Contour2D([line_fig3_seg1, line_fig3_seg2, line_fig3_seg3, line_fig3_seg4,
+contour3 = d3dw.Contour2D([line_fig3_seg1, line_fig3_seg2, line_fig3_seg3, line_fig3_seg4,
                           line_fig3_seg5, line_fig3_seg6, line_fig3_seg7, line_fig3_seg8, line_fig3_seg9,
                           line_fig3_seg10])
 bd_rectangle = contour3.bounding_rectangle
@@ -103,8 +103,8 @@ print(b_rec.distance_to_b_rectangle(b_rec3))
 print(b_rec.distance_to_b_rectangle(b_rec2))  # d=0
 
 # test distance to point
-print(b_rec.distance_to_point(vm.Point2D(0.45, 0.45)))  #
+print(b_rec.distance_to_point(d3d.Point2D(0.45, 0.45)))  #
 
-print(b_rec.distance_to_point(vm.Point2D(2, 0.45)))  # d= 1
+print(b_rec.distance_to_point(d3d.Point2D(2, 0.45)))  # d= 1
 
-print(b_rec.distance_to_point(vm.Point2D(2, 2)))
+print(b_rec.distance_to_point(d3d.Point2D(2, 2)))

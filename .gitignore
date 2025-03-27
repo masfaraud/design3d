@@ -128,4 +128,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-volmdlr/core_compiled.c
+design3d/core_compiled.c

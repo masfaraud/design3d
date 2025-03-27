@@ -13,12 +13,12 @@ from scipy.spatial import ConvexHull
 
 import volmdlr.cloud
 import volmdlr.core
-import volmdlr.stl as vmstl
+import volmdlr.stl as d3dstl
 
-# import volmdlr as vm
-# import volmdlr.wires as vmw
-# import volmdlr.faces as vmf
-# import volmdlr.edges as vme
+# import volmdlr as d3d
+# import volmdlr.wires as d3dw
+# import volmdlr.faces as d3df
+# import volmdlr.edges as d3de
 # import matplotlib.pyplot as plt
 
 shells = []

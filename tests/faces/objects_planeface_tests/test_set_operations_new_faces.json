@@ -1,36 +1,36 @@
 {
-  "object_class": "volmdlr.core.VolumeModel",
+  "object_class": "design3d.core.VolumeModel",
   "name": "",
   "primitives": [
     {
-      "object_class": "volmdlr.faces.PlaneFace3D",
+      "object_class": "design3d.faces.PlaneFace3D",
       "name": "",
       "surface3d": {
-        "object_class": "volmdlr.surfaces.Plane3D",
+        "object_class": "design3d.surfaces.Plane3D",
         "name": "",
         "frame": {
-          "object_class": "volmdlr.Frame3D",
+          "object_class": "design3d.Frame3D",
           "name": "",
           "origin": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": 0.0,
             "y": 0.0,
             "z": 0.0
           },
           "u": {
-            "object_class": "volmdlr.Vector3D",
+            "object_class": "design3d.Vector3D",
             "x": 1.0,
             "y": 0.0,
             "z": 0.0
           },
           "v": {
-            "object_class": "volmdlr.Vector3D",
+            "object_class": "design3d.Vector3D",
             "x": 0.0,
             "y": 1.0,
             "z": 0.0
           },
           "w": {
-            "object_class": "volmdlr.Vector3D",
+            "object_class": "design3d.Vector3D",
             "x": 0.0,
             "y": 0.0,
             "z": 1.0
@@ -38,92 +38,92 @@
         }
       },
       "surface2d": {
-        "object_class": "volmdlr.surfaces.Surface2D",
+        "object_class": "design3d.surfaces.Surface2D",
         "name": "name",
         "outer_contour": {
-          "object_class": "volmdlr.wires.Contour2D",
+          "object_class": "design3d.wires.Contour2D",
           "name": "",
           "primitives": [
             {
-              "object_class": "volmdlr.edges.LineSegment2D",
+              "object_class": "design3d.edges.LineSegment2D",
               "name": "",
               "start": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": -2.0,
                 "y": 0.0
               },
               "end": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": 2.0,
                 "y": 0.0
               }
             },
             {
-              "object_class": "volmdlr.edges.LineSegment2D",
+              "object_class": "design3d.edges.LineSegment2D",
               "name": "",
               "start": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": 2.0,
                 "y": 0.0
               },
               "end": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": 2.0,
                 "y": 1.25
               }
             },
             {
-              "object_class": "volmdlr.edges.LineSegment2D",
+              "object_class": "design3d.edges.LineSegment2D",
               "name": "",
               "start": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": 2.0,
                 "y": 1.25
               },
               "end": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": 1.0,
                 "y": 1.25
               }
             },
             {
-              "object_class": "volmdlr.edges.LineSegment2D",
+              "object_class": "design3d.edges.LineSegment2D",
               "name": "",
               "start": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": 1.0,
                 "y": 1.25
               },
               "end": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": 1.0,
                 "y": 2.0
               }
             },
             {
-              "object_class": "volmdlr.edges.LineSegment2D",
+              "object_class": "design3d.edges.LineSegment2D",
               "name": "",
               "start": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": 1.0,
                 "y": 2.0
               },
               "end": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": -2.0,
                 "y": 2.0
               }
             },
             {
-              "object_class": "volmdlr.edges.LineSegment2D",
+              "object_class": "design3d.edges.LineSegment2D",
               "name": "",
               "start": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": -2.0,
                 "y": 2.0
               },
               "end": {
-                "object_class": "volmdlr.Point2D",
+                "object_class": "design3d.Point2D",
                 "x": -2.0,
                 "y": 0.0
               }
@@ -132,61 +132,61 @@
         },
         "inner_contours": [
           {
-            "object_class": "volmdlr.wires.Contour2D",
+            "object_class": "design3d.wires.Contour2D",
             "name": "",
             "primitives": [
               {
-                "object_class": "volmdlr.edges.LineSegment2D",
+                "object_class": "design3d.edges.LineSegment2D",
                 "name": "",
                 "start": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": -1.25,
                   "y": 1.75
                 },
                 "end": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": -0.25,
                   "y": 1.75
                 }
               },
               {
-                "object_class": "volmdlr.edges.LineSegment2D",
+                "object_class": "design3d.edges.LineSegment2D",
                 "name": "",
                 "start": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": -0.25,
                   "y": 1.75
                 },
                 "end": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": -0.25,
                   "y": 1.5
                 }
               },
               {
-                "object_class": "volmdlr.edges.LineSegment2D",
+                "object_class": "design3d.edges.LineSegment2D",
                 "name": "",
                 "start": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": -0.25,
                   "y": 1.5
                 },
                 "end": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": -1.25,
                   "y": 1.5
                 }
               },
               {
-                "object_class": "volmdlr.edges.LineSegment2D",
+                "object_class": "design3d.edges.LineSegment2D",
                 "name": "",
                 "start": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": -1.25,
                   "y": 1.5
                 },
                 "end": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": -1.25,
                   "y": 1.75
                 }
@@ -194,61 +194,61 @@
             ]
           },
           {
-            "object_class": "volmdlr.wires.Contour2D",
+            "object_class": "design3d.wires.Contour2D",
             "name": "",
             "primitives": [
               {
-                "object_class": "volmdlr.edges.LineSegment2D",
+                "object_class": "design3d.edges.LineSegment2D",
                 "name": "",
                 "start": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": 1.0,
                   "y": 0.75
                 },
                 "end": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": -0.5,
                   "y": 0.75
                 }
               },
               {
-                "object_class": "volmdlr.edges.LineSegment2D",
+                "object_class": "design3d.edges.LineSegment2D",
                 "name": "",
                 "start": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": -0.5,
                   "y": 0.75
                 },
                 "end": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": -0.5,
                   "y": 1.25
                 }
               },
               {
-                "object_class": "volmdlr.edges.LineSegment2D",
+                "object_class": "design3d.edges.LineSegment2D",
                 "name": "",
                 "start": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": -0.5,
                   "y": 1.25
                 },
                 "end": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": 1.0,
                   "y": 1.25
                 }
               },
               {
-                "object_class": "volmdlr.edges.LineSegment2D",
+                "object_class": "design3d.edges.LineSegment2D",
                 "name": "",
                 "start": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": 1.0,
                   "y": 1.25
                 },
                 "end": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": 1.0,
                   "y": 0.75
                 }
@@ -256,32 +256,32 @@
             ]
           },
           {
-            "object_class": "volmdlr.wires.Contour2D",
+            "object_class": "design3d.wires.Contour2D",
             "name": "",
             "primitives": [
               {
-                "object_class": "volmdlr.edges.Arc2D",
+                "object_class": "design3d.edges.Arc2D",
                 "name": "",
                 "circle": {
-                  "object_class": "volmdlr.curves.Circle2D",
+                  "object_class": "design3d.curves.Circle2D",
                   "name": "",
                   "radius": 0.2,
                   "frame": {
-                    "object_class": "volmdlr.Frame2D",
+                    "object_class": "design3d.Frame2D",
                     "name": "",
                     "origin": {
-                    "object_class": "volmdlr.Point2D",
+                    "object_class": "design3d.Point2D",
                     "x": 0.5,
                     "y": 0.35
                     },
                     "u": {
-                      "object_class": "volmdlr.Vector2D",
+                      "object_class": "design3d.Vector2D",
                       "x": 1.0,
                       "y": 0.0,
                       "name": ""
                     },
                     "v": {
-                      "object_class": "volmdlr.Vector2D",
+                      "object_class": "design3d.Vector2D",
                       "x": 0.0,
                       "y": 1.0,
                       "name": ""
@@ -290,39 +290,39 @@
                 },
                 "is_trigo": true,
                 "start": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": 0.7,
                   "y": 0.35
                 },
                 "end": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": 0.30000000000000004,
                   "y": 0.35
                 }
               },
               {
-                "object_class": "volmdlr.edges.Arc2D",
+                "object_class": "design3d.edges.Arc2D",
                 "name": "",
                 "circle": {
-                  "object_class": "volmdlr.curves.Circle2D",
+                  "object_class": "design3d.curves.Circle2D",
                   "name": "",
                   "radius": 0.2,
                   "frame": {
-                    "object_class": "volmdlr.Frame2D",
+                    "object_class": "design3d.Frame2D",
                     "name": "",
                     "origin": {
-                    "object_class": "volmdlr.Point2D",
+                    "object_class": "design3d.Point2D",
                     "x": 0.5,
                     "y": 0.35
                     },
                     "u": {
-                      "object_class": "volmdlr.Vector2D",
+                      "object_class": "design3d.Vector2D",
                       "x": 1.0,
                       "y": 0.0,
                       "name": ""
                     },
                     "v": {
-                      "object_class": "volmdlr.Vector2D",
+                      "object_class": "design3d.Vector2D",
                       "x": 0.0,
                       "y": 1.0,
                       "name": ""
@@ -331,12 +331,12 @@
                 },
                 "is_trigo": true,
                 "start": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": 0.30000000000000004,
                   "y": 0.35
                 },
                 "end": {
-                  "object_class": "volmdlr.Point2D",
+                  "object_class": "design3d.Point2D",
                   "x": 0.7,
                   "y": 0.35
                 }
@@ -381,20 +381,20 @@
   ],
   "_references": {
     "6f8ebb56-ff06-11ed-b1d6-d2c33e3011fd": {
-      "object_class": "volmdlr.wires.Contour3D",
+      "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
         {
-          "object_class": "volmdlr.edges.LineSegment3D",
+          "object_class": "design3d.edges.LineSegment3D",
           "name": "",
           "start": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": 2.0,
             "y": 0.75,
             "z": 0.0
           },
           "end": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": 1.0,
             "y": 0.75,
             "z": 0.0
@@ -406,20 +406,20 @@
       "alpha": 1
     },
     "6f8ebcaa-ff06-11ed-b1d6-d2c33e3011fd": {
-      "object_class": "volmdlr.wires.Contour3D",
+      "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
         {
-          "object_class": "volmdlr.edges.LineSegment3D",
+          "object_class": "design3d.edges.LineSegment3D",
           "name": "",
           "start": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": -2.0,
             "y": 0.5,
             "z": 0.0
           },
           "end": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": -1.0,
             "y": 0.0,
             "z": 0.0
@@ -431,20 +431,20 @@
       "alpha": 1
     },
     "6f8ebdd6-ff06-11ed-b1d6-d2c33e3011fd": {
-      "object_class": "volmdlr.wires.Contour3D",
+      "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
         {
-          "object_class": "volmdlr.edges.LineSegment3D",
+          "object_class": "design3d.edges.LineSegment3D",
           "name": "",
           "start": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": 0.5,
             "y": 0.0,
             "z": 0.0
           },
           "end": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": 0.5,
             "y": 0.15,
             "z": 0.0
@@ -456,20 +456,20 @@
       "alpha": 1
     },
     "6f8ebeee-ff06-11ed-b1d6-d2c33e3011fd": {
-      "object_class": "volmdlr.wires.Contour3D",
+      "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
         {
-          "object_class": "volmdlr.edges.LineSegment3D",
+          "object_class": "design3d.edges.LineSegment3D",
           "name": "",
           "start": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": 0.5,
             "y": 0.55,
             "z": 0.0
           },
           "end": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": 0.5,
             "y": 0.75,
             "z": 0.0
@@ -481,20 +481,20 @@
       "alpha": 1
     },
     "6f8ec006-ff06-11ed-b1d6-d2c33e3011fd": {
-      "object_class": "volmdlr.wires.Contour3D",
+      "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
         {
-          "object_class": "volmdlr.edges.LineSegment3D",
+          "object_class": "design3d.edges.LineSegment3D",
           "name": "",
           "start": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": -0.25,
             "y": 1.25,
             "z": 0.0
           },
           "end": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": -0.5,
             "y": 1.5,
             "z": 0.0
@@ -506,20 +506,20 @@
       "alpha": 1
     },
     "6f8ec11e-ff06-11ed-b1d6-d2c33e3011fd": {
-      "object_class": "volmdlr.wires.Contour3D",
+      "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
         {
-          "object_class": "volmdlr.edges.LineSegment3D",
+          "object_class": "design3d.edges.LineSegment3D",
           "name": "",
           "start": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": -2.0,
             "y": 1.0,
             "z": 0.0
           },
           "end": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": -1.25,
             "y": 1.62,
             "z": 0.0
@@ -531,20 +531,20 @@
       "alpha": 1
     },
     "6f8ec236-ff06-11ed-b1d6-d2c33e3011fd": {
-      "object_class": "volmdlr.wires.Contour3D",
+      "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
         {
-          "object_class": "volmdlr.edges.LineSegment3D",
+          "object_class": "design3d.edges.LineSegment3D",
           "name": "",
           "start": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": -0.25,
             "y": 1.65,
             "z": 0.0
           },
           "end": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": 1.0,
             "y": 1.5,
             "z": 0.0
@@ -556,20 +556,20 @@
       "alpha": 1
     },
     "6f8ec34e-ff06-11ed-b1d6-d2c33e3011fd": {
-      "object_class": "volmdlr.wires.Contour3D",
+      "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
         {
-          "object_class": "volmdlr.edges.LineSegment3D",
+          "object_class": "design3d.edges.LineSegment3D",
           "name": "",
           "start": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": 0.0,
             "y": 0.75,
             "z": 0.0
           },
           "end": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": -0.25,
             "y": 0.5,
             "z": 0.0
@@ -581,20 +581,20 @@
       "alpha": 1
     },
     "6f8ec45c-ff06-11ed-b1d6-d2c33e3011fd": {
-      "object_class": "volmdlr.wires.Contour3D",
+      "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
         {
-          "object_class": "volmdlr.edges.LineSegment3D",
+          "object_class": "design3d.edges.LineSegment3D",
           "name": "",
           "start": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": -0.25,
             "y": 0.5,
             "z": 0.0
           },
           "end": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": -0.4,
             "y": 0.75,
             "z": 0.0
@@ -606,39 +606,39 @@
       "alpha": 1
     },
     "6f8ec77c-ff06-11ed-b1d6-d2c33e3011fd": {
-      "object_class": "volmdlr.wires.Contour3D",
+      "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
         {
-          "object_class": "volmdlr.edges.FullArc3D",
+          "object_class": "design3d.edges.FullArc3D",
           "name": "",
           "circle": {
-            "object_class": "volmdlr.curves.Circle3D",
+            "object_class": "design3d.curves.Circle3D",
             "name": 0.2,
             "radius": 0.2,
             "frame": {
-              "object_class": "volmdlr.Frame3D",
+              "object_class": "design3d.Frame3D",
               "name": "",
               "origin": {
-                "object_class": "volmdlr.Point3D",
+                "object_class": "design3d.Point3D",
                 "x": -1.25,
                 "y": 0.65,
                 "z": 0.0
               },
               "u": {
-                "object_class": "volmdlr.Vector3D",
+                "object_class": "design3d.Vector3D",
                 "x": 1.0,
                 "y": 0.0,
                 "z": 0.0
               },
               "v": {
-                "object_class": "volmdlr.Vector3D",
+                "object_class": "design3d.Vector3D",
                 "x": 0.0,
                 "y": 1.0,
                 "z": 0.0
               },
               "w": {
-                "object_class": "volmdlr.Vector3D",
+                "object_class": "design3d.Vector3D",
                 "x": 0.0,
                 "y": 0.0,
                 "z": 1.0
@@ -648,7 +648,7 @@
           "angle": 6.283185307179586,
           "is_trigo": true,
           "start_end": {
-            "object_class": "volmdlr.Point3D",
+            "object_class": "design3d.Point3D",
             "x": -1.05,
             "y": 0.65,
             "z": 0.0

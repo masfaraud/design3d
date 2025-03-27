@@ -1,9 +1,9 @@
 import unittest
 
-import volmdlr
-from volmdlr import edges
-import volmdlr.step
-from volmdlr.models.edges import bspline1, lineseg, arc, arc_ellipse2d, linesegment3d, arc3d, arc_ellipse3d
+import design3d
+from design3d import edges
+import design3d.step
+from design3d.models.edges import bspline1, lineseg, arc, arc_ellipse2d, linesegment3d, arc3d, arc_ellipse3d
 
 
 class TestEdge(unittest.TestCase):
@@ -21,8 +21,8 @@ class TestEdge(unittest.TestCase):
         self.assertFalse(arc_ellipse2d.direction_independent_is_close(arc_ellipse2d.complementary()))
 
     def test_trim(self):
-        point1 = volmdlr.Point3D(0.1744332430903422, 0.033444245563080795, 0.07798520478978595)
-        point2 = volmdlr.Point3D(0.177922447446, 0.03351981629780013, 0.07827867754649165)
+        point1 = design3d.Point3D(0.1744332430903422, 0.033444245563080795, 0.07798520478978595)
+        point2 = design3d.Point3D(0.177922447446, 0.03351981629780013, 0.07827867754649165)
         arc3d = edges.Arc3D.from_json("edges/arc3d_split_between_two_points.json")
         new_arc3d = arc3d.trim(point1, point2)
         self.assertTrue(new_arc3d)
@@ -30,7 +30,7 @@ class TestEdge(unittest.TestCase):
         self.assertTrue(new_arc3d.end.is_close(point1))
 
     def test_from_step(self):
-        step = volmdlr.step.Step.from_file(filepath='edges/test_edge_from_step.stp')
+        step = design3d.step.Step.from_file(filepath='edges/test_edge_from_step.stp')
         model = step.to_volume_model()
         self.assertTrue(model.primitives[0].faces[0].outer_contour3d.is_ordered())
 

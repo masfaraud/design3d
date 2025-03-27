@@ -9,9 +9,9 @@
 
 import numpy as npy
 
-import volmdlr as vm
-from volmdlr.models import bspline_surfaces
-from volmdlr import surfaces, faces
+import design3d as d3d
+from design3d.models import bspline_surfaces
+from design3d import surfaces, faces
 
 #%%  BSpline-surface definition
 
@@ -42,7 +42,7 @@ ax = faces.BSplineFace3D.from_surface_rectangular_cut(bspline_surface, 0, 1, 0, 
 for f in splitted_faces:
     f.plot(ax=ax, color=f.color)
 
-# vm.core.VolumeModel(splitted_faces).babylonjs()
+# d3d.core.VolumeModel(splitted_faces).babylonjs()
 
 # %% (2) BSpline-surface split - v_split
 # split the bspline_surface at the input parametric coordinate (v) on the v-direction, into 2 surfaces
@@ -61,22 +61,22 @@ ax = faces.BSplineFace3D.from_surface_rectangular_cut(bspline_surface, 0, 1, 0, 
 for f in splitted_faces:
     f.plot(ax=ax, color=f.color)
 
-# vm.core.VolumeModel(splitted_faces).babylonjs()
+# d3d.core.VolumeModel(splitted_faces).babylonjs()
 
 # %% (3) BSpline-surface split - bspline_curve_split
 # split the bspline_surface, into 2 surfaces, using a bspline curve
 
 # %%% Bspline-curve definition
 
-points2d = [vm.Point2D(0, 0.1),
-            vm.Point2D(0.2, 0.3),
-            vm.Point2D(0.4, 0.4),
-            vm.Point2D(0.5, 0.6),
-            vm.Point2D(0.6, 0.7),
-            vm.Point2D(0.8, 0.8),
-            vm.Point2D(1, 0.9)]
+points2d = [d3d.Point2D(0, 0.1),
+            d3d.Point2D(0.2, 0.3),
+            d3d.Point2D(0.4, 0.4),
+            d3d.Point2D(0.5, 0.6),
+            d3d.Point2D(0.6, 0.7),
+            d3d.Point2D(0.8, 0.8),
+            d3d.Point2D(1, 0.9)]
 
-bspline_curve3d = bspline_surface.bsplinecurve2d_to_3d(vm.edges.BSplineCurve2D.from_points_interpolation(points2d, 2))[0]
+bspline_curve3d = bspline_surface.bsplinecurve2d_to_3d(d3d.edges.BSplineCurve2D.from_points_interpolation(points2d, 2))[0]
 
 # %%% Split surface
 
@@ -92,5 +92,3 @@ for i, s in enumerate(splitted_surfaces):
 ax = faces.BSplineFace3D.from_surface_rectangular_cut(bspline_surface, 0, 1, 0, 1).plot()
 for f in splitted_faces:
     f.plot(ax=ax, color=f.color)
-
-# vm.core.VolumeModel(splitted_faces).babylonjs()
