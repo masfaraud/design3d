@@ -127,6 +127,7 @@ setup(
         "packaging",
         "Cython>=3.0.0",
         "numpy",
+        "orjson",
         "matplotlib",
         "scipy",
         "geomdl",

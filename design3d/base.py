@@ -4,16 +4,8 @@
 Base models for design3d.
 """
 
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Mar 24 22:09:20 2025
-
-@author: steven
-"""
-
 import sys
+import json
 import math
 import warnings
 import inspect
@@ -25,14 +17,9 @@ from typing import get_origin, get_args, Union, Any, BinaryIO, TextIO, Dict
 from functools import cached_property
 
 import numpy as npy
-import networkx as nx
-# import dessia_common.utils.types as dcty
-# from dessia_common.abstract import CoreDessiaObject
-# from dessia_common.typings import InstanceOf, JsonSerializable
-# from dessia_common.breakdown import get_in_object_from_path
+# import networkx as nx
 
 FLOAT_TOLERANCE = 1e-9
-
 
     
 
@@ -77,7 +64,45 @@ def isinstance_base_types(obj):
 def full_classname(object_):
     return f"{object_.__class__.__module__}.{object_.__class__.__name__}"
 
-def dict_to_object(dict_):
+
+def serialize_dict(dict_):
+    """ Serialize dictionary values. """
+    return {k: serialize(v) for k, v in dict_.items()}
+
+
+def serialize_sequence(seq):
+    """ Serialize a sequence (list or sequence) into a list of dictionaries. """
+    return [serialize(v) for v in seq]
+
+
+def serialize(value):
+    """
+    Calls recursively itself serialize_sequence and serialize_dict.
+    """
+    if isinstance(value, SerializableObject):
+        try:
+            serialized_value = value.to_dict(use_pointers=False)
+        except TypeError:
+            warnings.warn(f'specific to_dict of class {value.__class__} '
+                          'should implement use_pointers, memo and path arguments', Warning)
+            serialized_value = value.to_dict()
+    elif isinstance(value, dict):
+        serialized_value = serialize_dict(value)
+    elif is_sequence(value):
+        serialized_value = serialize_sequence(value)
+    elif isinstance(value, npy.int64):
+        serialized_value = int(value)
+    elif isinstance(value, npy.float64):
+        serialized_value = float(value)
+    elif hasattr(value, 'to_dict'):
+        to_dict_method = getattr(value, 'to_dict', None)
+        if callable(to_dict_method):
+            return to_dict_method()
+    else:
+        serialized_value = value
+    return serialized_value
+
+def deserialize(dict_):
     pass
 
 
@@ -85,7 +110,6 @@ def dict_to_object(dict_):
 
 class SerializableObject:
     """ Object that can travel on the web. """
-    _non_serializable_attributes = []
 
     def base_dict(self):
         """ A base dict for to_dict: set up a dict with object class and version. """
@@ -112,45 +136,31 @@ class SerializableObject:
         """
 
         dict_ = {k: v for k, v in self.__dict__.items()
-                 if k not in self._non_serializable_attributes and not k.startswith('_')}
+                 if not k.startswith('_')}
         return dict_
 
-    # def to_dict(self, use_pointers: bool = True, memo=None, path: str = '#'):
-    #     """ Generic to_dict method. """
-    #     if memo is None:
-    #         memo = {}
-
-    #     # Default to dict
-    #     serialized_dict = self.base_dict()
-    #     dict_ = self._serializable_dict()
-    #     if use_pointers:
-    #         serialized_dict.update(serialize_dict_with_pointers(dict_, memo, path)[0])
-    #     else:
-    #         serialized_dict.update(serialize_dict(dict_))
-
-        # return serialized_dict
-        # def to_dict(self):
+    def to_dict(self):
+        dict_ = serialize_dict(self._serializable_dict())
+        dict_.update({'object_class': self.full_classname})
+        return dict_
             
 
 
     @classmethod
     def dict_to_object(cls, dict_) -> 'SerializableObject':
         """ Generic dict_to_object method. """
-        if 'object_class' in dict_:
-            obj = dict_to_object(dict_=dict_)
-            return obj
-
-        raise NotImplementedError("No object_class in dict")
+        return deserialize(dict_)
 
     @cached_property
     def full_classname(self):
         """ Full classname of class like: package.module.submodule.classname. """
         return full_classname(self)
 
-    # def copy(self):
-    #     """ Copy object. Not implemented at base level. """
-    #     raise NotImplementedError("Method copy is not implemented for SerializableObject."
-    #                               "Please inherit from DessiaObject")
+
+    @classmethod
+    def from_json(cls, filepath: str):
+        with open(filepath, 'r') as file:
+            return cls.dict_to_object(json.load(file))
 
         
 def data_eq(value1, value2):
@@ -235,3 +245,9 @@ class DataEqualityObject(SerializableObject):
         if self.__class__.__name__ != other_object.__class__.__name__:
             return False
         return data_eq(self, other_object)
+
+
+    def _data_eq_dict(self):
+        """ Returns a dict of what to look at for data eq. """
+        return {k: v for k, v in self._serializable_dict().items()
+                if k not in ['package_version', 'name']}

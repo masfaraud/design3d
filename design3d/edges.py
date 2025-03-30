@@ -24,6 +24,7 @@ from design3d.nurbs.core import evaluate_curve, derivatives_curve
 from design3d.nurbs import fitting
 import design3d.nurbs.helpers as nurbs_helpers
 
+from design3d.base import DataEqualityObject
 import design3d.core
 import design3d.core_compiled
 import design3d.geometry
@@ -35,7 +36,7 @@ from design3d.core import EdgeStyle
 # pylint: disable=arguments-differ
 
 
-class Edge:
+class Edge(DataEqualityObject):
     """
     Defines a simple edge Object.
     """

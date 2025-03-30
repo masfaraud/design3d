@@ -20,6 +20,7 @@ from triangle import triangulate
 
 import design3d
 import design3d.core
+from design3d.base import DataEqualityObject
 import design3d.display as d3dd
 import design3d.geometry
 from design3d import curves, edges, PATH_ROOT
@@ -174,7 +175,7 @@ def reorder_contour3d_edges_from_step(raw_edges, step_data):
     return new_edges
 
 
-class WireMixin:
+class WireMixin(DataEqualityObject):
     """
     Abstract class for Wire, storing methods and attributes used by many classes in this module.
 

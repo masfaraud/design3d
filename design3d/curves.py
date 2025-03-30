@@ -13,6 +13,7 @@ from matplotlib import __version__ as _mpl_version
 from packaging import version
 
 import design3d
+from design3d.base import DataEqualityObject
 from design3d import core, geometry, get_minimum_distance_points_lines
 from design3d.nurbs.helpers import generate_knot_vector
 import design3d.utils.common_operations as d3d_common_operations
@@ -40,7 +41,7 @@ def hyperbola_parabola_control_point_and_weight(start, start_tangent, end, end_t
     return point1, weight_1
 
 
-class Curve:
+class Curve(DataEqualityObject):
     """Abstract class for a curve object."""
 
     def __init__(self, name: str = ''):

@@ -20,9 +20,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+
 import design3d
 import design3d.templates
 from design3d.core_compiled import bbox_is_intersecting
+from design3d.base import DataEqualityObject
 from design3d.discrete_representation_compiled import triangle_intersects_voxel
 from design3d.utils.step_writer import product_writer, geometric_context_writer, assembly_definition_writer, \
     STEP_HEADER, STEP_FOOTER, step_ids_to_str
@@ -246,7 +248,7 @@ class EdgeStyle:
     equal_aspect: bool = True
 
 
-class Primitive3D:
+class Primitive3D(DataEqualityObject):
     """
     Defines a Primitive3D.
     """
@@ -541,7 +543,7 @@ class BoundingRectangle:
         return cls(xmin, xmax, ymin, ymax, name=name)
 
 
-class BoundingBox:
+class BoundingBox(DataEqualityObject):
     """
     An axis aligned boundary box.
     """
@@ -851,21 +853,21 @@ class BoundingBox:
 
         return lx * ly * lz
 
-    def is_intersecting_triangle(self, triangle: "Triangle3D") -> bool:
-        """
-        Check if the bounding box and a triangle are intersecting or touching.
+    # def is_intersecting_triangle(self, triangle: "Triangle3D") -> bool:
+    #     """
+    #     Check if the bounding box and a triangle are intersecting or touching.
 
-        :param triangle: the triangle to check if there is an intersection with.
-        :type triangle: Triangle3D
+    #     :param triangle: the triangle to check if there is an intersection with.
+    #     :type triangle: Triangle3D
 
-        :return: True if the bounding box and the triangle are intersecting or touching, False otherwise.
-        :rtype: bool
-        """
-        _triangle = tuple((point.x, point.y, point.z) for point in triangle.points)
-        _center = (self.center[0], self.center[1], self.center[2])
-        _extents = tuple(size / 2 for size in self.size)
+    #     :return: True if the bounding box and the triangle are intersecting or touching, False otherwise.
+    #     :rtype: bool
+    #     """
+    #     _triangle = tuple((point.x, point.y, point.z) for point in triangle.points)
+    #     _center = (self.center[0], self.center[1], self.center[2])
+    #     _extents = tuple(size / 2 for size in self.size)
 
-        return triangle_intersects_voxel(_triangle, _center, _extents)
+    #     return triangle_intersects_voxel(_triangle, _center, _extents)
 
     def distance_to_bbox(self, bbox2: "BoundingBox") -> float:
         """
@@ -991,7 +993,7 @@ class BoundingBox:
         return self._octree
 
 
-class Assembly:
+class Assembly(DataEqualityObject):
     """
     Defines an assembly.
 
@@ -1151,7 +1153,7 @@ class Assembly:
             [shape_representation_id, product_definition_id, frame_ids]
 
 
-class Compound:
+class Compound(DataEqualityObject):
     """
     A class that can be a collection of any design3d primitives.
     """
@@ -1283,7 +1285,7 @@ class Compound:
         return step_content, current_id, [brep_id, product_definition_id]
 
 
-class VolumeModel:
+class VolumeModel(DataEqualityObject):
     """
     A class containing one or several :class:`design3d.core.Primitive3D`.
 
@@ -2176,7 +2178,7 @@ class MovingVolumeModel(VolumeModel):
         self.step_frames = step_frames
 
         if not self.is_consistent():
-            raise ConsistencyError
+            raise RuntimeError('unconsistent model')
 
     def is_consistent(self):
         """ Check if the number of frames for each step corresponds to the number of primitives of the model. """

@@ -2,7 +2,8 @@ import math
 import os
 import unittest
 
-from dessia_common.core import DessiaObject
+# from dessia_common.core import DessiaObject
+from design3d.base import SerializableObject
 
 import design3d
 from design3d import edges, wires, curves
@@ -16,7 +17,7 @@ folder = os.path.dirname(os.path.realpath(__file__))
 class TestContour2D(unittest.TestCase):
     contour1 = wires.Contour2D([edges.FullArc2D(circle=curves.Circle2D(design3d.OXY, 0.029999999),
                                                 start_end=design3d.Point2D(0.029999999, 0))])
-    not_ordered_contour = DessiaObject.from_json(os.path.join(folder, "contour_not_ordered.json"))
+    not_ordered_contour = SerializableObject.from_json(os.path.join(folder, "contour_not_ordered.json"))
     # ordered_contour = DessiaObject.from_json('wires/contour_ordered.json')
     contour_to_extract_from = contour = wires.Contour2D.from_points(
         [design3d.Point2D(-.15, .15), design3d.Point2D(-.15, -.15), design3d.Point2D(.15, -.15),
@@ -41,7 +42,7 @@ class TestContour2D(unittest.TestCase):
         point4 = design3d.Point2D(0.745, 0.0685)
         self.assertTrue(contour2d_2.point_inside(point4))
 
-        contour, point = DessiaObject.from_json(os.path.join(folder, "test_contour_point_belongs.json")).primitives
+        contour, point = SerializableObject.from_json(os.path.join(folder, "test_contour_point_belongs.json")).primitives
         self.assertTrue(contour.point_inside(point, False))
 
     def test_is_ordered(self):
@@ -85,7 +86,7 @@ class TestContour2D(unittest.TestCase):
         self.assertAlmostEqual(wire_crossings[1].length(), 3.4)
 
     def test_offset(self):
-        contour_to_offset = DessiaObject.from_json(os.path.join(folder, "contour_to_offset.json"))
+        contour_to_offset = SerializableObject.from_json(os.path.join(folder, "contour_to_offset.json"))
         stringer_contour_offset = contour_to_offset.offset(4)
         self.assertEqual(len(stringer_contour_offset.primitives), 10)
         self.assertAlmostEqual(stringer_contour_offset.area(), 546.1486677646164)
@@ -196,7 +197,7 @@ class TestContour2D(unittest.TestCase):
         self.assertEqual(furthest_point2, design3d.Point2D(1.5, 1.0))
 
     def test_intersection_contour_with(self):
-        vol = DessiaObject.from_json(os.path.join(folder, "test_intersection_contour_with.json"))
+        vol = SerializableObject.from_json(os.path.join(folder, "test_intersection_contour_with.json"))
         contour2 = vol.primitives[0]
         contour3 = vol.primitives[1]
         intersection_contours1 = contour2.intersection_contour_with(contour3, abs_tol=1e-5)
@@ -221,7 +222,7 @@ class TestContour2D(unittest.TestCase):
             if '.json' not in filename:
                 continue
             file_path = os.path.join(source_folder, filename)
-            obj = DessiaObject.from_json(file_path)
+            obj = SerializableObject.from_json(file_path)
             primitives = obj.primitives
             contours = wires.Contour2D.contours_from_edges(primitives)
             areas = []
@@ -240,7 +241,7 @@ class TestContour2D(unittest.TestCase):
                 self.assertAlmostEqual(contour_length, expected_contour_length)
 
     def test_divide(self):
-        vol = DessiaObject.from_json(os.path.join(folder, "test_contour2d_divide_1.json"))
+        vol = SerializableObject.from_json(os.path.join(folder, "test_contour2d_divide_1.json"))
         contour, cutting_contours = vol.primitives[0], vol.primitives[1:]
         divided_contours = contour.divide(cutting_contours)
         divided_contours = sorted(divided_contours, key=lambda cntr: cntr.area())
@@ -253,7 +254,7 @@ class TestContour2D(unittest.TestCase):
             self.assertAlmostEqual(contour_.length(), expected_contour_lengths[i])
 
     def test_merge_not_adjacent_contour(self):
-        contours = DessiaObject.from_json(os.path.join(folder, "test_merge_connected_contours.json")).primitives
+        contours = SerializableObject.from_json(os.path.join(folder, "test_merge_connected_contours.json")).primitives
         contour1, contour2 = contours
         merge_not_adjacent_contour = contour2.merge_not_adjacent_contour(contour1)
         self.assertAlmostEqual(merge_not_adjacent_contour.length(), 0.1589126915239475)

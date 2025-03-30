@@ -19,6 +19,7 @@ from scipy.optimize import least_squares, minimize
 import design3d.nurbs.helpers as nurbs_helpers
 from design3d.nurbs.helpers import generate_knot_vector
 import design3d.core
+from design3d.base import DataEqualityObject
 import design3d.geometry
 import design3d.utils.common_operations as d3d_common_operations
 import design3d.utils.intersections as d3d_utils_intersections
@@ -45,8 +46,7 @@ def knots_vector_inv(knots_vector):
 
     return knots, multiplicities
 
-
-class Surface2D:
+class Surface2D(DataEqualityObject):
     """
     A surface bounded by an outer contour.
 
@@ -692,7 +692,7 @@ class Surface2D:
 
         design3d.core.VolumeModel.generate_msh_file(file_name, mesh_dimension, mesh_order)
 
-class Surface3D:
+class Surface3D(DataEqualityObject):
     """
     Abstract class.
 
