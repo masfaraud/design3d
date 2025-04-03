@@ -2,7 +2,7 @@ import math
 import unittest
 import os
 import numpy as np
-from dessia_common.core import DessiaObject
+from design3d.base import SerializableObject
 import design3d
 from design3d import edges, surfaces, curves, wires
 from design3d.surfaces import Plane3D
@@ -150,7 +150,7 @@ class TestPlane3D(unittest.TestCase):
         )
         plane_intersections2 = plane1.plane_intersections(plane2)
         self.assertEqual(expected_line, plane_intersections2[0])
-        plane1, plane2 = DessiaObject.from_json(
+        plane1, plane2 = SerializableObject.from_json(
             os.path.join(folder, "test_plane_plane_intersections301123.json")
         ).primitives
         plane_intersections = plane1.plane_intersections(plane2)

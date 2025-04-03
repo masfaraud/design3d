@@ -1667,9 +1667,9 @@ class Plane3D(Surface3D):
         :return: Array of 3D points representing the plane in Cartesian coordinates.
         :rtype: numpy.ndarray[np.float64]
         """
-        center = np.array(self.frame.origin)
-        x = np.array([self.frame.u[0], self.frame.u[1], self.frame.u[2]])
-        y = np.array([self.frame.v[0], self.frame.v[1], self.frame.v[2]])
+        center = np.asarray(self.frame.origin)
+        x = np.asarray([self.frame.u[0], self.frame.u[1], self.frame.u[2]])
+        y = np.asarray([self.frame.v[0], self.frame.v[1], self.frame.v[2]])
 
         points = points.reshape(-1, 2, 1)
 
@@ -2572,10 +2572,10 @@ class CylindricalSurface3D(UPeriodicalSurface):
         :return: Array of 3D points representing the cylindrical surface in Cartesian coordinates.
         :rtype: numpy.ndarray[np.float64]
         """
-        center = np.array(self.frame.origin)
-        x = np.array([self.frame.u[0], self.frame.u[1], self.frame.u[2]])
-        y = np.array([self.frame.v[0], self.frame.v[1], self.frame.v[2]])
-        z = np.array([self.frame.w[0], self.frame.w[1], self.frame.w[2]])
+        center = np.asarray(self.frame.origin)
+        x = np.asarray([self.frame.u[0], self.frame.u[1], self.frame.u[2]])
+        y = np.asarray([self.frame.v[0], self.frame.v[1], self.frame.v[2]])
+        z = np.asarray([self.frame.w[0], self.frame.w[1], self.frame.w[2]])
 
         points = points.reshape(-1, 2, 1)
 
@@ -3260,10 +3260,10 @@ class ToroidalSurface3D(UVPeriodicalSurface):
         :return: Array of 3D points representing the toroidal surface in Cartesian coordinates.
         :rtype: numpy.ndarray[np.float64]
         """
-        center = np.array(self.frame.origin)
-        x = np.array([self.frame.u[0], self.frame.u[1], self.frame.u[2]])
-        y = np.array([self.frame.v[0], self.frame.v[1], self.frame.v[2]])
-        z = np.array([self.frame.w[0], self.frame.w[1], self.frame.w[2]])
+        center = np.asarray(self.frame.origin)
+        x = np.asarray([self.frame.u[0], self.frame.u[1], self.frame.u[2]])
+        y = np.asarray([self.frame.v[0], self.frame.v[1], self.frame.v[2]])
+        z = np.asarray([self.frame.w[0], self.frame.w[1], self.frame.w[2]])
 
         points = points.reshape(-1, 2, 1)
 
@@ -4440,10 +4440,10 @@ class ConicalSurface3D(UPeriodicalSurface):
         :return: Array of 3D points representing the conical surface in Cartesian coordinates.
         :rtype: numpy.ndarray[np.float64]
         """
-        center = np.array(self.frame.origin)
-        x = np.array([self.frame.u[0], self.frame.u[1], self.frame.u[2]])
-        y = np.array([self.frame.v[0], self.frame.v[1], self.frame.v[2]])
-        z = np.array([self.frame.w[0], self.frame.w[1], self.frame.w[2]])
+        center = np.asarray(self.frame.origin)
+        x = np.asarray([self.frame.u[0], self.frame.u[1], self.frame.u[2]])
+        y = np.asarray([self.frame.v[0], self.frame.v[1], self.frame.v[2]])
+        z = np.asarray([self.frame.w[0], self.frame.w[1], self.frame.w[2]])
 
         points = points.reshape(-1, 2, 1)
 
@@ -5178,10 +5178,10 @@ class SphericalSurface3D(UVPeriodicalSurface):
         :return: Array of 3D points representing the spherical surface in Cartesian coordinates.
         :rtype: numpy.ndarray[np.float64]
         """
-        center = np.array(self.frame.origin)
-        x = np.array([self.frame.u[0], self.frame.u[1], self.frame.u[2]])
-        y = np.array([self.frame.v[0], self.frame.v[1], self.frame.v[2]])
-        z = np.array([self.frame.w[0], self.frame.w[1], self.frame.w[2]])
+        center = np.asarray(self.frame.origin)
+        x = np.asarray([self.frame.u[0], self.frame.u[1], self.frame.u[2]])
+        y = np.asarray([self.frame.v[0], self.frame.v[1], self.frame.v[2]])
+        z = np.asarray([self.frame.w[0], self.frame.w[1], self.frame.w[2]])
 
         points = points.reshape(-1, 2, 1)
 
@@ -6191,7 +6191,7 @@ class ExtrusionSurface3D(Surface3D):
         :return: Array of 3D points representing the extrusion surface in Cartesian coordinates.
         :rtype: numpy.ndarray[np.float64]
         """
-        z = np.array([self.direction[0], self.direction[1], self.direction[2]])
+        z = np.asarray([self.direction[0], self.direction[1], self.direction[2]])
 
         points = points.reshape(-1, 2, 1)
 
@@ -6201,7 +6201,7 @@ class ExtrusionSurface3D(Surface3D):
             u_values[u_values < 0] += self.x_periodicity
         v_values = points[:, 1]
 
-        points_at_curve = np.array([self.edge.point_at_abscissa(u) for u in u_values])
+        points_at_curve = np.asarray([self.edge.point_at_abscissa(u) for u in u_values])
 
         return points_at_curve + v_values * z
 
@@ -6625,8 +6625,8 @@ class RevolutionSurface3D(UPeriodicalSurface):
         :return: Array of 3D points representing the revolution surface in Cartesian coordinates.
         :rtype: numpy.ndarray[np.float64]
         """
-        center = np.array(self.axis_point)
-        z = np.array([self.axis[0], self.axis[1], self.axis[2]])
+        center = np.asarray(self.axis_point)
+        z = np.asarray([self.axis[0], self.axis[1], self.axis[2]])
 
         points = points.reshape(-1, 2, 1)
 
@@ -6638,7 +6638,7 @@ class RevolutionSurface3D(UPeriodicalSurface):
 
         cos_u = np.cos(u_values)
 
-        points_at_curve = np.array([self.edge.point_at_abscissa(v) for v in v_values])
+        points_at_curve = np.asarray([self.edge.point_at_abscissa(v) for v in v_values])
         points_at_curve_minus_center = points_at_curve - center
 
         return (center + points_at_curve_minus_center * cos_u +

@@ -1446,7 +1446,7 @@ class BSplineCurve(Edge):
         # results.append((abscissa, objective_function(u)))
         initial_condition_list = [u_min + index * (u_max - u_min) / (self.sample_size - 1) for index in indexes[:3]]
         for u0 in initial_condition_list:
-            res = minimize(objective_function, np.array(u0), bounds=[(u_min, u_max)], jac=True)
+            res = minimize(objective_function, np.asarray(u0), bounds=[(u_min, u_max)], jac=True)
             if res.fun < 1e-6: # or (res.success and abs(res.fun - distance) <= 1e-8):
                 return float(res.x[0] * length)
 
@@ -5870,7 +5870,7 @@ class Arc3D(ArcMixin, Edge):
                     + 2 * radius2 * math.sin(x[1]) * w_u4 + u3_u4 * math.sin(
                         2 * x[1]) * radius2 ** 2)
 
-        x01 = np.array([self.angle / 2, other_arc.angle / 2])
+        x01 = np.asarray([self.angle / 2, other_arc.angle / 2])
 
         res1 = least_squares(distance_squared, x01, bounds=[(0, 0), (self.angle, other_arc.angle)])
 

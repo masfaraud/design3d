@@ -5,8 +5,8 @@ import unittest
 import math
 import numpy as np
 import os
-import dessia_common.core
 import design3d
+from design3d.base import SerializableObject
 from design3d import Point2D, Point3D, edges, wires, surfaces, curves
 from design3d.models import cylindrical_surfaces
 
@@ -268,33 +268,33 @@ class TestCylindricalSurface3D(unittest.TestCase):
         self.assertEqual(linesegment2d.start, Point2D(0, 0.003))
         self.assertEqual(linesegment2d.end, Point2D(0, 0.013))
 
-        surface = dessia_common.core.DessiaObject.from_json(
+        surface = SerializableObject.from_json(
             os.path.join(folder, "cylindrical_surface_bspline_openned_contour.json"))
-        contour = dessia_common.core.DessiaObject.from_json(
+        contour = SerializableObject.from_json(
             os.path.join(folder,"cylindrical_contour_bspline_openned_contour.json"))
         contour2d = surface.contour3d_to_2d(contour)
         self.assertEqual(len(contour2d.primitives), 2)
         self.assertFalse(contour2d.is_ordered())
 
-        surface = dessia_common.core.DessiaObject.from_json(
+        surface = SerializableObject.from_json(
             os.path.join(folder, "test_contour3d_to_2d_surface.json"
         ))
-        contour = dessia_common.core.DessiaObject.from_json(
+        contour = SerializableObject.from_json(
             os.path.join(folder, "test_contour3d_to_2d_contour.json"
         ))
 
-        surface = dessia_common.core.DessiaObject.from_json(
+        surface = SerializableObject.from_json(
             os.path.join(folder, "test_contour3d_to_2d_surface.json"))
-        contour = dessia_common.core.DessiaObject.from_json(
+        contour = SerializableObject.from_json(
             os.path.join(folder, "test_contour3d_to_2d_contour.json"))
 
         contour2d = surface.contour3d_to_2d(contour)
         self.assertAlmostEqual(contour2d.area(), 0.29361767646954695, 2)
         self.assertTrue(contour2d.is_ordered())
 
-        surface = dessia_common.core.DessiaObject.from_json(
+        surface = SerializableObject.from_json(
             os.path.join(folder, "cylindricalsurface_small_periodic_bsplinecurve.json"))
-        contour = dessia_common.core.DessiaObject.from_json(
+        contour = SerializableObject.from_json(
             os.path.join(folder, "cylindricalsurface_small_periodic_bsplinecurve_contour.json"))
         contour2d = surface.contour3d_to_2d(contour)
         self.assertAlmostEqual(contour2d.area(), 0.0, 6)
@@ -302,8 +302,8 @@ class TestCylindricalSurface3D(unittest.TestCase):
 
 
     def test_bsplinecurve3d_to_2d(self):
-        surface = dessia_common.core.DessiaObject.from_json(os.path.join(folder, "cylindrical_surf_bug.json"))
-        bsplinecurve3d = dessia_common.core.DessiaObject.from_json(os.path.join(folder, "bsplinecurve3d_bug.json"))
+        surface = SerializableObject.from_json(os.path.join(folder, "cylindrical_surf_bug.json"))
+        bsplinecurve3d = SerializableObject.from_json(os.path.join(folder, "bsplinecurve3d_bug.json"))
         primitive2d = surface.bsplinecurve3d_to_2d(bsplinecurve3d)[0]
         self.assertTrue(
             primitive2d.start.is_close(

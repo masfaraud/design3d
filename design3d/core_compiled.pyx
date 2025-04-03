@@ -20,6 +20,7 @@ import matplotlib.pyplot as plt
 import numpy as npy
 cimport numpy as np
 import design3d
+from design3d.base import SerializableObject
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d
 
@@ -2398,7 +2399,7 @@ class Matrix33:
                           [self.M31, self.M32, self.M33]])
 
 
-class Basis:
+class Basis(SerializableObject):
     """
     Abstract class of a basis
     """

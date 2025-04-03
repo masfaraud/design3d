@@ -12,6 +12,8 @@ from numpy.linalg import solve as np_solve
 
 import design3d as d3d
 
+def numpy_cross2d(x, y):
+    return x[..., 0] * y[..., 1] - x[..., 1] * y[..., 0]
 
 def euler_angles_to_transfer_matrix(psi, theta, phi):
     """

@@ -7,6 +7,7 @@ Classes to define mesh for display use. Display mesh do not require good aspect 
 import warnings
 from typing import List, Tuple, TypeVar, Union
 
+
 import numpy as np
 import pyfqmr
 import trimesh
@@ -16,6 +17,7 @@ from trimesh import Trimesh
 
 import design3d.edges
 from design3d.core import Primitive3D
+from design3d.geometry import numpy_cross2d
 
 # TODO: make this module "mesh" as it is not useful only for display
 
@@ -268,7 +270,7 @@ class MeshMixin:
         :rtype: np.ndarray[float]
         """
         vectors = np.diff(self.triangles_vertices(), axis=1)
-        return np.cross(vectors[:, 0], vectors[:, 1])
+        return numpy_cross2d(vectors[:, 0], vectors[:, 1])
 
     def plot(self, ax=None, numbering: bool = False):
         """Plot the mesh with Matplotlib."""

@@ -3,7 +3,7 @@ import unittest
 import os
 import design3d
 from design3d import edges, faces, surfaces, wires
-from dessia_common.core import DessiaObject
+from design3d.base import SerializableObject
 
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'objects_cylindrical_tests')
@@ -80,11 +80,11 @@ class TestCylindricalFace3D(unittest.TestCase):
         self.assertAlmostEqual(face.surface2d.area(), 0.024190263432641437, 4)
         self.assertTrue(face.surface2d.outer_contour.is_ordered())
 
-        surface = DessiaObject.from_json(
+        surface = SerializableObject.from_json(
             os.path.join(folder, 'surface3d_1.json'))
-        contour0 = DessiaObject.from_json(
+        contour0 = SerializableObject.from_json(
             os.path.join(folder, 'contour_1_0.json'))
-        contour1 = DessiaObject.from_json(
+        contour1 = SerializableObject.from_json(
             os.path.join(folder, 'contour_1_1.json'))
 
         face = faces.CylindricalFace3D.from_contours3d(surface, [contour0, contour1])
@@ -102,9 +102,9 @@ class TestCylindricalFace3D(unittest.TestCase):
         face = faces.CylindricalFace3D.from_contours3d(cylindrical, [contour1, contour2])
         self.assertEqual(face.surface2d.area(), 0.2 * 2 * math.pi)
 
-        surface = DessiaObject.from_json(
+        surface = SerializableObject.from_json(
             os.path.join(folder, "cylindrical_surface_floating_point_error.json"))
-        contour0 = DessiaObject.from_json(
+        contour0 = SerializableObject.from_json(
             os.path.join(folder, "cylindrical_contour_floating_point_error.json"))
 
         face = faces.CylindricalFace3D.from_contours3d(surface, [contour0])
@@ -132,12 +132,12 @@ class TestCylindricalFace3D(unittest.TestCase):
         cylindricalsurface = surfaces.CylindricalSurface3D(design3d.OXYZ, R)
         cylindricalface = faces.CylindricalFace3D.from_surface_rectangular_cut(cylindricalsurface, 0, design3d.TWO_PI,
                                                                                -.25, .25)
-        plane_face_cylindricalface_intersec = DessiaObject.from_json(
+        plane_face_cylindricalface_intersec = SerializableObject.from_json(
             os.path.join(folder, "plane_face_cylindrical_face_intersec.json"))
         plane_face_3 = plane_face_cylindricalface_intersec.rotation(design3d.O3D, design3d.X3D, math.pi / 7)
         split_by_plane = cylindricalface.split_by_plane(plane_face_3.surface3d)
         self.assertTrue(len(split_by_plane), 4)
-        list_expected_points = DessiaObject.from_json(
+        list_expected_points = SerializableObject.from_json(
             os.path.join(folder, "test_cylindrical_faces_split_by_plane_"
             "expected_discretization_points.json")).primitives
         for i, face in enumerate(split_by_plane):
@@ -146,7 +146,7 @@ class TestCylindricalFace3D(unittest.TestCase):
                 self.assertTrue(point.is_close(expected_point))
 
     def test_plane_intersections(self):
-        face, plane = DessiaObject.from_json(
+        face, plane = SerializableObject.from_json(
             os.path.join(folder, "test_buggy_split_by_plane12_07_2023.json")).primitives
         plane_intersections = face.plane_intersections(plane)
         self.assertAlmostEqual(plane_intersections[0].length(), 0.10485331158773475)
@@ -211,7 +211,7 @@ class TestCylindricalFace3D(unittest.TestCase):
         self.assertTrue(normal.is_close(design3d.Vector3D(-1, 0, 0)))
       
     def test_face_inside(self):
-        face1, face2 = DessiaObject.from_json(
+        face1, face2 = SerializableObject.from_json(
             os.path.join(folder, "test_cylindricalface_face_inside.json")).primitives
         self.assertTrue(face1.face_inside(face2))
 

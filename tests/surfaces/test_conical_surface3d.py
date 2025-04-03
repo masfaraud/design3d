@@ -2,7 +2,7 @@ import math
 import unittest
 import os
 import numpy as np
-from dessia_common.core import DessiaObject
+from design3d.base import SerializableObject
 import design3d
 import design3d.edges as d3de
 from design3d import curves, surfaces, edges
@@ -338,7 +338,7 @@ class TestConicalSurface3D(unittest.TestCase):
                 else:
                     self.assertAlmostEqual(intersection[1], expected_result[1])
 
-        conicalsurface, plane = DessiaObject.from_json(
+        conicalsurface, plane = SerializableObject.from_json(
             os.path.join(folder, 'test_conicalsurface_plane_intersections081223.json')).primitives
         intersections = conicalsurface.plane_intersections(plane)
         self.assertEqual(len(intersections), 1)

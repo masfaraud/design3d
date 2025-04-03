@@ -3,7 +3,7 @@ import unittest
 import os
 import numpy
 
-import dessia_common.core
+from design3d.base import SerializableObject
 import design3d
 from design3d import edges, faces, primitives3d, wires, surfaces, shells
 
@@ -169,7 +169,7 @@ class TestClosedShell3D(unittest.TestCase):
         self.assertFalse(box1.intersection(box4))
 
     def test_point_belongs(self):
-        closed_shell = dessia_common.core.DessiaObject.from_json(
+        closed_shell = SerializableObject.from_json(
             os.path.join(folder, 'test_closed_shell_point_belongs2.json')).primitives[0]
         points = [design3d.Point3D(-.2, -0.6, 0.08), design3d.Point3D(-0.340920128805, -0.418071198223, 0.007036661148),
                   design3d.Point3D(-0.287522562519, -0.574786328164, 0.157256628036),
@@ -179,7 +179,7 @@ class TestClosedShell3D(unittest.TestCase):
             self.assertEqual(closed_shell.point_inside(points[i]), expected_result)
 
     def test_minimum_distance(self):
-        closed_shell = dessia_common.core.DessiaObject.from_json(
+        closed_shell = SerializableObject.from_json(
             os.path.join(folder, 'test_shells_distance2.json'))
         u_vector = design3d.Vector3D(-0.5773502691896258, -0.5773502691896258, -0.5773502691896258)
         v_vector = design3d.Vector3D(0.8164965809277258, -0.40824829046386313, -0.40824829046386313)
@@ -196,7 +196,7 @@ class TestClosedShell3D(unittest.TestCase):
         self.assertEqual(min_distance, 0.0)
 
     def test_volume(self):
-        closed_shell = dessia_common.core.DessiaObject.from_json(os.path.join(folder, 'test_shell_volume.json'))
+        closed_shell = SerializableObject.from_json(os.path.join(folder, 'test_shell_volume.json'))
         closed_shell2 = closed_shell.rotation(design3d.O3D - 0.95 * design3d.X3D, design3d.Z3D, numpy.pi / 2)
         closed_shell2 = closed_shell2.translation(-0.95 * design3d.X3D + 0.45 * design3d.Z3D + 0.2 * design3d.Y3D)
         self.assertAlmostEqual(closed_shell.volume(), closed_shell2.volume())

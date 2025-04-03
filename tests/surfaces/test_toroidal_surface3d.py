@@ -2,7 +2,7 @@ import math
 import os
 import unittest
 import numpy as np
-from dessia_common.core import DessiaObject
+from design3d.base import SerializableObject
 import design3d
 from design3d import edges, surfaces, wires, curves
 
@@ -192,11 +192,11 @@ class TestToroidalSurface3D(unittest.TestCase):
                             [design3d.Point3D(1.3426661840222276, -1.6569652433720718, -0.9911601091085722),
                              design3d.Point3D(2.6785064972435375, -1.252458418216524, -0.2905337359307829)],
                             []]
-        surface1, lineseg1 = DessiaObject.from_json(os.path.join(folder, "test_torus_line_intersections.json")).primitives
-        surface2, line2 = DessiaObject.from_json(os.path.join(folder, "test_torus_line_itnersections_08_11_2023.json")).primitives
-        surface3, lineseg3 = DessiaObject.from_json(os.path.join(folder, "test_torus_lineseg141223.json")).primitives
-        surface4, lineseg4 = DessiaObject.from_json(os.path.join(folder, "test_toroidal_surface_lineseg_intersections201223.json")).primitives
-        surface5, lineseg5 = DessiaObject.from_json(os.path.join(folder, "test_toroidal_surface_line_intersections.json")).primitives
+        surface1, lineseg1 = SerializableObject.from_json(os.path.join(folder, "test_torus_line_intersections.json")).primitives
+        surface2, line2 = SerializableObject.from_json(os.path.join(folder, "test_torus_line_itnersections_08_11_2023.json")).primitives
+        surface3, lineseg3 = SerializableObject.from_json(os.path.join(folder, "test_torus_lineseg141223.json")).primitives
+        surface4, lineseg4 = SerializableObject.from_json(os.path.join(folder, "test_toroidal_surface_lineseg_intersections201223.json")).primitives
+        surface5, lineseg5 = SerializableObject.from_json(os.path.join(folder, "test_toroidal_surface_line_intersections.json")).primitives
         for i, (surface, line) in enumerate([[surface1, lineseg1.line], [surface2, line2], [surface3, lineseg3.line],
                                              [surface4, lineseg4.line], [surface5, lineseg5.line]]):
             line_intersections = surface.line_intersections(line)
@@ -263,7 +263,7 @@ class TestToroidalSurface3D(unittest.TestCase):
                             w=design3d.Vector3D(0.7071067811865475, 0.0, 0.7071067811865476)))
         plane_intersections = toroidal_surface.plane_intersections(plane6)
         self.assertFalse(plane_intersections)
-        toroidalsurface, plane = DessiaObject.from_json(
+        toroidalsurface, plane = SerializableObject.from_json(
             os.path.join(folder, 'test_toroidalsurface_plane3d_intersections_211223.json')).primitives
         intersections = toroidalsurface.surface_intersections(plane)
         self.assertEqual(len(intersections), 2)
@@ -319,7 +319,7 @@ class TestToroidalSurface3D(unittest.TestCase):
         expected_point2 = design3d.Point3D(0.161552737537, 1.544982741074, -0.894736842105)
         self.assertTrue(circle_intersections[0].is_close(expected_point1))
         self.assertTrue(circle_intersections[1].is_close(expected_point2))
-        torus, circle = DessiaObject.from_json(os.path.join(folder,
+        torus, circle = SerializableObject.from_json(os.path.join(folder,
             'test_toroidalsurface_circle_intersections211223_2.json')).primitives
         circle_intersections = torus.circle_intersections(circle)
         self.assertEqual(len(circle_intersections), 2)

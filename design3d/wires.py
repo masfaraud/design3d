@@ -2987,8 +2987,8 @@ class ClosedPolygon2D(ClosedPolygonMixin, Contour2D):
         """
         Ray casting algorithm copied from internet.
         """
-        return polygon_point_belongs(np.array(self.points),
-                                     np.array(point),
+        return polygon_point_belongs(np.asarray(self.points),
+                                     np.asarray(point),
                                      include_edge_points=include_edge_points, tol=tol)
 
     def points_in_polygon(self, points, include_edge_points: bool = False, tol: float = 1e-6):
