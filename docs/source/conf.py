@@ -14,21 +14,20 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../volmdlr'))
+sys.path.insert(0, os.path.abspath('../../design3d'))
 
 
 # -- Project information -----------------------------------------------------
 import datetime
 
-project = 'Volmdlr'
-copyright = f'2018-{datetime.datetime.now().year} DessIA Technologies'
-author = 'DessIA Technologies'
+project = 'Design3d'
+author = 'The design3d team'
 
-import volmdlr
+import design3d
 
-version = volmdlr.__version__
+version = design3d.__version__
 # The full version, including alpha/beta/rc tags
-release = volmdlr.__version__
+release = design3d.__version__
 
 
 # -- General configuration ---------------------------------------------------
@@ -86,8 +85,7 @@ pygments_style = 'sphinx'
 # a list of builtin themes.
 #
 # html_theme = 'sphinx_rtd_theme'
-html_theme = "pydata_sphinx_theme"
-# html_theme = "furo"
+html_theme = "furo"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -95,10 +93,10 @@ html_theme = "pydata_sphinx_theme"
 
 html_theme_options = {
   "logo": {
-      "image_light": "volmdlr.svg",
-      "image_dark": "volmdlr-dark.svg",
+      "image_light": "design3d.svg",
+      "image_dark": "design3d-dark.svg",
   },
-  "github_url": "https://github.com/Dessia-tech/volmdlr",
+  "github_url": "https://github.com/masfaraud/design3d",
   # "twitter_url": "https://twitter.com/numpy_team",
   "collapse_navigation": True,
   # "external_links": [
@@ -118,7 +116,7 @@ html_theme_options = {
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
-html_css_files = ["volmdlr.css"]
+html_css_files = ["design3d.css"]
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -134,7 +132,7 @@ html_css_files = ["volmdlr.css"]
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Volmdlrdoc'
+htmlhelp_basename = 'design3dDoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -161,8 +159,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Volmdlr.tex', 'Volmdlr Documentation',
-     'DessIA Technologies', 'manual'),
+    (master_doc, 'Design3d.tex', 'Design3d Documentation',
+     'design3d team', 'manual'),
 ]
 
 
@@ -171,7 +169,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'volmdlr', 'Volmdlr Documentation',
+    (master_doc, 'design3d', 'Design3d Documentation',
      [author], 1)
 ]
 
@@ -182,8 +180,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Volmdlr', 'Volmdlr Documentation',
-     author, 'Volmdlr', 'One line description of project.',
+    (master_doc, 'Design3d', 'Design3d Documentation',
+     author, 'Design3d', 'One line description of project.',
      'Miscellaneous'),
 ]
 

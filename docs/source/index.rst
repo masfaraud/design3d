@@ -1,5 +1,5 @@
 #####################
-Volmdlr Documentation
+Design3d Documentation
 #####################
 
 .. toctree::
@@ -7,14 +7,13 @@ Volmdlr Documentation
    :hidden:
 
    User Guide <user_guide>
-   About Dessia <about_dessia>
    Authors <authors>
    About the Package <about_the_package>
    Roadmap <road_map_and_current_limitations>
    Tutorials <tutorials>
 
 
-The design3d library is an open-source Python library primarily developed by Dessia Technologies,
+The design3d library is an open-source Python library,
 aimed at providing 3D modeling capabilities based on Boundary Representation (B-Rep) purely in Python.
 The library is designed to be easy to use, efficient, and customizable.
 
@@ -51,7 +50,7 @@ shapes and to provide a rich set of operations for manipulating and analyzing th
         ^^^^^^^^^^
 
         The user guide provides in-depth information on the
-        key concepts of Volmdlr with useful background information and explanation.
+        key concepts of design3d with useful background information and explanation.
 
         +++
 

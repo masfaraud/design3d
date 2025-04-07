@@ -145,7 +145,7 @@ setup(
         "lxml"
     ],
     extras_require={"test": ["coverage"],
-                    "doc": ["sphinx", "nbsphinx", "pydata_sphinx_theme", "nbformat", "nbconvert",
+                    "doc": ["sphinx", "nbsphinx", "furo", "nbformat", "nbconvert",
                             "sphinx_copybutton", "sphinx_design"]},
     classifiers=["Topic :: Scientific/Engineering",
                  "Topic :: Multimedia :: Graphics :: 3D Modeling",

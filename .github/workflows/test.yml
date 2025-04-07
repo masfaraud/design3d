@@ -45,3 +45,9 @@ jobs:
           coverage run --rcfile=../.coveragerc --data-file=../.coverage --source design3d -a ci_scripts.py
           coverage report
           done
+
+
+      - name: Build docs
+        run: |
+          cd docs
+          make html
