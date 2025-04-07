@@ -8,17 +8,26 @@ import os
 import design3d
 from design3d.base import SerializableObject
 from design3d import Point2D, Point3D, edges, wires, surfaces, curves
-from design3d.models import cylindrical_surfaces
+
+
+cylindrical_surface = surfaces.CylindricalSurface3D(design3d.OXYZ, 0.32)
+cylindrical_surface2 = surfaces.CylindricalSurface3D(design3d.OXYZ, 1.0)
+frame = design3d.Frame3D(design3d.Point3D(-0.005829, 0.000765110438227, -0.0002349369830163),
+                        design3d.Vector3D(-0.6607898454031987, 0.562158151695499, -0.4973278523210991),
+                        design3d.Vector3D(-0.7505709694705869, -0.4949144228333324, 0.43783893597935386),
+                        design3d.Vector3D(-0.0, 0.6625993710787045, 0.748974013865705))
+cylindrical_surface3 = surfaces.CylindricalSurface3D(frame, 0.003)
+cylindrical_surface4 = surfaces.CylindricalSurface3D(design3d.OXYZ, radius=0.03)
 
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'objects_cylindrical_tests')
 
 
 class TestCylindricalSurface3D(unittest.TestCase):
-    cylindrical_surface = cylindrical_surfaces.cylindrical_surface
-    cylindrical_surface2 = cylindrical_surfaces.cylindrical_surface2
-    cylindrical_surface3 = cylindrical_surfaces.cylindrical_surface3
-    cylindrical_surface4 = cylindrical_surfaces.cylindrical_surface4
+    cylindrical_surface = cylindrical_surface
+    cylindrical_surface2 = cylindrical_surface2
+    cylindrical_surface3 = cylindrical_surface3
+    cylindrical_surface4 = cylindrical_surface4
 
     def test_line_intersections(self):
         line3d = curves.Line3D(design3d.O3D, design3d.Point3D(0.3, 0.3, 0.3))

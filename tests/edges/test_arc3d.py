@@ -3,10 +3,17 @@ import os
 import unittest
 from itertools import product
 
-import dessia_common.core
 import design3d
 from design3d import edges, wires, curves
-from design3d.models.curves import circle3d
+from design3d.base import SerializableObject
+
+vector1 = design3d.Vector3D(1, 1, 1)
+vector1 = vector1.unit_vector()
+vector2 = vector1.deterministic_unit_normal_vector()
+vector3 = vector1.cross(vector2)
+frame = design3d.Frame3D(design3d.O3D, vector1, vector2, vector3)
+
+circle3d = curves.Circle3D(frame, 1)
 
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "arc_objects")
@@ -245,7 +252,7 @@ class TestArc3D(unittest.TestCase):
         self.assertEqual(arc.point_distance(point4), math.sqrt(2))
 
         point = design3d.Point3D(0.33525, -0.51106, 0.639935)
-        arc = dessia_common.core.DessiaObject.from_json(os.path.join(folder, "arc3d_test_point_distance.json"))
+        arc = SerializableObject.from_json(os.path.join(folder, "arc3d_test_point_distance.json"))
         self.assertAlmostEqual(arc.point_distance(point), 0.0021097842575404403)
 
     def test_arc_intersections(self):

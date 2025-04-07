@@ -3,7 +3,6 @@ Unittets for edges.Fullarc2D.
 
 """
 import unittest
-from dessia_common.core import DessiaObject
 import design3d
 from design3d import edges, curves
 

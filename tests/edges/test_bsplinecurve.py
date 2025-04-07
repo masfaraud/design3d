@@ -3,12 +3,11 @@ Unit tests for design3d.faces.BSplineCurve
 """
 import unittest
 import os
-from dessia_common.core import DessiaObject
 from geomdl import BSpline
-import numpy as np
 import design3d
 import design3d.edges as d3de
 from design3d import curves
+from design3d.base import SerializableObject
 from design3d.models import bspline_curves
 import design3d.nurbs.helpers as nurbs_helpers
 
@@ -180,7 +179,7 @@ class TestBSplineCurve2D(unittest.TestCase):
         self.assertAlmostEqual(bspline_curve2d.abscissa(point), 7.747599410268476)
 
     def test_line_intersections(self):
-        bspline_curve2d = DessiaObject.from_json(os.path.join(folder, "bsplinecurve2d_1.json"))
+        bspline_curve2d = SerializableObject.from_json(os.path.join(folder, "bsplinecurve2d_1.json"))
         line = curves.Line2D(design3d.Point2D(1.263163105753452, -0.002645572020392778),
                           design3d.Point2D(1.263163105753452, -0.001820963841291406))
 

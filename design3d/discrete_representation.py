@@ -8,12 +8,11 @@ from typing import Dict, Iterable, List, Set, Tuple, TypeVar, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
-from dessia_common.core import DessiaObject, PhysicalObject
-from dessia_common.serialization import JsonSerializable
 from matplotlib import patches
 from numpy.typing import NDArray
 
 from design3d import Point2D, Point3D, Vector3D
+from design3d.base import SerializableObject
 from design3d.core import BoundingBox, BoundingRectangle, VolumeModel
 from design3d.discrete_representation_compiled import (
     flood_fill_matrix_2d,
@@ -397,7 +396,7 @@ class DiscreteRepresentation:
             raise ValueError(f"Both {self.__class__} must have same element size to perform this operation.")
 
 
-class Voxelization(DiscreteRepresentation, PhysicalObject):
+class Voxelization(DiscreteRepresentation, SerializableObject):
     """
     Abstract base class for creating and manipulating voxelizations of design3d geometries.
 
@@ -426,8 +425,8 @@ class Voxelization(DiscreteRepresentation, PhysicalObject):
         :type name: str, optional
         """
         DiscreteRepresentation.__init__(self, element_size=voxel_size)
-        PhysicalObject.__init__(self, name=name)
-
+        self.name = name
+        
     @property
     def voxel_size(self) -> float:
         """
@@ -986,7 +985,7 @@ class PointBasedVoxelization(Voxelization):
         return self.__class__(intersecting_voxels, self.voxel_size)
 
     # SERIALIZATION
-    def to_dict(self, *args, **kwargs) -> JsonSerializable:
+    def to_dict(self, *args, **kwargs):
         """Specific 'to_dict' method to allow serialization of a set."""
         dict_ = self.base_dict()
 
@@ -997,7 +996,7 @@ class PointBasedVoxelization(Voxelization):
         return dict_
 
     @classmethod
-    def dict_to_object(cls, dict_: JsonSerializable, *args, **kwargs) -> "PointBasedVoxelization":
+    def dict_to_object(cls, dict_, *args, **kwargs) -> "PointBasedVoxelization":
         """Specific 'dict_to_object' method to allow deserialization of a set."""
 
         voxel_centers = set(tuple(voxel_center) for voxel_center in dict_["voxel_centers"])
@@ -1426,7 +1425,7 @@ class MatrixBasedVoxelization(Voxelization):
         return inner_filled_voxel_matrix
 
     # SERIALIZATION
-    def to_dict(self, *args, **kwargs) -> JsonSerializable:
+    def to_dict(self, *args, **kwargs):
         """Specific 'to_dict' method to allow serialization of a numpy array."""
         dict_ = self.base_dict()
 
@@ -1438,7 +1437,7 @@ class MatrixBasedVoxelization(Voxelization):
         return dict_
 
     @classmethod
-    def dict_to_object(cls, dict_: JsonSerializable, *args, **kwargs) -> "MatrixBasedVoxelization":
+    def dict_to_object(cls, dict_, *args, **kwargs) -> "MatrixBasedVoxelization":
         """Specific 'dict_to_object' method to allow deserialization of a numpy array."""
 
         matrix = np.array(dict_["matrix"])
@@ -2989,7 +2988,7 @@ class OctreeBasedVoxelization(Voxelization):
         return octree_1, octree_2
 
     # SERIALIZATION
-    def to_dict(self, *args, **kwargs) -> JsonSerializable:
+    def to_dict(self, *args, **kwargs):
         """Specific 'to_dict' method."""
         dict_ = self.base_dict()
 
@@ -3003,7 +3002,7 @@ class OctreeBasedVoxelization(Voxelization):
         return dict_
 
     @classmethod
-    def dict_to_object(cls, dict_: JsonSerializable, *args, **kwargs) -> "OctreeBasedVoxelization":
+    def dict_to_object(cls, dict_, *args, **kwargs) -> "OctreeBasedVoxelization":
         """Specific 'dict_to_object' method."""
 
         octree = dict_["octree"]
@@ -3016,7 +3015,7 @@ class OctreeBasedVoxelization(Voxelization):
         return cls(octree, root_center, octree_depth, voxel_size, triangles, name)
 
 
-class Pixelization(DiscreteRepresentation, DessiaObject):
+class Pixelization(DiscreteRepresentation, SerializableObject):
     """
     Abstract base class for creating and manipulating pixelizations of design3d geometries.
 
@@ -3045,7 +3044,7 @@ class Pixelization(DiscreteRepresentation, DessiaObject):
         :type name: str, optional
         """
         DiscreteRepresentation.__init__(self, element_size=pixel_size)
-        DessiaObject.__init__(self, name=name)
+        self.name = name
 
     @property
     def pixel_size(self) -> float:
@@ -3492,7 +3491,7 @@ class PointBasedPixelization(Pixelization):
         return self.from_matrix_based_pixelization(self.to_matrix_based_pixelization().fill_enclosed_pixels())
 
     # SERIALIZATION
-    def to_dict(self, *args, **kwargs) -> JsonSerializable:
+    def to_dict(self, *args, **kwargs):
         """Specific 'to_dict' method to allow serialization of a set."""
         dict_ = self.base_dict()
 
@@ -3503,7 +3502,7 @@ class PointBasedPixelization(Pixelization):
         return dict_
 
     @classmethod
-    def dict_to_object(cls, dict_: JsonSerializable, *args, **kwargs) -> "PointBasedPixelization":
+    def dict_to_object(cls, dict_, *args, **kwargs) -> "PointBasedPixelization":
         """Specific 'dict_to_object' method to allow deserialization of a set."""
 
         pixel_centers = set(tuple(pixel_center) for pixel_center in dict_["pixel_centers"])
@@ -3809,7 +3808,7 @@ class MatrixBasedPixelization(Pixelization):
         return inner_filled_pixel_matrix
 
     # SERIALIZATION
-    def to_dict(self, *args, **kwargs) -> JsonSerializable:
+    def to_dict(self, *args, **kwargs):
         """Specific 'to_dict' method to allow serialization of a numpy array."""
         dict_ = self.base_dict()
 
@@ -3821,7 +3820,7 @@ class MatrixBasedPixelization(Pixelization):
         return dict_
 
     @classmethod
-    def dict_to_object(cls, dict_: JsonSerializable, *args, **kwargs) -> "MatrixBasedPixelization":
+    def dict_to_object(cls, dict_, *args, **kwargs) -> "MatrixBasedPixelization":
         """Specific 'dict_to_object' method to allow deserialization of a numpy array."""
 
         matrix = np.array(dict_["matrix"])

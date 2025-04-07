@@ -2118,6 +2118,7 @@ class DisplayTriangleShell3D(Shell3D):
     def to_dict(self, *args, **kwargs):
         """Overload of 'to_dict' for performance."""
         dict_ = self.base_dict()
+        dict_["name"] = self.name
 
         dict_["positions"] = self.positions.tolist()
         dict_["indices"] = self.indices.tolist()

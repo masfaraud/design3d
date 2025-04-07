@@ -11,6 +11,8 @@ import warnings
 import inspect
 import collections
 import collections.abc
+from copy import copy, deepcopy
+
 import orjson
 from importlib import import_module
 from ast import literal_eval
@@ -181,7 +183,7 @@ def deserialize_dict(dict_):
         # TOCHECK Class method to generate init_dict ??
     else:
         init_dict = dict_
-        init_dict.pop("object_class")
+        init_dict.pop("object_class", None)
 
     subobjects = {}
     for key, value in init_dict.items():
@@ -201,6 +203,36 @@ def deserialize_dict(dict_):
 
 class SerializableObject:
     """Object that can travel on the web."""
+
+    def copy(self, deep: bool = True, memo=None):
+        """
+        Copy object.
+
+        :param deep: If False, perform a shallow copy. If True, perform a deep copy.
+        :param memo: A dict that keep track of references.
+        """
+        if deep:
+            return deepcopy(self, memo=memo)
+        return copy(self)
+
+    def __copy__(self):
+        """Generic copy use init of objects."""
+        class_name = self.full_classname
+        if class_name in _ARGSSPEC_CACHE:
+            class_argspec = _ARGSSPEC_CACHE[class_name]
+        else:
+            class_argspec = inspect.getfullargspec(self.__class__)
+            _ARGSSPEC_CACHE[class_name] = class_argspec
+
+        dict_ = {}
+        for arg in class_argspec.args:
+            if arg != "self":
+                value = self.__dict__[arg]
+                if hasattr(value, "__copy__"):
+                    dict_[arg] = value.__copy__()
+                else:
+                    dict_[arg] = value
+        return self.__class__(**dict_)
 
     def base_dict(self):
         """A base dict for to_dict: set up a dict with object class and version."""

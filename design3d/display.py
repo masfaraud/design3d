@@ -301,6 +301,7 @@ class MeshMixin:
         """Overload of 'to_dict' for numpy usage and memory perf."""
 
         dict_ = self.base_dict()
+        dict_["name"] = self.name
         dict_["vertices"] = self.vertices.flatten().tolist()
         dict_["triangles"] = self.triangles.flatten().tolist()
 

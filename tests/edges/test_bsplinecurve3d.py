@@ -3,8 +3,7 @@ import os
 import design3d
 import design3d.edges as d3de
 from design3d import curves
-from dessia_common.core import DessiaObject
-
+from design3d.base import SerializableObject
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'bsplinecurve_objects')
 
@@ -46,7 +45,7 @@ class TestBSplineCurve3D(unittest.TestCase):
         self.assertTrue(trimmed_curve.start.is_close(point1))
         self.assertTrue(trimmed_curve.end.is_close(point2))
         self.assertAlmostEqual(trimmed_curve.length(), 0.011010880733091775, 2)
-        bspline, point1, point2 = DessiaObject.from_json(
+        bspline, point1, point2 = SerializableObject.from_json(
             os.path.join(folder, "test_bspline_trim271123.json")).primitives
         trim = bspline.trim(point1, point2, True)
         self.assertAlmostEqual(trim.length(), 14.607916441075464)
@@ -182,7 +181,7 @@ class TestBSplineCurve3D(unittest.TestCase):
         self.assertTrue(bsplinecurve.point_at_abscissa(abscissa).is_close(point))
 
     def test_local_discretization(self):
-        edge, start, end = DessiaObject.from_json(os.path.join(
+        edge, start, end = SerializableObject.from_json(os.path.join(
             folder, 'test_bspline_local_discretizations.json')).primitives
         expected_points = [design3d.Point3D(0.40000000000000013, 0.3055497472688364, -0.0577802904293785),
                            design3d.Point3D(0.39999999999999997, 0.3054558765193882, -0.05729389615629579),

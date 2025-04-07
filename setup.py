@@ -141,7 +141,8 @@ setup(
         "gmsh",
         "pyfqmr",
         "CGAL",
-        "scikit-learn"
+        "scikit-learn",
+        "lxml"
     ],
     extras_require={"test": ["coverage"],
                     "doc": ["sphinx", "nbsphinx", "pydata_sphinx_theme", "nbformat", "nbconvert",

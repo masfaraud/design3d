@@ -3,7 +3,14 @@ import math
 import unittest
 import design3d
 from design3d import edges, curves
-from design3d.models.curves import circle3d
+
+vector1 = design3d.Vector3D(1, 1, 1)
+vector1 = vector1.unit_vector()
+vector2 = vector1.deterministic_unit_normal_vector()
+vector3 = vector1.cross(vector2)
+frame = design3d.Frame3D(design3d.O3D, vector1, vector2, vector3)
+
+circle3d = curves.Circle3D(frame, 1)
 
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'circle3D_objects')
