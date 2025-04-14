@@ -1,4 +1,11 @@
-"""some design3d edges models."""
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Apr 14 22:36:57 2025
+
+@author: steven
+"""
+
 from geomdl import utilities
 import design3d
 from design3d import edges, curves

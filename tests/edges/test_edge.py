@@ -3,7 +3,8 @@ import unittest
 import design3d
 from design3d import edges
 import design3d.step
-from design3d.models.edges import bspline1, lineseg, arc, arc_ellipse2d, linesegment3d, arc3d, arc_ellipse3d
+from edges_models import bspline1, lineseg, arc, arc_ellipse2d, linesegment3d, arc3d, arc_ellipse3d
+
 
 
 class TestEdge(unittest.TestCase):
