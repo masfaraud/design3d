@@ -446,7 +446,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         :return: The total surface area of the 3D mesh.
         :rtype: float
         """
-        areas = np.sqrt((self.triangles_cross_products() ** 2).sum(axis=1)) / 2.0
+        areas = np.sqrt((self.triangles_cross_products() ** 2).sum()) / 2.0
         return areas.sum()
 
     def minimum_distance(self, other_mesh: "Mesh3D", return_points: bool = False):
