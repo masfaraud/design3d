@@ -25,7 +25,6 @@ import design3d
 import design3d.templates
 from design3d.core_compiled import bbox_is_intersecting
 from design3d.base import DataEqualityObject
-from design3d.discrete_representation_compiled import triangle_intersects_voxel
 from design3d.utils.step_writer import product_writer, geometric_context_writer, assembly_definition_writer, \
     STEP_HEADER, STEP_FOOTER, step_ids_to_str
 from design3d.geometry import get_transfer_matrix_from_basis

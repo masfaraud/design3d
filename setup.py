@@ -152,7 +152,6 @@ setup(
                  "Development Status :: 5 - Production/Stable"],
 
     ext_modules=cythonize(["design3d/core_compiled.pyx",
-                           "design3d/discrete_representation_compiled.py",
                            "design3d/nurbs/core.pyx",
                            "design3d/nurbs/helpers.pyx",
                            "design3d/nurbs/fitting.py",
