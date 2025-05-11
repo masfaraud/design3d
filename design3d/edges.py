@@ -122,7 +122,7 @@ class Edge(DataEqualityObject):
         :return:
         """
         if not self._middle_point:
-            half_length = self.length() / 2
+            half_length = self.length() / 2.
             self._middle_point = self.point_at_abscissa(abscissa=half_length)
         return self._middle_point
 

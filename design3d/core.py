@@ -206,7 +206,6 @@ def helper_babylon_data(babylon_data, display_points):
 
     # Calculate max length of the bounding box
     max_length = float(max(max_vals - min_vals))
-    print('max_length', max_length)
 
     # Calculate center point of the bounding box
     center = (0.5 * (min_vals + max_vals)).tolist()
