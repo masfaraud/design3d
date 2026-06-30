@@ -6,7 +6,6 @@ from design3d.base import SerializableObject
 import design3d
 from design3d import edges, surfaces, curves, wires
 from design3d.surfaces import Plane3D
-from design3d.models.edges import bspline_curve3d
 
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_plane_test")
@@ -26,6 +25,23 @@ class TestPlane3D(unittest.TestCase):
         )
     )
     plane4 = surfaces.Plane3D(design3d.OXYZ.rotation(design3d.O3D, design3d.Vector3D(0, 0, 1), math.pi / 4))
+
+    degree = 5
+    control_points = [design3d.Point3D(0, 3, 0),
+                      design3d.Point3D(3, 2, 1),
+                      design3d.Point3D(5, -1, 4),
+                      design3d.Point3D(5, -4, 0),
+                      design3d.Point3D(-1, -2, -3),
+                      design3d.Point3D(-3, 4, 1)]
+    knots = [0.0, 1.0]
+    knot_multiplicities = [6, 6]
+    weights = None
+    bspline_curve3d = edges.BSplineCurve3D(degree=degree, control_points=control_points,
+                                knot_multiplicities=knot_multiplicities,
+                                knots=knots,
+                                weights=weights,
+                                name='B Spline Curve 3D 1')
+
 
     def setUp(self):
         self.point1 = design3d.Point3D(0, 0, 0)
@@ -212,7 +228,7 @@ class TestPlane3D(unittest.TestCase):
 
     def test_bspline_intersections(self):
         plane = Plane3D(design3d.OZXY)
-        intersections = plane.bsplinecurve_intersections(bspline_curve=bspline_curve3d())
+        intersections = plane.bsplinecurve_intersections(bspline_curve=self.bspline_curve3d)
         self.assertTrue(len(intersections), 2)
         self.assertTrue(intersections[0].is_close(design3d.Point3D(3.4032921805712286, 0.0, 1.5267489712255913)))
         self.assertTrue(intersections[1].is_close(design3d.Point3D(-0.49607254405814866, 0.0, -0.6842127097914265)))

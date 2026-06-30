@@ -7,16 +7,25 @@ import design3d
 import design3d.edges as d3de
 from design3d import curves, surfaces, edges
 import design3d.wires as d3dw
-from design3d import O3D, X3D, Y3D, Z3D, Point2D, Point3D
-from design3d.models import conical_surfaces
+from design3d import O3D, X3D, Y3D, Z3D, Point2D, Point3D, Frame3D, OXYZ
+# from design3d.models import conical_surfaces
 
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'objects_conical_tests')
 
 
 class TestConicalSurface3D(unittest.TestCase):
-    conical_surface = conical_surfaces.conical_surface1
-    conical_surface2 = conical_surfaces.conical_surface2
+    conical_surface1 = surfaces.ConicalSurface3D(OXYZ, math.pi / 3)
+
+    frame_cone = Frame3D(Point3D(0.0, 0.0, 0.1), X3D, -Y3D, -Z3D)
+    conical_surface2 = surfaces.ConicalSurface3D(frame_cone, 0.336674819387)
+
+    # frame = volmdlr.Frame3D(volmdlr.Point3D(0.0, 0.0, -0.0022143719324716786), volmdlr.X3D, volmdlr.Y3D, volmdlr.Z3D)
+    # conical_surface3 = surfaces.ConicalSurface3D(frame, 1.0471975511966)
+
+
+    # conical_surface = conical_surfaces.conical_surface1
+    # conical_surface2 = conical_surfaces.conical_surface2
     conical_surface3 = surfaces.ConicalSurface3D(design3d.OXYZ, math.pi / 4, 0.5)
     frame = design3d.Frame3D(design3d.Point3D(0.5, 0.5, 0.5), design3d.X3D,
                             design3d.Vector3D(0.0, 1/math.sqrt(2), -1/math.sqrt(2)),
@@ -32,7 +41,8 @@ class TestConicalSurface3D(unittest.TestCase):
                                       [math.pi, 1.0 / math.tan(math.pi / 3)],
                                       [1.5 * math.pi, 1.0 / math.tan(math.pi / 3)]
                                       ], dtype=np.float64)
-        points3d = self.conical_surface.parametric_points_to_3d(parametric_points)
+
+        points3d = self.conical_surface1.parametric_points_to_3d(parametric_points)
         expected_points = np.array([[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0],
                                     [0.5, 0.0, 0.5/math.tan(math.pi / 3)], [0.0, 0.5, 0.5/math.tan(math.pi / 3)],
                                     [-0.5, 0.0, 0.5/math.tan(math.pi / 3)], [0.0, -0.5, 0.5/math.tan(math.pi / 3)],
@@ -78,7 +88,7 @@ class TestConicalSurface3D(unittest.TestCase):
         conical_surface3_test_ref_radius = surfaces.ConicalSurface3D(design3d.OXYZ, math.pi / 4, 0.49)
         conical_surface3_test_semi_angle = surfaces.ConicalSurface3D(design3d.OXYZ, math.pi / 5, 0.5)
         conical_surface3_close = surfaces.ConicalSurface3D(design3d.OXYZ, 0.785398163834, 0.4999999)
-        self.assertFalse(self.conical_surface.is_coincident(self.conical_surface3))
+        self.assertFalse(self.conical_surface1.is_coincident(self.conical_surface3))
         self.assertFalse(self.conical_surface3.is_coincident(conical_surface3_test_ref_radius))
         self.assertFalse(self.conical_surface3.is_coincident(conical_surface3_test_semi_angle))
         self.assertTrue(self.conical_surface3.is_coincident(self.conical_surface3))
@@ -91,8 +101,8 @@ class TestConicalSurface3D(unittest.TestCase):
         arc2 = d3de.Arc3D.from_3_points(design3d.Point3D(0, -1, 1 / math.sqrt(3)),
                          design3d.Point3D(-1 / math.sqrt(2), 1 / math.sqrt(2), 1 / math.sqrt(3)),
                          design3d.Point3D(1, 0, 1 / math.sqrt(3)))
-        test1 = self.conical_surface.arc3d_to_2d(arc3d=arc1)[0]
-        test2 = self.conical_surface.arc3d_to_2d(arc3d=arc2)[0]
+        test1 = self.conical_surface1.arc3d_to_2d(arc3d=arc1)[0]
+        test2 = self.conical_surface1.arc3d_to_2d(arc3d=arc2)[0]
 
         # Assert that the returned object is an edges.LineSegment2D
         self.assertIsInstance(test1, d3de.LineSegment2D)
@@ -109,7 +119,7 @@ class TestConicalSurface3D(unittest.TestCase):
                                    d3de.LineSegment2D(design3d.Point2D(math.pi, 0.0), design3d.Point2D(math.pi, 1.0)),
                                    d3de.LineSegment2D(design3d.Point2D(math.pi, 1.0), design3d.Point2D(-math.pi, 1.0)),
                                    d3de.LineSegment2D(design3d.Point2D(-math.pi, 1.0), design3d.Point2D(-math.pi, 0.0))])
-        contour3d, primitives_mapping = self.conical_surface.contour2d_to_3d(contour2d, return_primitives_mapping=True)
+        contour3d, primitives_mapping = self.conical_surface1.contour2d_to_3d(contour2d, return_primitives_mapping=True)
         self.assertEqual(len(contour3d.primitives), len(primitives_mapping))
         self.assertIsNone(primitives_mapping.get(contour2d.primitives[0]))
         self.assertEqual(contour3d.primitives[0], primitives_mapping[contour2d.primitives[1]])
@@ -184,7 +194,7 @@ class TestConicalSurface3D(unittest.TestCase):
 
 
     def test_bsplinecurve3d_to_2d(self):
-        conical_surface3 = conical_surfaces.conical_surface3
+        conical_surface3 = self.conical_surface3
         control_points = [design3d.Point3D(-0.00235270234694772, 0.004075, 0.000502294734194974),
                           design3d.Point3D(-0.00158643061573795, 0.004075, 0.000281091139051792),
                           design3d.Point3D(-1.38558964783719e-06, 0.004075, -4.49804036433251e-06),
@@ -231,7 +241,7 @@ class TestConicalSurface3D(unittest.TestCase):
         conical_surface = surfaces.ConicalSurface3D(design3d.OXYZ, math.pi / 6, 0.5773502691896257)
         expected_number_intersections = [2, 2, 2, 1, 0, 2]
         for i, line in enumerate(lines):
-            intersections = conical_surface.line_intersections(line)
+            intersections = self.conical_surface1.line_intersections(line)
             self.assertEqual(len(intersections), expected_number_intersections[i])
             for intersection in intersections:
                 self.assertTrue(line.point_belongs(intersection))

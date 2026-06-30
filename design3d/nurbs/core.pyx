@@ -643,6 +643,7 @@ cdef vector[vector[double]] evaluate_curve_c(int degree, double[:] knotvector, d
 
 
 def derivatives_curve(dict datadict, double parpos, int deriv_order):
+    #print('dd', datadict)
     cdef int degree = datadict["degree"]
     cdef double[:] knotvector = datadict["knotvector"]
     cdef double[:, ::1] ctrlpts = datadict["control_points"]

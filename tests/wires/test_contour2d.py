@@ -2,19 +2,25 @@ import math
 import os
 import unittest
 
-# from dessia_common.core import DessiaObject
 from design3d.base import SerializableObject
 
 import design3d
 from design3d import edges, wires, curves
-from design3d.models.contours import contour2d_1, contour2d_2, contour1_cut_by_wire, contour2_cut_by_wire,\
-    contour2_unittest, unordered_contour2_unittest, invalid_unordered_contour2_unittest
 
 
 folder = os.path.dirname(os.path.realpath(__file__))
 
 
 class TestContour2D(unittest.TestCase):
+    points2d = [design3d.Point2D(-1, 1), design3d.Point2D(2, 2), design3d.Point2D(-2, -2), design3d.Point2D(1, -1)]
+    bspline = edges.BSplineCurve2D(3, points2d, knot_multiplicities=[4, 4], knots=[0.0, 1.0])
+    line_segment1 = edges.LineSegment2D(design3d.Point2D(1, -1), design3d.Point2D(1.5, 1))
+    arc = edges.Arc2D.from_3_points(design3d.Point2D(1.5, 1), design3d.Point2D(1.3, 1.5), design3d.Point2D(0.5, 1.5))
+    line_segment2 = edges.LineSegment2D(design3d.Point2D(0.5, 1.5), design3d.Point2D(-2, 1))
+    line_segment3 = edges.LineSegment2D(design3d.Point2D(-2, 1), design3d.Point2D(-2, 0.7))
+    line_segment4 = edges.LineSegment2D(design3d.Point2D(-2, 0.7), design3d.Point2D(-1, 1))
+    contour2_unittest = wires.Contour2D([bspline, line_segment1, arc, line_segment2, line_segment3, line_segment4])
+    
     contour1 = wires.Contour2D([edges.FullArc2D(circle=curves.Circle2D(design3d.OXY, 0.029999999),
                                                 start_end=design3d.Point2D(0.029999999, 0))])
     not_ordered_contour = SerializableObject.from_json(os.path.join(folder, "contour_not_ordered.json"))
@@ -29,6 +35,146 @@ class TestContour2D(unittest.TestCase):
     contour3 = contour2_unittest.rotation(design3d.Point2D(0.5, 0.5), math.pi / 1.5)
     contour3 = contour3.translation(design3d.Vector2D(-0.3, 0))
 
+    primitives = [
+        edges.LineSegment2D(design3d.Point2D(0.001, 0.014),
+                            design3d.Point2D(0.001, 0.0125)),
+
+        edges.Arc2D.from_3_points(design3d.Point2D(0.001, 0.0125),
+                                design3d.Point2D(0.009862829911410362, 0.007744326060968065),
+                                design3d.Point2D(0.012539936203984454, 0.0)),
+
+        edges.Arc2D.from_3_points(design3d.Point2D(0.012539936203984454, 0.0),
+                                design3d.Point2D(0.0, -0.012539936203984454),
+                                design3d.Point2D(-0.012539936203984454, 0.0)),
+
+        edges.Arc2D.from_3_points(design3d.Point2D(-0.012539936203984454, 0.0),
+                                design3d.Point2D(-0.00921384654213387, 0.008506176103162205),
+                                design3d.Point2D(-0.001, 0.0125)),
+
+        edges.LineSegment2D(design3d.Point2D(-0.001, 0.0125),
+                            design3d.Point2D(-0.001, 0.014)),
+
+        edges.LineSegment2D(design3d.Point2D(-0.001, 0.014),
+                            design3d.Point2D(0.001, 0.014))
+    ]
+
+    contour2d_1 = wires.Contour2D(primitives)
+
+    unordered_contour2_unittest = wires.Contour2D([line_segment2, bspline.reverse(), arc.reverse(),
+                                                          line_segment1, line_segment3, line_segment4])
+
+    invalid_unordered_contour2_unittest = wires.Contour2D([line_segment2, bspline.reverse(), arc.reverse(),
+                                                       line_segment1, line_segment3, line_segment4,
+                                                       edges.LineSegment2D(design3d.Point2D(1, -1),
+                                                                           design3d.Point2D(1.5, -1))])
+
+    points = [
+        design3d.Point2D(0.20308817713481986, 0.04966773764193705),
+        design3d.Point2D(0.7969119765656952, 0.04966797879396336),
+        design3d.Point2D(0.8442697800221348, 0.04966805448106126),
+        design3d.Point2D(0.9031379981759905, 0.04545485716230839),
+        design3d.Point2D(0.9479619187253645, 0.10517762923653938),
+        design3d.Point2D(0.9545454713622077, 0.19659816573695035),
+        design3d.Point2D(0.9193352753725873, 0.27036785408838365),
+        design3d.Point2D(0.9193352733808331, 0.2891129034169921),
+        design3d.Point2D(0.9193352491395294, 0.7108874440320542),
+        design3d.Point2D(0.9193352445733572, 0.7296301344365137),
+        design3d.Point2D(0.9545453968718225, 0.8034021061594617),
+        design3d.Point2D(0.9479618025250582, 0.8948226395224322),
+        design3d.Point2D(0.9031378875027738, 0.9545453756361115),
+        design3d.Point2D(0.8442696587355882, 0.9503323074053969),
+        design3d.Point2D(0.7969118264212707, 0.950332267803071),
+        design3d.Point2D(0.203088054423346, 0.9503320443667395),
+        design3d.Point2D(0.15573023404235076, 0.9503319931770652),
+        design3d.Point2D(0.09686198756850553, 0.9545451189134176),
+        design3d.Point2D(0.05203811911069425, 0.8948223672618099),
+        design3d.Point2D(0.04545450905371345, 0.8034018054641981),
+        design3d.Point2D(0.08066468979315351, 0.7296322065226041),
+        design3d.Point2D(0.08066468965825305, 0.7108871704475791),
+        design3d.Point2D(0.08066474955300275, 0.289112539074918),
+        design3d.Point2D(0.08066475417207301, 0.27036750263798714),
+        design3d.Point2D(0.04545459207437027, 0.19659788603626316),
+        design3d.Point2D(0.05203818215846509, 0.10517733497317228),
+        design3d.Point2D(0.09686210943003962, 0.04545460320088811),
+        design3d.Point2D(0.15573034610061637, 0.04966777166777087)
+    ]
+
+    contour1_cut_by_wire = wires.Contour2D.from_points(points)
+
+    points = [
+        design3d.Point2D(0.2030881575366132, 0.04966771677601732),
+        design3d.Point2D(0.20308809125575447, 0.2891126765655333),
+        design3d.Point2D(0.08066474910267005, 0.2891125988482983),
+        design3d.Point2D(0.05674291581332371, 0.28911260559053886),
+        design3d.Point2D(0.04267127288273421, 0.311080039363985),
+        design3d.Point2D(0.04267123136672513, 0.6889196955746452),
+        design3d.Point2D(0.056742861492621116, 0.7108870816261534),
+        design3d.Point2D(0.08066469250960157, 0.7108871106086502),
+        design3d.Point2D(0.2030880435632797, 0.7108871156873701),
+        design3d.Point2D(0.20308804388447252, 0.9503320678576602),
+        design3d.Point2D(0.20308798646643267, 0.9876766506444887),
+        design3d.Point2D(0.21715969201684732, 1.0),
+        design3d.Point2D(0.7828401610275215, 1.0),
+        design3d.Point2D(0.7969118753894622, 0.9876767973117213),
+        design3d.Point2D(0.7969118376396574, 0.9503322697795179),
+        design3d.Point2D(0.796911890394745, 0.7108872963268008),
+        design3d.Point2D(0.9193352406490979, 0.7108873750750229),
+        design3d.Point2D(0.943257068363107, 0.7108873714262228),
+        design3d.Point2D(0.957328707411281, 0.6889199122213159),
+        design3d.Point2D(0.9573287795940568, 0.3110803289147694),
+        design3d.Point2D(0.9432571269950443, 0.28911295065634096),
+        design3d.Point2D(0.9193352813560651, 0.2891129208514467),
+        design3d.Point2D(0.7969119478569466, 0.289112868790721),
+        design3d.Point2D(0.7969119771240915, 0.049667935920999225),
+        design3d.Point2D(0.7969119981329132, 0.012323366834239619),
+        design3d.Point2D(0.7828402953854121, 0.0),
+        design3d.Point2D(0.21715982313378532, 0.0),
+        design3d.Point2D(0.2030881157414971, 0.012323183603131671)]
+
+    contour2_cut_by_wire = wires.Contour2D.from_points(points)
+
+    points2d = [design3d.Point2D(0.7557261768236382, 0.047840610095316816),
+                design3d.Point2D(0.7557153778090784, 0.053529840943971466),
+                design3d.Point2D(0.7548352148318592, 0.059379242604894106),
+                design3d.Point2D(0.7509972673886837, 0.06812701209830616),
+                design3d.Point2D(0.7463815515547884, 0.06876367708780329),
+                design3d.Point2D(0.7426873841819802, 0.06850598841747624),
+                design3d.Point2D(0.7386859822441963, 0.0690723949917957),
+                design3d.Point2D(0.7344087842895368, 0.0660771254673235),
+                design3d.Point2D(0.7316087522378829, 0.0572133737658937),
+                design3d.Point2D(0.7306755405178993, 0.04995246337945117),
+                design3d.Point2D(0.7310451707836978, 0.044346281865748856)]
+
+    curve2d_1 = edges.BSplineCurve2D(degree=3,
+                                    control_points=points2d,
+                                    knot_multiplicities=[4, 1, 1, 1, 1, 1, 1, 1, 4],
+                                    knots=[0.0, 0.26206414743620277, 0.3531225286567413,
+                                            0.42241139891509305, 0.4822254408401885,
+                                            0.5440692281614715, 0.6202023477514225,
+                                            0.7222748100879735, 1.0])
+
+    points2d = [design3d.Point2D(0.7310451707836978, 0.044346281865748856),
+                design3d.Point2D(0.7308827017192874, 0.03840965331596735),
+                design3d.Point2D(0.7318250470334302, 0.03228668394110015),
+                design3d.Point2D(0.7354633489443133, 0.023006441447214778),
+                design3d.Point2D(0.7402551819180077, 0.022102466430262133),
+                design3d.Point2D(0.7440795569187786, 0.02242177670352842),
+                design3d.Point2D(0.7482500898246996, 0.02178574616551938),
+                design3d.Point2D(0.7525849938211369, 0.025193737559804485),
+                design3d.Point2D(0.7553036624157348, 0.03437896214237193),
+                design3d.Point2D(0.7561315600530795, 0.042073178367651974),
+                design3d.Point2D(0.7557261768236382, 0.047840610095316816)]
+
+    curve2d_2 = edges.BSplineCurve2D(degree=3,
+                                    control_points=points2d,
+                                    knot_multiplicities=[4, 1, 1, 1, 1, 1, 1, 1, 4],
+                                    knots=[0.0, 0.26231860269644847, 0.35446984209379995,
+                                            0.4237193471508679, 0.48275286541966095,
+                                            0.5439383602451768, 0.62045686469776,
+                                            0.7233434357617774, 1.0])
+
+    contour2d_2 = wires.Contour2D([curve2d_1, curve2d_2])
+
     def test_point_inside(self):
         point1 = design3d.Point2D(0.0144822, 0.00595264)
         point2 = design3d.Point2D(0.02, 0.02)
@@ -36,11 +182,11 @@ class TestContour2D(unittest.TestCase):
         self.assertTrue(self.contour1.point_inside(point2))
 
         point3 = design3d.Point2D(0, 0.013)
-        self.assertTrue(contour2d_1.point_inside(point3))
-        self.assertFalse(contour2d_1.point_inside(point1))
+        self.assertTrue(self.contour2d_1.point_inside(point3))
+        self.assertFalse(self.contour2d_1.point_inside(point1))
 
         point4 = design3d.Point2D(0.745, 0.0685)
-        self.assertTrue(contour2d_2.point_inside(point4))
+        self.assertTrue(self.contour2d_2.point_inside(point4))
 
         contour, point = SerializableObject.from_json(os.path.join(folder, "test_contour_point_belongs.json")).primitives
         self.assertTrue(contour.point_inside(point, False))
@@ -55,15 +201,15 @@ class TestContour2D(unittest.TestCase):
         for previous_primitive, primitive in zip(ordered_contour.primitives, ordered_contour.primitives[1:] +
                                                                              [ordered_contour.primitives[0]]):
             self.assertEqual(previous_primitive.end, primitive.start)
-        self.assertFalse(unordered_contour2_unittest.is_ordered())
-        unordered_contour2_unittest.order_contour()
-        self.assertTrue(unordered_contour2_unittest.is_ordered())
+        self.assertFalse(self.unordered_contour2_unittest.is_ordered())
+        self.unordered_contour2_unittest.order_contour()
+        self.assertTrue(self.unordered_contour2_unittest.is_ordered())
         with self.assertRaises(NotImplementedError):
-            invalid_unordered_contour2_unittest.order_contour()
+            self.invalid_unordered_contour2_unittest.order_contour()
 
     def test_cut_by_wire(self):
-        results = contour1_cut_by_wire.cut_by_wire(contour2_cut_by_wire)
-        results1 = contour2_cut_by_wire.cut_by_wire(contour1_cut_by_wire)
+        results = self.contour1_cut_by_wire.cut_by_wire(self.contour2_cut_by_wire)
+        results1 = self.contour2_cut_by_wire.cut_by_wire(self.contour1_cut_by_wire)
         list_expected_contour_lengths = [0.735061566418825, 3.4786699386591753, 0.7350615900834909, 0.7350613283792926,
                                          0.7350615482415725, 1.2716033189138256, 3.478669938659176, 0.8996337337370333,
                                          1.2716033047094752, 0.8996336040021796]
@@ -110,7 +256,7 @@ class TestContour2D(unittest.TestCase):
         self.assertTrue(wire_edge_crossings[0].is_close(design3d.Point2D(-0.2, -0.2)))
 
     def test_crossings(self):
-        contour_crossings = contour2_unittest.wire_crossings(self.contour3)
+        contour_crossings = self.contour2_unittest.wire_crossings(self.contour3)
         expected_crossings = [design3d.Point2D(0.003455042474764269, 0.010365521626940934),
                               design3d.Point2D(-0.08592141662920678, -0.26441019657119236),
                               design3d.Point2D(1.3565385114925572, 0.4261540459702289),
@@ -183,17 +329,17 @@ class TestContour2D(unittest.TestCase):
     def test_closest_point_to_point2(self):
         point1 = design3d.Point2D(1.5, -1.5)
         point2 = design3d.Point2D(-1, -1)
-        closest_point1 = contour2_unittest.closest_point_to_point2(point1)
+        closest_point1 = self.contour2_unittest.closest_point_to_point2(point1)
         self.assertEqual(closest_point1, design3d.Point2D(1.0, -1.0))
-        closest_point2 = contour2_unittest.closest_point_to_point2(point2)
+        closest_point2 = self.contour2_unittest.closest_point_to_point2(point2)
         self.assertEqual(closest_point2, design3d.Point2D(-2.0, 0.7))
 
     def test_furthest_point_to_point2(self):
         point1 = design3d.Point2D(1.5, -1.5)
         point2 = design3d.Point2D(-1, -1)
-        furthest_point1 = contour2_unittest.get_furthest_point_to_point2(point1)
+        furthest_point1 = self.contour2_unittest.get_furthest_point_to_point2(point1)
         self.assertEqual(furthest_point1, design3d.Point2D(-2.0, 1.0))
-        furthest_point2 = contour2_unittest.get_furthest_point_to_point2(point2)
+        furthest_point2 = self.contour2_unittest.get_furthest_point_to_point2(point2)
         self.assertEqual(furthest_point2, design3d.Point2D(1.5, 1.0))
 
     def test_intersection_contour_with(self):
@@ -203,7 +349,7 @@ class TestContour2D(unittest.TestCase):
         intersection_contours1 = contour2.intersection_contour_with(contour3, abs_tol=1e-5)
         self.assertTrue(len(intersection_contours1), 2)
         self.assertAlmostEqual(intersection_contours1[0].length(), 0.16514108581676357, 4)
-        intersection_contours2 = contour2_unittest.intersection_contour_with(self.contour3, abs_tol=1e-6)
+        intersection_contours2 = self.contour2_unittest.intersection_contour_with(self.contour3, abs_tol=1e-6)
         self.assertTrue(len(intersection_contours1), 2)
         self.assertAlmostEqual(intersection_contours2[0].length(), 6.915890339970204, 6)
         self.assertAlmostEqual(intersection_contours2[1].length(), 2.440847693749909, 6)

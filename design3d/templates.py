@@ -5,7 +5,6 @@ design3d to babylonjs templates.
 import os
 from string import Template
 
-import pkg_resources
 
 BABYLON_UNPACKER_CDN_HEADER = Template('''
 <!doctype html>

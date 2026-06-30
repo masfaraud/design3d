@@ -4,9 +4,9 @@ design3d init module.
 # -*- coding: utf-8 -*-
 import math
 
-import pkg_resources
+from importlib.metadata import version
 
-__version__ = pkg_resources.require("design3d")[0].version
+__version__ = version("design3d")
 
 from design3d.core_compiled import (O2D, O3D, OXY, X2D, X3D, Y2D, Y3D, Z3D,
                                    Basis2D, Basis3D, Frame2D, Frame3D,

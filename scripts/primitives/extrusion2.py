@@ -4,8 +4,6 @@
 Created on Sun Mar  5 22:01:35 2017
 
 @author: steven
-
-
 """
 
 import math
@@ -43,9 +41,3 @@ profile = primitives3d.ExtrudedProfile(d3d.OYZX, c1, [], 0.1)
 
 model = d3dc.VolumeModel([profile])
 model.babylonjs()
-
-#profile.MPLPlot((0,0,0),(1,0,0),(0,1,0))
-
-#model.MPLPlot()
-
-#model.FreeCADExport('extrusion2')

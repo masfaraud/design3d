@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Bspline curves scripts
 
-@author: s.bendjebla
 """
 
 # %% Libraries
@@ -11,14 +11,6 @@ import matplotlib.patches as mpatches
 
 import design3d as d3d
 from design3d.core import EdgeStyle
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Mar 3 2022.
-
-@author: s.bendjebla
-"""
 
 # %% Libraries
 from geomdl import BSpline

@@ -6,8 +6,6 @@ Created on Fri Mar  3 09:56:29 2017
 @author: steven
 """
 
-import numpy as npy
-
 import design3d as d3d
 import design3d.edges as edges
 import design3d.primitives2d as primitives2d

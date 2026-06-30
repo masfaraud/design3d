@@ -1165,6 +1165,8 @@ class BSplineCurve(Edge):
         :rtype: Union[design3d.Point2D, Union[design3d.Point3D]
         """
         point_name = 'Point' + self.__class__.__name__[-2:]
+        # print("self.data", self.data)
+        # print('evaluate_curve(self.data, u, u)', evaluate_curve(self.data, u, u))
         return getattr(design3d, point_name)(*evaluate_curve(self.data, u, u)[0])
 
     def derivatives(self, u, order):
@@ -1205,6 +1207,7 @@ class BSplineCurve(Edge):
             datadict["control_points"] = self.ctrlptsw
         else:
             datadict["control_points"] = self.ctrlpts
+        # print('u', u)
         return [getattr(design3d, vector_name)(*point)
                 for point in derivatives_curve(datadict, u, order)]
 

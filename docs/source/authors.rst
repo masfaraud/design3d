@@ -1,4 +1,4 @@
-As a fork a volmdlr, this package has inherited from its contributors, and the should be thanks for their work:
+As a fork a volmdlr, this package has inherited from its contributors, and the should be credited for their work:
 
 Former contributors
 ===================

@@ -37,4 +37,3 @@ assert math.isclose(extrusion.volume(), (outer_circle.area() - inner_circles_are
 
 model = d3dc.VolumeModel([extrusion])
 model.babylonjs()
-model._check_platform()

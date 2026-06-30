@@ -4,7 +4,7 @@ import unittest
 from itertools import product
 
 import design3d
-from design3d import edges, wires, curves
+from design3d import edges, curves
 from design3d.base import SerializableObject
 
 vector1 = design3d.Vector3D(1, 1, 1)

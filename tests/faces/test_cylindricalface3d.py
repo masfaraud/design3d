@@ -143,6 +143,7 @@ class TestCylindricalFace3D(unittest.TestCase):
         for i, face in enumerate(split_by_plane):
             points = face.outer_contour3d.discretization_points(number_points=10)
             for point, expected_point in zip(points, list_expected_points[i]):
+                print(point, expected_point)
                 self.assertTrue(point.is_close(expected_point))
 
     def test_plane_intersections(self):

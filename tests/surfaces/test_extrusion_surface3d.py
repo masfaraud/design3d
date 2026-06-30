@@ -132,6 +132,8 @@ class TestExtrusionSurface3D(unittest.TestCase):
     def test_contour3d_to_2d(self):
         surface = surfaces.ExtrusionSurface3D.from_json(os.path.join(folder, "contour3d_to_2d_surface.json"))
         contour = d3dw.Contour3D.from_json(os.path.join(folder, "contour3d_to_2d_contour.json"))
+        ax = surface.plot()
+        contour.plot(ax=ax)
         contour2d = surface.contour3d_to_2d(contour)
         self.assertTrue(contour2d.is_ordered())
         self.assertAlmostEqual(contour2d.area(), 0.00032168769592775094, 6)
