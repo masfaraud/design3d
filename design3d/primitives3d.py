@@ -563,7 +563,9 @@ class ExtrudedProfile(shells.ClosedShell3D):
             frame=self.frame.frame_mapping(frame, side),
             outer_contour2d=self.outer_contour2d, inner_contours2d=self.inner_contours2d,
             extrusion_length=self.extrusion_length,
-            reference_path=self.reference_path
+            reference_path=self.reference_path,
+            color=self.color, alpha=self.alpha,
+            name=self.name
         )
 
     def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D,
@@ -787,7 +789,8 @@ class RevolvedProfile(shells.ClosedShell3D):
             self.axis_point.frame_mapping(frame, side),
             axis=axis, angle=self.angle,
             color=self.color, alpha=self.alpha,
-            reference_path=self.reference_path
+            reference_path=self.reference_path,
+            name=self.name
         )
 
 
