@@ -28,8 +28,8 @@ BABYLON_UNPACKER_CDN_HEADER = Template('''
    </style>
       <script src="https://cdn.babylonjs.com/babylon.js"></script>
       <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
-      <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
-      <script src='https://unpkg.com/earcut@2.1.1/dist/earcut.min.js'></script>
+      <script src="https://code.jquery.com/pep/0.6.10/pep.js"></script>
+      <script src='https://unpkg.com/earcut@3.2.3/dist/earcut.min.js'></script>
       <script src='https://cdn.babylonjs.com/gui/babylon.gui.min.js'></script>
 </head>
 ''')
@@ -147,7 +147,7 @@ BABYLON_UNPACKER_BODY_TEMPLATE = Template(
                 var dynamicTexture = new BABYLON.DynamicTexture("DynamicTexture", 50, scene, true);
                 dynamicTexture.hasAlpha = true;
                 dynamicTexture.drawText(text, 5, 40, "bold 36px Arial", color, "transparent", true);
-                var plane = new BABYLON.Mesh.CreatePlane("TextPlane", size, scene, true);
+                var plane = BABYLON.Mesh.CreatePlane("TextPlane", size, scene, true);
                 plane.material = new BABYLON.StandardMaterial("TextPlaneMaterial", scene);
                 plane.material.backFaceCulling = false;
                 plane.material.specularColor = new BABYLON.Color3(0, 0, 0);
@@ -155,7 +155,7 @@ BABYLON_UNPACKER_BODY_TEMPLATE = Template(
                 return plane;
             };
             var axisX = BABYLON.Mesh.CreateLines("axisX", [
-                new BABYLON.Vector3.Zero(), new BABYLON.Vector3(size, 0, 0),
+                BABYLON.Vector3.Zero(), new BABYLON.Vector3(size, 0, 0),
                 new BABYLON.Vector3(size * 0.95, 0.05 * size, 0),
                 new BABYLON.Vector3(size, 0, 0), new BABYLON.Vector3(size * 0.95, -0.05 * size, 0)
             ], scene);
@@ -163,7 +163,7 @@ BABYLON_UNPACKER_BODY_TEMPLATE = Template(
             var xChar = makeTextPlane("X", "red", size / 10);
             xChar.position = new BABYLON.Vector3(0.9 * size, -0.05 * size, 0);
             var axisY = BABYLON.Mesh.CreateLines("axisY", [
-                new BABYLON.Vector3.Zero(), new BABYLON.Vector3(0, size, 0),
+                BABYLON.Vector3.Zero(), new BABYLON.Vector3(0, size, 0),
                 new BABYLON.Vector3(-0.05 * size, size * 0.95, 0),
                 new BABYLON.Vector3(0, size, 0), new BABYLON.Vector3(0.05 * size, size * 0.95, 0)
             ], scene);
@@ -171,7 +171,7 @@ BABYLON_UNPACKER_BODY_TEMPLATE = Template(
             var yChar = makeTextPlane("Y", "green", size / 10);
             yChar.position = new BABYLON.Vector3(0, 0.9 * size, -0.05 * size);
             var axisZ = BABYLON.Mesh.CreateLines("axisZ", [
-                new BABYLON.Vector3.Zero(), new BABYLON.Vector3(0, 0, size),
+                BABYLON.Vector3.Zero(), new BABYLON.Vector3(0, 0, size),
                 new BABYLON.Vector3(0, -0.05 * size, size * 0.95),
                 new BABYLON.Vector3(0, 0, size), new BABYLON.Vector3(0, 0.05 * size, size * 0.95)
             ], scene);

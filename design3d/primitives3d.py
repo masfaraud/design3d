@@ -764,7 +764,7 @@ class RevolvedProfile(shells.ClosedShell3D):
 
     def frame_mapping_parameters(self, frame: design3d.Frame3D, side: str):
         """Apply transformation to object's parameters."""
-        basis = frame.Basis()
+        basis = frame.basis()
         if side == 'old':
             axis = basis.local_to_global_coordinates(self.axis)
         elif side == 'new':
@@ -786,6 +786,7 @@ class RevolvedProfile(shells.ClosedShell3D):
             self.contour2d,
             self.axis_point.frame_mapping(frame, side),
             axis=axis, angle=self.angle,
+            color=self.color, alpha=self.alpha,
             reference_path=self.reference_path
         )
 

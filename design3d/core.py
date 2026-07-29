@@ -1011,6 +1011,9 @@ class Assembly(DataEqualityObject):
         self.positions = positions
         self.primitives = [map_primitive_with_initial_and_final_frames(primitive, frame, frame_primitive)
                            for primitive, frame_primitive in zip(components, positions)]
+        for primitive, component in zip(self.primitives, self.components):
+            # Applying names
+            primitive.name = component.name
         self._bbox = None
         self.name = name
 

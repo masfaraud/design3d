@@ -38,7 +38,7 @@ from design3d.core import EdgeStyle
 
 class Edge(DataEqualityObject):
     """
-    Defines a simple edge Object.
+    Defines a basis edge Object.
     """
 
     def __init__(self, start, end, reference_path: str = PATH_ROOT, name=''):
@@ -2385,7 +2385,6 @@ class BezierCurve2D(BSplineCurve2D):
 class LineSegment2D(LineSegment):
     """
     Define a line segment limited by two points.
-
     """
 
     def __init__(self, start: design3d.Point2D, end: design3d.Point2D, reference_path: str = PATH_ROOT, name: str = ''):
@@ -2740,6 +2739,37 @@ class LineSegment2D(LineSegment):
             return distance, point1, point2
         return distance
 
+    @staticmethod
+    def external_circle_tangents(circle1, circle2):
+        """
+        Compute the two external tangent line segments between two circles.
+
+        :return: tuple[LineSegment2D, LineSegment2D]
+        """
+        d = circle1.frame.origin.point_distance(circle2.frame.origin)
+        
+        if d < 1e-6:
+            return []
+        
+        diff = circle1.radius - circle2.radius
+        
+        if abs(diff) < 1e-6:
+            theta = 0
+        else:
+            theta = math.atan2(diff, d)
+
+        v = (circle2.center - circle1.center).unit_vector().normal_vector()
+
+        point_c11 = (circle1.center + circle1.radius * v).rotation(circle1.center, -theta)
+        point_c12 = (circle1.center - circle1.radius * v).rotation(circle1.center, theta)
+        
+        point_c21 = (circle2.center + circle2.radius * v).rotation(circle2.center, -theta)
+        point_c22 = (circle2.center - circle2.radius * v).rotation(circle2.center, theta)
+
+        segment1 = LineSegment2D(point_c11, point_c21)
+        segment2 = LineSegment2D(point_c12, point_c22)
+        
+        return [segment1, segment2]
 
 class ArcMixin:
     """
@@ -3033,7 +3063,7 @@ class FullArcMixin(ArcMixin):
 
 class Arc2D(ArcMixin, Edge):
     """
-    Class to draw Arc2D.
+    Class to define an 2D arc.
 
     angle: the angle measure always >= 0
     """
@@ -3070,6 +3100,9 @@ class Arc2D(ArcMixin, Edge):
         """
         Creates a circle 2d from 3 points.
 
+        :param point1: The start of the arc
+        :param point2: An interior point of the arc
+        :param point3: The end of the arc
         :return: circle 2d.
         """
         circle = design3d_curves.Circle2D.from_3_points(point1, point2, point3)
@@ -3562,7 +3595,6 @@ class FullArc2D(FullArcMixin, Arc2D):
 
     def __init__(self, circle: 'design3d.curves.Circle2D', start_end: design3d.Point2D,
                  reference_path: str = PATH_ROOT, name: str = ''):
-        # self.interior = start_end.rotation(center, math.pi)
         self._bounding_rectangle = None
         FullArcMixin.__init__(self, circle=circle, start_end=start_end, name=name)
         Arc2D.__init__(self, circle=circle, start=start_end, end=start_end, reference_path=reference_path, name=name)

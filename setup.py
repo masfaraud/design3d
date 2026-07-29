@@ -124,7 +124,7 @@ setup(
     package_dir={},
     include_package_data=True,
     install_requires=[
-        "packaging",
+        "packaging", 
         "Cython>=3.0.0",
         "numpy",
         "orjson",
@@ -145,7 +145,7 @@ setup(
         "lxml"
     ],
     extras_require={"test": ["coverage"],
-                    "doc": ["sphinx", "nbsphinx", "furo", "nbformat", "nbconvert",
+                    "doc": ["sphinx", "nbsphinx", "sphinx_book_theme", "nbformat", "nbconvert",
                             "sphinx_copybutton", "sphinx_design"]},
     classifiers=["Topic :: Scientific/Engineering",
                  "Topic :: Multimedia :: Graphics :: 3D Modeling",
