@@ -72,7 +72,7 @@ handlebar_offset = 0.045
 handlebar_base_width = 0.150
 
 # Computed
-tube_height = 0.5 * tyre_diameter + crowns_distance + tyre_crown_clearance + 2*crown_width
+tube_height = 0.5 * tyre_diameter + crowns_distance + tyre_crown_clearance + 2 * crown_width
 
 
 # Arm
@@ -81,7 +81,7 @@ caster_angle = math.radians(26.5)
 
 # Colors
 tyre_black = (0.15, 0.15, 0.15)
-asphalt = (112/256, 110/256, 106/256)
+asphalt = (112 / 256, 110 / 256, 106 / 256)
 
 ## End of data
 
@@ -140,7 +140,7 @@ def hexnut(diameter: float, height: float, name="Hex nut"):
         outer_contour2d=contour,
         inner_contours2d=[Contour2D.from_circle(Circle2D.from_center_and_radius(d3d.O2D, 0.5 * diameter))],
         extrusion_length=height,
-        name=name
+        name=name,
     )
 
 
@@ -363,14 +363,18 @@ fork_frame_axle = RevolvedProfile(
 )
 fork_frame_nut = hexnut(fork_pivot_diameter, 0.012)
 
-left_front_bearing = radial_bearing(front_bearing_d, front_bearing_D, front_bearing_B, )
+left_front_bearing = radial_bearing(
+    front_bearing_d,
+    front_bearing_D,
+    front_bearing_B,
+)
 right_front_bearing = radial_bearing(front_bearing_d, front_bearing_D, front_bearing_B)
 front_bearing_spacer = HollowCylinder(
     d3d.OZXY,
     inner_radius=0.5 * front_bearing_d,
     outer_radius=0.5 * front_bearing_d + 0.004,
     length=front_bearing_spacing - front_bearing_B,
-    name="Front bearing spacer"
+    name="Front bearing spacer",
 )
 
 fork_assembly = Assembly(
@@ -400,10 +404,12 @@ fork_assembly = Assembly(
         d3d.OXYZ,
         d3d.OXYZ,
         d3d.Frame3D(d3d.Point3D(0, front_brake_disk_offset, 0), d3d.X3D, d3d.Y3D, d3d.Z3D),
-        d3d.Frame3D(d3d.Point3D(0, 0, tube_height-crown_width), d3d.Y3D, -d3d.X3D, d3d.Z3D),
-        d3d.Frame3D(d3d.Point3D(0, 0, tube_height - crowns_distance-2*crown_width), d3d.Y3D, -d3d.X3D, d3d.Z3D),
+        d3d.Frame3D(d3d.Point3D(0, 0, tube_height - crown_width), d3d.Y3D, -d3d.X3D, d3d.Z3D),
+        d3d.Frame3D(d3d.Point3D(0, 0, tube_height - crowns_distance - 2 * crown_width), d3d.Y3D, -d3d.X3D, d3d.Z3D),
         d3d.Frame3D(d3d.Point3D(0, 0, tube_height + crown_handlebar_offset), d3d.Y3D, -d3d.X3D, d3d.Z3D),
-        d3d.Frame3D(d3d.Point3D(fork_offset, 0, tube_height - 2*crown_width - crowns_distance), d3d.X3D, d3d.Y3D, d3d.Z3D),
+        d3d.Frame3D(
+            d3d.Point3D(fork_offset, 0, tube_height - 2 * crown_width - crowns_distance), d3d.X3D, d3d.Y3D, d3d.Z3D
+        ),
         d3d.Frame3D(d3d.Point3D(fork_offset, 0, tube_height), d3d.X3D, d3d.Y3D, d3d.Z3D),
     ],
 )
@@ -415,8 +421,8 @@ fork_frame = d3d.XYZ.rotation(d3d.Y3D, caster_angle).to_frame(d3d.Point3D(0, 0, 
 frame_pivot_frame = d3d.XYZ.rotation(d3d.Y3D, caster_angle).to_frame(d3d.Point3D(0, 0, 0))
 frame_pivot = HollowCylinder(
     frame_pivot_frame,
-    inner_radius=0.5*fork_pivot_diameter,
-    outer_radius=0.5*fork_pivot_diameter + 0.008,
+    inner_radius=0.5 * fork_pivot_diameter,
+    outer_radius=0.5 * fork_pivot_diameter + 0.008,
     length=crowns_distance,
     name="Frame pivot",
 )
@@ -424,7 +430,9 @@ frame_pivot = HollowCylinder(
 frame = frame_pivot
 frame_frame = d3d.Frame3D(
     (
-        d3d.Point3D(fork_offset, 0, tube_height - 0.5*crowns_distance-crown_width).rotation(d3d.O3D, d3d.Y3D, caster_angle)
+        d3d.Point3D(fork_offset, 0, tube_height - 0.5 * crowns_distance - crown_width).rotation(
+            d3d.O3D, d3d.Y3D, caster_angle
+        )
         + 0.5 * tyre_diameter * d3d.Z3D
     ).to_point(),
     d3d.X3D,
