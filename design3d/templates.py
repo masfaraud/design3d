@@ -98,7 +98,7 @@ BABYLON_UNPACKER_BODY_TEMPLATE = Template(
             scene.clearColor = new BABYLON.Color4(.9, .9, .9, .9);
         }
       	var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera",
-                                              0, 0, 2*babylon_data['max_length'],
+                                              0.785, 0.785, 1.5*babylon_data['max_length'],
                                               new BABYLON.Vector3(babylon_data['center'][0],
                                                                   babylon_data['center'][1],
                                                                   babylon_data['center'][2]), scene);

@@ -1155,7 +1155,7 @@ class BSplineCurve(Edge):
         # Evaluate and cache
         self._eval_points = np.asarray(evaluate_curve(self.data, start=start, stop=stop), dtype=np.float64)
 
-    def evaluate_single(self, u):
+    def evaluate_single(self, u: float):
         """
         Calculates a point in the BSplineCurve at a given parameter u.
 
@@ -1169,7 +1169,7 @@ class BSplineCurve(Edge):
         # print('evaluate_curve(self.data, u, u)', evaluate_curve(self.data, u, u))
         return getattr(design3d, point_name)(*evaluate_curve(self.data, u, u)[0])
 
-    def derivatives(self, u, order):
+    def derivatives(self, u:float, order):
         """
         Evaluates n-th order curve derivatives at the given parameter value.
 
@@ -1438,14 +1438,14 @@ class BSplineCurve(Edge):
         if convergence_sucess:  # sometimes we don't achieve convergence with a given initial guess
             return float(abscissa)
 
-        def objective_function(u_param):
-            derivatives = self.derivatives(u_param, 1)
+        def objective_function(u_param: list[float]):
+            derivatives = self.derivatives(u_param[0], 1)
             distance_vector = derivatives[0] - point
             func = distance_vector.norm()
             grad = (distance_vector.dot(derivatives[1])) / func
             return func, grad
 
-        results.append((abscissa, objective_function(u)[0]))
+        results.append((abscissa, objective_function([u])[0]))
         # results.append((abscissa, objective_function(u)))
         initial_condition_list = [u_min + index * (u_max - u_min) / (self.sample_size - 1) for index in indexes[:3]]
         for u0 in initial_condition_list:

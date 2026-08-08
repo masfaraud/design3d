@@ -49,7 +49,7 @@ fork_offset = 0.035
 front_axle_diameter = 0.015
 crown_width = 0.020
 crown_tube_outer_diameter = tube_diameter + 0.012
-crown_height = 0.170
+crowns_distance = 0.170
 tyre_width_margin = 0.015
 tubes_spacing = tube_diameter + front_tyre_width + 2 * tyre_width_margin
 fork_pivot_diameter = 0.030
@@ -72,7 +72,7 @@ handlebar_offset = 0.045
 handlebar_base_width = 0.150
 
 # Computed
-tube_height = 0.5 * tyre_diameter + crown_height + tyre_crown_clearance
+tube_height = 0.5 * tyre_diameter + crowns_distance + tyre_crown_clearance + 2*crown_width
 
 
 # Arm
@@ -81,13 +81,15 @@ caster_angle = math.radians(26.5)
 
 # Colors
 tyre_black = (0.15, 0.15, 0.15)
+asphalt = (112/256, 110/256, 106/256)
 
 ## End of data
 
 # Ground
 ground_plane = Plane3D(d3d.OXYZ)
-ground = PlaneFace3D.from_surface_rectangular_cut(ground_plane, -1, 2, -1, 1)
+ground = PlaneFace3D.from_surface_rectangular_cut(ground_plane, -0.5, 1.5, -0.5, 0.5)
 ground.name = "Ground"
+ground.color = asphalt
 
 
 def isohex(diameter: float):
@@ -131,19 +133,20 @@ def isohex(diameter: float):
     return ClosedPolygon2D([d3d.Point2D(0, e / 2).rotation(d3d.O2D, i * math.pi / 3) for i in range(6)])
 
 
-def hexnut(diameter: float, height: float):
+def hexnut(diameter: float, height: float, name="Hex nut"):
     contour = isohex(diameter=diameter)
     return ExtrudedProfile(
         d3d.OXYZ,
         outer_contour2d=contour,
         inner_contours2d=[Contour2D.from_circle(Circle2D.from_center_and_radius(d3d.O2D, 0.5 * diameter))],
         extrusion_length=height,
+        name=name
     )
 
 
-def radial_bearing(d, D, B):
+def radial_bearing(d, D, B, name="Bearing"):
     delta = 0.5 * (D - d)
-    return HollowCylinder(d3d.OXYZ, inner_radius=0.5 * d, outer_radius=0.5 * D, length=B)
+    return HollowCylinder(d3d.OXYZ, inner_radius=0.5 * d, outer_radius=0.5 * D, length=B, name=name)
 
 
 def tyre(rim_diameter: float, rim_width: float, diameter: float, width: float, tyre_thickness: float, name="Tyre"):
@@ -351,8 +354,8 @@ p1 = d3d.Point2D(-0.005, 0.5 * fork_pivot_inner_diameter)
 p2 = d3d.Point2D(-0.005, 0.5 * fork_pivot_diameter + 0.007)
 p3 = d3d.Point2D(0, 0.5 * fork_pivot_diameter + 0.007)
 p4 = d3d.Point2D(0, 0.5 * fork_pivot_diameter)
-p5 = d3d.Point2D(crown_height + 0.025, 0.5 * fork_pivot_diameter)
-p6 = d3d.Point2D(crown_height + 0.025, 0.5 * fork_pivot_inner_diameter)
+p5 = d3d.Point2D(crowns_distance + 0.025, 0.5 * fork_pivot_diameter)
+p6 = d3d.Point2D(crowns_distance + 0.025, 0.5 * fork_pivot_inner_diameter)
 
 fork_frame_axle_contour = ClosedPolygon2D([p1, p2, p3, p4, p5, p6])
 fork_frame_axle = RevolvedProfile(
@@ -360,13 +363,14 @@ fork_frame_axle = RevolvedProfile(
 )
 fork_frame_nut = hexnut(fork_pivot_diameter, 0.012)
 
-left_front_bearing = radial_bearing(front_bearing_d, front_bearing_D, front_bearing_B)
+left_front_bearing = radial_bearing(front_bearing_d, front_bearing_D, front_bearing_B, )
 right_front_bearing = radial_bearing(front_bearing_d, front_bearing_D, front_bearing_B)
 front_bearing_spacer = HollowCylinder(
     d3d.OZXY,
     inner_radius=0.5 * front_bearing_d,
     outer_radius=0.5 * front_bearing_d + 0.004,
     length=front_bearing_spacing - front_bearing_B,
+    name="Front bearing spacer"
 )
 
 fork_assembly = Assembly(
@@ -396,11 +400,11 @@ fork_assembly = Assembly(
         d3d.OXYZ,
         d3d.OXYZ,
         d3d.Frame3D(d3d.Point3D(0, front_brake_disk_offset, 0), d3d.X3D, d3d.Y3D, d3d.Z3D),
-        d3d.Frame3D(d3d.Point3D(0, 0, tube_height), d3d.Y3D, -d3d.X3D, d3d.Z3D),
-        d3d.Frame3D(d3d.Point3D(0, 0, tube_height - crown_height), d3d.Y3D, -d3d.X3D, d3d.Z3D),
+        d3d.Frame3D(d3d.Point3D(0, 0, tube_height-crown_width), d3d.Y3D, -d3d.X3D, d3d.Z3D),
+        d3d.Frame3D(d3d.Point3D(0, 0, tube_height - crowns_distance-2*crown_width), d3d.Y3D, -d3d.X3D, d3d.Z3D),
         d3d.Frame3D(d3d.Point3D(0, 0, tube_height + crown_handlebar_offset), d3d.Y3D, -d3d.X3D, d3d.Z3D),
-        d3d.Frame3D(d3d.Point3D(fork_offset, 0, tube_height - crown_height), d3d.X3D, d3d.Y3D, d3d.Z3D),
-        d3d.Frame3D(d3d.Point3D(fork_offset, 0, tube_height + crown_width), d3d.X3D, d3d.Y3D, d3d.Z3D),
+        d3d.Frame3D(d3d.Point3D(fork_offset, 0, tube_height - 2*crown_width - crowns_distance), d3d.X3D, d3d.Y3D, d3d.Z3D),
+        d3d.Frame3D(d3d.Point3D(fork_offset, 0, tube_height), d3d.X3D, d3d.Y3D, d3d.Z3D),
     ],
 )
 
@@ -411,16 +415,16 @@ fork_frame = d3d.XYZ.rotation(d3d.Y3D, caster_angle).to_frame(d3d.Point3D(0, 0, 
 frame_pivot_frame = d3d.XYZ.rotation(d3d.Y3D, caster_angle).to_frame(d3d.Point3D(0, 0, 0))
 frame_pivot = HollowCylinder(
     frame_pivot_frame,
-    inner_radius=fork_pivot_diameter,
-    outer_radius=fork_pivot_diameter + 0.008,
-    length=crown_height,
+    inner_radius=0.5*fork_pivot_diameter,
+    outer_radius=0.5*fork_pivot_diameter + 0.008,
+    length=crowns_distance,
     name="Frame pivot",
 )
 
 frame = frame_pivot
 frame_frame = d3d.Frame3D(
     (
-        (tube_height - 0.5 * crown_height) * d3d.Z3D.rotation(d3d.O3D, d3d.Y3D, caster_angle)
+        d3d.Point3D(fork_offset, 0, tube_height - 0.5*crowns_distance-crown_width).rotation(d3d.O3D, d3d.Y3D, caster_angle)
         + 0.5 * tyre_diameter * d3d.Z3D
     ).to_point(),
     d3d.X3D,
