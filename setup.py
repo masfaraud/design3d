@@ -9,7 +9,7 @@ from os.path import dirname, isdir, join
 from subprocess import CalledProcessError, check_output, STDOUT
 
 import numpy as np
-from setuptools import setup
+from setuptools import setup, Extension, find_packages
 
 from Cython.Build import cythonize  # isort: skip This prevent a build bug
 
@@ -105,6 +105,34 @@ def get_version():
     return version
 
 
+extensions = [
+    Extension(
+        "design3d.core_compiled",
+        ["design3d/core_compiled.pyx"],
+        include_dirs=[np.get_include()],
+    ),
+    Extension(
+        "design3d.nurbs.core",
+        ["design3d/nurbs/core.pyx"],
+        include_dirs=[np.get_include()],
+    ),
+    Extension(
+        "design3d.nurbs.helpers",
+        ["design3d/nurbs/helpers.pyx"],
+        include_dirs=[np.get_include()],
+    ),
+    Extension(
+        "design3d.nurbs.fitting",
+        ["design3d/nurbs/fitting.py"],
+        include_dirs=[np.get_include()],
+    ),
+    Extension(
+        "design3d.nurbs.operations",
+        ["design3d/nurbs/operations.py"],
+        include_dirs=[np.get_include()],
+    ),
+]
+
 setup(
     name="design3d",
     version=get_version(),
@@ -116,11 +144,7 @@ setup(
     author="Steven Masfaraud",
     author_email="design3d@masfaraud.fr",
     license="Creative Commons Attribution-Share Alike license",
-    packages=[
-        "design3d",
-        "design3d.utils",
-        "design3d.nurbs"
-    ],
+    packages=find_packages(),
     package_dir={},
     include_package_data=True,
     install_requires=[
@@ -151,11 +175,8 @@ setup(
                  "Topic :: Multimedia :: Graphics :: 3D Modeling",
                  "Development Status :: 5 - Production/Stable"],
 
-    ext_modules=cythonize(["design3d/core_compiled.pyx",
-                           "design3d/nurbs/core.pyx",
-                           "design3d/nurbs/helpers.pyx",
-                           "design3d/nurbs/fitting.py",
-                           "design3d/nurbs/operations.py"],
+
+    ext_modules=cythonize(extensions,
                           language_level = "3"),
     include_dirs=[np.get_include()],
     python_requires=">=3.9",
