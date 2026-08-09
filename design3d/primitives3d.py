@@ -2010,7 +2010,107 @@ class Sweep(shells.ClosedShell3D):
         return Sweep(new_contour2d, new_wire3d, color=self.color,
                      alpha=self.alpha, reference_path=self.reference_path, name=self.name)
 
+class Loft(shells.ClosedShell3D):
+    """
+    Define a loft of sections along a path.
 
+    The loft is defined by a sections (contour2D) and a path with C1 continuity provided by
+    the 3D wire. 
+    
+    The starting frame defines the position and orientation of the profile in the 3D space.
+
+    :param sections: The 2D contours, defining the profile to be swept along the wire.
+    :param wire3d: The 3D wire path along which the contour is swept. The path must be C1 continuous.
+    :type wire3d: design3d.wires.Wire3D
+    :param starting_frame: (optional) The starting frame for the sweep. This parameter is used to control the
+        orientation of the profile in 3D space. The frame's origin should be coincident with the start of the path.
+        If not provided, it is determined from the orientation of the wire and may provide unexpected sweep
+        orientation, if the aspect ratio of the profile is different of 1.
+    :type starting_frame: design3d.Frame3D
+    :param color: (optional) The RGB color of the resulting shell.
+    :type color: Tuple[float, float, float]
+    :param alpha: (optional) The transparency of the resulting shell.
+    :type alpha: float
+    :param name: The name of the sweep.
+    :type name: str
+    """
+
+    def __init__(self, sections2d: list[design3d.wires.Contour2D],
+                 sections_frames: list[design3d.Frame3D],
+                 wire3d: design3d.wires.Wire3D,
+                 color: Tuple[float, float, float] = None, alpha: float = 1,
+                 name: str = ''):
+        self.sections2d = sections2d
+        self.sections_frames = sections_frames
+        self.wire3d = wire3d
+        faces = self.shell_faces()
+        shells.ClosedShell3D.__init__(self, faces, color=color, alpha=alpha, reference_path=reference_path, name=name)
+
+    def to_dict(self, *args, **kwargs):
+        """Custom serialization for performance."""
+        dict_ = shells.ClosedShell3D.base_dict(self)
+        dict_.update({'color': self.color,
+                      'alpha': self.alpha,
+                      'wire3d': self.wire3d.to_dict(),
+                      'sections2d': [c.to_dict() for c in self.sections2d],
+                      
+                      })
+
+        return dict_
+
+    def shell_faces(self):
+        """
+        Generates the shell faces.
+
+        For now, it does not take into account rotation of sections.
+        """
+        if not self.wire3d.point_at_abscissa(0.).is_close(self.starting_frame.origin):
+            raise ValueError("Frame origin and wire start should be coincident.")
+        start_plane = surfaces.Plane3D(self.starting_frame)
+
+        faces = [design3d.faces.PlaneFace3D(start_plane, surfaces.Surface2D(self.contour2d, []))]
+
+        last_end_tangent = self.wire3d.primitives[0].unit_direction_vector(0.)
+        frame_contour = self.starting_frame
+        for wire_primitive in self.wire3d.primitives:
+            start_tangent = wire_primitive.unit_direction_vector(0.)
+            if not start_tangent.is_close(last_end_tangent):
+                raise ValueError("""It seems that the wire3d provided to the sweep is not C1 continuous.
+                 If you have a wire with discotinuites you can try to break it down into many sweeps or
+                  try to use a OpenRoundedLineSegments3D as path.""")
+
+            if not wire_primitive.start.is_close(frame_contour.origin):
+                raise ValueError("Frame origin and edge start should be coincident.")
+
+            faces.extend(wire_primitive.sweep(self.contour2d, frame_contour))
+            last_end_tangent = wire_primitive.unit_direction_vector(wire_primitive.length())
+            frame_contour = wire_primitive.move_frame_along(frame_contour)
+        end_plane = surfaces.Plane3D(frame_contour)
+        contour3d = self.contour2d.to_3d(frame_contour.origin, frame_contour.u, frame_contour.v)
+        contour2d = end_plane.contour3d_to_2d(contour3d)
+        end_face = design3d.faces.PlaneFace3D(end_plane, surfaces.Surface2D(contour2d, []))
+        faces.append(end_face)
+        return faces
+
+    def frame_mapping(self, frame: design3d.Frame3D, side: str):
+        """
+        Changes frame_mapping and return a new Sweep.
+
+        :param frame: Frame to map.
+        :param side: 'old' or 'new'
+        """
+        new_wire = self.wire3d.frame_mapping(frame, side)
+        return Sweep(self.contour2d, new_wire, color=self.color,
+                     alpha=self.alpha, reference_path=self.reference_path, name=self.name)
+
+    def copy(self, deep=True, memo=None):
+        """Creates a copy of the Sweep."""
+        new_contour2d = self.contour2d.copy()
+        new_wire3d = self.wire3d.copy()
+        return Sweep(new_contour2d, new_wire3d, color=self.color,
+                     alpha=self.alpha, reference_path=self.reference_path, name=self.name)
+
+    
 class Sphere(shells.ClosedShell3D):
     """
     Defines a sphere at a given position & radius.
