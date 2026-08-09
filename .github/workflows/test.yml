@@ -36,7 +36,12 @@ jobs:
 
       - name: Install Package
         run: |
-          python -m pip install '.[test]'
+          python -m pip install -v --no-cache-dir '.[test]'
+
+      - name: Verify compiled extensions
+        run: |
+          python -c "import design3d.core_compiled; print(design3d.core_compiled.__file__)"
+          python -c "import design3d.nurbs.core; print(design3d.nurbs.core.__file__)"
 
       - name: Run Tests and Scripts
         run: |
