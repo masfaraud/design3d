@@ -159,7 +159,7 @@ _ARGSSPEC_CACHE = {}
 
 
 def deserialize_dict(dict_):
-    """Transform a dictionnary into an object."""
+    """Transform a dictionary into an object."""
     class_argspec = None
 
     # if class_ is None and

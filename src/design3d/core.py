@@ -2244,7 +2244,7 @@ class MovingVolumeModel(VolumeModel):
         self.step_frames = step_frames
 
         if not self.is_consistent():
-            raise RuntimeError("unconsistent model")
+            raise RuntimeError("inconsistent model")
 
     def is_consistent(self):
         """Check if the number of frames for each step corresponds to the number of primitives of the model."""

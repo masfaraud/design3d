@@ -59,7 +59,7 @@ def transfer_matrix_to_euler_angles(r_matrix):
 
 def get_transfer_matrix_from_basis(basis_a, basis_b):
     """
-    Get the matrix of tranformation that applied to the basis A gives basis B.
+    Get the matrix of transformation that applied to the basis A gives basis B.
     """
     matrix_a = array(
         [

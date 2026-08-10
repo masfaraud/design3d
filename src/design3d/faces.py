@@ -427,7 +427,7 @@ class Face3D(design3d.core.Primitive3D):
 
     def grid_points(self, grid_size, polygon_data=None):
         """
-        Parametric tesselation points.
+        Parametric tessellation points.
         """
         if polygon_data:
             outer_polygon, inner_polygons = polygon_data
@@ -1481,7 +1481,7 @@ class Face3D(design3d.core.Primitive3D):
         :param return_points: return corresponding point or not.
         :return:
         """
-        # Speficic case, if defined
+        # Specific case, if defined
         method_name = f"{other_face.__class__.__name__.lower()[:-2]}_minimum_distance"
         if hasattr(self, method_name):
             return getattr(self, method_name)(other_face, return_points)
@@ -1964,7 +1964,7 @@ class PlaneFace3D(Face3D):
 
     def is_adjacent(self, face2: Face3D):
         """
-        Verifies if two plane faces are adjacent to eachother.
+        Verifies if two plane faces are adjacent to each other.
 
         :param face2: other face.
         :return: True if adjacent, False otherwise.
@@ -3053,7 +3053,7 @@ class SphericalFace3D(PeriodicalFaceMixin, Face3D):
 
     def grid_points(self, grid_size, polygon_data=None):
         """
-        Parametric tesselation points.
+        Parametric tessellation points.
         """
         if polygon_data:
             outer_polygon, inner_polygons = polygon_data
@@ -3325,7 +3325,7 @@ class RevolutionFace3D(Face3D):
 
     def grid_points(self, grid_size, polygon_data=None):
         """
-        Parametric tesselation points.
+        Parametric tessellation points.
         """
         if polygon_data:
             outer_polygon, inner_polygons = polygon_data

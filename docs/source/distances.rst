@@ -156,7 +156,7 @@ Here are some examples:
    print('distance_arc3d_arcellipse3d: ', distance_arc3d_arcellipse3d)
    >>> distance_arc3d_arcellipse3d: 0.5340975460532926
 
-Distances betweeen two faces
+Distances between two faces
 ****************************
 
 You can also calculate the distance between two faces. To do so, you can use the `face_minimum_distance` method.
@@ -189,7 +189,7 @@ It will work for any two faces.
    print('minimum_distance: ', minimum_distance)
    >>> minimum_distance: 0.3097688266437426
 
-Distances betweeen two shells
+Distances between two shells
 *****************************
 
 Likewise, you can calculate the distance between two shells as shown in the next example:

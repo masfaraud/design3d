@@ -80,7 +80,7 @@ ax3.scatter(center2[0], center2[1])
 # test boundingbox intersection true
 print(b_rec.is_intersecting(b_rec2))
 
-# test boundingbox intersection flase
+# test boundingbox intersection false
 line_fig3_seg1 = d3de.LineSegment2D(d3d.Point2D(5, 1), d3d.Point2D(5.25, 0.5))
 line_fig3_seg2 = d3de.LineSegment2D(d3d.Point2D(5.25, 0.5), d3d.Point2D(6, 0.5))
 line_fig3_seg3 = d3de.LineSegment2D(d3d.Point2D(6, 0.5), d3d.Point2D(5.45, 0))

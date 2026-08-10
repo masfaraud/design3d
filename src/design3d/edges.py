@@ -1089,7 +1089,7 @@ class BSplineCurve(Edge):
 
     def get_bounding_element(self):
         """Gets bounding box if a 3D object, or bounding rectangle if 2D."""
-        raise NotImplementedError("get_bounding_element method should be implemeted by child class.")
+        raise NotImplementedError("get_bounding_element method should be implemented by child class.")
 
     def copy(self, deep: bool = True, **kwargs):
         """

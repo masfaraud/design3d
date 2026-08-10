@@ -701,7 +701,7 @@ class RevolvedProfile(shells.ClosedShell3D):
     @property
     def contour3d(self):
         """
-        Gets the positionned contour for revolution.
+        Gets the positioned contour for revolution.
         """
         return self.contour2d.to_3d(self.frame.origin, self.frame.u, self.frame.v)
 

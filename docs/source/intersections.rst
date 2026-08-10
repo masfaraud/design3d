@@ -101,12 +101,12 @@ Another example in 3D: BSplineCurve3D and LineSegment3D:
 
 
 
-Intersections betweeen an edge and a curve
+Intersections between an edge and a curve
 ******************************************
 
 
 
-Intersections betweeen a wire/contour and an edge
+Intersections between a wire/contour and an edge
 *************************************************
 
 If you ever need to calcule the intersections of a wire/contour with any edge, you can use the `edge_intersections` method.
@@ -127,7 +127,7 @@ Example:
     contour2d = contour2_unittest.copy()
     contour2d = contour2d.translation(design3d.Vector2D(1, 0.0))
 
-    #search for intersections betweeen a contour2d and an edge.
+    #search for intersections between a contour2d and an edge.
     edge_intersections = contour2d.edge_intersections(bspline1)
 
     #plot
@@ -184,7 +184,7 @@ Intersections between two surfaces
         intersection.plot(ax, EdgeStyle('r'))
 
 
-Intersections betweeen surfaces and faces
+Intersections between surfaces and faces
 *****************************************
 
 The intersections between a Face3D and a Surface3D are also possible, and you can do it by also calling the `surface_intersection` method.

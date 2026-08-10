@@ -179,11 +179,11 @@ class Step:
             function_arg = function_arg_string.split("#")
             connections = []
             if function_name:
-                for connec in function_arg[1:]:
-                    connec = connec.split(",")
-                    connec = connec[0].split(")")
-                    if connec[0][-1] != "'":
-                        function_connection = int(connec[0])
+                for connect in function_arg[1:]:
+                    connect = connect.split(",")
+                    connect = connect[0].split(")")
+                    if connect[0][-1] != "'":
+                        function_connection = int(connect[0])
                         connections.append(function_connection)
 
             previous_line = str()

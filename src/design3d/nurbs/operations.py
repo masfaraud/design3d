@@ -365,7 +365,7 @@ def insert_knot_surface(obj, param, num, **kwargs):
 
 def insert_control_points_surface_u(obj, param, num, **kwargs):
     """
-    Caculates the control points equivalent to inserts knot n-times to a spline geometry.
+    Calculates the control points equivalent to inserts knot n-times to a spline geometry.
 
     Keyword Arguments:
         * ``check_num``: enables/disables operation validity checks. *Default: True*
@@ -407,7 +407,7 @@ def insert_control_points_surface_u(obj, param, num, **kwargs):
 
 def insert_control_points_surface_v(obj, param, num, **kwargs):
     """
-    Caculates the control points equivalent to inserts knot n-times to a spline geometry.
+    Calculates the control points equivalent to inserts knot n-times to a spline geometry.
 
     Keyword Arguments:
         * ``check_num``: enables/disables operation validity checks. *Default: True*
@@ -832,7 +832,7 @@ def decompose_curve(obj, return_params: bool = False, number_max_patches: int = 
 
     :param obj: Curve to be decomposed
     :type obj: BSplineCurve
-    :param return_params: If True, returns the parameters from start and end of each Bézier patch with repect to the
+    :param return_params: If True, returns the parameters from start and end of each Bézier patch with respect to the
      input curve.
     :type return_params: bool
     :param number_max_patches: number max of patches, if limiting is needed.
@@ -873,7 +873,7 @@ def decompose_surface(obj, return_params, **kwargs):
 
     :param obj: surface
     :type obj: BSplineSurface3D
-    :param return_params: If True, returns the parameters from start and end of each Bézier patch with repect to the
+    :param return_params: If True, returns the parameters from start and end of each Bézier patch with respect to the
      input curve.
     :type return_params: bool
     :return: a list of Bezier patches

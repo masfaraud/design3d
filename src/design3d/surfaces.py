@@ -202,8 +202,8 @@ class Surface2D(DataEqualityObject):
             "vertices": np.array(vertices).reshape((-1, 2)),
             "segments": np.array(segments).reshape((-1, 2)),
         }
-        triagulation = triangle_lib.triangulate(tri, tri_opt)
-        return display.Mesh2D(vertices=triagulation["vertices"], triangles=triagulation["triangles"])
+        triangulation = triangle_lib.triangulate(tri, tri_opt)
+        return display.Mesh2D(vertices=triangulation["vertices"], triangles=triangulation["triangles"])
 
     def triangulation(self, number_points_x: int = 15, number_points_y: int = 15):
         """
@@ -2631,7 +2631,7 @@ class CylindricalSurface3D(UPeriodicalSurface):
 
     def point2d_to_3d(self, point2d: design3d.Point2D):
         """
-        Coverts a parametric coordinate on the surface into a 3D spatial point (x, y, z).
+        Converts a parametric coordinate on the surface into a 3D spatial point (x, y, z).
 
         :param point2d: Point at the ToroidalSuface3D
         :type point2d: `design3d.`Point2D`
@@ -3302,7 +3302,7 @@ class ToroidalSurface3D(UVPeriodicalSurface):
 
     def point2d_to_3d(self, point2d: design3d.Point2D):
         """
-        Coverts a parametric coordinate on the surface into a 3D spatial point (x, y, z).
+        Converts a parametric coordinate on the surface into a 3D spatial point (x, y, z).
 
         :param point2d: Point at the ToroidalSuface3D
         :type point2d: `design3d.`Point2D`
@@ -4559,7 +4559,7 @@ class ConicalSurface3D(UPeriodicalSurface):
 
     def point2d_to_3d(self, point2d: design3d.Point2D):
         """
-        Coverts a parametric coordinate on the surface into a 3D spatial point (x, y, z).
+        Converts a parametric coordinate on the surface into a 3D spatial point (x, y, z).
 
         :param point2d: Point at the ConicalSuface3D
         :type point2d: `design3d.`Point2D`
@@ -5313,7 +5313,7 @@ class SphericalSurface3D(UVPeriodicalSurface):
 
     def point2d_to_3d(self, point2d):
         """
-        Coverts a parametric coordinate on the surface into a 3D spatial point (x, y, z).
+        Converts a parametric coordinate on the surface into a 3D spatial point (x, y, z).
 
         source: https://mathcurve.com/surfaces/sphere
         # -pi<theta<pi, -pi/2<phi<pi/2
@@ -6258,7 +6258,7 @@ class RuledSurface3D(Surface3D):
 
     def point2d_to_3d(self, point2d: design3d.Point2D):
         """
-        Coverts a parametric coordinate on the surface into a 3D spatial point (x, y, z).
+        Converts a parametric coordinate on the surface into a 3D spatial point (x, y, z).
 
         :param point2d: Point at the ToroidalSuface3D
         :type point2d: `design3d.`Point2D`
@@ -8139,7 +8139,7 @@ class BSplineSurface3D(Surface3D):
         Decomposes the surface into Bezier surface patches of the same degree.
 
         :param return_params: If True, returns the parameters from start and end of each Bézier patch
-         with repect to the input curve.
+         with respect to the input curve.
         :type return_params: bool
         :param decompose_dir: Direction of decomposition. 'uv', 'u' or 'v'.
         :type decompose_dir: str

@@ -53,7 +53,7 @@ p1, p2 = l1.Matrix_distance(l2)
 
 
 mes = primitives3D.Measure3D(p1, p2)
-ll = primitives3D.OpenRoundedLineSegments3D([p1, p2], {}, name="mesure")
+ll = primitives3D.OpenRoundedLineSegments3D([p1, p2], {}, name="measure")
 
 
 # mes.MPLPlot(ax=ax)
@@ -61,4 +61,4 @@ ll = primitives3D.OpenRoundedLineSegments3D([p1, p2], {}, name="mesure")
 model = design3d.core.VolumeModel([rl1, rl, ll])
 # model.FreeCADExport('lines')
 
-ll2 = primitives3D.OpenRoundedLineSegments3D([p1, p2], {}, name="mesure")
+ll2 = primitives3D.OpenRoundedLineSegments3D([p1, p2], {}, name="measure")

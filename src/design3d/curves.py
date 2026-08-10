@@ -203,7 +203,7 @@ class Line(Curve):
 
     def is_close(self, other_line, abs_tol: float = 1e-6):
         """
-        Verfies if two Lines are the same, considering a certain tolerance.
+        Verifies if two Lines are the same, considering a certain tolerance.
 
         :param other_line: other line.
         :param abs_tol: tolerance used.
