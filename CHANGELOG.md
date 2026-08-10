@@ -10,5 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### New Features
 
+- primitives3D: Loft
 
 ### Fixed
+
+### Build
+
+- moved source to src folder
