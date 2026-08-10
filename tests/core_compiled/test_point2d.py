@@ -1,6 +1,7 @@
 """
 Unittest for design3d.Point2D
 """
+
 import unittest
 
 import matplotlib
@@ -106,5 +107,5 @@ class TestPoint2D(unittest.TestCase):
         self.assertEqual(nearest, Point2D(1, 2))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

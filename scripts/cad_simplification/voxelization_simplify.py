@@ -1,6 +1,7 @@
 """
 Showcase of the 'VoxelizationSimplify' class.
 """
+
 import time
 
 from volmdlr.cad_simplification import VoxelizationSimplify

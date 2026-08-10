@@ -8,8 +8,7 @@ import design3d.step as d3ds
 import design3d.wires as d3dw
 from design3d import surfaces
 
-
-folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'objects_extrusion_tests')
+folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_extrusion_tests")
 
 
 class TestExtrusionSurface3D(unittest.TestCase):
@@ -18,28 +17,51 @@ class TestExtrusionSurface3D(unittest.TestCase):
         design3d.Point3D(-0.005449685, -0.007265721, 0.0),
         design3d.Point3D(0.0, 0.0, 0.0),
         design3d.Point3D(0.014457705000000001, -0.002636091, 0.0),
-        design3d.Point3D(0.013503079, -0.014007147, 0.0)]
+        design3d.Point3D(0.013503079, -0.014007147, 0.0),
+    ]
     edge = d3de.BSplineCurve3D(3, control_points, [4, 1, 4], [0.0, 0.5, 1.0])
     surface = surfaces.ExtrusionSurface3D(edge, -design3d.Z3D)
 
     def test_parametric_points_to_3d(self):
-        parametric_points = np.array([[0.0, 0.0], [0.25 * self.edge.length(), 0.0], [0.5 * self.edge.length(), 0.0],
-                                      [0.75 * self.edge.length(), 0.0], [self.edge.length(), 0.0],
-                                      [0.0, 1.0], [0.25 * self.edge.length(), 1.0], [0.5 * self.edge.length(), 1.0],
-                                      [0.75 * self.edge.length(), 1.0], [self.edge.length(), 1.0],
-                                      [0.0, -1.0], [0.25 * self.edge.length(), -1.0], [0.5 * self.edge.length(), -1.0],
-                                      [0.75 * self.edge.length(), -1.0], [self.edge.length(), -1.0]])
+        parametric_points = np.array(
+            [
+                [0.0, 0.0],
+                [0.25 * self.edge.length(), 0.0],
+                [0.5 * self.edge.length(), 0.0],
+                [0.75 * self.edge.length(), 0.0],
+                [self.edge.length(), 0.0],
+                [0.0, 1.0],
+                [0.25 * self.edge.length(), 1.0],
+                [0.5 * self.edge.length(), 1.0],
+                [0.75 * self.edge.length(), 1.0],
+                [self.edge.length(), 1.0],
+                [0.0, -1.0],
+                [0.25 * self.edge.length(), -1.0],
+                [0.5 * self.edge.length(), -1.0],
+                [0.75 * self.edge.length(), -1.0],
+                [self.edge.length(), -1.0],
+            ]
+        )
         points3d = self.surface.parametric_points_to_3d(parametric_points)
-        expected_points = np.array([[-0.025917292, 0.002544355, 0.0], [-0.006023608687500001, -0.0040783553125, 0.0],
-                                    [0.0022520050000000005, -0.002475453, 0.0],
-                                    [0.010101844562500002, -0.0035431261875, 0.0], [0.013503079, -0.014007147, 0.0],
-                                    [-0.025917292, 0.002544355, -1.0], [-0.006023608687500001, -0.0040783553125, -1.0],
-                                    [0.0022520050000000005, -0.002475453, -1.0],
-                                    [0.010101844562500002, -0.0035431261875, -1.0], [0.013503079, -0.014007147, -1.0],
-                                    [-0.025917292, 0.002544355, 1.0], [-0.006023608687500001, -0.0040783553125, 1.0],
-                                    [0.0022520050000000005, -0.002475453, 1.0],
-                                    [0.010101844562500002, -0.0035431261875, 1.0], [0.013503079, -0.014007147, 1.0]
-                                    ])
+        expected_points = np.array(
+            [
+                [-0.025917292, 0.002544355, 0.0],
+                [-0.006023608687500001, -0.0040783553125, 0.0],
+                [0.0022520050000000005, -0.002475453, 0.0],
+                [0.010101844562500002, -0.0035431261875, 0.0],
+                [0.013503079, -0.014007147, 0.0],
+                [-0.025917292, 0.002544355, -1.0],
+                [-0.006023608687500001, -0.0040783553125, -1.0],
+                [0.0022520050000000005, -0.002475453, -1.0],
+                [0.010101844562500002, -0.0035431261875, -1.0],
+                [0.013503079, -0.014007147, -1.0],
+                [-0.025917292, 0.002544355, 1.0],
+                [-0.006023608687500001, -0.0040783553125, 1.0],
+                [0.0022520050000000005, -0.002475453, 1.0],
+                [0.010101844562500002, -0.0035431261875, 1.0],
+                [0.013503079, -0.014007147, 1.0],
+            ]
+        )
         for point, expected_point in zip(points3d, expected_points):
             self.assertAlmostEqual(np.linalg.norm(point - expected_point), 0.0)
 
@@ -72,7 +94,8 @@ class TestExtrusionSurface3D(unittest.TestCase):
 
     def test_linesegment2d_to_3d(self):
         surface = surfaces.ExtrusionSurface3D.from_json(
-            os.path.join(folder, "extrusion_surface_undefined_direction_linesegment.json"))
+            os.path.join(folder, "extrusion_surface_undefined_direction_linesegment.json")
+        )
         point1 = design3d.Point2D(0.9020984833336293, -0.08534036750789999)
         point2 = design3d.Point2D(0.9286913444016728, -0.07799341694)
         linesegment2d = d3de.LineSegment2D(point1, point2)
@@ -82,20 +105,21 @@ class TestExtrusionSurface3D(unittest.TestCase):
         self.assertTrue(result.start.is_close(start3d))
         self.assertTrue(result.end.is_close(end3d))
         surface = surfaces.ExtrusionSurface3D.from_json(
-            os.path.join(folder, "extrusion_surface_test_linesegment2d_to_3d.json"))
+            os.path.join(folder, "extrusion_surface_test_linesegment2d_to_3d.json")
+        )
         linesegment2d = d3de.LineSegment2D.from_json(os.path.join(folder, "linesegment2d_to_linesegment3d.json"))
         result = surface.linesegment2d_to_3d(linesegment2d)[0]
         self.assertIsInstance(result, d3de.LineSegment3D)
 
         surface = surfaces.ExtrusionSurface3D.from_json(
-            os.path.join(folder, "extrusion_surface_test_linesegment2d_to_3d.json"))
+            os.path.join(folder, "extrusion_surface_test_linesegment2d_to_3d.json")
+        )
         linesegment2d = d3de.LineSegment2D.from_json(os.path.join(folder, "linesegment2d_to_self_edge.json"))
         result = surface.linesegment2d_to_3d(linesegment2d)[0]
         self.assertEqual(result, surface.edge)
 
     def test_arc3d_to_2d(self):
-        surface = surfaces.ExtrusionSurface3D.from_json(
-            os.path.join(folder, "extrusion_surface_test_arc3d_to_2d.json"))
+        surface = surfaces.ExtrusionSurface3D.from_json(os.path.join(folder, "extrusion_surface_test_arc3d_to_2d.json"))
         contour3d = d3dw.Contour3D.from_json(os.path.join(folder, "extrusion_contour_test_arc3d_to_2d.json"))
         arc3d = contour3d.primitives[2]
         result = surface.arc3d_to_2d(arc3d)[0]
@@ -103,10 +127,10 @@ class TestExtrusionSurface3D(unittest.TestCase):
         self.assertTrue(result.end.is_close(design3d.Point2D(0.00046275860846800896, 0.0032000000499998738)))
 
     def test_bsplinecurve3d_to_2d(self):
-        surface = surfaces.ExtrusionSurface3D.from_json(
-            os.path.join(folder, "periodical_extrusionsurface.json"))
+        surface = surfaces.ExtrusionSurface3D.from_json(os.path.join(folder, "periodical_extrusionsurface.json"))
         bsplinecurve3d = d3de.BSplineCurve3D.from_json(
-            os.path.join(folder, "periodical_extrusionsurface_bsplinecurve.json"))
+            os.path.join(folder, "periodical_extrusionsurface_bsplinecurve.json")
+        )
         result = surface.bsplinecurve3d_to_2d(bsplinecurve3d)[0]
         inverse_prof = surface.linesegment2d_to_3d(result)[0]
         self.assertTrue(result.start.is_close(design3d.Point2D(5.475029217377275, 0.02477709130796299)))
@@ -115,9 +139,11 @@ class TestExtrusionSurface3D(unittest.TestCase):
 
     def test_fullarcellipse3d_to_2d(self):
         surface = surfaces.ExtrusionSurface3D.from_json(
-            os.path.join(folder, "extrusionsurface_fullarcellipse3d_to_2d.json"))
+            os.path.join(folder, "extrusionsurface_fullarcellipse3d_to_2d.json")
+        )
         ellipse = d3de.FullArcEllipse3D.from_json(
-            os.path.join(folder, "extrusionsurface_fullarcellipse3d_to_2d_fullarcellipse3d.json"))
+            os.path.join(folder, "extrusionsurface_fullarcellipse3d_to_2d_fullarcellipse3d.json")
+        )
         result = surface.fullarcellipse3d_to_2d(ellipse)[0]
         self.assertTrue(result.start.is_close(design3d.Point2D(0.0, 0.01)))
         self.assertTrue(result.end.is_close(design3d.Point2D(0.025526998862788763, 0.01)))
@@ -132,6 +158,8 @@ class TestExtrusionSurface3D(unittest.TestCase):
     def test_contour3d_to_2d(self):
         surface = surfaces.ExtrusionSurface3D.from_json(os.path.join(folder, "contour3d_to_2d_surface.json"))
         contour = d3dw.Contour3D.from_json(os.path.join(folder, "contour3d_to_2d_contour.json"))
+        ax = surface.plot()
+        contour.plot(ax=ax)
         contour2d = surface.contour3d_to_2d(contour)
         self.assertTrue(contour2d.is_ordered())
         self.assertAlmostEqual(contour2d.area(), 0.00032168769592775094, 6)
@@ -143,57 +171,55 @@ class TestExtrusionSurface3D(unittest.TestCase):
         self.assertAlmostEqual(contour2d.area(), 0.05992365409316021, 6)
 
         surface = surfaces.ExtrusionSurface3D.from_json(
-            os.path.join(folder, "extrusionsurface_edge_not_in_normal_plane.json"))
+            os.path.join(folder, "extrusionsurface_edge_not_in_normal_plane.json")
+        )
         contour = d3dw.Contour3D.from_json(
-            os.path.join(folder, "extrusionsurface_edge_not_in_normal_plane_contour.json"))
+            os.path.join(folder, "extrusionsurface_edge_not_in_normal_plane_contour.json")
+        )
         contour2d = surface.contour3d_to_2d(contour)
         self.assertTrue(contour2d.is_ordered())
         self.assertAlmostEqual(contour2d.area(), 0.00019036534467768707, 6)
 
-        surface = surfaces.ExtrusionSurface3D.from_json(
-            os.path.join(folder, "extrusionsurface_with_small_edge.json"))
-        contour = d3dw.Contour3D.from_json(
-            os.path.join(folder, "extrusionsurface_with_small_edge_contour.json"))
+        surface = surfaces.ExtrusionSurface3D.from_json(os.path.join(folder, "extrusionsurface_with_small_edge.json"))
+        contour = d3dw.Contour3D.from_json(os.path.join(folder, "extrusionsurface_with_small_edge_contour.json"))
         contour2d = surface.contour3d_to_2d(contour)
         self.assertTrue(contour2d.is_ordered())
         self.assertAlmostEqual(contour2d.area(), 3.74649557711703e-09, 10)
 
-        surface = surfaces.ExtrusionSurface3D.from_json(
-            os.path.join(folder, "extrusionsurface_fullarcellipse.json"))
+        surface = surfaces.ExtrusionSurface3D.from_json(os.path.join(folder, "extrusionsurface_fullarcellipse.json"))
         contour = d3dw.Contour3D.from_json(os.path.join(folder, "extrusionsurface_fullarcellipse_contour.json"))
         contour2d = surface.contour3d_to_2d(contour)
         self.assertTrue(contour2d.is_ordered())
         self.assertAlmostEqual(contour2d.area(), 0.012120134592666365, 6)
 
-        surface = surfaces.ExtrusionSurface3D.from_json(
-            os.path.join(folder, "extrusionsurface_fullarc.json"))
+        surface = surfaces.ExtrusionSurface3D.from_json(os.path.join(folder, "extrusionsurface_fullarc.json"))
         contour = d3dw.Contour3D.from_json(os.path.join(folder, "extrusionsurface_fullarc_contour.json"))
         contour2d = surface.contour3d_to_2d(contour)
         self.assertTrue(contour2d.is_ordered())
         self.assertAlmostEqual(contour2d.area(), 2.0719721732132054e-06, 8)
 
-        surface = surfaces.ExtrusionSurface3D.from_json(
-            os.path.join(folder, "extrusionsurface_fullarcellipse.json"))
+        surface = surfaces.ExtrusionSurface3D.from_json(os.path.join(folder, "extrusionsurface_fullarcellipse.json"))
         contour = d3dw.Contour3D.from_json(os.path.join(folder, "extrusionsurface_fullarcellipse_contour.json"))
         contour2d = surface.contour3d_to_2d(contour)
         self.assertTrue(contour2d.is_ordered())
         self.assertAlmostEqual(contour2d.area(), 0.012120134592666365, 2)
 
-        surface = surfaces.ExtrusionSurface3D.from_json(
-            os.path.join(folder, "extrusionsurface_periodic.json"))
+        surface = surfaces.ExtrusionSurface3D.from_json(os.path.join(folder, "extrusionsurface_periodic.json"))
         contour = d3dw.Contour3D.from_json(os.path.join(folder, "extrusionsurface_periodic_contour.json"))
         contour2d = surface.contour3d_to_2d(contour)
         self.assertTrue(contour2d.is_ordered())
         self.assertAlmostEqual(contour2d.area(), 2.009851332304794e-06, 8)
 
         surface = surfaces.ExtrusionSurface3D.from_json(
-            os.path.join(folder, "periodical_extrusionsurface_linesegment3d_to_2d.json"))
+            os.path.join(folder, "periodical_extrusionsurface_linesegment3d_to_2d.json")
+        )
         contour = d3dw.Contour3D.from_json(
-            os.path.join(folder, "periodical_extrusionsurface_linesegment3d_to_2d_contour.json"))
+            os.path.join(folder, "periodical_extrusionsurface_linesegment3d_to_2d_contour.json")
+        )
         contour2d = surface.contour3d_to_2d(contour)
         self.assertTrue(contour2d.is_ordered(1e-5))
         self.assertAlmostEqual(contour2d.area(), 0.007376809172328507, 2)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

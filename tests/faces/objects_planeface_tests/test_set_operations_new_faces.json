@@ -349,38 +349,6 @@
       "alpha": 1
     },
     {
-      "$ref": "#/_references/6f8ebb56-ff06-11ed-b1d6-d2c33e3011fd"
-    },
-    {
-      "$ref": "#/_references/6f8ebcaa-ff06-11ed-b1d6-d2c33e3011fd"
-    },
-    {
-      "$ref": "#/_references/6f8ebdd6-ff06-11ed-b1d6-d2c33e3011fd"
-    },
-    {
-      "$ref": "#/_references/6f8ebeee-ff06-11ed-b1d6-d2c33e3011fd"
-    },
-    {
-      "$ref": "#/_references/6f8ec006-ff06-11ed-b1d6-d2c33e3011fd"
-    },
-    {
-      "$ref": "#/_references/6f8ec11e-ff06-11ed-b1d6-d2c33e3011fd"
-    },
-    {
-      "$ref": "#/_references/6f8ec236-ff06-11ed-b1d6-d2c33e3011fd"
-    },
-    {
-      "$ref": "#/_references/6f8ec34e-ff06-11ed-b1d6-d2c33e3011fd"
-    },
-    {
-      "$ref": "#/_references/6f8ec45c-ff06-11ed-b1d6-d2c33e3011fd"
-    },
-    {
-      "$ref": "#/_references/6f8ec77c-ff06-11ed-b1d6-d2c33e3011fd"
-    }
-  ],
-  "_references": {
-    "6f8ebb56-ff06-11ed-b1d6-d2c33e3011fd": {
       "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
@@ -405,7 +373,7 @@
       "color": null,
       "alpha": 1
     },
-    "6f8ebcaa-ff06-11ed-b1d6-d2c33e3011fd": {
+    {
       "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
@@ -430,7 +398,7 @@
       "color": null,
       "alpha": 1
     },
-    "6f8ebdd6-ff06-11ed-b1d6-d2c33e3011fd": {
+    {
       "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
@@ -455,7 +423,7 @@
       "color": null,
       "alpha": 1
     },
-    "6f8ebeee-ff06-11ed-b1d6-d2c33e3011fd": {
+    {
       "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
@@ -480,7 +448,7 @@
       "color": null,
       "alpha": 1
     },
-    "6f8ec006-ff06-11ed-b1d6-d2c33e3011fd": {
+    {
       "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
@@ -505,7 +473,7 @@
       "color": null,
       "alpha": 1
     },
-    "6f8ec11e-ff06-11ed-b1d6-d2c33e3011fd": {
+    {
       "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
@@ -530,7 +498,7 @@
       "color": null,
       "alpha": 1
     },
-    "6f8ec236-ff06-11ed-b1d6-d2c33e3011fd": {
+    {
       "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
@@ -555,7 +523,7 @@
       "color": null,
       "alpha": 1
     },
-    "6f8ec34e-ff06-11ed-b1d6-d2c33e3011fd": {
+    {
       "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
@@ -580,7 +548,7 @@
       "color": null,
       "alpha": 1
     },
-    "6f8ec45c-ff06-11ed-b1d6-d2c33e3011fd": {
+    {
       "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
@@ -605,7 +573,7 @@
       "color": null,
       "alpha": 1
     },
-    "6f8ec77c-ff06-11ed-b1d6-d2c33e3011fd": {
+    {
       "object_class": "design3d.wires.Contour3D",
       "name": "",
       "primitives": [
@@ -659,5 +627,5 @@
       "color": null,
       "alpha": 1
     }
-  }
+  ]
 }

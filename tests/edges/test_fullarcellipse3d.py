@@ -5,8 +5,7 @@ import design3d
 import design3d.edges as d3de
 from design3d import curves
 
-
-folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'fullarcellipse_objects')
+folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fullarcellipse_objects")
 
 
 class TestFullArcEllipse3D(unittest.TestCase):
@@ -26,11 +25,13 @@ class TestFullArcEllipse3D(unittest.TestCase):
 
     def test_to_2d(self):
         plane_origin = design3d.Point3D(1, 1, 0)
-        x = design3d.Vector3D(0.5*math.sqrt(2), 0.5*math.sqrt(2), 0)
-        y = design3d.Vector3D(-0.5*math.sqrt(2), 0.5*math.sqrt(2), 0)
+        x = design3d.Vector3D(0.5 * math.sqrt(2), 0.5 * math.sqrt(2), 0)
+        y = design3d.Vector3D(-0.5 * math.sqrt(2), 0.5 * math.sqrt(2), 0)
         ellipse2d = self.ellipse.to_2d(plane_origin, x, y)
-        self.assertTrue(ellipse2d.ellipse.major_dir.is_close(design3d.Vector2D(0.5*math.sqrt(2), -0.5*math.sqrt(2))))
-        self.assertTrue(ellipse2d.ellipse.minor_dir.is_close(design3d.Vector2D(0.5*math.sqrt(2), 0.5*math.sqrt(2))))
+        self.assertTrue(
+            ellipse2d.ellipse.major_dir.is_close(design3d.Vector2D(0.5 * math.sqrt(2), -0.5 * math.sqrt(2)))
+        )
+        self.assertTrue(ellipse2d.ellipse.minor_dir.is_close(design3d.Vector2D(0.5 * math.sqrt(2), 0.5 * math.sqrt(2))))
         self.assertAlmostEqual(ellipse2d.ellipse.major_axis, 0.0225, places=4)
         self.assertAlmostEqual(ellipse2d.ellipse.minor_axis, 0.0075, places=4)
 
@@ -40,7 +41,7 @@ class TestFullArcEllipse3D(unittest.TestCase):
 
     def test_frame_mapping(self):
         new_frame = design3d.Frame3D(design3d.O3D, design3d.Z3D, design3d.X3D, -design3d.Y3D)
-        new_ellipse = self.ellipse.frame_mapping(new_frame, 'new')
+        new_ellipse = self.ellipse.frame_mapping(new_frame, "new")
         self.assertEqual(new_ellipse.ellipse.major_dir, design3d.Vector3D(0.0, 1.0, 0.0))
         self.assertEqual(new_ellipse.ellipse.minor_dir, design3d.Vector3D(0.0, 0.0, -1.0))
         self.assertEqual(new_ellipse.normal, design3d.Vector3D(1.0, 0.0, 0.0))
@@ -48,7 +49,7 @@ class TestFullArcEllipse3D(unittest.TestCase):
     def test_abscissa(self):
         point1 = design3d.Point3D(0, -0.0075, 0)
         point2 = design3d.Point3D(0.0225, 0, 0)
-        self.assertAlmostEqual(self.ellipse.abscissa(point1), 0.75*self.ellipse.length())
+        self.assertAlmostEqual(self.ellipse.abscissa(point1), 0.75 * self.ellipse.length())
         self.assertAlmostEqual(self.ellipse.abscissa(point2), 0.0)
 
     def test_translation(self):
@@ -57,24 +58,36 @@ class TestFullArcEllipse3D(unittest.TestCase):
         self.assertEqual(translated_ellipse.start_end, design3d.Point3D(1.0225, 0, 0))
 
     def test_point_belongs(self):
-        fullarcellipse = d3de.FullArcEllipse3D(curves.Ellipse3D(
-            major_axis=0.0100500150616, minor_axis=0.009916145846950001, frame=design3d.Frame3D(
-                design3d.Point3D(-0.46362762553200004, -0.509606021605, 0.509000000114),
-                design3d.Vector3D(-0.8577170218519301, -0.016653392447698645, 0.5138522890339582),
-                design3d.Vector3D(-0.5141198069940289, 0.030753268830964377, -0.8571668802004851),
-                design3d.Vector3D(-0.00152790113491038,  -0.9993882633772487, -0.0349394410649187))),
-            design3d.Point3D(-0.47224769452020265, -0.5097733884499261, 0.514164223358229))
+        fullarcellipse = d3de.FullArcEllipse3D(
+            curves.Ellipse3D(
+                major_axis=0.0100500150616,
+                minor_axis=0.009916145846950001,
+                frame=design3d.Frame3D(
+                    design3d.Point3D(-0.46362762553200004, -0.509606021605, 0.509000000114),
+                    design3d.Vector3D(-0.8577170218519301, -0.016653392447698645, 0.5138522890339582),
+                    design3d.Vector3D(-0.5141198069940289, 0.030753268830964377, -0.8571668802004851),
+                    design3d.Vector3D(-0.00152790113491038, -0.9993882633772487, -0.0349394410649187),
+                ),
+            ),
+            design3d.Point3D(-0.47224769452020265, -0.5097733884499261, 0.514164223358229),
+        )
         point = design3d.Point3D(-0.45404913959118903, -0.5072162164760068, 0.5060526668248432)
         self.assertTrue(fullarcellipse.point_belongs(point, 1e-5))
 
     def test_split(self):
-        fullarcellipse = d3de.FullArcEllipse3D(curves.Ellipse3D(
-            major_axis=0.0100500150616, minor_axis=0.009916145846950001, frame=design3d.Frame3D(
-                design3d.Point3D(-0.46362762553200004, -0.509606021605, 0.509000000114),
-                design3d.Vector3D(-0.8577170218519301, -0.016653392447698645, 0.5138522890339582),
-                design3d.Vector3D(-0.5141198069940289, 0.030753268830964377, -0.8571668802004851),
-                design3d.Vector3D(-0.00152790113491038, -0.9993882633772487, -0.0349394410649187))),
-            design3d.Point3D(-0.47224769452020265, -0.5097733884499261, 0.514164223358229))
+        fullarcellipse = d3de.FullArcEllipse3D(
+            curves.Ellipse3D(
+                major_axis=0.0100500150616,
+                minor_axis=0.009916145846950001,
+                frame=design3d.Frame3D(
+                    design3d.Point3D(-0.46362762553200004, -0.509606021605, 0.509000000114),
+                    design3d.Vector3D(-0.8577170218519301, -0.016653392447698645, 0.5138522890339582),
+                    design3d.Vector3D(-0.5141198069940289, 0.030753268830964377, -0.8571668802004851),
+                    design3d.Vector3D(-0.00152790113491038, -0.9993882633772487, -0.0349394410649187),
+                ),
+            ),
+            design3d.Point3D(-0.47224769452020265, -0.5097733884499261, 0.514164223358229),
+        )
         split_point = design3d.Point3D(-0.4540526537637985, -0.5095148094812338, 0.5059723061104128)
         result = fullarcellipse.split(split_point)
         self.assertTrue(result[0].start.is_close(fullarcellipse.start_end))
@@ -84,7 +97,8 @@ class TestFullArcEllipse3D(unittest.TestCase):
 
     def test_discretization_points(self):
         fullarcellipse = d3de.FullArcEllipse3D.from_json(
-            os.path.join(folder, "fullarcellipse3d_discretization_points.json"))
+            os.path.join(folder, "fullarcellipse3d_discretization_points.json")
+        )
         discretization_points = fullarcellipse.discretization_points(number_points=9)
         self.assertEqual(len(discretization_points), 9)
         self.assertTrue(discretization_points[0].is_close(fullarcellipse.start))
@@ -92,11 +106,12 @@ class TestFullArcEllipse3D(unittest.TestCase):
 
     def test_line_intersections(self):
         fullarcellipse = d3de.FullArcEllipse3D.from_json(
-            os.path.join(folder, "fullarcellipse3d_line_intersections.json"))
+            os.path.join(folder, "fullarcellipse3d_line_intersections.json")
+        )
         line = curves.Line3D.from_json(os.path.join(folder, "fullarcellipse3d_line_intersections_line.json"))
         test = fullarcellipse.line_intersections(line, 1e-4)[0]
         self.assertTrue(test, design3d.Point3D(0.3407914925119553, -0.10964172421958009, 0.5033056993640009))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

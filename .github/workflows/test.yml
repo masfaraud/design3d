@@ -14,34 +14,47 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
-          fetch-depth: 0  # Ensure full history is fetched
+          fetch-depth: 0
           fetch-tags: true
+          lfs: true
 
       - name: Set Up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
+          python-version: '3.12'
+          cache: pip
 
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install build pre-commit
-      
+          python -m pip install build pre-commit
+
       - name: Run Pre-commit Hooks
         run: |
           pre-commit run --all-files
-      
+
       - name: Install Package
         run: |
-          pip install .[test]
+          python -m pip install -v --no-cache-dir '.[test]'
 
-      - name: Run Scripts
+      - name: Run Tests and Scripts
         run: |
-          cd tests
-          coverage run --rcfile=../.coveragerc --data-file=../.coverage --source design3d -m unittest discover -v
-          cd ../scripts
-          coverage run --rcfile=../.coveragerc --data-file=../.coverage --source design3d -a ci_scripts.py
+          coverage run \
+            --rcfile=.coveragerc \
+            --data-file=.coverage \
+            --source=design3d \
+            -m unittest discover -v tests
+
+          coverage run \
+            --rcfile=.coveragerc \
+            --data-file=.coverage \
+            --source=design3d \
+            -a scripts/ci_scripts.py
+
           coverage report
-          done
+
+      - name: Build Docs
+        run: |
+          make -C docs html

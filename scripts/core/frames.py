@@ -13,5 +13,5 @@ center = d3d.Point3D(0.6, 0, 0)
 frame2 = frame1.rotation(center, d3d.Z3D, 0.2)
 
 ax = frame1.plot()
-center.plot(ax=ax, color='r')
+center.plot(ax=ax, color="r")
 frame2.plot(ax=ax)

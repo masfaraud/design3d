@@ -70,9 +70,9 @@ class TestPoint3D(unittest.TestCase):
         self.assertEqual(self.p1.to_vector(), expected_output)
 
     def test_point_distance(self):
-        expected_output = math.sqrt((self.p3.x - self.p1.x) ** 2 +
-                                    (self.p3.y - self.p1.y) ** 2 +
-                                    (self.p3.z - self.p1.z) ** 2)
+        expected_output = math.sqrt(
+            (self.p3.x - self.p1.x) ** 2 + (self.p3.y - self.p1.y) ** 2 + (self.p3.z - self.p1.z) ** 2
+        )
         self.assertAlmostEqual(self.p1.point_distance(self.p3), expected_output)
 
     def test_middle_point(self):

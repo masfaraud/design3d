@@ -1,6 +1,7 @@
 """
 Demo script of spheres created on the skin of a defined sphere.
 """
+
 import math
 import random
 

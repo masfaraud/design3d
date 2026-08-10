@@ -74,7 +74,7 @@ Babylon.js is a JavaScript framework for rendering 3D graphics in web browsers.
 Simplify volume using Cloud of points
 *************************************
 
-Sometimes when working with stl files, it is needed to simplify the model to have a rough aproximation of its shape in order to run some space related calculations.
+Sometimes when working with stl files, it is needed to simplify the model to have a rough approximation of its shape in order to run some space related calculations.
 To achieve it, you can do as follows:
 
 .. code-block:: python

@@ -4,8 +4,7 @@ import design3d
 from design3d.core import VolumeModel
 from design3d.step import Step
 
-
-folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'objects_revolution_tests')
+folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_revolution_tests")
 
 
 class TestRevolutionFace3D(unittest.TestCase):
@@ -20,5 +19,5 @@ class TestRevolutionFace3D(unittest.TestCase):
         self.assertAlmostEqual(revolutionface.surface2d.area(), 0.00738824 * design3d.TWO_PI, 6)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

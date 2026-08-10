@@ -16,26 +16,24 @@ import design3d.wires
 # %% Data
 
 primitives = [
-    design3d.edges.LineSegment2D(design3d.Point2D(0.001, 0.014),
-                                design3d.Point2D(0.001, 0.0125)),
-
-    design3d.edges.Arc2D(design3d.Point2D(0.001, 0.0125),
-                        design3d.Point2D(0.009862829911410362, 0.007744326060968065),
-                        design3d.Point2D(0.012539936203984454, 0.0)),
-
-    design3d.edges.Arc2D(design3d.Point2D(0.012539936203984454, 0.0),
-                        design3d.Point2D(0.0, -0.012539936203984454),
-                        design3d.Point2D(-0.012539936203984454, 0.0)),
-
-    design3d.edges.Arc2D(design3d.Point2D(-0.012539936203984454, 0.0),
-                        design3d.Point2D(-0.00921384654213387, 0.008506176103162205),
-                        design3d.Point2D(-0.001, 0.0125)),
-
-    design3d.edges.LineSegment2D(design3d.Point2D(-0.001, 0.0125),
-                                design3d.Point2D(-0.001, 0.014)),
-
-    design3d.edges.LineSegment2D(design3d.Point2D(-0.001, 0.014),
-                                design3d.Point2D(0.001, 0.014))
+    design3d.edges.LineSegment2D(design3d.Point2D(0.001, 0.014), design3d.Point2D(0.001, 0.0125)),
+    design3d.edges.Arc2D(
+        design3d.Point2D(0.001, 0.0125),
+        design3d.Point2D(0.009862829911410362, 0.007744326060968065),
+        design3d.Point2D(0.012539936203984454, 0.0),
+    ),
+    design3d.edges.Arc2D(
+        design3d.Point2D(0.012539936203984454, 0.0),
+        design3d.Point2D(0.0, -0.012539936203984454),
+        design3d.Point2D(-0.012539936203984454, 0.0),
+    ),
+    design3d.edges.Arc2D(
+        design3d.Point2D(-0.012539936203984454, 0.0),
+        design3d.Point2D(-0.00921384654213387, 0.008506176103162205),
+        design3d.Point2D(-0.001, 0.0125),
+    ),
+    design3d.edges.LineSegment2D(design3d.Point2D(-0.001, 0.0125), design3d.Point2D(-0.001, 0.014)),
+    design3d.edges.LineSegment2D(design3d.Point2D(-0.001, 0.014), design3d.Point2D(0.001, 0.014)),
 ]
 contour2d = design3d.wires.Contour2D(primitives)
 
@@ -55,7 +53,7 @@ extracted_primitives = [extracted_primitives_inside_true, extracted_primitives_i
 fig, axs = plt.subplots(1, 2)
 
 titles = ["inside=True", "inside=False"]
-colors = ['g', 'r']
+colors = ["g", "r"]
 for i in range(len(axs)):
     contour2d.plot(ax=axs[i])
     point1.plot(ax=axs[i])

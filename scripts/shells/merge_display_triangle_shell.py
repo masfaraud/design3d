@@ -1,6 +1,7 @@
 """
 Testing merge of DisplayTriangleShell class
 """
+
 from numpy import array
 from volmdlr.shells import DisplayTriangleShell3D
 from volmdlr.core import VolumeModel

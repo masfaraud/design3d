@@ -9,7 +9,7 @@ from os.path import dirname, isdir, join
 from subprocess import CalledProcessError, check_output, STDOUT
 
 import numpy as np
-from setuptools import setup
+from setuptools import setup, Extension, find_packages
 
 from Cython.Build import cythonize  # isort: skip This prevent a build bug
 
@@ -92,8 +92,9 @@ def get_version():
         try:
             version = check_output(cmd.split(), stderr=STDOUT).decode().strip()[:]
         except CalledProcessError as exception:
-            raise RuntimeError("Unable to get version number from git tags, rc=", exception.returncode,
-                               "output=", exception.output)
+            raise RuntimeError(
+                "Unable to get version number from git tags, rc=", exception.returncode, "output=", exception.output
+            )
 
         return version_from_git_describe(version)
     else:
@@ -104,6 +105,34 @@ def get_version():
     # print('version', version)
     return version
 
+
+extensions = [
+    Extension(
+        "design3d.core_compiled",
+        ["src/design3d/core_compiled.pyx"],
+        include_dirs=[np.get_include()],
+    ),
+    Extension(
+        "design3d.nurbs.core",
+        ["src/design3d/nurbs/core.pyx"],
+        include_dirs=[np.get_include()],
+    ),
+    Extension(
+        "design3d.nurbs.helpers",
+        ["src/design3d/nurbs/helpers.pyx"],
+        include_dirs=[np.get_include()],
+    ),
+    Extension(
+        "design3d.nurbs.fitting",
+        ["src/design3d/nurbs/fitting.py"],
+        include_dirs=[np.get_include()],
+    ),
+    Extension(
+        "design3d.nurbs.operations",
+        ["src/design3d/nurbs/operations.py"],
+        include_dirs=[np.get_include()],
+    ),
+]
 
 setup(
     name="design3d",
@@ -116,17 +145,14 @@ setup(
     author="Steven Masfaraud",
     author_email="design3d@masfaraud.fr",
     license="Creative Commons Attribution-Share Alike license",
-    packages=[
-        "design3d",
-        "design3d.utils",
-        "design3d.nurbs"
-    ],
-    package_dir={},
+    packages=find_packages(where="src"),
+    package_dir={"": "src"},
     include_package_data=True,
     install_requires=[
         "packaging",
         "Cython>=3.0.0",
         "numpy",
+        "orjson",
         "matplotlib",
         "scipy",
         "geomdl",
@@ -140,22 +166,27 @@ setup(
         "gmsh",
         "pyfqmr",
         "CGAL",
-        "scikit-learn"
+        "scikit-learn",
+        "lxml",
     ],
-    extras_require={"test": ["coverage"],
-                    "doc": ["sphinx", "nbsphinx", "pydata_sphinx_theme", "nbformat", "nbconvert",
-                            "sphinx_copybutton", "sphinx_design"]},
-    classifiers=["Topic :: Scientific/Engineering",
-                 "Topic :: Multimedia :: Graphics :: 3D Modeling",
-                 "Development Status :: 5 - Production/Stable"],
-
-    ext_modules=cythonize(["design3d/core_compiled.pyx",
-                           "design3d/discrete_representation_compiled.py",
-                           "design3d/nurbs/core.pyx",
-                           "design3d/nurbs/helpers.pyx",
-                           "design3d/nurbs/fitting.py",
-                           "design3d/nurbs/operations.py"],
-                          language_level = "3"),
+    extras_require={
+        "test": ["coverage"],
+        "doc": [
+            "sphinx",
+            "nbsphinx",
+            "sphinx_book_theme",
+            "nbformat",
+            "nbconvert",
+            "sphinx_copybutton",
+            "sphinx_design",
+        ],
+    },
+    classifiers=[
+        "Topic :: Scientific/Engineering",
+        "Topic :: Multimedia :: Graphics :: 3D Modeling",
+        "Development Status :: 5 - Production/Stable",
+    ],
+    ext_modules=cythonize(extensions, language_level="3"),
     include_dirs=[np.get_include()],
     python_requires=">=3.9",
 )

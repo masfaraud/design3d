@@ -25,8 +25,8 @@ class TestContour(unittest.TestCase):
         normal_v2D_1 = v2D_1.normal_vector()
         self.assertAlmostEqual(normal_v2D_1.dot(v2D_1), 0)
         normal_unit_v2D_1 = v2D_1.unit_normal_vector()
-        self.assertAlmostEqual(normal_unit_v2D_1.norm(), 1.)
+        self.assertAlmostEqual(normal_unit_v2D_1.norm(), 1.0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main(verbosity=0)

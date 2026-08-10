@@ -14,24 +14,26 @@ import volmdlr.primitives2d as primitives2d
 import volmdlr.primitives3d as primitives3d
 import volmdlr.wires as wires
 
+
 def get_color():
     random_color = list(npy.random.choice(range(255), size=3))
     random_color = (random_color[0] / 256, random_color[1] / 256, random_color[2] / 256)
     return random_color
 
+
 # %% Shell1
 
 p1 = d3d.Point2D(0, 0)
-p2 = d3d.Point2D(0.1, 0.)
+p2 = d3d.Point2D(0.1, 0.0)
 p3 = d3d.Point2D(0.1, 0.2)
 p4 = d3d.Point2D(0.05, 0.1)
-p5 = d3d.Point2D(0.,0.21)
+p5 = d3d.Point2D(0.0, 0.21)
 
 radius = {0: 0.01, 2: 0.01, 3: 0.015}
 
 outer_profile = primitives2d.ClosedRoundedLineSegments2D([p1, p2, p3, p4, p5], radius)
 
-profile=primitives3d.ExtrudedProfile(d3d.O3D, d3d.Y3D, d3d.Z3D, outer_profile, [], d3d.X3D*0.1, name = 'extrusion')
+profile = primitives3d.ExtrudedProfile(d3d.O3D, d3d.Y3D, d3d.Z3D, outer_profile, [], d3d.X3D * 0.1, name="extrusion")
 
 shell1 = d3d.shells.ClosedShell3D(profile.faces)
 
@@ -49,7 +51,9 @@ l4 = edges.LineSegment2D(p9, p6)
 
 outer_profile = wires.Contour2D([l1, l2, l3, l4])
 
-profile = primitives3d.ExtrudedProfile(d3d.Point3D(-0.1,0,0), d3d.Y3D, d3d.Z3D, outer_profile, [], d3d.X3D*0.3, name = 'extrusion')
+profile = primitives3d.ExtrudedProfile(
+    d3d.Point3D(-0.1, 0, 0), d3d.Y3D, d3d.Z3D, outer_profile, [], d3d.X3D * 0.3, name="extrusion"
+)
 
 shell2 = d3d.shells.ClosedShell3D(profile.faces)
 

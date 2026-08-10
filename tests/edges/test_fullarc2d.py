@@ -2,8 +2,8 @@
 Unittets for edges.Fullarc2D.
 
 """
+
 import unittest
-from dessia_common.core import DessiaObject
 import design3d
 from design3d import edges, curves
 
@@ -16,9 +16,15 @@ class TestFullArc2D(unittest.TestCase):
         split_point1 = design3d.Point2D(-0.7071067811865475, 0.7071067811865475)
         split_point2 = design3d.Point2D(-0.7071067811865475, -0.7071067811865475)
         split = self.fullarc2d.trim(split_point1, split_point2)
-        self.assertEqual(split, edges.Arc2D(self.circle2d, design3d.Point2D(-0.7071067811865475, -0.7071067811865475),
-                                            design3d.Point2D(-0.7071067811865475, 0.7071067811865475)))
+        self.assertEqual(
+            split,
+            edges.Arc2D(
+                self.circle2d,
+                design3d.Point2D(-0.7071067811865475, -0.7071067811865475),
+                design3d.Point2D(-0.7071067811865475, 0.7071067811865475),
+            ),
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

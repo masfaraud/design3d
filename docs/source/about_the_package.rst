@@ -20,7 +20,7 @@ appreciation, which we would also be very happy about:
 - Mention the project at local meetups and tell your friends/colleagues
 
 If you would like to contribute to the project, please go to our
-`GitHub page <https://github.com/Dessia-tech>`_
+`GitHub page <https://github.com/masfaraud/design3d>`_
 and submit a pull request or an issue. You can contribute in many ways: by
 improving the existing code, adding new features or changing the documentation.
 Documentation improvements are crucial to us to make this package as user

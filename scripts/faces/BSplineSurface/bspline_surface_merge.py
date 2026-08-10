@@ -28,8 +28,10 @@ from design3d.models import bspline_surfaces
 
 #     bspline_faces.append(faces[0])
 
-bspline_faces = [faces.BSplineFace3D.from_surface_rectangular_cut(bspline_surfaces.bspline_surface_1, 0, 1, 0, 1),
-                 faces.BSplineFace3D.from_surface_rectangular_cut(bspline_surfaces.bspline_surface_2, 0, 1, 0, 1)]
+bspline_faces = [
+    faces.BSplineFace3D.from_surface_rectangular_cut(bspline_surfaces.bspline_surface_1, 0, 1, 0, 1),
+    faces.BSplineFace3D.from_surface_rectangular_cut(bspline_surfaces.bspline_surface_2, 0, 1, 0, 1),
+]
 
 # %% Merge faces/surfaces
 
@@ -40,9 +42,13 @@ bspline_faces.append(faces.BSplineFace3D.from_surface_rectangular_cut(merged_sur
 # %% Display
 random_colors = []
 for i in range(0, 3):
-    random_colors.append([list(npy.random.choice(range(255), size=1))[0] / 256,
-                          list(npy.random.choice(range(255), size=1))[0] / 256,
-                          list(npy.random.choice(range(255), size=1))[0] / 256])
+    random_colors.append(
+        [
+            list(npy.random.choice(range(255), size=1))[0] / 256,
+            list(npy.random.choice(range(255), size=1))[0] / 256,
+            list(npy.random.choice(range(255), size=1))[0] / 256,
+        ]
+    )
 
 ax = bspline_faces[0].plot()
 for i, face in enumerate(bspline_faces):

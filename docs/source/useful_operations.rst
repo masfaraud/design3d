@@ -1,6 +1,6 @@
-==================
-Usefull operations
-==================
+=================
+Useful operations
+=================
 
 Export to json file
 *******************

@@ -10,7 +10,7 @@ repos:
       - id: double-quote-cython-strings
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-json
       - id: check-added-large-files
@@ -19,3 +19,23 @@ repos:
       - id: requirements-txt-fixer
       - id: check-merge-conflict
       - id: end-of-file-fixer
+      - id: forbid-submodules
+      - id: mixed-line-ending
+
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 26.5.1
+    hooks:
+      - id: black
+        args: ["-l 120", "."]
+        # It is recommended to specify the latest version of Python
+        # supported by your project here, or alternatively use
+        # pre-commit's default_language_version, see
+        # https://pre-commit.com/#top_level-default_language_version
+        language_version: python3.12
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.3
+    hooks:
+    -   id: codespell
+        files: ^.*\.(py|md|rst|ts|html|yml)$
+        args: ["--ignore-words", ".codespellignore"]

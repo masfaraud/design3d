@@ -4,21 +4,19 @@ import design3d as d3d
 import design3d.edges as d3de
 import design3d.wires as d3dw
 
-for iarc, arc in enumerate([d3de.Arc2D.from_3_points(d3d.Point2D(0.3, 0.4),
-                      d3d.Point2D(0.35, 0.3),
-                      d3d.Point2D(0.37, 0.22)),
-            d3de.Arc2D.from_3_points(d3d.Point2D(0.3, 0.4),
-                      d3d.Point2D(-0.35, 0.3),
-                      d3d.Point2D(0.37, 0.22))]):
+for iarc, arc in enumerate(
+    [
+        d3de.Arc2D.from_3_points(d3d.Point2D(0.3, 0.4), d3d.Point2D(0.35, 0.3), d3d.Point2D(0.37, 0.22)),
+        d3de.Arc2D.from_3_points(d3d.Point2D(0.3, 0.4), d3d.Point2D(-0.35, 0.3), d3d.Point2D(0.37, 0.22)),
+    ]
+):
 
-    arc_triangle = d3dw.ClosedPolygon2D([arc.start,arc.end, arc.circle.center])
+    arc_triangle = d3dw.ClosedPolygon2D([arc.start, arc.end, arc.circle.center])
 
     ax = arc.plot()
     arc.circle.center.plot(ax=ax)
     arc_triangle.plot(ax=ax)
-    ax.set_aspect('equal')
-
-
+    ax.set_aspect("equal")
 
     # Areas
     arc_area = arc.area()
@@ -29,27 +27,27 @@ for iarc, arc in enumerate([d3de.Arc2D.from_3_points(d3d.Point2D(0.3, 0.4),
     else:
         area_diff = arc_area + triangle_area - abs(arc_sl_area)
 
-    assert math.isclose(area_diff, 0., abs_tol=1e-9)
+    assert math.isclose(area_diff, 0.0, abs_tol=1e-9)
 
     # COG
     arc_cog = arc.center_of_mass()
     triangle_cog = arc_triangle.center_of_mass()
     arc_sl_cog = arc.straight_line_center_of_mass()
 
-    arc_cog.plot(ax=ax, color='r')
-    triangle_cog.plot(ax=ax, color='g')
-    arc_sl_cog.plot(ax=ax, color='b')
+    arc_cog.plot(ax=ax, color="r")
+    triangle_cog.plot(ax=ax, color="g")
+    arc_sl_cog.plot(ax=ax, color="b")
 
     if iarc == 0:
-        cog_diff = (triangle_cog * triangle_area + arc_sl_cog * abs(
-            arc_sl_area)) / (abs(arc_sl_area) + triangle_area) - arc_cog
+        cog_diff = (triangle_cog * triangle_area + arc_sl_cog * abs(arc_sl_area)) / (
+            abs(arc_sl_area) + triangle_area
+        ) - arc_cog
     else:
         cog_diff = (triangle_cog * triangle_area + arc_cog * arc_area) / (arc_area + triangle_area) - arc_sl_cog
     print(cog_diff)
 
-    assert math.isclose(cog_diff.x, 0., abs_tol=1e-9)
-    assert math.isclose(cog_diff.y, 0., abs_tol=1e-9)
-
+    assert math.isclose(cog_diff.x, 0.0, abs_tol=1e-9)
+    assert math.isclose(cog_diff.y, 0.0, abs_tol=1e-9)
 
     # Second moment area
     arc_sma = arc.second_moment_area(arc.circle.center)
@@ -66,10 +64,10 @@ for iarc, arc in enumerate([d3de.Arc2D.from_3_points(d3d.Point2D(0.3, 0.4),
         Iy_diff = arc_sma[1] + triangle_sma[1] - abs(arc_slsma[1])
         Ixy_diff = arc_sma[2] + triangle_sma[2] - abs(arc_slsma[2])
 
-    print('triangle_sma', triangle_sma)
+    print("triangle_sma", triangle_sma)
     print(Ix_diff, Iy_diff, Ixy_diff)
-    assert math.isclose(Ix_diff, 0., abs_tol=1e-9)
-    assert math.isclose(Iy_diff, 0., abs_tol=1e-9)
+    assert math.isclose(Ix_diff, 0.0, abs_tol=1e-9)
+    assert math.isclose(Iy_diff, 0.0, abs_tol=1e-9)
     # TODO: check this for arc > math.pi
     # assert math.isclose(Ixy_diff, 0., abs_tol=1e-9)
 

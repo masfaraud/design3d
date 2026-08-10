@@ -1,10 +1,12 @@
 """
 Some conical surfaces models to perform unit test.
 """
+
 import math
 
 import volmdlr
 from volmdlr import surfaces
+
 conical_surface1 = surfaces.ConicalSurface3D(volmdlr.OXYZ, math.pi / 3)
 
 frame_cone = volmdlr.Frame3D(volmdlr.Point3D(0.0, 0.0, 0.1), volmdlr.X3D, -volmdlr.Y3D, -volmdlr.Z3D)

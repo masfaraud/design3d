@@ -142,7 +142,6 @@ for script_name in scripts:
         # replacement = r'.volmdlr_volume_model().babylon_data()'
         # exec(re.sub(pattern, replacement, script.read()))
         exec(script.read())
-        
 
     time_start_script = time.time() - time_start_script
     times[script_name] = time_start_script
