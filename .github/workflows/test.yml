@@ -18,6 +18,7 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
+          lfs: true
 
       - name: Set Up Python
         uses: actions/setup-python@v6
