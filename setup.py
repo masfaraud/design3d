@@ -108,27 +108,27 @@ def get_version():
 extensions = [
     Extension(
         "design3d.core_compiled",
-        ["design3d/core_compiled.pyx"],
+        ["src/design3d/core_compiled.pyx"],
         include_dirs=[np.get_include()],
     ),
     Extension(
         "design3d.nurbs.core",
-        ["design3d/nurbs/core.pyx"],
+        ["src/design3d/nurbs/core.pyx"],
         include_dirs=[np.get_include()],
     ),
     Extension(
         "design3d.nurbs.helpers",
-        ["design3d/nurbs/helpers.pyx"],
+        ["src/design3d/nurbs/helpers.pyx"],
         include_dirs=[np.get_include()],
     ),
     Extension(
         "design3d.nurbs.fitting",
-        ["design3d/nurbs/fitting.py"],
+        ["src/design3d/nurbs/fitting.py"],
         include_dirs=[np.get_include()],
     ),
     Extension(
         "design3d.nurbs.operations",
-        ["design3d/nurbs/operations.py"],
+        ["src/design3d/nurbs/operations.py"],
         include_dirs=[np.get_include()],
     ),
 ]
@@ -144,8 +144,8 @@ setup(
     author="Steven Masfaraud",
     author_email="design3d@masfaraud.fr",
     license="Creative Commons Attribution-Share Alike license",
-    packages=find_packages(),
-    package_dir={},
+    packages=find_packages(where="src"),
+    package_dir={"": "src"},
     include_package_data=True,
     install_requires=[
         "packaging", 
