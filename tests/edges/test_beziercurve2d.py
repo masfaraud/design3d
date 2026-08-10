@@ -1,6 +1,7 @@
 """
 Unit tests for design3d.faces.BSplineCurve
 """
+
 import unittest
 import design3d
 import design3d.edges as d3de
@@ -27,5 +28,5 @@ class TestBezierCurve2D(unittest.TestCase):
             self.assertAlmostEqual(point[1], test[1], delta=1e-6)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

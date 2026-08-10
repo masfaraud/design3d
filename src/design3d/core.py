@@ -3,6 +3,7 @@
 """
 Base classes.
 """
+
 import os
 import tempfile
 import warnings
@@ -20,16 +21,21 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-
 import design3d
 import design3d.templates
 from design3d.core_compiled import bbox_is_intersecting
 from design3d.base import DataEqualityObject
-from design3d.utils.step_writer import product_writer, geometric_context_writer, assembly_definition_writer, \
-    STEP_HEADER, STEP_FOOTER, step_ids_to_str
+from design3d.utils.step_writer import (
+    product_writer,
+    geometric_context_writer,
+    assembly_definition_writer,
+    STEP_HEADER,
+    STEP_FOOTER,
+    step_ids_to_str,
+)
 from design3d.geometry import get_transfer_matrix_from_basis
 
-np.seterr(divide='raise')
+np.seterr(divide="raise")
 
 DEFAULT_COLOR = (0.8, 0.8, 0.8)
 
@@ -174,7 +180,7 @@ def map_primitive_with_initial_and_final_frames(primitive, initial_frame, final_
     new_frame = design3d.Frame3D(final_frame.origin, u_vector, v_vector, w_vector)
     if new_frame == design3d.OXYZ:
         return primitive
-    new_primitive = primitive.frame_mapping(new_frame, 'old')
+    new_primitive = primitive.frame_mapping(new_frame, "old")
     return new_primitive
 
 
@@ -210,8 +216,8 @@ def helper_babylon_data(babylon_data, display_points):
     # Calculate center point of the bounding box
     center = (0.5 * (min_vals + max_vals)).tolist()
 
-    babylon_data['max_length'] = max_length
-    babylon_data['center'] = center
+    babylon_data["max_length"] = max_length
+    babylon_data["center"] = center
 
     return babylon_data
 
@@ -233,7 +239,8 @@ class EdgeStyle:
     Data class for styling edges Matplotlib plots.
 
     """
-    color: str = 'k'
+
+    color: str = "k"
     alpha: float = 1
     edge_ends: bool = False
     edge_direction: bool = False
@@ -241,7 +248,7 @@ class EdgeStyle:
     arrow: bool = False
     plot_points: bool = False
     dashed: bool = True
-    linestyle: str = '-'
+    linestyle: str = "-"
     linewidth: float = 1
     equal_aspect: bool = True
 
@@ -251,8 +258,13 @@ class Primitive3D(DataEqualityObject):
     Defines a Primitive3D.
     """
 
-    def __init__(self, color: Tuple[float, float, float] = None, alpha: float = 1.0,
-                 reference_path: str = design3d.PATH_ROOT, name: str = ''):
+    def __init__(
+        self,
+        color: Tuple[float, float, float] = None,
+        alpha: float = 1.0,
+        reference_path: str = design3d.PATH_ROOT,
+        name: str = "",
+    ):
         self.color = color
         self.alpha = alpha
         self.reference_path = reference_path
@@ -267,9 +279,9 @@ class Primitive3D(DataEqualityObject):
         """
 
         babylon_param = {
-            'alpha': self.alpha,
-            'name': self.name,
-            'color': list(self.color) if self.color is not None else [0.8, 0.8, 0.8]
+            "alpha": self.alpha,
+            "name": self.name,
+            "color": list(self.color) if self.color is not None else [0.8, 0.8, 0.8],
         }
 
         return babylon_param
@@ -278,8 +290,7 @@ class Primitive3D(DataEqualityObject):
         """
         Get object triangulation.
         """
-        raise NotImplementedError(
-            f"triangulation method should be implemented on class {self.__class__.__name__}")
+        raise NotImplementedError(f"triangulation method should be implemented on class {self.__class__.__name__}")
 
     def babylon_meshes(self, *args, **kwargs):
         """
@@ -292,7 +303,6 @@ class Primitive3D(DataEqualityObject):
         babylon_mesh.update(self.babylon_param())
         babylon_mesh["reference_path"] = self.reference_path
         return [babylon_mesh]
-    
 
     def babylonjs(
         self,
@@ -303,8 +313,9 @@ class Primitive3D(DataEqualityObject):
         dark_mode: bool = False,
     ):
         model = VolumeModel([self], name=self.name)
-        return model.babylonjs(page_name=page_name, use_cdn=use_cdn, debug=debug, merge_meshes=merge_meshes,
-                        dark_mode=dark_mode)
+        return model.babylonjs(
+            page_name=page_name, use_cdn=use_cdn, debug=debug, merge_meshes=merge_meshes, dark_mode=dark_mode
+        )
 
 
 class CompositePrimitive3D(Primitive3D):
@@ -312,8 +323,14 @@ class CompositePrimitive3D(Primitive3D):
     A collection of simple primitives3D.
     """
 
-    def __init__(self, primitives: List[Primitive3D], color: Tuple[float, float, float] = None, alpha: float = 1,
-                 reference_path: str = design3d.PATH_ROOT, name: str = ""):
+    def __init__(
+        self,
+        primitives: List[Primitive3D],
+        color: Tuple[float, float, float] = None,
+        alpha: float = 1,
+        reference_path: str = design3d.PATH_ROOT,
+        name: str = "",
+    ):
         self.primitives = primitives
         Primitive3D.__init__(self, color=color, alpha=alpha, reference_path=reference_path, name=name)
         self._utd_primitives_to_index = False
@@ -338,7 +355,7 @@ class CompositePrimitive3D(Primitive3D):
         """
         if ax is None:
             fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d')
+            ax = fig.add_subplot(111, projection="3d")
         for primitive in self.primitives:
             primitive.plot(ax=ax, edge_style=edge_style)
         return ax
@@ -358,7 +375,7 @@ class BoundingRectangle:
     :type ymax: float
     """
 
-    def __init__(self, xmin: float, xmax: float, ymin: float, ymax: float, name: str = ''):
+    def __init__(self, xmin: float, xmax: float, ymin: float, ymax: float, name: str = ""):
         self.xmin = xmin
         self.xmax = xmax
         self.ymin = ymin
@@ -386,10 +403,14 @@ class BoundingRectangle:
         """
         Return the bounds of the BoundingRectangle.
         """
-        return [design3d.Point2D(self.xmin, self.ymin), design3d.Point2D(self.xmax, self.ymin),
-                design3d.Point2D(self.xmax, self.ymax), design3d.Point2D(self.xmin, self.ymax)]
+        return [
+            design3d.Point2D(self.xmin, self.ymin),
+            design3d.Point2D(self.xmax, self.ymin),
+            design3d.Point2D(self.xmax, self.ymax),
+            design3d.Point2D(self.xmin, self.ymax),
+        ]
 
-    def plot(self, ax=None, color='k', linestyle='dotted'):
+    def plot(self, ax=None, color="k", linestyle="dotted"):
         """
         Plot of the bounding rectangle and its vertex.
         """
@@ -422,8 +443,12 @@ class BoundingRectangle:
         :param b_rectangle2: bounding rectangle to verify intersection
         :type b_rectangle2: :class:`BoundingRectangle`
         """
-        return self.xmin < b_rectangle2.xmax and self.xmax > b_rectangle2.xmin \
-            and self.ymin < b_rectangle2.ymax and self.ymax > b_rectangle2.ymin
+        return (
+            self.xmin < b_rectangle2.xmax
+            and self.xmax > b_rectangle2.xmin
+            and self.ymin < b_rectangle2.ymax
+            and self.ymax > b_rectangle2.ymin
+        )
 
     def b_rectangle_intersection(self, b_rectangle2):
         """
@@ -432,7 +457,7 @@ class BoundingRectangle:
         :param b_rectangle2: bounding rectangle to verify intersection
         :type b_rectangle2: :class:`BoundingRectangle`
         """
-        warnings.warn('b_rectangle_intersection is deprecated, please use is_intersecting instead')
+        warnings.warn("b_rectangle_intersection is deprecated, please use is_intersecting instead")
         return self.is_intersecting(b_rectangle2)
 
     def is_inside_b_rectangle(self, b_rectangle2, tol: float = 1e-6):
@@ -444,8 +469,12 @@ class BoundingRectangle:
         :param tol: A tolerance for considering inside
         :type tol: float
         """
-        return (self.xmin >= b_rectangle2.xmin - tol) and (self.xmax <= b_rectangle2.xmax + tol) \
-            and (self.ymin >= b_rectangle2.ymin - tol) and (self.ymax <= b_rectangle2.ymax + tol)
+        return (
+            (self.xmin >= b_rectangle2.xmin - tol)
+            and (self.xmax <= b_rectangle2.xmax + tol)
+            and (self.ymin >= b_rectangle2.ymin - tol)
+            and (self.ymax <= b_rectangle2.ymax + tol)
+        )
 
     def point_inside(self, point: design3d.Point2D):
         """
@@ -494,7 +523,7 @@ class BoundingRectangle:
             permute_b_rec1, permute_b_rec2 = permute_b_rec2, permute_b_rec1
         dy = max(permute_b_rec2.ymin - permute_b_rec1.ymax, 0)
 
-        return (dx ** 2 + dy ** 2) ** 0.5
+        return (dx**2 + dy**2) ** 0.5
 
     def distance_to_point(self, point: design3d.Point2D):
         """
@@ -504,8 +533,7 @@ class BoundingRectangle:
         :type point: :class:`design3d.Point2D`
         """
         if self.point_inside(point):
-            return min([self.xmax - point.x, point.y - self.xmin,
-                        self.ymax - point.y, point.y - self.ymin])
+            return min([self.xmax - point.x, point.y - self.xmin, self.ymax - point.y, point.y - self.ymin])
 
         if point.x < self.xmin:
             dx = self.xmin - point.x
@@ -521,10 +549,10 @@ class BoundingRectangle:
         else:
             dy = 0
 
-        return (dx ** 2 + dy ** 2) ** 0.5
+        return (dx**2 + dy**2) ** 0.5
 
     @classmethod
-    def from_points(cls, points: List[design3d.Point2D], name: str = '') -> "BoundingRectangle":
+    def from_points(cls, points: List[design3d.Point2D], name: str = "") -> "BoundingRectangle":
         """
         Initializes a bounding rectangle from a list of points.
 
@@ -583,20 +611,22 @@ class BoundingBox(DataEqualityObject):
 
         TODO: change lru_cache to cached property when support for py3.7 is dropped.
         """
-        return design3d.Point3D(0.5 * (self.xmin + self.xmax),
-                               0.5 * (self.ymin + self.ymax),
-                               0.5 * (self.zmin + self.zmax))
+        return design3d.Point3D(
+            0.5 * (self.xmin + self.xmax), 0.5 * (self.ymin + self.ymax), 0.5 * (self.zmin + self.zmax)
+        )
 
     def __hash__(self) -> int:
         return sum(hash(point) for point in self.points)
 
     def __add__(self, other_bbox) -> "BoundingBox":
-        return BoundingBox(min(self.xmin, other_bbox.xmin),
-                           max(self.xmax, other_bbox.xmax),
-                           min(self.ymin, other_bbox.ymin),
-                           max(self.ymax, other_bbox.ymax),
-                           min(self.zmin, other_bbox.zmin),
-                           max(self.zmax, other_bbox.zmax))
+        return BoundingBox(
+            min(self.xmin, other_bbox.xmin),
+            max(self.xmax, other_bbox.xmax),
+            min(self.ymin, other_bbox.ymin),
+            max(self.ymax, other_bbox.ymax),
+            min(self.zmin, other_bbox.zmin),
+            max(self.zmax, other_bbox.zmax),
+        )
 
     def to_dict(self, *args, **kwargs) -> dict:
         """
@@ -612,15 +642,16 @@ class BoundingBox(DataEqualityObject):
         :return: The dictionary representation of the bounding box.
         :rtype: dict
         """
-        return {'object_class': 'design3d.core.BoundingBox',
-                'name': self.name,
-                'xmin': self.xmin,
-                'xmax': self.xmax,
-                'ymin': self.ymin,
-                'ymax': self.ymax,
-                'zmin': self.zmin,
-                'zmax': self.zmax,
-                }
+        return {
+            "object_class": "design3d.core.BoundingBox",
+            "name": self.name,
+            "xmin": self.xmin,
+            "xmax": self.xmax,
+            "ymin": self.ymin,
+            "ymax": self.ymax,
+            "zmin": self.zmin,
+            "zmax": self.zmax,
+        }
 
     @property
     def points(self) -> List[design3d.Point3D]:
@@ -630,16 +661,18 @@ class BoundingBox(DataEqualityObject):
         :return: A list of eight 3D points representing the corners of the bounding box.
         :rtype: list of design3d.Point3D
         """
-        return [design3d.Point3D(self.xmin, self.ymin, self.zmin),
-                design3d.Point3D(self.xmax, self.ymin, self.zmin),
-                design3d.Point3D(self.xmax, self.ymax, self.zmin),
-                design3d.Point3D(self.xmin, self.ymax, self.zmin),
-                design3d.Point3D(self.xmin, self.ymin, self.zmax),
-                design3d.Point3D(self.xmax, self.ymin, self.zmax),
-                design3d.Point3D(self.xmax, self.ymax, self.zmax),
-                design3d.Point3D(self.xmin, self.ymax, self.zmax)]
+        return [
+            design3d.Point3D(self.xmin, self.ymin, self.zmin),
+            design3d.Point3D(self.xmax, self.ymin, self.zmin),
+            design3d.Point3D(self.xmax, self.ymax, self.zmin),
+            design3d.Point3D(self.xmin, self.ymax, self.zmin),
+            design3d.Point3D(self.xmin, self.ymin, self.zmax),
+            design3d.Point3D(self.xmax, self.ymin, self.zmax),
+            design3d.Point3D(self.xmax, self.ymax, self.zmax),
+            design3d.Point3D(self.xmin, self.ymax, self.zmax),
+        ]
 
-    def plot(self, ax=None, color='gray'):
+    def plot(self, ax=None, color="gray"):
         """
         Plot the bounding box on 3D axes.
 
@@ -652,29 +685,28 @@ class BoundingBox(DataEqualityObject):
         """
         if ax is None:
             fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d')
+            ax = fig.add_subplot(111, projection="3d")
 
-        bbox_edges = [[self.points[0], self.points[1]],
-                      [self.points[0], self.points[3]],
-                      [self.points[0], self.points[4]],
-                      [self.points[1], self.points[2]],
-                      [self.points[1], self.points[5]],
-                      [self.points[2], self.points[3]],
-                      [self.points[2], self.points[6]],
-                      [self.points[3], self.points[7]],
-                      [self.points[4], self.points[5]],
-                      [self.points[5], self.points[6]],
-                      [self.points[6], self.points[7]],
-                      [self.points[7], self.points[4]]]
+        bbox_edges = [
+            [self.points[0], self.points[1]],
+            [self.points[0], self.points[3]],
+            [self.points[0], self.points[4]],
+            [self.points[1], self.points[2]],
+            [self.points[1], self.points[5]],
+            [self.points[2], self.points[3]],
+            [self.points[2], self.points[6]],
+            [self.points[3], self.points[7]],
+            [self.points[4], self.points[5]],
+            [self.points[5], self.points[6]],
+            [self.points[6], self.points[7]],
+            [self.points[7], self.points[4]],
+        ]
 
         for edge in bbox_edges:
-            ax.plot3D([edge[0][0], edge[1][0]],
-                      [edge[0][1], edge[1][1]],
-                      [edge[0][2], edge[1][2]],
-                      color=color)
-        ax.set_xlabel('X Label')
-        ax.set_ylabel('Y Label')
-        ax.set_zlabel('Z Label')
+            ax.plot3D([edge[0][0], edge[1][0]], [edge[0][1], edge[1][1]], [edge[0][2], edge[1][2]], color=color)
+        ax.set_xlabel("X Label")
+        ax.set_ylabel("Y Label")
+        ax.set_zlabel("Z Label")
         return ax
 
     @classmethod
@@ -704,7 +736,7 @@ class BoundingBox(DataEqualityObject):
         return cls(xmin, xmax, ymin, ymax, zmin, zmax, name=name)
 
     @classmethod
-    def from_points(cls, points: List[design3d.Point3D], name: str = '') -> "BoundingBox":
+    def from_points(cls, points: List[design3d.Point3D], name: str = "") -> "BoundingBox":
         """
         Initializes a bounding box from a list of points.
 
@@ -743,18 +775,17 @@ class BoundingBox(DataEqualityObject):
         :param points_z: Number of points in z direction.
         :return: list of points inside bounding box.
         """
-        _size = [self.size[0] / points_x, self.size[1] / points_y,
-                 self.size[2] / points_z]
+        _size = [self.size[0] / points_x, self.size[1] / points_y, self.size[2] / points_z]
         initial_center = self.center.translation(
-            -design3d.Vector3D(self.size[0] / 2 - _size[0] / 2,
-                              self.size[1] / 2 - _size[1] / 2,
-                              self.size[2] / 2 - _size[2] / 2))
+            -design3d.Vector3D(
+                self.size[0] / 2 - _size[0] / 2, self.size[1] / 2 - _size[1] / 2, self.size[2] / 2 - _size[2] / 2
+            )
+        )
         points = []
         for z_box in range(points_z):
             for y_box in range(points_y):
                 for x_box in range(points_x):
-                    translation_vector = design3d.Vector3D(x_box * _size[0], y_box * _size[1],
-                                                          z_box * _size[2])
+                    translation_vector = design3d.Vector3D(x_box * _size[0], y_box * _size[1], z_box * _size[2])
                     point = initial_center.translation(translation_vector)
                     points.append(point)
         return points
@@ -827,9 +858,14 @@ class BoundingBox(DataEqualityObject):
         :return: True if the bounding box is contained inside bbox2, False otherwise.
         :rtype: bool
         """
-        return (self.xmin >= bbox2.xmin - 1e-6) and (self.xmax <= bbox2.xmax + 1e-6) \
-            and (self.ymin >= bbox2.ymin - 1e-6) and (self.ymax <= bbox2.ymax + 1e-6) \
-            and (self.zmin >= bbox2.zmin - 1e-6) and (self.zmax <= bbox2.zmax + 1e-6)
+        return (
+            (self.xmin >= bbox2.xmin - 1e-6)
+            and (self.xmax <= bbox2.xmax + 1e-6)
+            and (self.ymin >= bbox2.ymin - 1e-6)
+            and (self.ymax <= bbox2.ymax + 1e-6)
+            and (self.zmin >= bbox2.zmin - 1e-6)
+            and (self.zmax <= bbox2.zmax + 1e-6)
+        )
 
     def intersection_volume(self, bbox2: "BoundingBox") -> float:
         """
@@ -898,7 +934,7 @@ class BoundingBox(DataEqualityObject):
             permute_bbox1, permute_bbox2 = permute_bbox2, permute_bbox1
         dz = max(permute_bbox2.zmin - permute_bbox1.zmax, 0)
 
-        return (dx ** 2 + dy ** 2 + dz ** 2) ** 0.5
+        return (dx**2 + dy**2 + dz**2) ** 0.5
 
     def point_inside(self, point: design3d.Point3D, tol=1e-6) -> bool:
         """
@@ -911,9 +947,9 @@ class BoundingBox(DataEqualityObject):
         :rtype: bool
         """
         return (
-                self.xmin - tol <= point[0] <= self.xmax + tol
-                and self.ymin - tol <= point[1] <= self.ymax + tol
-                and self.zmin - tol <= point[2] <= self.zmax + tol
+            self.xmin - tol <= point[0] <= self.xmax + tol
+            and self.ymin - tol <= point[1] <= self.ymax + tol
+            and self.zmin - tol <= point[2] <= self.zmax + tol
         )
 
     def distance_to_point(self, point: design3d.Point3D) -> float:
@@ -926,9 +962,16 @@ class BoundingBox(DataEqualityObject):
         :rtype: float
         """
         if self.point_inside(point):
-            return min([self.xmax - point[0], point[0] - self.xmin,
-                        self.ymax - point[1], point[1] - self.ymin,
-                        self.zmax - point[2], point[2] - self.zmin])
+            return min(
+                [
+                    self.xmax - point[0],
+                    point[0] - self.xmin,
+                    self.ymax - point[1],
+                    point[1] - self.ymin,
+                    self.zmax - point[2],
+                    point[2] - self.zmin,
+                ]
+            )
 
         if point[0] < self.xmin:
             dx = self.xmin - point[0]
@@ -950,7 +993,7 @@ class BoundingBox(DataEqualityObject):
             dz = point[2] - self.zmax
         else:
             dz = 0
-        return (dx ** 2 + dy ** 2 + dz ** 2) ** 0.5
+        return (dx**2 + dy**2 + dz**2) ** 0.5
 
     def is_close(self, other_bounding_box: "BoundingBox", tol: float = 1e-6) -> bool:
         """
@@ -978,15 +1021,15 @@ class BoundingBox(DataEqualityObject):
         if not self._octree:
             octants = []
             points_x, points_y, points_z = 2, 2, 2
-            _size = [self.size[0] / points_x, self.size[1] / points_y,
-                     self.size[2] / points_z]
+            _size = [self.size[0] / points_x, self.size[1] / points_y, self.size[2] / points_z]
             octants_center = self.get_points_inside_bbox(points_x, points_y, points_z)
             for octant_center in octants_center:
                 mins_maxs = []
                 for i, size_component in enumerate(_size):
                     mins_maxs.extend([octant_center[i] - size_component / 2, octant_center[i] + size_component / 2])
-                octants.append(self.__class__(mins_maxs[0], mins_maxs[1], mins_maxs[2], mins_maxs[3],
-                                              mins_maxs[4], mins_maxs[5]))
+                octants.append(
+                    self.__class__(mins_maxs[0], mins_maxs[1], mins_maxs[2], mins_maxs[3], mins_maxs[4], mins_maxs[5])
+                )
             self._octree = octants
         return self._octree
 
@@ -1004,13 +1047,20 @@ class Assembly(DataEqualityObject):
     :type name: str
     """
 
-    def __init__(self, components: List[Primitive3D], positions: List[design3d.Frame3D],
-                 frame: design3d.Frame3D = design3d.OXYZ, name: str = ''):
+    def __init__(
+        self,
+        components: List[Primitive3D],
+        positions: List[design3d.Frame3D],
+        frame: design3d.Frame3D = design3d.OXYZ,
+        name: str = "",
+    ):
         self.components = components
         self.frame = frame
         self.positions = positions
-        self.primitives = [map_primitive_with_initial_and_final_frames(primitive, frame, frame_primitive)
-                           for primitive, frame_primitive in zip(components, positions)]
+        self.primitives = [
+            map_primitive_with_initial_and_final_frames(primitive, frame, frame_primitive)
+            for primitive, frame_primitive in zip(components, positions)
+        ]
         for primitive, component in zip(self.primitives, self.components):
             # Applying names
             primitive.name = component.name
@@ -1047,20 +1097,19 @@ class Assembly(DataEqualityObject):
         :return: Dictionary with babylon data.
         """
 
-        babylon_data = {'meshes': [],
-                        'lines': []}
+        babylon_data = {"meshes": [], "lines": []}
         display_points = []
         for primitive in self.primitives:
-            if hasattr(primitive, 'babylon_meshes'):
-                babylon_data['meshes'].extend(primitive.babylon_meshes(merge_meshes=merge_meshes))
-            elif hasattr(primitive, 'babylon_curves'):
+            if hasattr(primitive, "babylon_meshes"):
+                babylon_data["meshes"].extend(primitive.babylon_meshes(merge_meshes=merge_meshes))
+            elif hasattr(primitive, "babylon_curves"):
                 curves = primitive.babylon_curves()
                 if curves:
-                    babylon_data['lines'].append(curves)
-            elif hasattr(primitive, 'babylon_data'):
+                    babylon_data["lines"].append(curves)
+            elif hasattr(primitive, "babylon_data"):
                 data = primitive.babylon_data(merge_meshes=merge_meshes)
-                babylon_data['meshes'].extend(mesh for mesh in data.get("meshes"))
-                babylon_data['lines'].extend(line for line in data.get("lines"))
+                babylon_data["meshes"].extend(mesh for mesh in data.get("meshes"))
+                babylon_data["lines"].extend(line for line in data.get("lines"))
             elif isinstance(primitive, design3d.Point3D):
                 display_points.append(primitive)
         return helper_babylon_data(babylon_data, display_points)
@@ -1071,37 +1120,35 @@ class Assembly(DataEqualityObject):
 
         side = 'old' or 'new'
         """
-        new_positions = [position.frame_mapping(frame, side)
-                         for position in self.positions]
+        new_positions = [position.frame_mapping(frame, side) for position in self.positions]
         return Assembly(self.components, new_positions, self.frame, self.name)
-
 
     def to_step(self, current_id):
         """
         Creates step file entities from design3d objects.
         """
-        step_content = ''
+        step_content = ""
 
         product_content, current_id, assembly_data = self.to_step_product(current_id)
         step_content += product_content
         assembly_frames = assembly_data[-1]
         for i, primitive in enumerate(self.components):
-            if primitive.__class__.__name__ in ('OpenShell3D', 'ClosedShell3D') or hasattr(primitive, "shell_faces"):
+            if primitive.__class__.__name__ in ("OpenShell3D", "ClosedShell3D") or hasattr(primitive, "shell_faces"):
                 primitive_content, current_id, primitive_data = primitive.to_step_product(current_id)
                 assembly_frame_id = assembly_frames[0]
                 component_frame_id = assembly_frames[i + 1]
-                assembly_content, current_id = assembly_definition_writer(current_id, assembly_data[:-1],
-                                                                          primitive_data, assembly_frame_id,
-                                                                          component_frame_id)
+                assembly_content, current_id = assembly_definition_writer(
+                    current_id, assembly_data[:-1], primitive_data, assembly_frame_id, component_frame_id
+                )
 
             else:
                 primitive_content, current_id, primitive_data = primitive.to_step(current_id)
                 step_content += primitive_content
                 assembly_frame_id = assembly_frames[0]
                 component_frame_id = assembly_frames[i + 1]
-                assembly_content, current_id = assembly_definition_writer(current_id, assembly_data[:-1],
-                                                                          primitive_data, assembly_frame_id,
-                                                                          component_frame_id)
+                assembly_content, current_id = assembly_definition_writer(
+                    current_id, assembly_data[:-1], primitive_data, assembly_frame_id, component_frame_id
+                )
             step_content += primitive_content
             step_content += assembly_content
 
@@ -1115,12 +1162,12 @@ class Assembly(DataEqualityObject):
         """
         if ax is None:
             fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d', adjustable='box')
+            ax = fig.add_subplot(111, projection="3d", adjustable="box")
         for primitive in self.primitives:
             primitive.plot(ax)
         if not equal_aspect:
             # ax.set_aspect('equal')
-            ax.set_aspect('auto')
+            ax.set_aspect("auto")
         ax.margins(0.1)
         return ax
 
@@ -1128,13 +1175,13 @@ class Assembly(DataEqualityObject):
         """
         Returns step product entities from design3d objects.
         """
-        step_content = ''
+        step_content = ""
         product_content, shape_definition_repr_id = product_writer(current_id, self.name)
         product_definition_id = shape_definition_repr_id - 2
         step_content += product_content
         shape_representation_id = shape_definition_repr_id + 1
         current_id = shape_representation_id
-        assembly_position_content = ''
+        assembly_position_content = ""
         frame_ids = []
         for frame in [self.frame] + self.positions:
             frame_content, current_id = frame.to_step(current_id + 1)
@@ -1143,15 +1190,20 @@ class Assembly(DataEqualityObject):
 
         geometric_context_content, geometric_representation_context_id = geometric_context_writer(current_id)
 
-        step_content += f"#{shape_representation_id} = SHAPE_REPRESENTATION('',({step_ids_to_str(frame_ids)})," \
-                        f"#{geometric_representation_context_id});\n"
+        step_content += (
+            f"#{shape_representation_id} = SHAPE_REPRESENTATION('',({step_ids_to_str(frame_ids)}),"
+            f"#{geometric_representation_context_id});\n"
+        )
 
         step_content += assembly_position_content
 
         step_content += geometric_context_content
 
-        return step_content, geometric_representation_context_id, \
-            [shape_representation_id, product_definition_id, frame_ids]
+        return (
+            step_content,
+            geometric_representation_context_id,
+            [shape_representation_id, product_definition_id, frame_ids],
+        )
 
 
 class Compound(DataEqualityObject):
@@ -1187,11 +1239,15 @@ class Compound(DataEqualityObject):
 
         """
         if not self._type:
-            if all(primitive.__class__.__name__ in ('OpenShell3D', 'ClosedShell3D') or
-                   hasattr(primitive, "shell_faces") for primitive in self.primitives):
+            if all(
+                primitive.__class__.__name__ in ("OpenShell3D", "ClosedShell3D") or hasattr(primitive, "shell_faces")
+                for primitive in self.primitives
+            ):
                 self._type = "manifold_solid_brep"
-            elif all(isinstance(primitive, (design3d.wires.Wire3D, design3d.edges.Edge, design3d.Point3D))
-                     for primitive in self.primitives):
+            elif all(
+                isinstance(primitive, (design3d.wires.Wire3D, design3d.edges.Edge, design3d.Point3D))
+                for primitive in self.primitives
+            ):
                 self._type = "geometric_curve_set"
             else:
                 self._type = "shell_based_surface_model"
@@ -1217,8 +1273,7 @@ class Compound(DataEqualityObject):
 
         side = 'old' or 'new'
         """
-        new_primitives = [primitive.frame_mapping(frame, side)
-                          for primitive in self.primitives]
+        new_primitives = [primitive.frame_mapping(frame, side) for primitive in self.primitives]
         return Compound(new_primitives, self.name)
 
     def babylon_data(self, merge_meshes=True):
@@ -1228,31 +1283,29 @@ class Compound(DataEqualityObject):
         :return: Dictionary with babylon data.
         """
 
-        babylon_data = {'meshes': [],
-                        'lines': []}
+        babylon_data = {"meshes": [], "lines": []}
         display_points = []
         for primitive in self.primitives:
-            if hasattr(primitive, 'babylon_meshes'):
-                babylon_data['meshes'].extend(primitive.babylon_meshes(merge_meshes=merge_meshes))
-            elif hasattr(primitive, 'babylon_curves'):
+            if hasattr(primitive, "babylon_meshes"):
+                babylon_data["meshes"].extend(primitive.babylon_meshes(merge_meshes=merge_meshes))
+            elif hasattr(primitive, "babylon_curves"):
                 curves = primitive.babylon_curves()
                 if curves:
-                    babylon_data['lines'].append(curves)
-            elif hasattr(primitive, 'babylon_data'):
+                    babylon_data["lines"].append(curves)
+            elif hasattr(primitive, "babylon_data"):
                 data = primitive.babylon_data(merge_meshes=merge_meshes)
-                babylon_data['meshes'].extend(mesh for mesh in data.get("meshes"))
-                babylon_data['lines'].extend(line for line in data.get("lines"))
+                babylon_data["meshes"].extend(mesh for mesh in data.get("meshes"))
+                babylon_data["lines"].extend(line for line in data.get("lines"))
             elif isinstance(primitive, design3d.Point3D):
                 display_points.append(primitive)
         return helper_babylon_data(babylon_data, display_points)
-
 
     def to_step(self, current_id):
         """
         Creates step file entities from design3d objects.
         """
-        step_content = ''
-        primitives_content = ''
+        step_content = ""
+        primitives_content = ""
         shape_ids = []
         product_content, current_id = product_writer(current_id, self.name)
         product_definition_id = current_id - 2
@@ -1269,14 +1322,18 @@ class Compound(DataEqualityObject):
         geometric_context_content, geometric_representation_context_id = geometric_context_writer(current_id)
         current_id = geometric_representation_context_id
         if self.compound_type == "manifold_solid_brep":
-            step_content += f"#{brep_id} = MANIFOLD_SURFACE_SHAPE_REPRESENTATION(''," \
-                            f"({step_ids_to_str(shape_ids)})," \
-                            f"#{geometric_representation_context_id});\n"
+            step_content += (
+                f"#{brep_id} = MANIFOLD_SURFACE_SHAPE_REPRESENTATION('',"
+                f"({step_ids_to_str(shape_ids)}),"
+                f"#{geometric_representation_context_id});\n"
+            )
         elif self.compound_type == "geometric_curve_set":
             current_id += 1
-            step_content += f"#{brep_id} = GEOMETRICALLY_BOUNDED_SURFACE_SHAPE_REPRESENTATION(''," \
-                            f"(#{current_id})," \
-                            f"#{geometric_representation_context_id});\n"
+            step_content += (
+                f"#{brep_id} = GEOMETRICALLY_BOUNDED_SURFACE_SHAPE_REPRESENTATION('',"
+                f"(#{current_id}),"
+                f"#{geometric_representation_context_id});\n"
+            )
 
             step_content += f"#{current_id} = GEOMETRIC_SET('',({step_ids_to_str(shape_ids)}));\n"
         step_content += frame_content
@@ -1296,7 +1353,7 @@ class VolumeModel(DataEqualityObject):
     :type name: str
     """
 
-    def __init__(self, primitives: List[Primitive3D], name: str = ''):
+    def __init__(self, primitives: List[Primitive3D], name: str = ""):
         self.primitives = primitives
         self.name = name
         self.shells = []
@@ -1349,8 +1406,7 @@ class VolumeModel(DataEqualityObject):
             volume += primitive.volume()
         return volume
 
-    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D,
-                 angle: float):
+    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D, angle: float):
         """
         Rotates the VolumeModel.
 
@@ -1359,9 +1415,7 @@ class VolumeModel(DataEqualityObject):
         :param angle: angle rotation
         :return: a new rotated VolumeModel
         """
-        new_primitives = [
-            primitive.rotation(center, axis, angle) for
-            primitive in self.primitives]
+        new_primitives = [primitive.rotation(center, axis, angle) for primitive in self.primitives]
         return VolumeModel(new_primitives, self.name)
 
     def translation(self, offset: design3d.Vector3D):
@@ -1371,8 +1425,7 @@ class VolumeModel(DataEqualityObject):
         :param offset: translation vector
         :return: A new translated VolumeModel
         """
-        new_primitives = [primitive.translation(offset) for
-                          primitive in self.primitives]
+        new_primitives = [primitive.translation(offset) for primitive in self.primitives]
         return VolumeModel(new_primitives, self.name)
 
     def frame_mapping(self, frame: design3d.Frame3D, side: str):
@@ -1381,8 +1434,7 @@ class VolumeModel(DataEqualityObject):
 
         side = 'old' or 'new'
         """
-        new_primitives = [primitive.frame_mapping(frame, side)
-                          for primitive in self.primitives]
+        new_primitives = [primitive.frame_mapping(frame, side) for primitive in self.primitives]
         return VolumeModel(new_primitives, self.name)
 
     def copy(self, deep=True, memo=None):
@@ -1399,12 +1451,12 @@ class VolumeModel(DataEqualityObject):
         To use for debug.
         """
         fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d', adjustable='box')
+        ax = fig.add_subplot(111, projection="3d", adjustable="box")
         for primitive in self.primitives:
             primitive.plot(ax)
         if not equal_aspect:
             # ax.set_aspect('equal')
-            ax.set_aspect('auto')
+            ax.set_aspect("auto")
         ax.margins(0.1)
         return ax
 
@@ -1415,20 +1467,19 @@ class VolumeModel(DataEqualityObject):
         :return: Dictionary with babylon data.
         """
 
-        babylon_data = {'meshes': [],
-                        'lines': []}
+        babylon_data = {"meshes": [], "lines": []}
         display_points = []
         for primitive in self.primitives:
-            if hasattr(primitive, 'babylon_meshes'):
-                babylon_data['meshes'].extend(primitive.babylon_meshes(merge_meshes=merge_meshes))
-            elif hasattr(primitive, 'babylon_curves'):
+            if hasattr(primitive, "babylon_meshes"):
+                babylon_data["meshes"].extend(primitive.babylon_meshes(merge_meshes=merge_meshes))
+            elif hasattr(primitive, "babylon_curves"):
                 curves = primitive.babylon_curves()
                 if curves:
-                    babylon_data['lines'].append(curves)
-            elif hasattr(primitive, 'babylon_data'):
+                    babylon_data["lines"].append(curves)
+            elif hasattr(primitive, "babylon_data"):
                 data = primitive.babylon_data(merge_meshes=merge_meshes)
-                babylon_data['meshes'].extend(mesh for mesh in data.get("meshes"))
-                babylon_data['lines'].extend(line for line in data.get("lines"))
+                babylon_data["meshes"].extend(mesh for mesh in data.get("meshes"))
+                babylon_data["lines"].extend(line for line in data.get("lines"))
             elif isinstance(primitive, design3d.Point3D):
                 display_points.append(primitive)
         return helper_babylon_data(babylon_data, display_points)
@@ -1444,8 +1495,7 @@ class VolumeModel(DataEqualityObject):
         else:
             script = design3d.templates.BABYLON_UNPACKER_EMBEDDED_HEADER.substitute(title=title)
 
-        script += design3d.templates.BABYLON_UNPACKER_BODY_TEMPLATE.substitute(
-            babylon_data=babylon_data)
+        script += design3d.templates.BABYLON_UNPACKER_BODY_TEMPLATE.substitute(babylon_data=babylon_data)
         return script
 
     def babylonjs(
@@ -1498,18 +1548,17 @@ class VolumeModel(DataEqualityObject):
     def save_babylonjs_to_file(self, filename: str = None, use_cdn=True, debug=False, dark_mode=False):
         """Export a html file of the model."""
         babylon_data = self.babylon_data()
-        babylon_data['dark_mode'] = 1 if dark_mode else 0
+        babylon_data["dark_mode"] = 1 if dark_mode else 0
         script = self.babylonjs_script(babylon_data, use_cdn=use_cdn, debug=debug)
         if filename is None:
-            with tempfile.NamedTemporaryFile(suffix=".html",
-                                             delete=False) as file:
-                file.write(bytes(script, 'utf8'))
+            with tempfile.NamedTemporaryFile(suffix=".html", delete=False) as file:
+                file.write(bytes(script, "utf8"))
                 return file.name
 
-        if not filename.endswith('.html'):
-            filename += '.html'
+        if not filename.endswith(".html"):
+            filename += ".html"
 
-        with open(filename, 'w', encoding='utf-8') as file:
+        with open(filename, "w", encoding="utf-8") as file:
             file.write(script)
         return filename
 
@@ -1556,7 +1605,7 @@ class VolumeModel(DataEqualityObject):
         """Converts the model into a stl object."""
         warnings.warn(
             "design3d.stl module is deprecated. Use design3d.display module and 'Mesh3D' class instead for STL export.",
-            DeprecationWarning
+            DeprecationWarning,
         )
 
         mesh = self.to_mesh()
@@ -1576,9 +1625,9 @@ class VolumeModel(DataEqualityObject):
 
     def to_step(self, filepath: str):
         """Export a step file of the model."""
-        if not (filepath.endswith('.step') or filepath.endswith('.stp')):
-            filepath += '.step'
-        with open(filepath, 'w', encoding='utf-8') as file:
+        if not (filepath.endswith(".step") or filepath.endswith(".stp")):
+            filepath += ".step"
+        with open(filepath, "w", encoding="utf-8") as file:
             self.to_step_stream(file)
 
     def to_step_stream(self, stream):
@@ -1586,16 +1635,15 @@ class VolumeModel(DataEqualityObject):
         Export object CAD to given stream in STEP format.
 
         """
-        step_content = STEP_HEADER.format(name=self.name,
-                                          filename='',
-                                          timestamp=datetime.now().isoformat(),
-                                          version=design3d.__version__)
+        step_content = STEP_HEADER.format(
+            name=self.name, filename="", timestamp=datetime.now().isoformat(), version=design3d.__version__
+        )
         current_id = 2
 
         for primitive in self.primitives:
-            if primitive.__class__.__name__ in ('OpenShell3D', 'ClosedShell3D') or hasattr(primitive, "shell_faces"):
+            if primitive.__class__.__name__ in ("OpenShell3D", "ClosedShell3D") or hasattr(primitive, "shell_faces"):
                 primitive_content, primitive_id, _ = primitive.to_step_product(current_id)
-            elif primitive.__class__.__name__ in ('Assembly', 'Compound'):
+            elif primitive.__class__.__name__ in ("Assembly", "Compound"):
                 primitive_content, primitive_id, _ = primitive.to_step(current_id)
             else:
                 continue
@@ -1622,11 +1670,13 @@ class VolumeModel(DataEqualityObject):
 
         """
 
-        update_data = {'point_account': 0,
-                       'line_account': 0,
-                       'line_loop_account': 0,
-                       'surface_account': 0,
-                       'surface_loop_account': 0}
+        update_data = {
+            "point_account": 0,
+            "line_account": 0,
+            "line_loop_account": 0,
+            "surface_account": 0,
+            "surface_loop_account": 0,
+        }
 
         lines = []
         volume = 0
@@ -1635,8 +1685,8 @@ class VolumeModel(DataEqualityObject):
                 volume += 1
                 lines_primitives, update_data = primitive.get_geo_lines(update_data)
                 lines.extend(lines_primitives)
-                surface_loop = ((lines[-1].split('('))[1].split(')')[0])
-                lines.append('Volume(' + str(volume) + ') = {' + surface_loop + '};')
+                surface_loop = (lines[-1].split("("))[1].split(")")[0]
+                lines.append("Volume(" + str(volume) + ") = {" + surface_loop + "};")
             elif isinstance(primitive, design3d.shells.OpenShell3D):
                 lines_primitives, update_data = primitive.get_geo_lines(update_data)
                 lines.extend(lines_primitives)
@@ -1663,7 +1713,7 @@ class VolumeModel(DataEqualityObject):
         :rtype: List[str]
         """
 
-        for element in [('curvature_mesh_size', 0), ('min_points', None), ('initial_mesh_size', 5)]:
+        for element in [("curvature_mesh_size", 0), ("min_points", None), ("initial_mesh_size", 5)]:
             if element[0] not in kwargs:
                 kwargs[element[0]] = element[1]
 
@@ -1671,11 +1721,11 @@ class VolumeModel(DataEqualityObject):
         field_nums = []
         lines = []
 
-        lines.append('Mesh.CharacteristicLengthMin = 0;')
-        lines.append('Mesh.CharacteristicLengthMax = 1e+22;')
-        lines.append('Geometry.Tolerance = 1e-5;')
-        lines.append('Mesh.AngleToleranceFacetOverlap = 0.01;')
-        lines.append('General.Verbosity = 0;')
+        lines.append("Mesh.CharacteristicLengthMin = 0;")
+        lines.append("Mesh.CharacteristicLengthMax = 1e+22;")
+        lines.append("Geometry.Tolerance = 1e-5;")
+        lines.append("Mesh.AngleToleranceFacetOverlap = 0.01;")
+        lines.append("General.Verbosity = 0;")
 
         for i, primitive in enumerate(self.primitives):
             if isinstance(primitive, design3d.shells.ClosedShell3D):
@@ -1686,36 +1736,36 @@ class VolumeModel(DataEqualityObject):
                 if factor == 0:
                     factor = 1e-3
 
-                size = ((volume ** (1. / 3.)) / kwargs['initial_mesh_size']) * factor
+                size = ((volume ** (1.0 / 3.0)) / kwargs["initial_mesh_size"]) * factor
 
-                if kwargs['min_points']:
-                    lines.extend(primitive.get_mesh_lines_with_transfinite_curves(min_points=kwargs['min_points'],
-                                                                                  size=size))
+                if kwargs["min_points"]:
+                    lines.extend(
+                        primitive.get_mesh_lines_with_transfinite_curves(min_points=kwargs["min_points"], size=size)
+                    )
 
-                lines.append('Field[' + str(field_num) + '] = MathEval;')
-                lines.append('Field[' + str(field_num) + '].F = "' + str(size) + '";')
+                lines.append("Field[" + str(field_num) + "] = MathEval;")
+                lines.append("Field[" + str(field_num) + '].F = "' + str(size) + '";')
 
-                lines.append('Field[' + str(field_num + 1) + '] = Restrict;')
-                lines.append('Field[' + str(field_num + 1) + '].InField = ' + str(field_num) + ';')
-                lines.append('Field[' + str(field_num + 1) + '].VolumesList = {' + str(i + 1) + '};')
+                lines.append("Field[" + str(field_num + 1) + "] = Restrict;")
+                lines.append("Field[" + str(field_num + 1) + "].InField = " + str(field_num) + ";")
+                lines.append("Field[" + str(field_num + 1) + "].VolumesList = {" + str(i + 1) + "};")
                 field_nums.append(field_num + 1)
                 field_num += 2
 
             elif isinstance(primitive, design3d.shells.OpenShell3D):
                 continue
 
-        lines.append('Field[' + str(field_num) + '] = MinAniso;')
-        lines.append('Field[' + str(field_num) + '].FieldsList = {' + str(field_nums)[1:-1] + '};')
-        lines.append('Background Field = ' + str(field_num) + ';')
+        lines.append("Field[" + str(field_num) + "] = MinAniso;")
+        lines.append("Field[" + str(field_num) + "].FieldsList = {" + str(field_nums)[1:-1] + "};")
+        lines.append("Background Field = " + str(field_num) + ";")
 
-        lines.append('Mesh.MeshSizeFromCurvature = ' + str(kwargs['curvature_mesh_size']) + ';')
+        lines.append("Mesh.MeshSizeFromCurvature = " + str(kwargs["curvature_mesh_size"]) + ";")
 
-        lines.append('Coherence;')
+        lines.append("Coherence;")
 
         return lines
 
-    def to_geo_stream(self, stream,
-                      factor: float, **kwargs):
+    def to_geo_stream(self, stream, factor: float, **kwargs):
         """
         Gets the .geo file for the VolumeModel.
 
@@ -1737,24 +1787,27 @@ class VolumeModel(DataEqualityObject):
         :rtype: .txt
         """
 
-        for element in [('curvature_mesh_size', 0), ('min_points', None), ('initial_mesh_size', 5)]:
+        for element in [("curvature_mesh_size", 0), ("min_points", None), ("initial_mesh_size", 5)]:
             if element[0] not in kwargs:
                 kwargs[element[0]] = element[1]
 
         lines = self.get_geo_lines()
-        lines.extend(self.get_mesh_lines(factor,
-                                         curvature_mesh_size=kwargs['curvature_mesh_size'],
-                                         min_points=kwargs['min_points'],
-                                         initial_mesh_size=kwargs['initial_mesh_size']))
+        lines.extend(
+            self.get_mesh_lines(
+                factor,
+                curvature_mesh_size=kwargs["curvature_mesh_size"],
+                min_points=kwargs["min_points"],
+                initial_mesh_size=kwargs["initial_mesh_size"],
+            )
+        )
 
-        content = ''
+        content = ""
         for line in lines:
-            content += line + '\n'
+            content += line + "\n"
 
         stream.write(content)
 
-    def to_geo(self, file_name: str = '',
-               factor: float = 0.5, **kwargs):
+    def to_geo(self, file_name: str = "", factor: float = 0.5, **kwargs):
         # curvature_mesh_size: int = 0,
         # min_points: int = None,
         # initial_mesh_size: float = 5):
@@ -1779,19 +1832,22 @@ class VolumeModel(DataEqualityObject):
         :rtype: .txt
         """
 
-        for element in [('curvature_mesh_size', 0), ('min_points', None), ('initial_mesh_size', 5)]:
+        for element in [("curvature_mesh_size", 0), ("min_points", None), ("initial_mesh_size", 5)]:
             if element[0] not in kwargs:
                 kwargs[element[0]] = element[1]
 
-        if not (file_name.endswith('.geo') or file_name.endswith('.geo')):
-            file_name += '.geo'
+        if not (file_name.endswith(".geo") or file_name.endswith(".geo")):
+            file_name += ".geo"
 
-        with open(file_name, mode='w', encoding='utf-8') as file:
+        with open(file_name, mode="w", encoding="utf-8") as file:
 
-            self.to_geo_stream(file, factor,
-                               curvature_mesh_size=kwargs['curvature_mesh_size'],
-                               min_points=kwargs['min_points'],
-                               initial_mesh_size=kwargs['initial_mesh_size'])
+            self.to_geo_stream(
+                file,
+                factor,
+                curvature_mesh_size=kwargs["curvature_mesh_size"],
+                min_points=kwargs["min_points"],
+                initial_mesh_size=kwargs["initial_mesh_size"],
+            )
 
         # for element in [('curvature_mesh_size', 0), ('min_points', None), ('initial_mesh_size', 5)]:
         #     if element[0] not in kwargs:
@@ -1821,8 +1877,7 @@ class VolumeModel(DataEqualityObject):
         #         file.write('\n')
         # file.close()
 
-    def to_geo_with_stl(self, file_name: str,
-                        factor: float, **kwargs):
+    def to_geo_with_stl(self, file_name: str, factor: float, **kwargs):
         # curvature_mesh_size: int = 0,
         # min_points: int = None,
         # initial_mesh_size: float = 5):
@@ -1847,7 +1902,7 @@ class VolumeModel(DataEqualityObject):
         :rtype: .txt
         """
 
-        for element in [('curvature_mesh_size', 0), ('min_points', None), ('initial_mesh_size', 5)]:
+        for element in [("curvature_mesh_size", 0), ("min_points", None), ("initial_mesh_size", 5)]:
             if element[0] not in kwargs:
                 kwargs[element[0]] = element[1]
 
@@ -1865,10 +1920,14 @@ class VolumeModel(DataEqualityObject):
         #     initial_mesh_size = 5
 
         lines = self.get_geo_lines()
-        lines.extend(self.get_mesh_lines(factor,
-                                         curvature_mesh_size=kwargs['curvature_mesh_size'],
-                                         min_points=kwargs['min_points'],
-                                         initial_mesh_size=kwargs['initial_mesh_size']))
+        lines.extend(
+            self.get_mesh_lines(
+                factor,
+                curvature_mesh_size=kwargs["curvature_mesh_size"],
+                min_points=kwargs["min_points"],
+                initial_mesh_size=kwargs["initial_mesh_size"],
+            )
+        )
 
         contours, faces_account = [], 0
         surfaces = []
@@ -1877,8 +1936,8 @@ class VolumeModel(DataEqualityObject):
                 surfaces.append(list(range(1, 1 + len(primitive.faces))))
                 face_contours = [face.outer_contour3d for face in primitive.faces]
                 contours.append(face_contours)
-                lines.append('Mesh 2;')
-                lines.append('Physical Surface(' + str(i + 1) + ') = {' + str(surfaces[i])[1:-1] + '};')
+                lines.append("Mesh 2;")
+                lines.append("Physical Surface(" + str(i + 1) + ") = {" + str(surfaces[i])[1:-1] + "};")
                 lines.append('Save "' + file_name + '.stl" ;')
                 faces_account += len(primitive.faces) + 1
             else:
@@ -1891,8 +1950,8 @@ class VolumeModel(DataEqualityObject):
                 #             if face_c.is_superposing(contour):
                 #                 surfaces[i][k] = surfaces[l][c]
                 #                 continue
-                lines.append('Mesh 2;')
-                lines.append('Physical Surface(' + str(i + 1) + ') = {' + str(surfaces[i])[1:-1] + '};')
+                lines.append("Mesh 2;")
+                lines.append("Physical Surface(" + str(i + 1) + ") = {" + str(surfaces[i])[1:-1] + "};")
                 lines.append('Save "' + file_name + '.stl" ;')
                 faces_account += len(primitive.faces) + 1
                 contours.append(face_contours)
@@ -1910,8 +1969,7 @@ class VolumeModel(DataEqualityObject):
                         continue
         return surfaces
 
-    def to_msh(self, mesh_dimension: int, factor: float,
-               mesh_order: int = 1, file_name: str = '', **kwargs):
+    def to_msh(self, mesh_dimension: int, factor: float, mesh_order: int = 1, file_name: str = "", **kwargs):
         # curvature_mesh_size: int = 0,
         # min_points: int = None,
         # initial_mesh_size: float = 5):
@@ -1940,7 +1998,7 @@ class VolumeModel(DataEqualityObject):
         :rtype: .txt
         """
 
-        for element in [('curvature_mesh_size', 0), ('min_points', None), ('initial_mesh_size', 5)]:
+        for element in [("curvature_mesh_size", 0), ("min_points", None), ("initial_mesh_size", 5)]:
             if element[0] not in kwargs:
                 kwargs[element[0]] = element[1]
 
@@ -1957,15 +2015,17 @@ class VolumeModel(DataEqualityObject):
         # except KeyError:
         #     initial_mesh_size = 5
 
-        if file_name == '':
+        if file_name == "":
             with tempfile.NamedTemporaryFile(delete=False) as file:
                 file_name = file.name
 
-        self.to_geo(file_name=file_name,
-                    factor=factor,
-                    curvature_mesh_size=kwargs['curvature_mesh_size'],
-                    min_points=kwargs['min_points'],
-                    initial_mesh_size=kwargs['initial_mesh_size'])
+        self.to_geo(
+            file_name=file_name,
+            factor=factor,
+            curvature_mesh_size=kwargs["curvature_mesh_size"],
+            min_points=kwargs["min_points"],
+            initial_mesh_size=kwargs["initial_mesh_size"],
+        )
 
         self.generate_msh_file(file_name, mesh_dimension, mesh_order)
 
@@ -2007,10 +2067,9 @@ class VolumeModel(DataEqualityObject):
 
         gmsh.finalize()
 
-    def to_msh_stream(self, mesh_dimension: int,
-                      factor: float, stream,
-                      mesh_order: int = 1,
-                      file_name: str = '', **kwargs):
+    def to_msh_stream(
+        self, mesh_dimension: int, factor: float, stream, mesh_order: int = 1, file_name: str = "", **kwargs
+    ):
         """
         Gets .msh file for the VolumeModel generated by gmsh.
 
@@ -2037,19 +2096,21 @@ class VolumeModel(DataEqualityObject):
         :rtype: .txt
         """
 
-        for element in [('curvature_mesh_size', 0), ('min_points', None), ('initial_mesh_size', 5)]:
+        for element in [("curvature_mesh_size", 0), ("min_points", None), ("initial_mesh_size", 5)]:
             if element[0] not in kwargs:
                 kwargs[element[0]] = element[1]
 
-        if file_name == '':
+        if file_name == "":
             with tempfile.NamedTemporaryFile(delete=False) as file:
                 file_name = file.name
 
-        self.to_geo(file_name=file_name,
-                    factor=factor,
-                    curvature_mesh_size=kwargs['curvature_mesh_size'],
-                    min_points=kwargs['min_points'],
-                    initial_mesh_size=kwargs['initial_mesh_size'])
+        self.to_geo(
+            file_name=file_name,
+            factor=factor,
+            curvature_mesh_size=kwargs["curvature_mesh_size"],
+            min_points=kwargs["min_points"],
+            initial_mesh_size=kwargs["initial_mesh_size"],
+        )
 
         gmsh.initialize()
         gmsh.open(file_name + ".geo")
@@ -2059,62 +2120,65 @@ class VolumeModel(DataEqualityObject):
         gmsh.model.mesh.setOrder(mesh_order)
 
         lines = []
-        lines.append('$MeshFormat')
-        lines.append('4.1 0 8')
-        lines.append('$EndMeshFormat')
+        lines.append("$MeshFormat")
+        lines.append("4.1 0 8")
+        lines.append("$EndMeshFormat")
 
         lines.extend(self.get_nodes_lines(gmsh))
         lines.extend(self.get_elements_lines(gmsh))
 
-        content = ''
+        content = ""
         for line in lines:
-            content += line + '\n'
+            content += line + "\n"
 
         stream.write(content)
 
         # gmsh.finalize()
 
-    def to_msh_file(self, mesh_dimension: int,
-                    factor: float, stream,
-                    mesh_order: int = 1, file_name: str = '', **kwargs):
-        """ Convert and write model to a .msh file. """
+    def to_msh_file(
+        self, mesh_dimension: int, factor: float, stream, mesh_order: int = 1, file_name: str = "", **kwargs
+    ):
+        """Convert and write model to a .msh file."""
 
-        for element in [('curvature_mesh_size', 0), ('min_points', None), ('initial_mesh_size', 5)]:
+        for element in [("curvature_mesh_size", 0), ("min_points", None), ("initial_mesh_size", 5)]:
             if element[0] not in kwargs:
                 kwargs[element[0]] = element[1]
 
-        if file_name == '':
+        if file_name == "":
             with tempfile.NamedTemporaryFile(delete=False) as file:
                 file_name = file.name
 
-        with open(file_name, mode='w', encoding='utf-8') as file:
-            self.to_msh_stream(mesh_dimension=mesh_dimension,
-                               factor=factor, file_name=file,
-                               mesh_order=mesh_order,
-                               stream=stream,
-                               curvature_mesh_size=kwargs['curvature_mesh_size'],
-                               min_points=kwargs['min_points'],
-                               initial_mesh_size=kwargs['initial_mesh_size'])
+        with open(file_name, mode="w", encoding="utf-8") as file:
+            self.to_msh_stream(
+                mesh_dimension=mesh_dimension,
+                factor=factor,
+                file_name=file,
+                mesh_order=mesh_order,
+                stream=stream,
+                curvature_mesh_size=kwargs["curvature_mesh_size"],
+                min_points=kwargs["min_points"],
+                initial_mesh_size=kwargs["initial_mesh_size"],
+            )
 
     @staticmethod
     def get_nodes_lines(gmsh_model):
         """Get nodes lines."""
         lines_nodes = []
-        lines_nodes.append('$Nodes')
+        lines_nodes.append("$Nodes")
 
         tag = None
         entities = gmsh_model.model.getEntities()
         for dim, tag in entities:
             node_tags, node_coords, _ = gmsh_model.model.mesh.getNodes(dim, tag)
 
-            lines_nodes.append(str(dim) + ' ' + str(tag) + ' ' + '0 ' + str(len(node_tags)))
+            lines_nodes.append(str(dim) + " " + str(tag) + " " + "0 " + str(len(node_tags)))
             for tag in node_tags:
                 lines_nodes.append(str(tag))
             for n in range(0, len(node_coords), 3):
-                lines_nodes.append(str(node_coords[n:n + 3])[1:-1])
+                lines_nodes.append(str(node_coords[n : n + 3])[1:-1])
 
-        lines_nodes.insert(1, str(len(entities)) + ' ' + str(tag) + ' 1 ' + str(tag))
-        lines_nodes.append('$EndNodes')
+        lines_nodes.insert(1, str(len(entities)) + " " + str(tag) + " 1 " + str(tag))
+        lines_nodes.append("$EndNodes")
 
         return lines_nodes
 
@@ -2124,21 +2188,22 @@ class VolumeModel(DataEqualityObject):
         Helper function to export the volume model into gmsh format.
         """
         lines_elements = []
-        lines_elements.append('$Elements')
+        lines_elements.append("$Elements")
 
         entities = gmsh_model.model.getEntities()
         for dim, tag in entities:
             elem_types, elem_tags, elem_node_tags = gmsh_model.model.mesh.getElements(dim, tag)
 
-            lines_elements.append(str(dim) + ' ' + str(tag) + ' ' + str(elem_types[0]) + ' ' + str(len(elem_tags[0])))
+            lines_elements.append(str(dim) + " " + str(tag) + " " + str(elem_types[0]) + " " + str(len(elem_tags[0])))
             range_list = int(len(elem_node_tags[0]) / len(elem_tags[0]))
             for n in range(0, len(elem_node_tags[0]), range_list):
-                lines_elements.append(str(elem_tags[0][int(n / range_list)]) + ' ' +
-                                      str(elem_node_tags[0][n:n + range_list])[1:-1])
+                lines_elements.append(
+                    str(elem_tags[0][int(n / range_list)]) + " " + str(elem_node_tags[0][n : n + range_list])[1:-1]
+                )
 
         tag = str(elem_tags[0][int(n / range_list)])
-        lines_elements.insert(1, str(len(entities)) + ' ' + tag + ' 1 ' + tag)
-        lines_elements.append('$EndElements')
+        lines_elements.insert(1, str(len(entities)) + " " + tag + " 1 " + tag)
+        lines_elements.append("$EndElements")
 
         return lines_elements
 
@@ -2154,13 +2219,13 @@ class VolumeModel(DataEqualityObject):
 
         def unpack_assembly(assembly):
             for prim in assembly.primitives:
-                if prim.__class__.__name__ in ('Assembly', "Compound"):
+                if prim.__class__.__name__ in ("Assembly", "Compound"):
                     unpack_assembly(prim)
                 elif hasattr(prim, "faces") or hasattr(prim, "shell_faces"):
                     list_shells.append(prim)
 
         for primitive in self.primitives:
-            if primitive.__class__.__name__ in ('Assembly', "Compound"):
+            if primitive.__class__.__name__ in ("Assembly", "Compound"):
                 unpack_assembly(primitive)
             elif hasattr(primitive, "faces") or hasattr(primitive, "shell_faces"):
                 list_shells.append(primitive)
@@ -2174,15 +2239,15 @@ class MovingVolumeModel(VolumeModel):
 
     """
 
-    def __init__(self, primitives: List[Primitive3D], step_frames: List[List[design3d.Frame3D]], name: str = ''):
+    def __init__(self, primitives: List[Primitive3D], step_frames: List[List[design3d.Frame3D]], name: str = ""):
         VolumeModel.__init__(self, primitives=primitives, name=name)
         self.step_frames = step_frames
 
         if not self.is_consistent():
-            raise RuntimeError('unconsistent model')
+            raise RuntimeError("unconsistent model")
 
     def is_consistent(self):
-        """ Check if the number of frames for each step corresponds to the number of primitives of the model. """
+        """Check if the number of frames for each step corresponds to the number of primitives of the model."""
         n_primitives = len(self.primitives)
         for frames in self.step_frames:
             if len(frames) != n_primitives:
@@ -2195,8 +2260,7 @@ class MovingVolumeModel(VolumeModel):
         """
         primitives = []
         for primitive, frame in zip(self.primitives, self.step_frames[istep]):
-            primitives.append(
-                primitive.frame_mapping(frame, side='old'))
+            primitives.append(primitive.frame_mapping(frame, side="old"))
         return VolumeModel(primitives)
 
     def babylon_data(self, merge_meshes=True):
@@ -2208,7 +2272,7 @@ class MovingVolumeModel(VolumeModel):
         meshes = []
         primitives_to_meshes = []
         for i_prim, primitive in enumerate(self.primitives):
-            if hasattr(primitive, 'babylon_meshes'):
+            if hasattr(primitive, "babylon_meshes"):
                 meshes.extend(primitive.babylon_meshes(merge_meshes=merge_meshes))
                 primitives_to_meshes.append(i_prim)
 
@@ -2236,20 +2300,19 @@ class MovingVolumeModel(VolumeModel):
 
             # step_positions = []
             # step_orientations = []
-            step = {'time': istep}
+            step = {"time": istep}
             for iframe, frame in enumerate(frames):
                 if iframe in primitives_to_meshes:
                     imesh = primitives_to_meshes.index(iframe)
                     step[imesh] = {}
-                    step[imesh]['position'] = list(round(frame.origin, 6))
-                    step[imesh]['orientations'] = [list(round(frame.u, 6)),
-                                                   list(round(frame.v, 6)),
-                                                   list(round(frame.w, 6))]
+                    step[imesh]["position"] = list(round(frame.origin, 6))
+                    step[imesh]["orientations"] = [
+                        list(round(frame.u, 6)),
+                        list(round(frame.v, 6)),
+                        list(round(frame.w, 6)),
+                    ]
 
             steps.append(step)
 
-        babylon_data = {'meshes': meshes,
-                        'max_length': max_length,
-                        'center': center,
-                        'steps': steps}
+        babylon_data = {"meshes": meshes, "max_length": max_length, "center": center, "steps": steps}
         return babylon_data

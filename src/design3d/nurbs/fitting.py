@@ -68,8 +68,14 @@ def interpolate_curve(points: np.ndarray[np.double_t, ndim == 2], degree: cython
 
 @cython.wraparound(False)
 @cython.boundscheck(False)
-def interpolate_surface(points: np.ndarray[np.double_t, ndim == 2], size_u: cython.int, size_v: cython.int,
-                        degree_u: cython.int, degree_v: cython.int, **kwargs):
+def interpolate_surface(
+    points: np.ndarray[np.double_t, ndim == 2],
+    size_u: cython.int,
+    size_v: cython.int,
+    degree_u: cython.int,
+    degree_v: cython.int,
+    **kwargs
+):
     """
     Surface interpolation through the data points.
 
@@ -226,8 +232,14 @@ def approximate_curve(points: np.ndarray[np.double_t, ndim == 2], degree: cython
 
 @cython.wraparound(False)
 @cython.boundscheck(False)
-def approximate_surface(points: np.ndarray[np.double_t, ndim == 2], size_u: cython.int, size_v: cython.int,
-                        degree_u: cython.int, degree_v: cython.int, **kwargs):
+def approximate_surface(
+    points: np.ndarray[np.double_t, ndim == 2],
+    size_u: cython.int,
+    size_v: cython.int,
+    degree_u: cython.int,
+    degree_v: cython.int,
+    **kwargs
+):
     """
     Surface approximation using least squares method with fixed number of control points.
 
@@ -371,9 +383,7 @@ def approximate_surface(points: np.ndarray[np.double_t, ndim == 2], size_u: cyth
 @cython.cdivision
 @cython.wraparound(False)
 @cython.boundscheck(False)
-def compute_knot_vector(
-    degree: cython.int, num_points: cython.size_t, params: cython.double[:]
-) -> cython.double[:]:
+def compute_knot_vector(degree: cython.int, num_points: cython.size_t, params: cython.double[:]) -> cython.double[:]:
     """
     Computes a knot vector from the parameter list using averaging method.
 
@@ -411,8 +421,9 @@ def compute_knot_vector(
 @cython.cdivision
 @cython.wraparound(False)
 @cython.boundscheck(False)
-def compute_knot_vector2(degree: cython.int, num_dpts: cython.int,
-                         num_cpts: cython.int, params: cython.double[:]) -> cython.double[:]:
+def compute_knot_vector2(
+    degree: cython.int, num_dpts: cython.int, num_cpts: cython.int, params: cython.double[:]
+) -> cython.double[:]:
     """
     Computes a knot vector ensuring that every knot span has at least one :math:`\\overline{u}_{k}`.
 
@@ -454,8 +465,9 @@ def compute_knot_vector2(degree: cython.int, num_dpts: cython.int,
 @cython.cdivision
 @cython.wraparound(False)
 @cython.boundscheck(False)
-def compute_params_curve(points: np.ndarray[np.double_t, ndim == 2],
-                         centripetal: cython.bint = False) -> cython.double[:]:
+def compute_params_curve(
+    points: np.ndarray[np.double_t, ndim == 2], centripetal: cython.bint = False
+) -> cython.double[:]:
     """
     Computes ū_k for curves.
 
@@ -486,7 +498,7 @@ def compute_params_curve(points: np.ndarray[np.double_t, ndim == 2],
     # Divide individual chord lengths by the total chord length
     u_k: cython.double[:] = np.zeros(num_points, dtype=np.double)
     for i in range(num_points):
-        u_k[i] = np.sum(cds[0: i + 1]) / d
+        u_k[i] = np.sum(cds[0 : i + 1]) / d
 
     return u_k
 
@@ -495,8 +507,9 @@ def compute_params_curve(points: np.ndarray[np.double_t, ndim == 2],
 @cython.cdivision
 @cython.wraparound(False)
 @cython.boundscheck(False)
-def compute_params_surface(points: np.ndarray[np.double_t, ndim == 2], size_u: cython.int, size_v: cython.int,
-                           centripetal: cython.bint = False) -> tuple:
+def compute_params_surface(
+    points: np.ndarray[np.double_t, ndim == 2], size_u: cython.int, size_v: cython.int, centripetal: cython.bint = False
+) -> tuple:
     """
     Computes :math:`\\overline{u}_{k}` and :math:`\\overline{u}_{l}` for surfaces.
 

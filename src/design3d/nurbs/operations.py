@@ -32,9 +32,9 @@ def knot_insertion(degree, knotvector, ctrlpts, u, **kwargs):
 
     """
     # Get keyword arguments
-    num_insertions = kwargs.get('num', 1)  # number of knot insertions
-    knot_multiplicity = kwargs.get('s', core.find_multiplicity(u, knotvector))  # multiplicity
-    knot_span = kwargs.get('span', core.find_span_linear(degree, knotvector, len(ctrlpts), u))  # knot span
+    num_insertions = kwargs.get("num", 1)  # number of knot insertions
+    knot_multiplicity = kwargs.get("s", core.find_multiplicity(u, knotvector))  # multiplicity
+    knot_span = kwargs.get("span", core.find_span_linear(degree, knotvector, len(ctrlpts), u))  # knot span
 
     # Initialize variables
     num_ctrlpts_new = len(ctrlpts) + num_insertions
@@ -46,8 +46,8 @@ def knot_insertion(degree, knotvector, ctrlpts, u, **kwargs):
     temp = [np.empty_like(ctrlpts[0]) for _ in range(degree + 1)]
 
     # Save unaltered control points
-    ctrlpts_new[:knot_span - degree + 1] = ctrlpts[:knot_span - degree + 1]
-    ctrlpts_new[knot_span - knot_multiplicity + num_insertions:] = ctrlpts[knot_span - knot_multiplicity:]
+    ctrlpts_new[: knot_span - degree + 1] = ctrlpts[: knot_span - degree + 1]
+    ctrlpts_new[knot_span - knot_multiplicity + num_insertions :] = ctrlpts[knot_span - knot_multiplicity :]
 
     # Start filling the temporary local array which will be used to update control points during knot insertion
     for i in range(degree - knot_multiplicity + 1):
@@ -60,13 +60,13 @@ def knot_insertion(degree, knotvector, ctrlpts, u, **kwargs):
             alpha = knot_insertion_alpha(u, tuple(knotvector), knot_span, i, new_knot_index)
             temp[i] = alpha * temp[i + 1] + (1.0 - alpha) * temp[i]
         ctrlpts_new[new_knot_index] = temp[0]
-        ctrlpts_new[knot_span + num_insertions - j - knot_multiplicity] = \
-            temp[degree - j - knot_multiplicity]
+        ctrlpts_new[knot_span + num_insertions - j - knot_multiplicity] = temp[degree - j - knot_multiplicity]
 
     # Load remaining control points
     new_knot_index = knot_span - degree + num_insertions
-    ctrlpts_new[new_knot_index + 1:knot_span - knot_multiplicity] = \
-        temp[1:knot_span - knot_multiplicity - new_knot_index + 1]
+    ctrlpts_new[new_knot_index + 1 : knot_span - knot_multiplicity] = temp[
+        1 : knot_span - knot_multiplicity - new_knot_index + 1
+    ]
 
     # Return control points after knot insertion
     return ctrlpts_new
@@ -141,7 +141,7 @@ def insert_knot_curve(obj, param, num, **kwargs):
 
     """
     # Get keyword arguments
-    check_num = kwargs.get('check_num', True)  # can be set to False when the caller checks number of insertions
+    check_num = kwargs.get("check_num", True)  # can be set to False when the caller checks number of insertions
 
     if check_num:
         # Check the validity of number of insertions
@@ -153,7 +153,7 @@ def insert_knot_curve(obj, param, num, **kwargs):
 
         for val in num:
             if val < 0:
-                raise ValueError('Number of insertions must be a positive integer value')
+                raise ValueError("Number of insertions must be a positive integer value")
 
     if param[0] is not None and num[0] > 0:
         # Find knot multiplicity
@@ -171,8 +171,9 @@ def insert_knot_curve(obj, param, num, **kwargs):
 
         # Compute new control points
         cpts = obj.ctrlptsw if obj.rational else obj.ctrlpts
-        cpts_tmp = knot_insertion(obj.degree, obj.knotvector, cpts, param[0],
-                                  num=num[0], s=param_multiplicity, span=span)
+        cpts_tmp = knot_insertion(
+            obj.degree, obj.knotvector, cpts, param[0], num=num[0], s=param_multiplicity, span=span
+        )
         weights = None
         if obj.rational:
             cpts_tmp, weights = separate_ctrlpts_weights(cpts_tmp)
@@ -219,9 +220,9 @@ def split_curve(obj, param, **kwargs):
     temp_obj = insert_knot_curve(obj, [param], num=[insertion_count], check_num=False)
 
     # Knot vectors
-    curve1_kv, curve2_kv = helper_split_knot_vectors(temp_obj.degree, temp_obj.knotvector, len(temp_obj.ctrlpts),
-                                                     param,
-                                                     core.find_span_linear)
+    curve1_kv, curve2_kv = helper_split_knot_vectors(
+        temp_obj.degree, temp_obj.knotvector, len(temp_obj.ctrlpts), param, core.find_span_linear
+    )
 
     return construct_split_curve(temp_obj, curve1_kv, curve2_kv, knot_span, insertion_count)
 
@@ -231,11 +232,11 @@ def construct_split_curve(obj, curve1_kv, curve2_kv, knot_span, insertion_count)
     Helper function to instantiate split curve.
     """
     control_points = obj.control_points
-    curve1_ctrlpts = control_points[0:knot_span + insertion_count]
-    curve2_ctrlpts = control_points[knot_span + insertion_count - 1:]
+    curve1_ctrlpts = control_points[0 : knot_span + insertion_count]
+    curve2_ctrlpts = control_points[knot_span + insertion_count - 1 :]
     if obj.rational:
-        curve1_weights = obj.weights[0:knot_span + insertion_count]
-        curve2_weights = obj.weights[knot_span + insertion_count - 1:]
+        curve1_weights = obj.weights[0 : knot_span + insertion_count]
+        curve2_weights = obj.weights[knot_span + insertion_count - 1 :]
     else:
         curve1_weights = None
         curve2_weights = None
@@ -247,8 +248,10 @@ def construct_split_curve(obj, curve1_kv, curve2_kv, knot_span, insertion_count)
     if obj.__class__.__name__[:-2] == "BezierCurve":
         return [obj.__class__(obj.degree, curve1_ctrlpts), obj.__class__(obj.degree, curve2_ctrlpts)]
     # Return the split curves
-    return [obj.__class__(obj.degree, curve1_ctrlpts, knot_multiplicities_1, knots_1, curve1_weights),
-            obj.__class__(obj.degree, curve2_ctrlpts, knot_multiplicities_2, knots_2, curve2_weights)]
+    return [
+        obj.__class__(obj.degree, curve1_ctrlpts, knot_multiplicities_1, knots_1, curve1_weights),
+        obj.__class__(obj.degree, curve2_ctrlpts, knot_multiplicities_2, knots_2, curve2_weights),
+    ]
 
 
 def insert_knot_surface(obj, param, num, **kwargs):
@@ -267,7 +270,7 @@ def insert_knot_surface(obj, param, num, **kwargs):
 
     """
     # Get keyword arguments
-    check_num = kwargs.get('check_num', True)  # can be set to False when the caller checks number of insertions
+    check_num = kwargs.get("check_num", True)  # can be set to False when the caller checks number of insertions
     # u-direction
     if param[0] is not None and num[0] > 0:
         # Find knot multiplicity
@@ -289,8 +292,9 @@ def insert_knot_surface(obj, param, num, **kwargs):
         cpts = obj.ctrlptsw if obj.rational else obj.ctrlpts
         for v in range(obj.nb_v):
             ctrlpts = [cpts[v + (obj.nb_v * u)] for u in range(obj.nb_u)]
-            ctrlpts_tmp = knot_insertion(obj.degree_u, knotvector, ctrlpts, param[0],
-                                         num=num[0], s=param_multiplicity, span=span)
+            ctrlpts_tmp = knot_insertion(
+                obj.degree_u, knotvector, ctrlpts, param[0], num=num[0], s=param_multiplicity, span=span
+            )
             cpts_tmp += ctrlpts_tmp
 
         # Update the surface after knot insertion
@@ -300,10 +304,18 @@ def insert_knot_surface(obj, param, num, **kwargs):
         if obj.rational:
             cpts_tmp, weights = separate_ctrlpts_weights(cpts_tmp)
         control_points = [design3d.Point3D(*point) for point in cpts_tmp]
-        obj = obj.__class__(obj.degree_u, obj.degree_v,
-                            control_points,
-                            obj.nb_u + num[0], obj.nb_v, multiplicities, obj.v_multiplicities,
-                            knots, obj.v_knots, weights)
+        obj = obj.__class__(
+            obj.degree_u,
+            obj.degree_v,
+            control_points,
+            obj.nb_u + num[0],
+            obj.nb_v,
+            multiplicities,
+            obj.v_multiplicities,
+            knots,
+            obj.v_knots,
+            weights,
+        )
     # v-direction
     if param[1] is not None and num[1] > 0:
         # Find knot multiplicity
@@ -325,8 +337,9 @@ def insert_knot_surface(obj, param, num, **kwargs):
         cpts = obj.ctrlptsw if obj.rational else obj.ctrlpts
         for u in range(obj.nb_u):
             ctrlpts = [cpts[v + (obj.nb_v * u)] for v in range(obj.nb_v)]
-            ctrlpts_tmp = knot_insertion(obj.degree_v, knotvector, ctrlpts, param[1],
-                                         num=num[1], s=param_multiplicity, span=span)
+            ctrlpts_tmp = knot_insertion(
+                obj.degree_v, knotvector, ctrlpts, param[1], num=num[1], s=param_multiplicity, span=span
+            )
             cpts_tmp += ctrlpts_tmp
 
         knots, multiplicities = get_knots_and_multiplicities(new_kv)
@@ -335,9 +348,18 @@ def insert_knot_surface(obj, param, num, **kwargs):
             cpts_tmp, weights = separate_ctrlpts_weights(cpts_tmp)
         control_points = [design3d.Point3D(*point) for point in cpts_tmp]
         # Update the surface after knot insertion
-        obj = obj.__class__(obj.degree_u, obj.degree_v,
-                            control_points, obj.nb_u, obj.nb_v + num[1], obj.u_multiplicities, multiplicities,
-                            obj.u_knots, knots, weights)
+        obj = obj.__class__(
+            obj.degree_u,
+            obj.degree_v,
+            control_points,
+            obj.nb_u,
+            obj.nb_v + num[1],
+            obj.u_multiplicities,
+            multiplicities,
+            obj.u_knots,
+            knots,
+            weights,
+        )
     return obj
 
 
@@ -357,7 +379,7 @@ def insert_control_points_surface_u(obj, param, num, **kwargs):
 
     """
     # Get keyword arguments
-    check_num = kwargs.get('check_num', True)  # can be set to False when the caller checks number of insertions
+    check_num = kwargs.get("check_num", True)  # can be set to False when the caller checks number of insertions
     # u-direction
     # Find knot multiplicity
     knotvector = obj.knots_vector_u
@@ -375,8 +397,7 @@ def insert_control_points_surface_u(obj, param, num, **kwargs):
     cpts = obj.ctrlptsw if obj.rational else obj.ctrlpts
     for v in range(obj.nb_v):
         ctrlpts = [cpts[v + (obj.nb_v * u)] for u in range(obj.nb_u)]
-        ctrlpts_tmp = knot_insertion(obj.degree_u, knotvector, ctrlpts, param,
-                                     num=num, s=param_multiplicity, span=span)
+        ctrlpts_tmp = knot_insertion(obj.degree_u, knotvector, ctrlpts, param, num=num, s=param_multiplicity, span=span)
         cpts_tmp += ctrlpts_tmp
 
     cpts_tmp = flip_ctrlpts_u(cpts_tmp, obj.nb_u + num, obj.nb_v)
@@ -399,7 +420,7 @@ def insert_control_points_surface_v(obj, param, num, **kwargs):
     :return: a list with the control points
 
     """
-    check_num = kwargs.get('check_num', True)  # can be set to False when the caller checks number of insertions
+    check_num = kwargs.get("check_num", True)  # can be set to False when the caller checks number of insertions
     # v-direction
 
     # Find knot multiplicity
@@ -418,12 +439,10 @@ def insert_control_points_surface_v(obj, param, num, **kwargs):
     cpts = obj.ctrlptsw if obj.rational else obj.ctrlpts
     for u in range(obj.nb_u):
         ctrlpts = [cpts[v + (obj.nb_v * u)] for v in range(obj.nb_v)]
-        ctrlpts_tmp = knot_insertion(obj.degree_v, knotvector, ctrlpts, param,
-                                     num=num, s=param_multiplicity, span=span)
+        ctrlpts_tmp = knot_insertion(obj.degree_v, knotvector, ctrlpts, param, num=num, s=param_multiplicity, span=span)
         cpts_tmp += ctrlpts_tmp
 
     return cpts_tmp
-
 
 
 def refine_knot_vector_surface(obj, u, v, **kwargs):
@@ -446,7 +465,7 @@ def refine_knot_vector_surface(obj, u, v, **kwargs):
 
     """
     # Keyword arguments
-    insert_knot_func = kwargs.get('insert_knot_func', insert_knot_surface)  # Knot insertion algorithm
+    insert_knot_func = kwargs.get("insert_knot_func", insert_knot_surface)  # Knot insertion algorithm
     domain = obj.domain
     temp_obj = obj
     for param in u:
@@ -499,7 +518,7 @@ def extract_surface_curve_u(obj, param, curve_class, **kwargs):
         raise ValueError("Cannot split from the u-domain edge")
 
     # Keyword arguments
-    span_func = kwargs.get('find_span_func', core.find_span_linear)  # FindSpan implementation
+    span_func = kwargs.get("find_span_func", core.find_span_linear)  # FindSpan implementation
 
     # Find multiplicity of the knot
     knotvector_u = obj.knots_vector_u
@@ -511,7 +530,7 @@ def extract_surface_curve_u(obj, param, curve_class, **kwargs):
 
     ctrlpts2d = np.reshape(ctrlpts, (obj.nb_u + insertion_count, obj.nb_v, -1))
     # takes the second part of the split surface for simplicity
-    surf2_ctrlpts = ctrlpts2d_to_ctrlpts(ctrlpts2d[knot_span + insertion_count - 1:])[:obj.nb_v]
+    surf2_ctrlpts = ctrlpts2d_to_ctrlpts(ctrlpts2d[knot_span + insertion_count - 1 :])[: obj.nb_v]
     weights = None
     if obj.rational:
         surf2_ctrlpts, weights = separate_ctrlpts_weights(surf2_ctrlpts)
@@ -545,7 +564,7 @@ def extract_surface_curve_v(obj, param, curve_class, **kwargs):
         raise ValueError("Cannot split from the v-domain edge")
 
     # Keyword arguments
-    span_func = kwargs.get('find_span_func', core.find_span_linear)  # FindSpan implementation
+    span_func = kwargs.get("find_span_func", core.find_span_linear)  # FindSpan implementation
 
     # Find multiplicity of the knot
     knotvector_v = obj.knots_vector_v
@@ -558,7 +577,7 @@ def extract_surface_curve_v(obj, param, curve_class, **kwargs):
     ctrlpts2d = np.reshape(ctrlpts, (obj.nb_u, new_nb_v, -1))
     # first slicing ([:, knot_span + insertion_count - 1:, :]) takes the control points of the second surface
     # second slicing ([:, 0, :]) takes only the first control point of each row
-    surf2_ctrlpts = ctrlpts2d[:, knot_span + insertion_count - 1:, :][:, 0, :]
+    surf2_ctrlpts = ctrlpts2d[:, knot_span + insertion_count - 1 :, :][:, 0, :]
     weights = None
     if obj.rational:
         surf2_ctrlpts, weights = separate_ctrlpts_weights(surf2_ctrlpts)
@@ -591,8 +610,8 @@ def split_surface_u(obj, param, **kwargs):
         raise ValueError("Cannot split from the u-domain edge")
     param = float(f"{param:.18f}")
     # Keyword arguments
-    span_func = kwargs.get('find_span_func', core.find_span_linear)  # FindSpan implementation
-    insert_knot_func = kwargs.get('insert_knot_func', insert_knot_surface)  # Knot insertion algorithm
+    span_func = kwargs.get("find_span_func", core.find_span_linear)  # FindSpan implementation
+    insert_knot_func = kwargs.get("insert_knot_func", insert_knot_surface)  # Knot insertion algorithm
 
     # Find multiplicity of the knot
     knotvector_u = obj.knots_vector_u
@@ -604,8 +623,7 @@ def split_surface_u(obj, param, **kwargs):
     temp_obj = insert_knot_func(obj, [param, None], num=[insertion_count, 0], check_num=False)
 
     # Knot vectors
-    knotvectors = helper_split_knot_vectors(temp_obj.degree_u, temp_obj.knots_vector_u,
-                                            temp_obj.nb_u, param, span_func)
+    knotvectors = helper_split_knot_vectors(temp_obj.degree_u, temp_obj.knots_vector_u, temp_obj.nb_u, param, span_func)
 
     return construct_split_surfaces(temp_obj, knotvectors, "u", knot_span, insertion_count)
 
@@ -633,8 +651,8 @@ def split_surface_v(obj, param, **kwargs):
         raise ValueError("Cannot split from the v-domain edge")
     param = float(f"{param:.18f}")
     # Keyword arguments
-    span_func = kwargs.get('find_span_func', core.find_span_linear)  # FindSpan implementation
-    insert_knot_func = kwargs.get('insert_knot_func', insert_knot_surface)  # Knot insertion algorithm
+    span_func = kwargs.get("find_span_func", core.find_span_linear)  # FindSpan implementation
+    insert_knot_func = kwargs.get("insert_knot_func", insert_knot_surface)  # Knot insertion algorithm
 
     # Find multiplicity of the knot
     knotvector_v = obj.knots_vector_v
@@ -646,8 +664,7 @@ def split_surface_v(obj, param, **kwargs):
     temp_obj = insert_knot_func(obj, [None, param], num=[0, insertion_count], check_num=False)
 
     # Knot vectors
-    knotvectors = helper_split_knot_vectors(temp_obj.degree_v, temp_obj.knots_vector_v,
-                                            temp_obj.nb_v, param, span_func)
+    knotvectors = helper_split_knot_vectors(temp_obj.degree_v, temp_obj.knots_vector_v, temp_obj.nb_v, param, span_func)
 
     return construct_split_surfaces(temp_obj, knotvectors, "v", knot_span, insertion_count)
 
@@ -744,8 +761,8 @@ def construct_split_surfaces(obj, knotvectors, direction, knot_span, insertion_c
     surf1_kv, surf2_kv = knotvectors
     if direction == "u":
         ctrlpts2d = obj.ctrlpts2d()
-        surf1_ctrlpts = ctrlpts2d_to_ctrlpts(ctrlpts2d[0:knot_span + insertion_count])
-        surf2_ctrlpts = ctrlpts2d_to_ctrlpts(ctrlpts2d[knot_span + insertion_count - 1:])
+        surf1_ctrlpts = ctrlpts2d_to_ctrlpts(ctrlpts2d[0 : knot_span + insertion_count])
+        surf2_ctrlpts = ctrlpts2d_to_ctrlpts(ctrlpts2d[knot_span + insertion_count - 1 :])
         u_knots, u_multiplicities = get_knots_and_multiplicities(surf1_kv)
         v_knots, v_multiplicities = obj.v_knots, obj.v_multiplicities
         surf1_nb_u = knot_span + insertion_count
@@ -756,9 +773,9 @@ def construct_split_surfaces(obj, knotvectors, direction, knot_span, insertion_c
         surf1_ctrlpts = []
         surf2_ctrlpts = []
         for v_row in obj.ctrlpts2d():
-            temp = v_row[0:knot_span + insertion_count]
+            temp = v_row[0 : knot_span + insertion_count]
             surf1_ctrlpts.extend(temp)
-            temp = v_row[knot_span + insertion_count - 1:]
+            temp = v_row[knot_span + insertion_count - 1 :]
             surf2_ctrlpts.extend(temp)
         u_knots, u_multiplicities = obj.u_knots, obj.u_multiplicities
         v_knots, v_multiplicities = get_knots_and_multiplicities(surf1_kv)
@@ -770,8 +787,18 @@ def construct_split_surfaces(obj, knotvectors, direction, knot_span, insertion_c
     if obj.rational:
         surf1_ctrlpts, weights = separate_ctrlpts_weights(surf1_ctrlpts)
     control_points = [design3d.Point3D(*point) for point in surf1_ctrlpts]
-    surf1 = obj.__class__(obj.degree_u, obj.degree_v, control_points, surf1_nb_u,
-                          surf1_nb_v, u_multiplicities, v_multiplicities, u_knots, v_knots, weights)
+    surf1 = obj.__class__(
+        obj.degree_u,
+        obj.degree_v,
+        control_points,
+        surf1_nb_u,
+        surf1_nb_v,
+        u_multiplicities,
+        v_multiplicities,
+        u_knots,
+        v_knots,
+        weights,
+    )
 
     # knots
     if direction == "u":
@@ -782,8 +809,18 @@ def construct_split_surfaces(obj, knotvectors, direction, knot_span, insertion_c
     if obj.rational:
         surf2_ctrlpts, weights = separate_ctrlpts_weights(surf2_ctrlpts)
     control_points = [design3d.Point3D(*point) for point in surf2_ctrlpts]
-    surf2 = obj.__class__(obj.degree_u, obj.degree_v, control_points,
-                          surf2_nb_u, surf2_nb_v, u_multiplicities, v_multiplicities, u_knots, v_knots, weights)
+    surf2 = obj.__class__(
+        obj.degree_u,
+        obj.degree_v,
+        control_points,
+        surf2_nb_u,
+        surf2_nb_v,
+        u_multiplicities,
+        v_multiplicities,
+        u_knots,
+        v_knots,
+        weights,
+    )
 
     # Return the new surfaces
     return [surf1, surf2]
@@ -808,7 +845,7 @@ def decompose_curve(obj, return_params: bool = False, number_max_patches: int = 
         umin, umax = curve.domain
         knots = np.linspace(umin, umax, number_max_patches)[1:-1]
     else:
-        knots = curve.knotvector[curve.degree + 1:-(curve.degree + 1)]
+        knots = curve.knotvector[curve.degree + 1 : -(curve.degree + 1)]
     params = []
     umin, umax = obj.domain
     param_start = umin
@@ -816,7 +853,7 @@ def decompose_curve(obj, return_params: bool = False, number_max_patches: int = 
         knot = knots[0]
         curves = split_curve(curve, param=knot, **kwargs)
         curve = curves[1]
-        knots = curve.knotvector[curve.degree + 1:-(curve.degree + 1)]
+        knots = curve.knotvector[curve.degree + 1 : -(curve.degree + 1)]
         if return_params:
             umax_0 = knot * (umax - param_start) + param_start
             params.append((param_start, umax_0))
@@ -848,24 +885,25 @@ def decompose_surface(obj, return_params, **kwargs):
         raise ValueError("Input shape must be an instance of BSplineSurface3D class")
 
     # Get keyword arguments
-    decompose_dir = kwargs.get('decompose_dir', 'uv')  # possible directions: u, v, uv
+    decompose_dir = kwargs.get("decompose_dir", "uv")  # possible directions: u, v, uv
     if "decompose_dir" in kwargs:
         kwargs.pop("decompose_dir")
     domain = obj.domain
     # Only u-direction
-    if decompose_dir == 'u':
+    if decompose_dir == "u":
         return helper_decompose(obj, 0, split_surface_u, return_params, (domain[2], domain[3]), **kwargs)
 
     # Only v-direction
-    if decompose_dir == 'v':
+    if decompose_dir == "v":
         return helper_decompose(obj, 1, split_surface_v, return_params, (domain[0], domain[1]), **kwargs)
 
     # Both u- and v-directions
-    if decompose_dir == 'uv':
+    if decompose_dir == "uv":
         result = []
         if return_params:
-            for sfu, params in helper_decompose(obj, 0, split_surface_u, return_params,
-                                                (domain[2], domain[3]), **kwargs):
+            for sfu, params in helper_decompose(
+                obj, 0, split_surface_u, return_params, (domain[2], domain[3]), **kwargs
+            ):
                 result.extend(helper_decompose(sfu, 1, split_surface_v, return_params, params[0], **kwargs))
         else:
             for sfu in helper_decompose(obj, 0, split_surface_u, return_params, **kwargs):
@@ -881,7 +919,7 @@ def helper_decompose(srf, idx, split_func, return_params, other_direction_params
     """
     # pylint: disable=too-many-locals
     surf_degrees = [srf.degree_u, srf.degree_v]
-    knots = srf.knotvector[idx][surf_degrees[idx] + 1:-(surf_degrees[idx] + 1)]
+    knots = srf.knotvector[idx][surf_degrees[idx] + 1 : -(surf_degrees[idx] + 1)]
     param_min, param_max = 0.0, 1.0
     if return_params:
         domain = srf.domain
@@ -895,7 +933,7 @@ def helper_decompose(srf, idx, split_func, return_params, other_direction_params
         knot = knots[0]
         srfs = split_func(srf, param=knot, **kws)
         srf = srfs[1]
-        knots = srf.knotvector[idx][surf_degrees[idx] + 1:-(surf_degrees[idx] + 1)]
+        knots = srf.knotvector[idx][surf_degrees[idx] + 1 : -(surf_degrees[idx] + 1)]
         if return_params:
             param_end = knot * (param_max - param_start) + param_start
             if idx == 0:
@@ -941,7 +979,7 @@ def link_curves(curves, tol: float = 1e-7, validate: bool = True):
         # Process knot vectors
         if not knotvector:
             # get rid of the last superfluous knot to maintain split curve notation
-            knotvector += list(curve.knotvector[:-(curve.degree + 1)])
+            knotvector += list(curve.knotvector[: -(curve.degree + 1)])
             cpts += list(curve.ctrlpts)
             # Process control points
             if curve.rational:
@@ -950,7 +988,7 @@ def link_curves(curves, tol: float = 1e-7, validate: bool = True):
                 tmp_w = [1.0 for _ in range(len(curve.ctrlpts))]
                 wgts += tmp_w
         else:
-            tmp_kv = [pdomain_end + k for k in curve.knotvector[1:-(curve.degree + 1)]]
+            tmp_kv = [pdomain_end + k for k in curve.knotvector[1 : -(curve.degree + 1)]]
             knotvector += tmp_kv
             cpts += list(curve.ctrlpts[1:])
             # Process control points

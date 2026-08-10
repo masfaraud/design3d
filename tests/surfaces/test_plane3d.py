@@ -7,7 +7,6 @@ import design3d
 from design3d import edges, surfaces, curves, wires
 from design3d.surfaces import Plane3D
 
-
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_plane_test")
 
 
@@ -27,21 +26,25 @@ class TestPlane3D(unittest.TestCase):
     plane4 = surfaces.Plane3D(design3d.OXYZ.rotation(design3d.O3D, design3d.Vector3D(0, 0, 1), math.pi / 4))
 
     degree = 5
-    control_points = [design3d.Point3D(0, 3, 0),
-                      design3d.Point3D(3, 2, 1),
-                      design3d.Point3D(5, -1, 4),
-                      design3d.Point3D(5, -4, 0),
-                      design3d.Point3D(-1, -2, -3),
-                      design3d.Point3D(-3, 4, 1)]
+    control_points = [
+        design3d.Point3D(0, 3, 0),
+        design3d.Point3D(3, 2, 1),
+        design3d.Point3D(5, -1, 4),
+        design3d.Point3D(5, -4, 0),
+        design3d.Point3D(-1, -2, -3),
+        design3d.Point3D(-3, 4, 1),
+    ]
     knots = [0.0, 1.0]
     knot_multiplicities = [6, 6]
     weights = None
-    bspline_curve3d = edges.BSplineCurve3D(degree=degree, control_points=control_points,
-                                knot_multiplicities=knot_multiplicities,
-                                knots=knots,
-                                weights=weights,
-                                name='B Spline Curve 3D 1')
-
+    bspline_curve3d = edges.BSplineCurve3D(
+        degree=degree,
+        control_points=control_points,
+        knot_multiplicities=knot_multiplicities,
+        knots=knots,
+        weights=weights,
+        name="B Spline Curve 3D 1",
+    )
 
     def setUp(self):
         self.point1 = design3d.Point3D(0, 0, 0)
@@ -56,13 +59,22 @@ class TestPlane3D(unittest.TestCase):
         )
 
     def test_parametric_points_to_3d(self):
-        parametric_points = np.array([[-1.0, -1.0], [1.0, -1.0], [1.0, 1.0], [-1.0, 1.0],
-                                      [-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]])
+        parametric_points = np.array(
+            [[-1.0, -1.0], [1.0, -1.0], [1.0, 1.0], [-1.0, 1.0], [-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]
+        )
         points3d = self.plane2.parametric_points_to_3d(parametric_points)
-        expected_points = np.array([[0.292893218813, 1.0, 0.292893218813], [0.292893218813, 3.0, 0.292893218813],
-                                    [1.707106781187, 3.0, 1.707106781187], [1.707106781187, 1.0, 1.707106781187],
-                                    [0.646446609407, 1.5, 0.646446609407], [0.646446609407, 2.5, 0.646446609407],
-                                    [1.353553390593, 2.5, 1.353553390593], [1.353553390593, 1.5, 1.353553390593]])
+        expected_points = np.array(
+            [
+                [0.292893218813, 1.0, 0.292893218813],
+                [0.292893218813, 3.0, 0.292893218813],
+                [1.707106781187, 3.0, 1.707106781187],
+                [1.707106781187, 1.0, 1.707106781187],
+                [0.646446609407, 1.5, 0.646446609407],
+                [0.646446609407, 2.5, 0.646446609407],
+                [1.353553390593, 2.5, 1.353553390593],
+                [1.353553390593, 1.5, 1.353553390593],
+            ]
+        )
         for point, expected_point in zip(points3d, expected_points):
             self.assertAlmostEqual(np.linalg.norm(point - expected_point), 0.0)
 
@@ -140,8 +152,9 @@ class TestPlane3D(unittest.TestCase):
     def test_plane_intersections(self):
         plane_intersections = self.plane1.plane_intersections(self.plane2)
         self.assertEqual(len(plane_intersections), 1)
-        self.assertTrue(plane_intersections[0].is_close(
-            curves.Line3D(design3d.O3D, design3d.Point3D(0, 0.7071067811865476, 0))))
+        self.assertTrue(
+            plane_intersections[0].is_close(curves.Line3D(design3d.O3D, design3d.Point3D(0, 0.7071067811865476, 0)))
+        )
         no_plane_intersections = self.plane1.plane_intersections(self.plane3)
         self.assertFalse(no_plane_intersections)
         plane1 = surfaces.Plane3D(
@@ -171,8 +184,9 @@ class TestPlane3D(unittest.TestCase):
         ).primitives
         plane_intersections = plane1.plane_intersections(plane2)
         self.assertTrue(plane_intersections[0].point1.is_close(design3d.Point3D(0.0, 0.303510045726, 0.0)))
-        self.assertTrue(plane_intersections[0].point2.is_close(
-            design3d.Point3D(1.0000000000000002, 0.3035100457150452, 0.0)))
+        self.assertTrue(
+            plane_intersections[0].point2.is_close(design3d.Point3D(1.0000000000000002, 0.3035100457150452, 0.0))
+        )
 
     def test_line_intersections(self):
         # test line intersects the plane
@@ -297,7 +311,7 @@ class TestPlane3D(unittest.TestCase):
         contour3d = wires.Contour3D.from_json(os.path.join(folder, "planesurface_arc3d_to_2d_contour.json"))
         contour = plane.contour3d_to_2d(contour3d)
         self.assertTrue(contour.is_ordered())
-        self.assertAlmostEqual(contour.area(), math.pi * 0.202 ** 2, 4)
+        self.assertAlmostEqual(contour.area(), math.pi * 0.202**2, 4)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 """
 Unittest for design3d.Vector3D
 """
+
 import unittest
 
 import design3d
@@ -139,5 +140,5 @@ class TestVector3D(unittest.TestCase):
         self.assertEqual(p3, Vector3D(0, 0, 0))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

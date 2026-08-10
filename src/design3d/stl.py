@@ -40,16 +40,15 @@ class Stl:
 
     _standalone_in_db = True
 
-    _dessia_methods = ['from_text_stream', 'from_text_stream', 'to_closed_shell', 'to_open_shell']
+    _dessia_methods = ["from_text_stream", "from_text_stream", "to_closed_shell", "to_open_shell"]
 
-    def __init__(self, triangles: List[d3df.Triangle3D], name: str = ''):
+    def __init__(self, triangles: List[d3df.Triangle3D], name: str = ""):
         warnings.warn(
-            "'design3d.stl.Stl' class is deprecated. Use 'design3d.display.Mesh3D' instead",
-            DeprecationWarning
+            "'design3d.stl.Stl' class is deprecated. Use 'design3d.display.Mesh3D' instead", DeprecationWarning
         )
 
         self.triangles = triangles
-        self.name=name
+        self.name = name
 
         self.normals = None
 
@@ -67,29 +66,32 @@ class Stl:
         :rtype: List[d3d.Point3D]
         """
         if is_binary(filename):
-            with open(filename, 'rb') as file:
+            with open(filename, "rb") as file:
                 stream = KaitaiStream(file)
-                _ = stream.read_bytes(80).decode('utf8')
+                _ = stream.read_bytes(80).decode("utf8")
                 num_triangles = stream.read_u4le()
 
                 all_points = []
                 for i in range(num_triangles):
                     if i % 5000 == 0:
-                        print('reading stl',
-                              round(i / num_triangles * 100, 2), '%')
+                        print("reading stl", round(i / num_triangles * 100, 2), "%")
                     # First is normal, unused
-                    _ = d3d.Vector3D(stream.read_f4le(),
-                                    stream.read_f4le(),
-                                    stream.read_f4le())
-                    p1 = d3d.Point3D(distance_multiplier * stream.read_f4le(),
-                                    distance_multiplier * stream.read_f4le(),
-                                    distance_multiplier * stream.read_f4le())
-                    p2 = d3d.Point3D(distance_multiplier * stream.read_f4le(),
-                                    distance_multiplier * stream.read_f4le(),
-                                    distance_multiplier * stream.read_f4le())
-                    p3 = d3d.Point3D(distance_multiplier * stream.read_f4le(),
-                                    distance_multiplier * stream.read_f4le(),
-                                    distance_multiplier * stream.read_f4le())
+                    _ = d3d.Vector3D(stream.read_f4le(), stream.read_f4le(), stream.read_f4le())
+                    p1 = d3d.Point3D(
+                        distance_multiplier * stream.read_f4le(),
+                        distance_multiplier * stream.read_f4le(),
+                        distance_multiplier * stream.read_f4le(),
+                    )
+                    p2 = d3d.Point3D(
+                        distance_multiplier * stream.read_f4le(),
+                        distance_multiplier * stream.read_f4le(),
+                        distance_multiplier * stream.read_f4le(),
+                    )
+                    p3 = d3d.Point3D(
+                        distance_multiplier * stream.read_f4le(),
+                        distance_multiplier * stream.read_f4le(),
+                        distance_multiplier * stream.read_f4le(),
+                    )
                     all_points.extend([p1, p2, p3])
 
                     stream.read_u2le()
@@ -112,9 +114,9 @@ class Stl:
         stream = KaitaiStream(stream)
         name_slice = stream.read_bytes(80)
         try:
-            name = name_slice.decode('utf-8')
+            name = name_slice.decode("utf-8")
         except UnicodeDecodeError:
-            name = name_slice.decode('latin-1')
+            name = name_slice.decode("latin-1")
 
         num_triangles = stream.read_u4le()
         # print(num_triangles)
@@ -123,20 +125,23 @@ class Stl:
         invalid_triangles = []
         for i in range(num_triangles):
             if i % 5000 == 0:
-                print('reading stl',
-                      round(i / num_triangles * 100, 2), '%')
-            _ = d3d.Vector3D(stream.read_f4le(),
-                            stream.read_f4le(),
-                            stream.read_f4le())
-            p1 = d3d.Point3D(distance_multiplier * stream.read_f4le(),
-                            distance_multiplier * stream.read_f4le(),
-                            distance_multiplier * stream.read_f4le())
-            p2 = d3d.Point3D(distance_multiplier * stream.read_f4le(),
-                            distance_multiplier * stream.read_f4le(),
-                            distance_multiplier * stream.read_f4le())
-            p3 = d3d.Point3D(distance_multiplier * stream.read_f4le(),
-                            distance_multiplier * stream.read_f4le(),
-                            distance_multiplier * stream.read_f4le())
+                print("reading stl", round(i / num_triangles * 100, 2), "%")
+            _ = d3d.Vector3D(stream.read_f4le(), stream.read_f4le(), stream.read_f4le())
+            p1 = d3d.Point3D(
+                distance_multiplier * stream.read_f4le(),
+                distance_multiplier * stream.read_f4le(),
+                distance_multiplier * stream.read_f4le(),
+            )
+            p2 = d3d.Point3D(
+                distance_multiplier * stream.read_f4le(),
+                distance_multiplier * stream.read_f4le(),
+                distance_multiplier * stream.read_f4le(),
+            )
+            p3 = d3d.Point3D(
+                distance_multiplier * stream.read_f4le(),
+                distance_multiplier * stream.read_f4le(),
+                distance_multiplier * stream.read_f4le(),
+            )
             try:
                 triangles[i] = d3df.Triangle3D(p1, p2, p3)
             except ZeroDivisionError:
@@ -153,8 +158,7 @@ class Stl:
         return cls(triangles, name=name)
 
     @classmethod
-    def from_text_stream(cls, stream,
-                         distance_multiplier: float = 0.001):
+    def from_text_stream(cls, stream, distance_multiplier: float = 0.001):
         """
         Create an STL object from a text stream.
 
@@ -172,30 +176,28 @@ class Stl:
         triangles = []
         points = []
         for line in stream.readlines():
-            if 'vertex' in line:
-                line = line.replace('vertex', '')
-                line = line.lstrip(' ')
-                x, y, z = [i for i in line.split(' ') if i]
+            if "vertex" in line:
+                line = line.replace("vertex", "")
+                line = line.lstrip(" ")
+                x, y, z = [i for i in line.split(" ") if i]
 
-                points.append(d3d.Point3D(distance_multiplier * float(x),
-                                         distance_multiplier * float(y),
-                                         distance_multiplier * float(z)))
-            if 'endfacet' in line:
+                points.append(
+                    d3d.Point3D(
+                        distance_multiplier * float(x), distance_multiplier * float(y), distance_multiplier * float(z)
+                    )
+                )
+            if "endfacet" in line:
                 try:
-                    triangles.append(d3df.Triangle3D(points[0],
-                                                    points[1],
-                                                    points[2]))
+                    triangles.append(d3df.Triangle3D(points[0], points[1], points[2]))
                 except (ZeroDivisionError, NotImplementedError):  # NotImplementedError comes from equal points
                     pass
                 points = []
         return cls(triangles, name=name)
 
     @classmethod
-    def from_file(cls, filename: str = None,
-                  distance_multiplier: float = 0.001):
+    def from_file(cls, filename: str = None, distance_multiplier: float = 0.001):
         """Import stl from file."""
-        warnings.warn("Use load_from_file instead of from_file",
-                      DeprecationWarning)
+        warnings.warn("Use load_from_file instead of from_file", DeprecationWarning)
         return cls.load_from_file(filename, distance_multiplier)
 
     @classmethod
@@ -211,13 +213,11 @@ class Stl:
         :rtype: Stl
         """
         if is_binary(filepath):
-            with open(filepath, 'rb') as file:
-                return cls.from_binary_stream(
-                    file, distance_multiplier=distance_multiplier)
+            with open(filepath, "rb") as file:
+                return cls.from_binary_stream(file, distance_multiplier=distance_multiplier)
 
-        with open(filepath, 'r', encoding='utf-8', errors='ignore') as file:
-            return cls.from_text_stream(
-                file, distance_multiplier=distance_multiplier)
+        with open(filepath, "r", encoding="utf-8", errors="ignore") as file:
+            return cls.from_text_stream(file, distance_multiplier=distance_multiplier)
 
     def save_to_binary_file(self, filepath, distance_multiplier=1000):
         """
@@ -230,11 +230,11 @@ class Stl:
         :return: An instance of the Stl class.
         :rtype: Stl
         """
-        if not filepath.endswith('.stl'):
-            filepath += '.stl'
-            print('Adding .stl extension: ', filepath)
+        if not filepath.endswith(".stl"):
+            filepath += ".stl"
+            print("Adding .stl extension: ", filepath)
 
-        with open(filepath, 'wb') as file:
+        with open(filepath, "wb") as file:
             self.save_to_stream(file, distance_multiplier=distance_multiplier)
 
     def save_to_stream(self, stream, distance_multiplier=1000):
@@ -254,12 +254,13 @@ class Stl:
         binary_facet = "12fH"
 
         # counter = 0
-        stream.write(struct.pack(binary_header, self.name.encode('utf8'),
-                                 len(self.triangles)))
+        stream.write(struct.pack(binary_header, self.name.encode("utf8"), len(self.triangles)))
         # counter += 1
         for triangle in self.triangles:
             data = [
-                0., 0., 0.,
+                0.0,
+                0.0,
+                0.0,
                 distance_multiplier * triangle.point1.x,
                 distance_multiplier * triangle.point1.y,
                 distance_multiplier * triangle.point1.z,
@@ -269,7 +270,8 @@ class Stl:
                 distance_multiplier * triangle.point3.x,
                 distance_multiplier * triangle.point3.y,
                 distance_multiplier * triangle.point3.z,
-                0]
+                0,
+            ]
             stream.write(struct.pack(binary_facet, *data))
 
     def to_closed_shell(self):
@@ -396,7 +398,7 @@ class Stl:
         self.normals = normals
         return points_normals
 
-    def clean_flat_triangles(self, threshold: float = 1e-12) -> 'Stl':
+    def clean_flat_triangles(self, threshold: float = 1e-12) -> "Stl":
         """
         Clean the STL object by removing flat triangles with an area below a threshold.
 

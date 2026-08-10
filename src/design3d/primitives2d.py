@@ -32,13 +32,21 @@ class RoundedLineSegments2D(RoundedLineSegments):
     :param name: The name of the rounded line segments. Defaults to ''.
     :type name: str, optional
     """
+
     line_class = design3d.edges.LineSegment2D
     arc_class = design3d.edges.Arc2D
 
-    def __init__(self, points: List[design3d.Point2D], radius: Dict[int, float],
-                 adapt_radius: bool = False, reference_path: str = PATH_ROOT, name: str = ''):
-        RoundedLineSegments.__init__(self, points=points, radius=radius, adapt_radius=adapt_radius,
-                                     reference_path=reference_path, name=name)
+    def __init__(
+        self,
+        points: List[design3d.Point2D],
+        radius: Dict[int, float],
+        adapt_radius: bool = False,
+        reference_path: str = PATH_ROOT,
+        name: str = "",
+    ):
+        RoundedLineSegments.__init__(
+            self, points=points, radius=radius, adapt_radius=adapt_radius, reference_path=reference_path, name=name
+        )
 
     def arc_features(self, point_index: int):
         """
@@ -51,9 +59,13 @@ class RoundedLineSegments2D(RoundedLineSegments):
         point_distance1 = (pt1 - pti).norm()
         point_distance2 = (pt2 - pti).norm()
         point_distance3 = (pt1 - pt2).norm()
-        alpha = math.acos(
-            -(point_distance3 ** 2 - point_distance1 ** 2 - point_distance2 ** 2) / (2 * point_distance1
-                                                                                     * point_distance2)) / 2.
+        alpha = (
+            math.acos(
+                -(point_distance3**2 - point_distance1**2 - point_distance2**2)
+                / (2 * point_distance1 * point_distance2)
+            )
+            / 2.0
+        )
         point_distance = radius / math.tan(alpha)
 
         u1 = (pt1 - pti) / point_distance1
@@ -83,11 +95,12 @@ class RoundedLineSegments2D(RoundedLineSegments):
         :param angle: angle rotation
         :return: a new rotated OpenedRoundedLineSegments2D
         """
-        return self.__class__([point.rotation(center, angle)
-                               for point in self.points],
-                              self.radius,
-                              adapt_radius=self.adapt_radius,
-                              name=self.name)
+        return self.__class__(
+            [point.rotation(center, angle) for point in self.points],
+            self.radius,
+            adapt_radius=self.adapt_radius,
+            name=self.name,
+        )
 
     def translation(self, offset: design3d.Vector2D):
         """
@@ -98,7 +111,10 @@ class RoundedLineSegments2D(RoundedLineSegments):
         """
         return self.__class__(
             [point.translation(offset) for point in self.points],
-            self.radius, adapt_radius=self.adapt_radius, name=self.name)
+            self.radius,
+            adapt_radius=self.adapt_radius,
+            name=self.name,
+        )
 
     def _helper_offset_points_and_radii(self, vectors, number_points, offset):
         """
@@ -123,7 +139,7 @@ class RoundedLineSegments2D(RoundedLineSegments):
             else:
                 normal_i = normal_i.unit_vector()
                 if normal_i.dot(vectors[2 * i - 1].normal_vector()) > 0:
-                    normal_i = - normal_i
+                    normal_i = -normal_i
                     check = True
                 offset_vectors.append(normal_i)
 
@@ -138,7 +154,7 @@ class RoundedLineSegments2D(RoundedLineSegments):
                     if self.adapt_radius:
                         new_radii[i] = 1e-6
 
-            normal_vector1 = - vectors[2 * i - 1].normal_vector().unit_vector()
+            normal_vector1 = -vectors[2 * i - 1].normal_vector().unit_vector()
             normal_vector2 = vectors[2 * i].normal_vector().unit_vector()
             alpha = math.acos(normal_vector1.dot(normal_vector2))
 
@@ -177,7 +193,7 @@ class RoundedLineSegments2D(RoundedLineSegments):
             offset_points.insert(0, self.points[0] + offset * normal_1)
 
             n_last = vectors[-1].normal_vector()
-            n_last = - n_last
+            n_last = -n_last
             offset_points.append(self.points[-1] + offset * n_last)
 
         return self.__class__(offset_points, new_radii, adapt_radius=self.adapt_radius)
@@ -203,8 +219,7 @@ class RoundedLineSegments2D(RoundedLineSegments):
             else:
                 dir_vec_2 = design3d.Vector2D((self.points[0] - self.points[1]))
         elif self.closed and line_indexes[-1] == len(self.points) - 2:
-            dir_vec_2 = design3d.Vector2D(
-                (self.points[line_indexes[-1] + 1] - self.points[0]))
+            dir_vec_2 = design3d.Vector2D((self.points[line_indexes[-1] + 1] - self.points[0]))
         else:
             dir_vec_2 = self.points[line_indexes[-1] + 1] - self.points[line_indexes[-1] + 2]
 
@@ -227,12 +242,9 @@ class RoundedLineSegments2D(RoundedLineSegments):
         normal_vectors = []
         for index in line_indexes:
             if index == len(self.points) - 1:
-                normal_vectors.append(design3d.Vector2D(
-                    self.points[0] - self.points[index]).normalVector(
-                    unit=True))
+                normal_vectors.append(design3d.Vector2D(self.points[0] - self.points[index]).normalVector(unit=True))
             else:
-                normal_vectors.append(
-                    (self.points[index + 1] - self.points[index]).unit_normal_vector())
+                normal_vectors.append((self.points[index + 1] - self.points[index]).unit_normal_vector())
         return normal_vectors
 
     def _helper_get_offset_vectors(self, line_indexes, directive_vector1, directive_vector2):
@@ -242,13 +254,15 @@ class RoundedLineSegments2D(RoundedLineSegments):
         """
         intersection = design3d.Point2D.line_intersection(
             curves.Line2D(self.points[line_indexes[0]], self.points[line_indexes[0]] + directive_vector1),
-            curves.Line2D(self.points[line_indexes[-1] + 1], self.points[line_indexes[-1] + 1] + directive_vector2))
+            curves.Line2D(self.points[line_indexes[-1] + 1], self.points[line_indexes[-1] + 1] + directive_vector2),
+        )
         vec1 = intersection.point_distance(self.points[line_indexes[0]]) * directive_vector1
         vec2 = intersection.point_distance(self.points[line_indexes[-1] + 1]) * directive_vector2
         return vec1, vec2
 
-    def get_offset_new_points(self, line_indexes, offset, distance_dir1, distance_dir2, directive_vector1,
-                              directive_vector2, normal_vectors):
+    def get_offset_new_points(
+        self, line_indexes, offset, distance_dir1, distance_dir2, directive_vector1, directive_vector2, normal_vectors
+    ):
         """
         Get Offset new points.
 
@@ -260,13 +274,13 @@ class RoundedLineSegments2D(RoundedLineSegments):
 
         for i, index in enumerate(line_indexes[1:]):
             coeff_vec_2 = design3d.Point2D.point_distance(
-                self.points[line_indexes[0]], self.points[index]) / design3d.Point2D.point_distance(
-                self.points[line_indexes[0]], self.points[line_indexes[-1] + 1])
+                self.points[line_indexes[0]], self.points[index]
+            ) / design3d.Point2D.point_distance(self.points[line_indexes[0]], self.points[line_indexes[-1] + 1])
             coeff_vec_1 = 1 - coeff_vec_2
             if directive_vector1.dot(normal_vectors[i + 1]) < 0:
-                coeff_vec_1 = - coeff_vec_1
+                coeff_vec_1 = -coeff_vec_1
             if directive_vector2.dot(normal_vectors[i + 1]) < 0:
-                coeff_vec_2 = - coeff_vec_2
+                coeff_vec_2 = -coeff_vec_2
             index_dir_vector = coeff_vec_1 * vec1 + coeff_vec_2 * vec2
             index_dot = index_dir_vector.dot(normal_vectors[i + 1])
             new_points[index] = self.points[index] + (offset / index_dot) * index_dir_vector
@@ -310,16 +324,16 @@ class RoundedLineSegments2D(RoundedLineSegments):
         distance_dir1 = offset / dot1
         distance_dir2 = offset / dot2
 
-        new_points = self.get_offset_new_points(line_indexes, offset, distance_dir1, distance_dir2,
-                                                dir_vec_1, dir_vec_2, normal_vectors)
+        new_points = self.get_offset_new_points(
+            line_indexes, offset, distance_dir1, distance_dir2, dir_vec_1, dir_vec_2, normal_vectors
+        )
         for i, point in enumerate(self.points):
             if i in new_points:
                 new_linesegment2d_points.append(new_points[i])
             else:
                 new_linesegment2d_points.append(point)
 
-        rls_2d = self.__class__(new_linesegment2d_points, self.radius,
-                                adapt_radius=self.adapt_radius)
+        rls_2d = self.__class__(new_linesegment2d_points, self.radius, adapt_radius=self.adapt_radius)
 
         return rls_2d
 
@@ -334,10 +348,17 @@ class OpenedRoundedLineSegments2D(RoundedLineSegments2D, wires.Wire2D):
     :type radius: {position1(n): float which is the radius linked the n-1 and n+1 points, position2(n+1):...}.
     """
 
-    def __init__(self, points: List[design3d.Point2D], radius: Dict[int, float], adapt_radius: bool = False,
-                 reference_path: str = PATH_ROOT, name: str = ''):
-        RoundedLineSegments2D.__init__(self, points, radius, adapt_radius=adapt_radius,
-                                       reference_path=reference_path, name='')
+    def __init__(
+        self,
+        points: List[design3d.Point2D],
+        radius: Dict[int, float],
+        adapt_radius: bool = False,
+        reference_path: str = PATH_ROOT,
+        name: str = "",
+    ):
+        RoundedLineSegments2D.__init__(
+            self, points, radius, adapt_radius=adapt_radius, reference_path=reference_path, name=""
+        )
         self.closed = False
         wires.Wire2D.__init__(self, self._primitives(), reference_path=reference_path, name=name)
 
@@ -352,18 +373,29 @@ class ClosedRoundedLineSegments2D(RoundedLineSegments2D, wires.Contour2D):
     :type radius: {position1(n): float which is the radius linked the n-1 and n+1 points, position2(n+1):...}
     """
 
-    def __init__(self, points: List[design3d.Point2D], radius: Dict[int, float],
-                 adapt_radius: bool = False, reference_path: str = PATH_ROOT, name: str = ''):
-        RoundedLineSegments2D.__init__(self, points, radius, adapt_radius=adapt_radius,
-                                       reference_path=reference_path, name='')
+    def __init__(
+        self,
+        points: List[design3d.Point2D],
+        radius: Dict[int, float],
+        adapt_radius: bool = False,
+        reference_path: str = PATH_ROOT,
+        name: str = "",
+    ):
+        RoundedLineSegments2D.__init__(
+            self, points, radius, adapt_radius=adapt_radius, reference_path=reference_path, name=""
+        )
         self.closed = True
         # RoundedLineSegments.__init__(self, points, radius, closed=True, adapt_radius=adapt_radius, name=name)
         wires.Contour2D.__init__(self, self._primitives(), reference_path=reference_path, name=name)
 
     def copy(self, deep=True, memo=None):
         """Returns a copy of the object."""
-        return self.__class__([point.copy(deep, memo) for point in self.points], self.radius.copy(),
-                              self.adapt_radius, name='copy_' + self.name)
+        return self.__class__(
+            [point.copy(deep, memo) for point in self.points],
+            self.radius.copy(),
+            self.adapt_radius,
+            name="copy_" + self.name,
+        )
 
 
 class Measure2D(edges.LineSegment2D):
@@ -373,7 +405,7 @@ class Measure2D(edges.LineSegment2D):
     :param unit: 'mm', 'm' or None. If None, the distance won't be in the label.
     """
 
-    def __init__(self, point1, point2, label='', unit: str = 'mm', type_: str = 'distance'):
+    def __init__(self, point1, point2, label="", unit: str = "mm", type_: str = "distance"):
         """
         :param unit: 'mm', 'm' or None. If None, the distance won't be in the label.
 
@@ -392,29 +424,37 @@ class Measure2D(edges.LineSegment2D):
         x_middle, y_middle = 0.5 * (self.start + self.end)
         distance = self.end.point_distance(self.start)
 
-        if self.label != '':
-            label = f'{self.label}: '
+        if self.label != "":
+            label = f"{self.label}: "
         else:
-            label = ''
-        if self.unit == 'mm':
-            label += f'{round(distance * 1000, ndigits)} mm'
+            label = ""
+        if self.unit == "mm":
+            label += f"{round(distance * 1000, ndigits)} mm"
         else:
-            label += f'{round(distance, ndigits)} m'
+            label += f"{round(distance, ndigits)} m"
 
-        if self.type_ == 'distance':
-            arrow = matplotlib.patches.FancyArrowPatch((x1, y1), (x2, y2),
-                                                       arrowstyle='<|-|>,head_length=10,head_width=5',
-                                                       shrinkA=0, shrinkB=0,
-                                                       color=edge_style.color)
-        elif self.type_ == 'radius':
-            arrow = matplotlib.patches.FancyArrowPatch((x1, y1), (x2, y2),
-                                                       arrowstyle='-|>,head_length=10,head_width=5',
-                                                       shrinkA=0, shrinkB=0,
-                                                       color=edge_style.color)
+        if self.type_ == "distance":
+            arrow = matplotlib.patches.FancyArrowPatch(
+                (x1, y1),
+                (x2, y2),
+                arrowstyle="<|-|>,head_length=10,head_width=5",
+                shrinkA=0,
+                shrinkB=0,
+                color=edge_style.color,
+            )
+        elif self.type_ == "radius":
+            arrow = matplotlib.patches.FancyArrowPatch(
+                (x1, y1),
+                (x2, y2),
+                arrowstyle="-|>,head_length=10,head_width=5",
+                shrinkA=0,
+                shrinkB=0,
+                color=edge_style.color,
+            )
 
         ax.add_patch(arrow)
-        if x2 - x1 == 0.:
-            theta = 90.
+        if x2 - x1 == 0.0:
+            theta = 90.0
         else:
             theta = math.degrees(math.atan((y2 - y1) / (x2 - x1)))
-        ax.text(x_middle, y_middle, label, va='bottom', ha='center', rotation=theta)
+        ax.text(x_middle, y_middle, label, va="bottom", ha="center", rotation=theta)

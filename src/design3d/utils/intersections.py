@@ -2,6 +2,7 @@
 design3d utils for calculating curves intersections.
 
 """
+
 import math
 
 import design3d
@@ -30,12 +31,13 @@ def get_planar_circle3d_line_intersections(circle_3d, line, abs_tol: float = 1e-
     quadratic_equation_a = vec.dot(vec)
     quadratic_equation_b = 2 * vec.dot(point1 - circle_3d.center)
     quadratic_equation_c = (
-        point1.dot(point1) + circle_3d.center.dot(circle_3d.center)
+        point1.dot(point1)
+        + circle_3d.center.dot(circle_3d.center)
         - 2 * point1.dot(circle_3d.center)
-        - circle_3d.radius ** 2
+        - circle_3d.radius**2
     )
 
-    delta = quadratic_equation_b ** 2 - 4 * quadratic_equation_a * quadratic_equation_c
+    delta = quadratic_equation_b**2 - 4 * quadratic_equation_a * quadratic_equation_c
     if delta < 0:  # No real solutions, no intersection
         return []
     if math.isclose(delta, 0, abs_tol=abs_tol):  # One real solution, tangent intersection
@@ -78,7 +80,7 @@ def circle_3d_line_intersections(circle_3d, line, abs_tol: float = 1e-6):
     y_coordinate = constant * direction_vector.y + line.point1.y
     if math.isclose(
         (x_coordinate - circle_3d.frame.origin.x) ** 2 + (y_coordinate - circle_3d.frame.origin.y) ** 2,
-        circle_3d.radius ** 2,
+        circle_3d.radius**2,
         abs_tol=1e-6,
     ):
         intersections = [design3d.Point3D(x_coordinate, y_coordinate, z_constant)]
@@ -126,7 +128,7 @@ def _get_ellipse2d_vertical_line_intersectioons(ellipse2d, line2d):
     """
     x1 = line2d.point1.x
     x2 = x1
-    y1 = ellipse2d.minor_axis * math.sqrt((1 - x1 ** 2 / ellipse2d.major_axis ** 2))
+    y1 = ellipse2d.minor_axis * math.sqrt((1 - x1**2 / ellipse2d.major_axis**2))
     y2 = -y1
     point1 = design3d.Point2D(x1, y1)
     point2 = design3d.Point2D(x2, y2)
@@ -149,13 +151,13 @@ def _get_local_ellise2d_line_intersections(ellipse2d, line2d, abs_tol: float = 1
         return _get_ellipse2d_vertical_line_intersectioons(ellipse2d, line2d)
     line_slope = line2d.get_slope()
     line_y_intersection = line2d.get_y_intersection()
-    a_param = 1 / ellipse2d.major_axis ** 2 + line_slope ** 2 / ellipse2d.minor_axis ** 2
-    b_param = 2 * line_slope * line_y_intersection / ellipse2d.minor_axis ** 2
-    c_param = line_y_intersection ** 2 / ellipse2d.minor_axis ** 2 - 1
+    a_param = 1 / ellipse2d.major_axis**2 + line_slope**2 / ellipse2d.minor_axis**2
+    b_param = 2 * line_slope * line_y_intersection / ellipse2d.minor_axis**2
+    c_param = line_y_intersection**2 / ellipse2d.minor_axis**2 - 1
 
-    if b_param ** 2 > 4 * a_param * c_param:
-        x1 = (-b_param + math.sqrt(b_param ** 2 - 4 * a_param * c_param)) / (2 * a_param)
-        x2 = (-b_param - math.sqrt(b_param ** 2 - 4 * a_param * c_param)) / (2 * a_param)
+    if b_param**2 > 4 * a_param * c_param:
+        x1 = (-b_param + math.sqrt(b_param**2 - 4 * a_param * c_param)) / (2 * a_param)
+        x2 = (-b_param - math.sqrt(b_param**2 - 4 * a_param * c_param)) / (2 * a_param)
         y1 = line_slope * x1 + line_y_intersection
         y2 = line_slope * x2 + line_y_intersection
         point1 = design3d.Point2D(x1, y1)
@@ -214,11 +216,11 @@ def get_circle_intersections(circle1, circle2):
     # coincident circles
     if d_param == 0 and circle1.radius == circle2.radius:
         return []
-    a = (circle1.radius ** 2 - circle2.radius ** 2 + d_param ** 2) / (2 * d_param)
+    a = (circle1.radius**2 - circle2.radius**2 + d_param**2) / (2 * d_param)
     if abs(circle1.radius - a) < 1e-6:
         h_param = 0.0
     else:
-        h_param = math.sqrt(circle1.radius ** 2 - a ** 2)
+        h_param = math.sqrt(circle1.radius**2 - a**2)
     x2 = x0 + a * (x1 - x0) / d_param
     y2 = y0 + a * (y1 - y0) / d_param
     x3 = x2 + h_param * (y1 - y0) / d_param
@@ -245,10 +247,12 @@ def bspline_intersections_initial_conditions(primitive, bsplinecurve, resolution
     abscissa2 = bsplinecurve.length()
     if bsplinecurve.__class__.__name__ in ("BSplineCurve2D", "BSplineCurve3D"):
         bspline_discretized_points, points_abscissas = bsplinecurve.get_abscissa_discretization(
-            abscissa1, abscissa2, number_points=resolution, return_abscissas=True)
+            abscissa1, abscissa2, number_points=resolution, return_abscissas=True
+        )
     else:
         bspline_discretized_points, points_abscissas = get_abscissa_discretization(
-            bsplinecurve, abscissa1, abscissa2,  max_number_points=resolution)
+            bsplinecurve, abscissa1, abscissa2, max_number_points=resolution
+        )
         if bsplinecurve.periodic:
             bspline_discretized_points += [bspline_discretized_points[0]]
             if points_abscissas[0] == 0.0:
@@ -269,8 +273,7 @@ def bspline_intersections_initial_conditions(primitive, bsplinecurve, resolution
         if intersection:
             param_intersections.append((abscissa1, abscissa2))
     if not param_intersections and recursion_iteration < 1:
-        return bspline_intersections_initial_conditions(primitive, bsplinecurve, 100,
-                                                        recursion_iteration+1)
+        return bspline_intersections_initial_conditions(primitive, bsplinecurve, 100, recursion_iteration + 1)
     return param_intersections
 
 
@@ -304,12 +307,13 @@ def get_bsplinecurve_intersections(primitive, bsplinecurve, abs_tol: float = 1e-
             break
         abscissa1, abscissa2 = param_intersections[0]
         if bsplinecurve.__class__.__name__ in ("BSplineCurve2D", "BSplineCurve3D"):
-            (
-                discretized_points_between_1_2, points_abscissas
-            ) = bsplinecurve.get_abscissa_discretization(abscissa1, abscissa2, number_points=10, return_abscissas=True)
+            discretized_points_between_1_2, points_abscissas = bsplinecurve.get_abscissa_discretization(
+                abscissa1, abscissa2, number_points=10, return_abscissas=True
+            )
         else:
             (
-                discretized_points_between_1_2, points_abscissas,
+                discretized_points_between_1_2,
+                points_abscissas,
             ) = get_abscissa_discretization(bsplinecurve, abscissa1, abscissa2, max_number_points=10)
         for point1, point2, abscissa_point1, abscissa_point2 in zip(
             discretized_points_between_1_2[:-1],
@@ -390,9 +394,7 @@ def get_plane_linesegment_intersections(plane_frame, linesegment, abs_tol: float
     u_vector = linesegment.end - linesegment.start
     w_vector = linesegment.start - plane_frame.origin
     normaldotu = plane_frame.w.dot(u_vector)
-    if normaldotu == 0.0 or math.isclose(
-        plane_frame.w.unit_vector().dot(u_vector.unit_vector()), 0.0, abs_tol=abs_tol
-    ):
+    if normaldotu == 0.0 or math.isclose(plane_frame.w.unit_vector().dot(u_vector.unit_vector()), 0.0, abs_tol=abs_tol):
         return []
     intersection_abscissea = -plane_frame.w.dot(w_vector) / normaldotu
     if intersection_abscissea < 0 or intersection_abscissea > 1:
@@ -427,7 +429,7 @@ def get_plane_line_intersections(plane_frame, line, abs_tol: float = 1e-6):
 def _helper_two_plane_intersections(plane1_frame, plane2_frame):
     """
     Helper function to get point 1 on two plane intersections.
-   
+
     """
     a1, b1, c1, d1 = get_plane_equation_coefficients(plane1_frame)
     a2, b2, c2, d2 = get_plane_equation_coefficients(plane2_frame)
@@ -441,8 +443,8 @@ def _helper_two_plane_intersections(plane1_frame, plane2_frame):
         z0 = (a1 * d2 - a2 * d1) / (a2 * c1 - a1 * c2)
         point1 = design3d.Point3D(x0, 0, z0)
     elif abs(c1 * b2 - b1 * c2) > tol:
-        y0 = (- c2 * d1 + c1 * d2) / (b1 * c2 - c1 * b2)
-        z0 = (- b1 * d2 + b2 * d1) / (b1 * c2 - c1 * b2)
+        y0 = (-c2 * d1 + c1 * d2) / (b1 * c2 - c1 * b2)
+        z0 = (-b1 * d2 + b2 * d1) / (b1 * c2 - c1 * b2)
         point1 = design3d.Point3D(0, y0, z0)
     else:
         raise NotImplementedError

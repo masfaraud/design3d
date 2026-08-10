@@ -46,15 +46,13 @@ class Node2D(d3d.Point2D):
     def __hash__(self):
         return int(1e6 * (self.x + self.y))
 
-    def __eq__(self, other_node: 'Node2D'):
-        if other_node.__class__.__name__ not in ['Vector2D', 'Point2D',
-                                                 'Node2D']:
+    def __eq__(self, other_node: "Node2D"):
+        if other_node.__class__.__name__ not in ["Vector2D", "Point2D", "Node2D"]:
             return False
-        return math.isclose(self.x, other_node.x, abs_tol=1e-12) \
-            and math.isclose(self.y, other_node.y, abs_tol=1e-12)
+        return math.isclose(self.x, other_node.x, abs_tol=1e-12) and math.isclose(self.y, other_node.y, abs_tol=1e-12)
 
     @classmethod
-    def from_point(cls, point2d, name: str = ''):
+    def from_point(cls, point2d, name: str = ""):
         """
         Defines a node2d from a point2d.
 
@@ -82,15 +80,13 @@ class Node3D(d3d.Point3D):
     def __hash__(self):
         return int(1e6 * (self.x + self.y + self.z))
 
-    def __eq__(self, other_node: 'Node3D'):
-        if other_node.__class__.__name__ not in ['Vector3D', 'Point3D',
-                                                 'Node3D']:
+    def __eq__(self, other_node: "Node3D"):
+        if other_node.__class__.__name__ not in ["Vector3D", "Point3D", "Node3D"]:
             return False
-        return math.isclose(self.x, other_node.x, abs_tol=1e-12) \
-            and math.isclose(self.y, other_node.y, abs_tol=1e-12)
+        return math.isclose(self.x, other_node.x, abs_tol=1e-12) and math.isclose(self.y, other_node.y, abs_tol=1e-12)
 
     @classmethod
-    def from_point(cls, point3d, name: str = ''):
+    def from_point(cls, point3d, name: str = ""):
         """
         Defines a node3d from a point3d.
 
@@ -105,15 +101,15 @@ class Node3D(d3d.Point3D):
 
 
 class LinearElement(d3de.LineSegment2D):
-    """ A class that defines a linear element. """
+    """A class that defines a linear element."""
+
     _standalone_in_db = False
     _non_serializable_attributes = []
-    _non_data_eq_attributes = ['name']
-    _non_data_hash_attributes = ['name']
+    _non_data_eq_attributes = ["name"]
+    _non_data_hash_attributes = ["name"]
     _generic_eq = True
 
-    def __init__(self, start: d3d.Point2D, end: d3d.Point2D,
-                 interior_normal: d3d.Vector2D, name: str = ''):
+    def __init__(self, start: d3d.Point2D, end: d3d.Point2D, interior_normal: d3d.Vector2D, name: str = ""):
         self.points = [start, end]
         self.interior_normal = interior_normal
 
@@ -145,10 +141,11 @@ class TriangularElement(d3dw.Triangle):
     """
     A mesh element defined with 3 nodes.
     """
+
     _standalone_in_db = False
     _non_serializable_attributes = []
-    _non_data_eq_attributes = ['name']
-    _non_data_hash_attributes = ['name']
+    _non_data_eq_attributes = ["name"]
+    _non_data_hash_attributes = ["name"]
     _generic_eq = True
 
     def __init__(self, points: List[design3d.Point2D]):
@@ -172,12 +169,9 @@ class TriangularElement(d3dw.Triangle):
         :return: The linear elements corresponding to the sides of the triangle.
         :rtype: List[LinearElement]
         """
-        vec1 = d3d.Vector2D(self.points[1].x - self.points[0].x,
-                           self.points[1].y - self.points[0].y)
-        vec2 = d3d.Vector2D(self.points[2].x - self.points[1].x,
-                           self.points[2].y - self.points[1].y)
-        vec3 = d3d.Vector2D(self.points[0].x - self.points[2].x,
-                           self.points[0].y - self.points[2].y)
+        vec1 = d3d.Vector2D(self.points[1].x - self.points[0].x, self.points[1].y - self.points[0].y)
+        vec2 = d3d.Vector2D(self.points[2].x - self.points[1].x, self.points[2].y - self.points[1].y)
+        vec3 = d3d.Vector2D(self.points[0].x - self.points[2].x, self.points[0].y - self.points[2].y)
         normal1 = d3d.Vector2D(-vec1.y, vec1.x)
         normal2 = d3d.Vector2D(-vec2.y, vec2.x)
         normal3 = d3d.Vector2D(-vec3.y, vec3.x)
@@ -185,34 +179,38 @@ class TriangularElement(d3dw.Triangle):
         normal2 = normal2.unit_vector()
         normal3 = normal3.unit_vector()
         if normal1.dot(vec2) < 0:
-            normal1 = - normal1
+            normal1 = -normal1
         if normal2.dot(vec3) < 0:
-            normal2 = - normal2
+            normal2 = -normal2
         if normal3.dot(vec1) < 0:
-            normal3 = - normal3
-        linear_element_1 = LinearElement(self.points[0], self.points[1],
-                                         normal1)
-        linear_element_2 = LinearElement(self.points[1], self.points[2],
-                                         normal2)
-        linear_element_3 = LinearElement(self.points[2], self.points[0],
-                                         normal3)
+            normal3 = -normal3
+        linear_element_1 = LinearElement(self.points[0], self.points[1], normal1)
+        linear_element_2 = LinearElement(self.points[1], self.points[2], normal2)
+        linear_element_3 = LinearElement(self.points[2], self.points[0], normal3)
         return [linear_element_1, linear_element_2, linear_element_3]
 
     def _form_functions(self):
-        a_matrix = d3d.Matrix33(1, self.points[0].x, self.points[0].y,
-                               1, self.points[1].x, self.points[1].y,
-                               1, self.points[2].x, self.points[2].y)
+        a_matrix = d3d.Matrix33(
+            1,
+            self.points[0].x,
+            self.points[0].y,
+            1,
+            self.points[1].x,
+            self.points[1].y,
+            1,
+            self.points[2].x,
+            self.points[2].y,
+        )
         try:
             inv_a = a_matrix.inverse()
         except ValueError as expt:
             # self.plot()
-            print('buggy element area', self._area())
-            raise FlatElementError('form function bug') from expt
+            print("buggy element area", self._area())
+            raise FlatElementError("form function bug") from expt
         x_1 = inv_a.vector_multiplication(d3d.X3D)
         x_2 = inv_a.vector_multiplication(d3d.Y3D)
         x_3 = inv_a.vector_multiplication(d3d.Z3D)
         return x_1, x_2, x_3
-
 
     def _area(self):
         u_vect = self.points[1] - self.points[0]
@@ -238,14 +236,15 @@ class TriangularElement(d3dw.Triangle):
 
 
 class TriangularElement2D(TriangularElement, d3dw.ClosedPolygon2D):
-    """ Class to define a 2D triangular element. """
+    """Class to define a 2D triangular element."""
+
     _standalone_in_db = False
     _non_serializable_attributes = []
-    _non_data_eq_attributes = ['name']
-    _non_data_hash_attributes = ['name']
+    _non_data_eq_attributes = ["name"]
+    _non_data_hash_attributes = ["name"]
     _generic_eq = True
 
-    def __init__(self, points, name: str = ''):
+    def __init__(self, points, name: str = ""):
         super().__init__(points)
         # self.points = points
         self.name = name
@@ -266,12 +265,9 @@ class TriangularElement2D(TriangularElement, d3dw.ClosedPolygon2D):
         :return: The linear elements corresponding to the sides of the triangle.
         :rtype: List[LinearElement]
         """
-        vec1 = d3d.Vector2D(self.points[1].x - self.points[0].x,
-                           self.points[1].y - self.points[0].y)
-        vec2 = d3d.Vector2D(self.points[2].x - self.points[1].x,
-                           self.points[2].y - self.points[1].y)
-        vec3 = d3d.Vector2D(self.points[0].x - self.points[2].x,
-                           self.points[0].y - self.points[2].y)
+        vec1 = d3d.Vector2D(self.points[1].x - self.points[0].x, self.points[1].y - self.points[0].y)
+        vec2 = d3d.Vector2D(self.points[2].x - self.points[1].x, self.points[2].y - self.points[1].y)
+        vec3 = d3d.Vector2D(self.points[0].x - self.points[2].x, self.points[0].y - self.points[2].y)
         normal1 = d3d.Vector2D(-vec1.y, vec1.x)
         normal2 = d3d.Vector2D(-vec2.y, vec2.x)
         normal3 = d3d.Vector2D(-vec3.y, vec3.x)
@@ -279,29 +275,34 @@ class TriangularElement2D(TriangularElement, d3dw.ClosedPolygon2D):
         normal2 = normal2.unit_vector()
         normal3 = normal3.unit_vector()
         if normal1.dot(vec2) < 0:
-            normal1 = - normal1
+            normal1 = -normal1
         if normal2.dot(vec3) < 0:
-            normal2 = - normal2
+            normal2 = -normal2
         if normal3.dot(vec1) < 0:
-            normal3 = - normal3
-        linear_element_1 = LinearElement(self.points[0], self.points[1],
-                                         normal1)
-        linear_element_2 = LinearElement(self.points[1], self.points[2],
-                                         normal2)
-        linear_element_3 = LinearElement(self.points[2], self.points[0],
-                                         normal3)
+            normal3 = -normal3
+        linear_element_1 = LinearElement(self.points[0], self.points[1], normal1)
+        linear_element_2 = LinearElement(self.points[1], self.points[2], normal2)
+        linear_element_3 = LinearElement(self.points[2], self.points[0], normal3)
         return [linear_element_1, linear_element_2, linear_element_3]
 
     def _form_functions(self):
-        a_matrix = d3d.Matrix33(1, self.points[0].x, self.points[0].y,
-                               1, self.points[1].x, self.points[1].y,
-                               1, self.points[2].x, self.points[2].y)
+        a_matrix = d3d.Matrix33(
+            1,
+            self.points[0].x,
+            self.points[0].y,
+            1,
+            self.points[1].x,
+            self.points[1].y,
+            1,
+            self.points[2].x,
+            self.points[2].y,
+        )
         try:
             inv_a = a_matrix.inverse()
         except ValueError as expt:
             self.plot()
-            print('buggy element area', self.area)
-            raise FlatElementError('form function bug') from expt
+            print("buggy element area", self.area)
+            raise FlatElementError("form function bug") from expt
         x_1 = inv_a.vector_multiplication(d3d.X3D)
         x_2 = inv_a.vector_multiplication(d3d.Y3D)
         x_3 = inv_a.vector_multiplication(d3d.Z3D)
@@ -329,11 +330,10 @@ class TriangularElement2D(TriangularElement, d3dw.ClosedPolygon2D):
             new_points.append(point.axial_symmetry(line))
         return self.__class__(new_points)
 
-    def plot(self, ax=None, edge_style: EdgeStyle = EdgeStyle(), point_numbering=False,
-             fill=False, fill_color='w'):
+    def plot(self, ax=None, edge_style: EdgeStyle = EdgeStyle(), point_numbering=False, fill=False, fill_color="w"):
         if ax is None:
             _, ax = plt.subplots()
-            ax.set_aspect('equal')
+            ax.set_aspect("equal")
 
         if fill:
             x = [p[0] for p in self.points]
@@ -342,26 +342,24 @@ class TriangularElement2D(TriangularElement, d3dw.ClosedPolygon2D):
             return ax
         if point_numbering:
             for index_point, point in enumerate(self.points):
-                ax.text(*point, f'point {index_point + 1}', ha='center', va='top')
+                ax.text(*point, f"point {index_point + 1}", ha="center", va="top")
         for p1, p2 in zip(self.points, self.points[1:] + [self.points[0]]):
             if edge_style.width is None:
                 edge_style.width = 1
             if edge_style.plot_points:
-                ax.plot([p1.x, p2.x], [p1.y, p2.y], color=edge_style.color,
-                        marker='o', linewidth=edge_style.linewidth)
+                ax.plot([p1.x, p2.x], [p1.y, p2.y], color=edge_style.color, marker="o", linewidth=edge_style.linewidth)
             else:
-                ax.plot([p1.x, p2.x], [p1.y, p2.y], color=edge_style.color,
-                        linewidth=edge_style.linewidth)
+                ax.plot([p1.x, p2.x], [p1.y, p2.y], color=edge_style.color, linewidth=edge_style.linewidth)
         return ax
 
 
 class QuadrilateralElement2D(d3dw.ClosedPolygon2D):
-    """ Class to define a 2D quadrilateral element. """
+    """Class to define a 2D quadrilateral element."""
 
     _standalone_in_db = False
     _non_serializable_attributes = []
-    _non_data_eq_attributes = ['name']
-    _non_data_hash_attributes = ['name']
+    _non_data_eq_attributes = ["name"]
+    _non_data_hash_attributes = ["name"]
     _generic_eq = True
 
     def __init__(self, points: List[design3d.Point2D]):
@@ -377,7 +375,7 @@ class QuadrilateralElement2D(d3dw.ClosedPolygon2D):
 
 
 class TriangularElement3D(TriangularElement, d3dw.ClosedPolygon3D):
-    """ Class to define a 3D triangular element. """
+    """Class to define a 3D triangular element."""
 
     def __init__(self, points):
         self.points = points
@@ -391,7 +389,7 @@ class TriangularElement3D(TriangularElement, d3dw.ClosedPolygon3D):
         super().__init__(points)
 
     def axial_symmetry(self, line):
-        """ Returns a symmetric new element with respect to the given line. """
+        """Returns a symmetric new element with respect to the given line."""
         new_points = []
         for point in self.points:
             new_points.append(point.axial_symmetry(line))
@@ -399,9 +397,9 @@ class TriangularElement3D(TriangularElement, d3dw.ClosedPolygon3D):
 
 
 class TetrahedralElement:
-    """ Class to define a 3D tetrahedral element. """
+    """Class to define a 3D tetrahedral element."""
 
-    def __init__(self, points, name: str = ''):
+    def __init__(self, points, name: str = ""):
         self.points = points
         self.name = name
         # self.linear_elements = self._to_linear_elements()
@@ -420,15 +418,15 @@ class TetrahedralElement:
         triangular_elements = []
 
         for indices in indices_combinations:
-            triangular_elements.append(TriangularElement3D([self.points[indices[0]],
-                                                            self.points[indices[1]],
-                                                            self.points[indices[2]]]))
+            triangular_elements.append(
+                TriangularElement3D([self.points[indices[0]], self.points[indices[1]], self.points[indices[2]]])
+            )
 
         return triangular_elements
 
     def plot(self, ax=None, edge_style: EdgeStyle = EdgeStyle()):
         if ax is None:
-            ax = plt.figure().add_subplot(projection='3d')
+            ax = plt.figure().add_subplot(projection="3d")
         for point in self.points:
             point.plot(ax=ax)
         for triangle in self.triangular_elements:
@@ -455,19 +453,22 @@ class TetrahedralElement:
                     data_betha.extend([1, self.points[c_coef].y, self.points[c_coef].z])
                     data_delta.extend([1, self.points[c_coef].x, self.points[c_coef].y])
 
-            form_funct.append([(coeff[i] * (np.linalg.det(np.array(data_alpha).reshape(3, 3)))),
-                               ((-1) * coeff[i] * (np.linalg.det(np.array(data_betha).reshape(3, 3)))),
-                               (coeff[i] * (np.linalg.det(np.array(data_gamma).reshape(3, 3)))),
-                               ((-1) * coeff[i] * (np.linalg.det(np.array(data_delta).reshape(3, 3))))])
+            form_funct.append(
+                [
+                    (coeff[i] * (np.linalg.det(np.array(data_alpha).reshape(3, 3)))),
+                    ((-1) * coeff[i] * (np.linalg.det(np.array(data_betha).reshape(3, 3)))),
+                    (coeff[i] * (np.linalg.det(np.array(data_gamma).reshape(3, 3)))),
+                    ((-1) * coeff[i] * (np.linalg.det(np.array(data_delta).reshape(3, 3)))),
+                ]
+            )
 
         return form_funct[0], form_funct[1], form_funct[2], form_funct[3]
 
 
 class TetrahedralElementQuadratic:
-    """ Class to define a 3D quadratic tetrahedral element. """
+    """Class to define a 3D quadratic tetrahedral element."""
 
-
-    def __init__(self, points, name: str = ''):
+    def __init__(self, points, name: str = ""):
         self.points = points
         self.name = name
 
@@ -481,7 +482,6 @@ class ElementsGroup:
         self.name = name
 
         self._elements_per_node = None
-
 
     def _nodes(self):
         nodes = set()
@@ -537,14 +537,14 @@ class ElementsGroup:
     #         for elem in self.elements:
     #             elem.translation(offset, copy=False)
 
-    def plot(self, ax=None, color='k'):  # , fill=False):
+    def plot(self, ax=None, color="k"):  # , fill=False):
         """
         Plot an ElementGroup.
         """
 
         if ax is None:
             _, ax = plt.subplots()
-            ax.set_aspect('equal')
+            ax.set_aspect("equal")
         for element in self.elements:
             element.plot(ax=ax, edge_style=EdgeStyle(color=color))  # fill=fill
         return ax
@@ -554,9 +554,9 @@ class Mesh:
     """Defines a mesh."""
 
     _standalone_in_db = True
-    _non_serializable_attributes = ['node_to_index']
-    _non_data_eq_attributes = ['name']
-    _non_data_hash_attributes = ['name']
+    _non_serializable_attributes = ["node_to_index"]
+    _non_data_eq_attributes = ["name"]
+    _non_data_hash_attributes = ["name"]
     _generic_eq = True
 
     def __init__(self, elements_groups: List[ElementsGroup]):
@@ -586,11 +586,11 @@ class Mesh:
 
     def plot(self, ax=None):
         if ax is None:
-            if self.elements_groups[0].elements[0].__class__.__name__[-2::] == '2D':
+            if self.elements_groups[0].elements[0].__class__.__name__[-2::] == "2D":
                 _, ax = plt.subplots()
-                ax.set_aspect('equal')
+                ax.set_aspect("equal")
             else:
-                ax = plt.figure().add_subplot(projection='3d')
+                ax = plt.figure().add_subplot(projection="3d")
         for elements_group in self.elements_groups:
             elements_group.plot(ax=ax)
         return ax
@@ -680,7 +680,7 @@ class Mesh:
                 if new:
                     new_elements.add(element.__class__(points))
 
-            groups[index_g] = group.__class__(elements, name='')
+            groups[index_g] = group.__class__(elements, name="")
 
         groups.insert(reference_index, self.elements_groups[reference_index])
 

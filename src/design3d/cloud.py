@@ -19,6 +19,7 @@ from design3d import surfaces
 import design3d.primitives3d as p3d
 import design3d.step as vstep
 import design3d.stl as d3dstl
+
 # import design3d.core
 import design3d.wires as d3dw
 
@@ -30,13 +31,13 @@ class PointCloud3D:
     :param points: a list of points.
     """
 
-    def __init__(self, points: List[d3d.Point3D], name: str = ''):
+    def __init__(self, points: List[d3d.Point3D], name: str = ""):
         self.points = points
         self.__bounding_box = None
         self.name = name
 
     @classmethod
-    def from_stl(cls, file_path, name: str = 'from_stl'):
+    def from_stl(cls, file_path, name: str = "from_stl"):
         """
         Creates a point cloud 3d from a stl file.
 
@@ -77,7 +78,7 @@ class PointCloud3D:
         :return: PointCloud2D object.
         """
         list_points2d = [pt3d.to_2d(plane_origin, x, y) for pt3d in self.points]
-        return PointCloud2D(list_points2d, name='3d_to_2d')
+        return PointCloud2D(list_points2d, name="3d_to_2d")
 
     def extract(self, u, umin, umax):  # -> List[PointCloud3D] :
         """
@@ -127,8 +128,7 @@ class PointCloud3D:
         return dist_between_plane, position_plane
 
     @staticmethod
-    def check_area_polygon(initial_polygons2d, position_plane,
-                           normal, vec1, vec2):
+    def check_area_polygon(initial_polygons2d, position_plane, normal, vec1, vec2):
         """
         Checks and processes area of polygons.
 
@@ -151,8 +151,7 @@ class PointCloud3D:
                 continue
             if poly.area() < avg_area / 10:
                 new_poly = d3dw.ClosedPolygon2D.concave_hull(poly.points, -1, 0.000005)
-                new_polygon = new_poly.to_3d(position_plane[n] * normal, vec1,
-                                             vec2)
+                new_polygon = new_poly.to_3d(position_plane[n] * normal, vec1, vec2)
                 polygons_3d.append(new_polygon)
             else:
 
@@ -186,12 +185,15 @@ class PointCloud3D:
                     posmax = n
             vec1, vec2 = [d3d.X3D, d3d.Y3D, d3d.Z3D][posmax - 2], [d3d.X3D, d3d.Y3D, d3d.Z3D][posmax - 1]
 
-        dist_between_plane, position_plane = self.position_plane(posmax=posmax,
-                                                                 resolution=resolution)
-        sub_clouds3d = [self.extract(normal, pos_plane - 0.5 * dist_between_plane,
-                                     pos_plane + 0.5 * dist_between_plane) for pos_plane in position_plane]
-        sub_clouds2d = [sub_clouds3d[n].to_subcloud2d((position_plane[n] * normal).to_point(), vec1, vec2)
-                        for n in range(resolution)]
+        dist_between_plane, position_plane = self.position_plane(posmax=posmax, resolution=resolution)
+        sub_clouds3d = [
+            self.extract(normal, pos_plane - 0.5 * dist_between_plane, pos_plane + 0.5 * dist_between_plane)
+            for pos_plane in position_plane
+        ]
+        sub_clouds2d = [
+            sub_clouds3d[n].to_subcloud2d((position_plane[n] * normal).to_point(), vec1, vec2)
+            for n in range(resolution)
+        ]
 
         # Offsetting
         if offset != 0:
@@ -199,16 +201,21 @@ class PointCloud3D:
             position_plane, initial_polygons2d = self.offset_to_shell(position_plane, initial_polygons2d, offset)
         else:
             initial_polygons2d = [cloud2d.to_polygon() for cloud2d in sub_clouds2d]
-        polygons_3d = self.check_area_polygon(initial_polygons2d=initial_polygons2d,
-                                              position_plane=position_plane,
-                                              normal=normal,
-                                              vec1=vec1, vec2=vec2)
+        polygons_3d = self.check_area_polygon(
+            initial_polygons2d=initial_polygons2d, position_plane=position_plane, normal=normal, vec1=vec1, vec2=vec2
+        )
 
         return self.generate_shell(polygons_3d, normal, vec1, vec2)
 
     @classmethod
-    def generate_shell(cls, polygons_3d: List[d3d.wires.ClosedPolygon3D],
-                       normal: d3d.Vector3D, vec1: d3d.Vector3D, vec2: d3d.Vector3D, name: str = ''):
+    def generate_shell(
+        cls,
+        polygons_3d: List[d3d.wires.ClosedPolygon3D],
+        normal: d3d.Vector3D,
+        vec1: d3d.Vector3D,
+        vec2: d3d.Vector3D,
+        name: str = "",
+    ):
         """
         Generates a shell from a list of polygon 3d, using a sewing algorithm.
 
@@ -232,17 +239,22 @@ class PointCloud3D:
                     vec2_ = -vec2
                 faces.append(
                     d3df.PlaneFace3D(
-                        surface3d=surfaces.Plane3D.from_plane_vectors((position_plane[n] * normal).to_point(),
-                                                                      vec1, vec2_),
-                        surface2d=cls._poly_to_surf2d(poly1_simplified, position_plane[n], normal, vec1, vec2_)))
+                        surface3d=surfaces.Plane3D.from_plane_vectors(
+                            (position_plane[n] * normal).to_point(), vec1, vec2_
+                        ),
+                        surface2d=cls._poly_to_surf2d(poly1_simplified, position_plane[n], normal, vec1, vec2_),
+                    )
+                )
 
             if n != resolution - 1:
                 poly2 = polygons_3d[n + 1]
                 poly2_simplified = cls._helper_simplify_polygon(poly2, position_plane[n + 1], normal, vec1, vec2)
 
                 list_triangles_points = cls._helper_sew_polygons(poly1_simplified, poly2_simplified, vec1, vec2)
-                list_faces = [d3df.Triangle3D(*triangle_points, alpha=0.9, color=(1, 0.1, 0.1))
-                              for triangle_points in list_triangles_points]
+                list_faces = [
+                    d3df.Triangle3D(*triangle_points, alpha=0.9, color=(1, 0.1, 0.1))
+                    for triangle_points in list_triangles_points
+                ]
                 faces.extend(list_faces)
         return d3dshells.ClosedShell3D(faces, name=name)
 
@@ -262,7 +274,7 @@ class PointCloud3D:
     def _helper_sew_polygons(poly1, poly2, vec1, vec2):
         return poly1.sewing(poly2, vec1, vec2)
 
-    def shell_distances(self, shells: d3dshells.OpenTriangleShell3D) -> Tuple['PointCloud3D', List[float], List[int]]:
+    def shell_distances(self, shells: d3dshells.OpenTriangleShell3D) -> Tuple["PointCloud3D", List[float], List[int]]:
         """
         Computes distance of point to shell for each point in self.points.
 
@@ -271,9 +283,11 @@ class PointCloud3D:
         :rtype: Tuple[PointCloud3D, List[float], List[int]]
         """
         nearest_coords, distances, triangles_idx = self.shell_distances_ndarray(shells)
-        return (PointCloud3D([d3d.Point3D(*coords) for coords in nearest_coords]),
-                distances.tolist(),
-                triangles_idx.tolist())
+        return (
+            PointCloud3D([d3d.Point3D(*coords) for coords in nearest_coords]),
+            distances.tolist(),
+            triangles_idx.tolist(),
+        )
 
     def shell_distances_ndarray(self, shells: d3dshells.OpenTriangleShell3D):
         """
@@ -291,7 +305,7 @@ class PointCloud3D:
         return [point.coordinates() for point in self.points]
 
     @classmethod
-    def from_step(cls, step_file: str, name: str = ''):
+    def from_step(cls, step_file: str, name: str = ""):
         """
         Creates a cloud of points from a step file.
 
@@ -303,7 +317,7 @@ class PointCloud3D:
         points = step.to_points()
         return cls(points, name=name)
 
-    def plot(self, ax=None, color='k'):
+    def plot(self, ax=None, color="k"):
         """
         Plot the cloud 3d.
 
@@ -341,8 +355,7 @@ class PointCloud3D:
         return extended_points
 
     @staticmethod
-    def offset_to_shell(positions_plane: List[surfaces.Plane3D],
-                        polygons2d: List[d3dw.ClosedPolygon2D], offset: float):
+    def offset_to_shell(positions_plane: List[surfaces.Plane3D], polygons2d: List[d3dw.ClosedPolygon2D], offset: float):
         """Offsets a Shell."""
         origin_f, origin_l = positions_plane[0], positions_plane[-1]
 
@@ -360,11 +373,11 @@ class PointCloud2D:
     :param points: list of points for point cloud.
     """
 
-    def __init__(self, points, name: str = ''):
+    def __init__(self, points, name: str = ""):
         self.points = points
         self.name = name
 
-    def plot(self, ax=None, color='k'):
+    def plot(self, ax=None, color="k"):
         """Plot a point cloud 2d using Matplotlib."""
         if ax is None:
             _, ax = plt.subplots()
@@ -404,7 +417,7 @@ class PointCloud2D:
     def simplify(self, resolution=5):
         """Simplify cloud point 2d."""
         if not self.points:
-            return PointCloud2D(self.points, name=self.name + '_none')
+            return PointCloud2D(self.points, name=self.name + "_none")
 
         xy_extr = list(self.bounding_rectangle())  # xmin, xmax, ymin, ymax
 
@@ -426,7 +439,7 @@ class PointCloud2D:
         for poly in polys:
             if poly is not None:
                 clean_points += poly.points
-        return PointCloud2D(clean_points, name=self.name + '_clean')
+        return PointCloud2D(clean_points, name=self.name + "_clean")
 
     def to_coord_matrix(self) -> List[List[float]]:
         """

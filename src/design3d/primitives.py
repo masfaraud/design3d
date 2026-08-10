@@ -20,13 +20,21 @@ class RoundedLineSegments:
     Rounded Line Segments class.
 
     """
-    _non_serializable_attributes = ['line_class', 'arc_class', 'basis_primitives', 'primitives']
+
+    _non_serializable_attributes = ["line_class", "arc_class", "basis_primitives", "primitives"]
 
     line_class = design3d.edges.LineSegment
     arc_class = design3d.edges.ArcMixin
 
-    def __init__(self, points: List[design3d.Point3D], radius: Dict[str, float],
-                 closed: bool = False, adapt_radius: bool = False, reference_path: str = PATH_ROOT, name: str = ''):
+    def __init__(
+        self,
+        points: List[design3d.Point3D],
+        radius: Dict[str, float],
+        closed: bool = False,
+        adapt_radius: bool = False,
+        reference_path: str = PATH_ROOT,
+        name: str = "",
+    ):
 
         self.points = points
         self.radius = {int(k): v for k, v in radius.items()}
@@ -62,16 +70,18 @@ class RoundedLineSegments:
 
         side = 'old' or 'new'
         """
-        return self.__class__([point.frame_mapping(frame, side)
-                               for point in self.points], radius=self.radius,
-                              adapt_radius=self.adapt_radius,
-                              name=self.name)
+        return self.__class__(
+            [point.frame_mapping(frame, side) for point in self.points],
+            radius=self.radius,
+            adapt_radius=self.adapt_radius,
+            name=self.name,
+        )
 
     def arc_features(self, point_index: int):
         """
         Returns the arc features for point at index.
         """
-        raise NotImplementedError('The method arc_features should be overloaded.')
+        raise NotImplementedError("The method arc_features should be overloaded.")
 
     def _primitives(self):
         """
@@ -159,8 +169,9 @@ class RoundedLineSegments:
                         distance_2 = point2.point_distance(point3)
 
                         if dist[ipoint] > (min(distance_1, distance_2)):
-                            self.radius[ipoint] = min(self.radius[ipoint],
-                                                      min(distance_1, distance_2) * math.tan(alpha[ipoint]))
+                            self.radius[ipoint] = min(
+                                self.radius[ipoint], min(distance_1, distance_2) * math.tan(alpha[ipoint])
+                            )
 
                     else:
                         # Adding to dof
@@ -190,7 +201,7 @@ class RoundedLineSegments:
                     optimized_radius_solution = linprog(c, a_ub, b_ub, bounds=bounds)
 
                     for ipoint, dof_point in dof.items():
-                        radius = optimized_radius_solution .x[dof_point] * math.tan(alpha[ipoint])
+                        radius = optimized_radius_solution.x[dof_point] * math.tan(alpha[ipoint])
                         if radius > 1e-10:
                             self.radius[ipoint] = radius
                         else:

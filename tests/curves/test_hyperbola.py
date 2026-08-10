@@ -18,14 +18,24 @@ class TestHyperbola2D(unittest.TestCase):
         line1 = curves.Line2D(design3d.Point2D(1, 0), design3d.Point2D(-6, 10))
         line2 = curves.Line2D(design3d.Point2D(-10, -5), design3d.Point2D(10, 5))
         line3 = curves.Line2D(design3d.Point2D(-10, -5), design3d.Point2D(5, 10))
-        expected_results = [[[design3d.Point2D(3.414716821729969, 1.4411665257000275),
-                              design3d.Point2D(1.4066104613103017, 3.2667177624451798)],
-                             [design3d.Point2D(2.529822128134703, 1.2649110640673518)],
-                             [design3d.Point2D(2.696152422706632, 7.696152422706632)]],
-                            [[design3d.Point2D(10.884604683797278, -5.349640621633888),
-                              design3d.Point2D(3.452312878926738, 1.40698829188478319)],
-                             [],
-                             []]]
+        expected_results = [
+            [
+                [
+                    design3d.Point2D(3.414716821729969, 1.4411665257000275),
+                    design3d.Point2D(1.4066104613103017, 3.2667177624451798),
+                ],
+                [design3d.Point2D(2.529822128134703, 1.2649110640673518)],
+                [design3d.Point2D(2.696152422706632, 7.696152422706632)],
+            ],
+            [
+                [
+                    design3d.Point2D(10.884604683797278, -5.349640621633888),
+                    design3d.Point2D(3.452312878926738, 1.40698829188478319),
+                ],
+                [],
+                [],
+            ],
+        ]
         for i, hyperbola in enumerate([hyperbola1, hyperbola2]):
             for j, line in enumerate([line1, line2, line3]):
                 line_intersections = hyperbola.line_intersections(line)
@@ -68,12 +78,18 @@ class TestHyperbola3D(unittest.TestCase):
         line3d_2 = curves.Line3D(points[20], points[320])
         line3d_3 = curves.Line3D(points[50], design3d.Point3D(10, 15, -15))
         line3d_4 = curves.Line3D(design3d.Point3D(-20, -15, 15), design3d.Point3D(10, 15, -15))
-        expected_results = [[design3d.Point3D(3.106958942196619, 14.126593248702392, 14.126593248702392),
-                             design3d.Point3D(5.209563472536312, 2.1093320938257762, 2.1093320938257762)],
-                            [design3d.Point3D(3.1069589421966235, 14.126593248702383, 14.126593248702383),
-                             design3d.Point3D(12.001168238296865, 4.603586433650937, 4.603586433650937)],
-                            [design3d.Point3D(2.6111150368875498, 11.789027732278152, 11.789027732278152)],
-                            []]
+        expected_results = [
+            [
+                design3d.Point3D(3.106958942196619, 14.126593248702392, 14.126593248702392),
+                design3d.Point3D(5.209563472536312, 2.1093320938257762, 2.1093320938257762),
+            ],
+            [
+                design3d.Point3D(3.1069589421966235, 14.126593248702383, 14.126593248702383),
+                design3d.Point3D(12.001168238296865, 4.603586433650937, 4.603586433650937),
+            ],
+            [design3d.Point3D(2.6111150368875498, 11.789027732278152, 11.789027732278152)],
+            [],
+        ]
 
         for i, line in enumerate([line3d_1, line3d_2, line3d_3, line3d_4]):
             intersections = hyperbola.line_intersections(line)
@@ -81,9 +97,11 @@ class TestHyperbola3D(unittest.TestCase):
                 self.assertTrue(intersection.is_close(expected_result))
 
     def test_trim(self):
-        hyperbola = curves.Hyperbola3D(design3d.Frame3D(design3d.Point3D(0, 0.25, 0),
-                                                       design3d.Z3D, design3d.X3D, design3d.Y3D),
-                                       0.4330127018922194, 0.25000000000016875)
+        hyperbola = curves.Hyperbola3D(
+            design3d.Frame3D(design3d.Point3D(0, 0.25, 0), design3d.Z3D, design3d.X3D, design3d.Y3D),
+            0.4330127018922194,
+            0.25000000000016875,
+        )
 
         point_start = design3d.Point3D(0.4330127018922191, 0.25, 0.866025403784)
         point_end = design3d.Point3D(-0.4330127018922191, 0.25, 0.866025403784)
@@ -115,11 +133,13 @@ class TestHyperbola3D(unittest.TestCase):
         point2 = design3d.Point3D(-0.8766643972395096, 3.9800825065547225, 3.9800825065547225)
         tangent_vector1 = hyperbola3d.tangent(point1)
         tangent_vector2 = hyperbola3d.tangent(point2)
-        self.assertTrue(tangent_vector1.is_close(
-            design3d.Vector3D(1.362919855421623, 0.13817498403014217, 0.13817498403014217)))
-        self.assertTrue(tangent_vector2.is_close(
-            design3d.Vector3D(0.2566720737495096, -0.9680727976427224, -0.9680727976427224)))
+        self.assertTrue(
+            tangent_vector1.is_close(design3d.Vector3D(1.362919855421623, 0.13817498403014217, 0.13817498403014217))
+        )
+        self.assertTrue(
+            tangent_vector2.is_close(design3d.Vector3D(0.2566720737495096, -0.9680727976427224, -0.9680727976427224))
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

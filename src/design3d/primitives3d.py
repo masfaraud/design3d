@@ -22,8 +22,7 @@ import design3d.primitives
 import design3d.wires
 from design3d import shells, surfaces, curves
 
-
-np.seterr(divide='raise')
+np.seterr(divide="raise")
 
 
 class RoundedLineSegments3D(design3d.primitives.RoundedLineSegments):
@@ -43,11 +42,13 @@ class RoundedLineSegments3D(design3d.primitives.RoundedLineSegments):
     :param name: The name of the rounded line segments. Defaults to ''.
     :type name: str, optional
     """
+
     line_class = design3d.edges.LineSegment3D
     arc_class = design3d.edges.Arc3D
 
-    def __init__(self, points: List[design3d.Point3D], radius: Dict[str, float],
-                 adapt_radius: bool = False, name: str = ''):
+    def __init__(
+        self, points: List[design3d.Point3D], radius: Dict[str, float], adapt_radius: bool = False, name: str = ""
+    ):
         design3d.primitives.RoundedLineSegments.__init__(self, points, radius, adapt_radius=adapt_radius, name=name)
 
     def arc_features(self, point_index: int):
@@ -57,7 +58,7 @@ class RoundedLineSegments3D(design3d.primitives.RoundedLineSegments):
         dist1 = (point_1 - point_i).norm()
         dist2 = (point_2 - point_i).norm()
         dist3 = (point_1 - point_2).norm()
-        alpha = math.acos(-(dist3**2 - dist1**2 - dist2**2) / (2 * dist1 * dist2)) / 2.
+        alpha = math.acos(-(dist3**2 - dist1**2 - dist2**2) / (2 * dist1 * dist2)) / 2.0
         dist = radius / math.tan(alpha)
 
         u1 = (point_1 - point_i) / dist1
@@ -80,8 +81,7 @@ class RoundedLineSegments3D(design3d.primitives.RoundedLineSegments):
         interior = line1.minimum_distance_points(line2)[0] - w * radius
         return p3, interior, p4, dist, alpha
 
-    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D,
-                 angle: float):
+    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D, angle: float):
         """
         OpenRoundedLineSegments3D rotation.
 
@@ -90,9 +90,9 @@ class RoundedLineSegments3D(design3d.primitives.RoundedLineSegments):
         :param angle: angle rotation
         :return: a new rotated OpenRoundedLineSegments3D
         """
-        return self.__class__([point.rotation(center, axis, angle)
-                               for point in self.points],
-                              self.radius, self.closed, self.name)
+        return self.__class__(
+            [point.rotation(center, axis, angle) for point in self.points], self.radius, self.closed, self.name
+        )
 
     def translation(self, offset: design3d.Vector3D):
         """
@@ -101,9 +101,7 @@ class RoundedLineSegments3D(design3d.primitives.RoundedLineSegments):
         :param offset: translation vector
         :return: A new translated OpenRoundedLineSegments3D
         """
-        return self.__class__([point.translation(offset)
-                               for point in self.points],
-                              self.radius, self.closed, self.name)
+        return self.__class__([point.translation(offset) for point in self.points], self.radius, self.closed, self.name)
 
 
 class OpenRoundedLineSegments3D(design3d.wires.Wire3D, RoundedLineSegments3D):
@@ -116,12 +114,14 @@ class OpenRoundedLineSegments3D(design3d.wires.Wire3D, RoundedLineSegments3D):
     :type radius: {position1(n): float which is the radius linked the n-1 and.
     n+1 points, position2(n+1):...}
     """
-    _non_data_eq_attributes = ['name']
-    _non_data_hash_attributes = ['name']
 
-    def __init__(self, points: List[design3d.Point3D], radius: Dict[str, float],
-                 adapt_radius: bool = False, name: str = ''):
-        RoundedLineSegments3D.__init__(self, points, radius, adapt_radius=adapt_radius, name='')
+    _non_data_eq_attributes = ["name"]
+    _non_data_hash_attributes = ["name"]
+
+    def __init__(
+        self, points: List[design3d.Point3D], radius: Dict[str, float], adapt_radius: bool = False, name: str = ""
+    ):
+        RoundedLineSegments3D.__init__(self, points, radius, adapt_radius=adapt_radius, name="")
         self.closed = False
 
         design3d.wires.Wire3D.__init__(self, self._primitives(), name)
@@ -137,11 +137,12 @@ class ClosedRoundedLineSegments3D(RoundedLineSegments3D, design3d.wires.Contour3
     :type radius: {position1(n): float which is the radius linked the n-1 and
     n+1 points, position2(n+1):...}
     """
-    _non_serializable_attributes = []
-    _non_data_eq_attributes = ['name']
-    _non_data_hash_attributes = ['name']
 
-    def __init__(self, points: List[design3d.Point3D], radius: float, adapt_radius: bool = False, name: str = ''):
+    _non_serializable_attributes = []
+    _non_data_eq_attributes = ["name"]
+    _non_data_hash_attributes = ["name"]
+
+    def __init__(self, points: List[design3d.Point3D], radius: float, adapt_radius: bool = False, name: str = ""):
         RoundedLineSegments3D.__init__(self, points, radius, adapt_radius, name)
         self.closed = True
         design3d.wires.Contour3D.__init__(self, primitives=self._primitives(), name=name)
@@ -155,13 +156,17 @@ class Block(shells.ClosedShell3D):
      the 3 vectors are defining the edges. The frame has not to be orthogonal
     """
 
-    def __init__(self, frame: design3d.Frame3D, *,
-                 color: Tuple[float, float, float] = None, alpha: float = 1.,
-                 reference_path: str = design3d.PATH_ROOT, name: str = ''):
+    def __init__(
+        self,
+        frame: design3d.Frame3D,
+        *,
+        color: Tuple[float, float, float] = None,
+        alpha: float = 1.0,
+        reference_path: str = design3d.PATH_ROOT,
+        name: str = "",
+    ):
         self.frame = frame
-        self.size = (self.frame.u.norm(),
-                     self.frame.v.norm(),
-                     self.frame.w.norm())
+        self.size = (self.frame.u.norm(), self.frame.v.norm(), self.frame.w.norm())
         self._octree = None
         self._quadtree = None
         faces = self.shell_faces()
@@ -186,10 +191,14 @@ class Block(shells.ClosedShell3D):
 
         """
         dict_ = {"name": self.name}
-        dict_.update({'color': self.color,
-                      'alpha': self.alpha,
-                      'frame': self.frame.to_dict(),
-                      'reference_path': self.reference_path})
+        dict_.update(
+            {
+                "color": self.color,
+                "alpha": self.alpha,
+                "frame": self.frame.to_dict(),
+                "reference_path": self.reference_path,
+            }
+        )
 
         return dict_
 
@@ -228,30 +237,34 @@ class Block(shells.ClosedShell3D):
 
     def vertices(self):
         """Computes the vertices of the block."""
-        return [self.frame.origin - 0.5 * self.frame.u - 0.5 * self.frame.v - 0.5 * self.frame.w,
-                self.frame.origin - 0.5 * self.frame.u + 0.5 * self.frame.v - 0.5 * self.frame.w,
-                self.frame.origin + 0.5 * self.frame.u + 0.5 * self.frame.v - 0.5 * self.frame.w,
-                self.frame.origin + 0.5 * self.frame.u - 0.5 * self.frame.v - 0.5 * self.frame.w,
-                self.frame.origin - 0.5 * self.frame.u - 0.5 * self.frame.v + 0.5 * self.frame.w,
-                self.frame.origin - 0.5 * self.frame.u + 0.5 * self.frame.v + 0.5 * self.frame.w,
-                self.frame.origin + 0.5 * self.frame.u + 0.5 * self.frame.v + 0.5 * self.frame.w,
-                self.frame.origin + 0.5 * self.frame.u - 0.5 * self.frame.v + 0.5 * self.frame.w]
+        return [
+            self.frame.origin - 0.5 * self.frame.u - 0.5 * self.frame.v - 0.5 * self.frame.w,
+            self.frame.origin - 0.5 * self.frame.u + 0.5 * self.frame.v - 0.5 * self.frame.w,
+            self.frame.origin + 0.5 * self.frame.u + 0.5 * self.frame.v - 0.5 * self.frame.w,
+            self.frame.origin + 0.5 * self.frame.u - 0.5 * self.frame.v - 0.5 * self.frame.w,
+            self.frame.origin - 0.5 * self.frame.u - 0.5 * self.frame.v + 0.5 * self.frame.w,
+            self.frame.origin - 0.5 * self.frame.u + 0.5 * self.frame.v + 0.5 * self.frame.w,
+            self.frame.origin + 0.5 * self.frame.u + 0.5 * self.frame.v + 0.5 * self.frame.w,
+            self.frame.origin + 0.5 * self.frame.u - 0.5 * self.frame.v + 0.5 * self.frame.w,
+        ]
 
     def edges(self):
         """Computes the edges of the block."""
         point1, point2, point3, point4, point5, point6, point7, point8 = self.vertices()
-        return [design3d.edges.LineSegment3D(point1.copy(), point2.copy()),
-                design3d.edges.LineSegment3D(point2.copy(), point3.copy()),
-                design3d.edges.LineSegment3D(point3.copy(), point4.copy()),
-                design3d.edges.LineSegment3D(point4.copy(), point1.copy()),
-                design3d.edges.LineSegment3D(point5.copy(), point6.copy()),
-                design3d.edges.LineSegment3D(point6.copy(), point7.copy()),
-                design3d.edges.LineSegment3D(point7.copy(), point8.copy()),
-                design3d.edges.LineSegment3D(point8.copy(), point5.copy()),
-                design3d.edges.LineSegment3D(point1.copy(), point5.copy()),
-                design3d.edges.LineSegment3D(point2.copy(), point6.copy()),
-                design3d.edges.LineSegment3D(point3.copy(), point7.copy()),
-                design3d.edges.LineSegment3D(point4.copy(), point8.copy())]
+        return [
+            design3d.edges.LineSegment3D(point1.copy(), point2.copy()),
+            design3d.edges.LineSegment3D(point2.copy(), point3.copy()),
+            design3d.edges.LineSegment3D(point3.copy(), point4.copy()),
+            design3d.edges.LineSegment3D(point4.copy(), point1.copy()),
+            design3d.edges.LineSegment3D(point5.copy(), point6.copy()),
+            design3d.edges.LineSegment3D(point6.copy(), point7.copy()),
+            design3d.edges.LineSegment3D(point7.copy(), point8.copy()),
+            design3d.edges.LineSegment3D(point8.copy(), point5.copy()),
+            design3d.edges.LineSegment3D(point1.copy(), point5.copy()),
+            design3d.edges.LineSegment3D(point2.copy(), point6.copy()),
+            design3d.edges.LineSegment3D(point3.copy(), point7.copy()),
+            design3d.edges.LineSegment3D(point4.copy(), point8.copy()),
+        ]
 
     def face_contours3d(self):
         """Get face contours."""
@@ -260,14 +273,18 @@ class Block(shells.ClosedShell3D):
         contours = [
             design3d.wires.Contour3D([edge.copy() for edge in edges[:4]]),
             design3d.wires.Contour3D([edge.copy() for edge in edges[4:8]]),
-            design3d.wires.Contour3D([edges[0].copy(), edges[9].copy(),
-                                     switched_edges[0].copy(), switched_edges[4].copy()]),
-            design3d.wires.Contour3D([edges[1].copy(), edges[10].copy(),
-                                     switched_edges[1].copy(), switched_edges[5].copy()]),
-            design3d.wires.Contour3D([edges[2].copy(), edges[11].copy(),
-                                     switched_edges[2].copy(), switched_edges[6].copy()]),
-            design3d.wires.Contour3D([edges[3].copy(), edges[12].copy(),
-                                     switched_edges[3].copy(), switched_edges[7].copy()])
+            design3d.wires.Contour3D(
+                [edges[0].copy(), edges[9].copy(), switched_edges[0].copy(), switched_edges[4].copy()]
+            ),
+            design3d.wires.Contour3D(
+                [edges[1].copy(), edges[10].copy(), switched_edges[1].copy(), switched_edges[5].copy()]
+            ),
+            design3d.wires.Contour3D(
+                [edges[2].copy(), edges[11].copy(), switched_edges[2].copy(), switched_edges[6].copy()]
+            ),
+            design3d.wires.Contour3D(
+                [edges[3].copy(), edges[12].copy(), switched_edges[3].copy(), switched_edges[7].copy()]
+            ),
         ]
         return contours
 
@@ -279,7 +296,7 @@ class Block(shells.ClosedShell3D):
         frame = self.frame.copy()
         frame = frame.normalize()
         xm_frame = design3d.Frame3D(frame.origin - 0.5 * self.frame.u, frame.v, frame.w, frame.u)
-        xp_frame = design3d.Frame3D(frame.origin + 0.5 * self.frame.u,  frame.v, frame.w, frame.u)
+        xp_frame = design3d.Frame3D(frame.origin + 0.5 * self.frame.u, frame.v, frame.w, frame.u)
         ym_frame = design3d.Frame3D(frame.origin - 0.5 * self.frame.v, frame.w, frame.u, frame.v)
         yp_frame = design3d.Frame3D(frame.origin + 0.5 * self.frame.v, frame.w, frame.u, frame.v)
         zm_frame = design3d.Frame3D(frame.origin - 0.5 * self.frame.w, frame.u, frame.v, frame.w)
@@ -290,21 +307,22 @@ class Block(shells.ClosedShell3D):
             design3d.faces.PlaneFace3D.from_surface_rectangular_cut(surfaces.Plane3D(ym_frame), -hlz, hlz, -hlx, hlx),
             design3d.faces.PlaneFace3D.from_surface_rectangular_cut(surfaces.Plane3D(yp_frame), -hlz, hlz, -hlx, hlx),
             design3d.faces.PlaneFace3D.from_surface_rectangular_cut(surfaces.Plane3D(zm_frame), -hlx, hlx, -hly, hly),
-            design3d.faces.PlaneFace3D.from_surface_rectangular_cut(surfaces.Plane3D(zp_frame), -hlx, hlx, -hly, hly)
+            design3d.faces.PlaneFace3D.from_surface_rectangular_cut(surfaces.Plane3D(zp_frame), -hlx, hlx, -hly, hly),
         ]
         return block_faces
 
     def faces_center(self):
         """Computes the faces center of the block."""
-        return [self.frame.origin - 0.5 * self.frame.u,
-                self.frame.origin + 0.5 * self.frame.u,
-                self.frame.origin - 0.5 * self.frame.v,
-                self.frame.origin + 0.5 * self.frame.v,
-                self.frame.origin - 0.5 * self.frame.w,
-                self.frame.origin + 0.5 * self.frame.w]
+        return [
+            self.frame.origin - 0.5 * self.frame.u,
+            self.frame.origin + 0.5 * self.frame.u,
+            self.frame.origin - 0.5 * self.frame.v,
+            self.frame.origin + 0.5 * self.frame.v,
+            self.frame.origin - 0.5 * self.frame.w,
+            self.frame.origin + 0.5 * self.frame.w,
+        ]
 
-    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D,
-                 angle: float):
+    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D, angle: float):
         """
         Block rotation.
 
@@ -339,38 +357,38 @@ class Block(shells.ClosedShell3D):
         elif plane_3d.frame.w.dot(design3d.Vector3D(0, 0, 1)) == 0:
             pass
         else:
-            raise KeyError('plane is not orthogonal either with x, y or z')
-        point_min = design3d.Point3D(bouding_box.xmin, bouding_box.ymin,
-                                    bouding_box.zmin)
-        point_max = design3d.Point3D(bouding_box.xmax, bouding_box.ymax,
-                                    bouding_box.zmax)
+            raise KeyError("plane is not orthogonal either with x, y or z")
+        point_min = design3d.Point3D(bouding_box.xmin, bouding_box.ymin, bouding_box.zmin)
+        point_max = design3d.Point3D(bouding_box.xmax, bouding_box.ymax, bouding_box.zmax)
         point_min_2d = plane_3d.point3d_to_2d(point_min)
         point_max_2d = plane_3d.point3d_to_2d(point_max)
-        points = [point_min_2d, design3d.Point2D(point_max_2d.x, point_min_2d.y),
-                  point_max_2d, design3d.Point2D(point_min_2d.x, point_max_2d.y)]
-        contour_2d = surfaces.Surface2D(
-            design3d.wires.ClosedPolygon2D(points), [])
+        points = [
+            point_min_2d,
+            design3d.Point2D(point_max_2d.x, point_min_2d.y),
+            point_max_2d,
+            design3d.Point2D(point_min_2d.x, point_max_2d.y),
+        ]
+        contour_2d = surfaces.Surface2D(design3d.wires.ClosedPolygon2D(points), [])
 
         return design3d.faces.PlaneFace3D(plane_3d, contour_2d)
 
     def frame_mapping_parametres(self, frame: design3d.Frame3D, side: str):
         """Helper function to frame mapping."""
         basis = frame.basis()
-        if side == 'new':
+        if side == "new":
             new_origin = frame.global_to_local_coordinates(self.frame.origin)
             new_u = basis.global_to_local_coordinates(self.frame.u)
             new_v = basis.global_to_local_coordinates(self.frame.v)
             new_w = basis.global_to_local_coordinates(self.frame.w)
             new_frame = design3d.Frame3D(new_origin, new_u, new_v, new_w)
-        elif side == 'old':
+        elif side == "old":
             new_origin = frame.local_to_global_coordinates(self.frame.origin)
             new_u = basis.local_to_global_coordinates(self.frame.u)
             new_v = basis.local_to_global_coordinates(self.frame.v)
             new_w = basis.local_to_global_coordinates(self.frame.w)
             new_frame = design3d.Frame3D(new_origin, new_u, new_v, new_w)
         else:
-            raise ValueError('side value not valid, please specify'
-                             'a correct value: \'old\' or \'new\'')
+            raise ValueError("side value not valid, please specify" "a correct value: 'old' or 'new'")
         return new_frame
 
     def frame_mapping(self, frame: design3d.Frame3D, side: str):
@@ -401,7 +419,7 @@ class Block(shells.ClosedShell3D):
         """
         if ax is None:
             fig, ax = plt.subplots()
-            ax.set_aspect('equal')
+            ax.set_aspect("equal")
         else:
             fig = None
 
@@ -424,21 +442,31 @@ class Block(shells.ClosedShell3D):
 
     def subdivide_block(self, number_blocks_x, number_blocks_y, number_blocks_z):
         """Divide block into sub blocks."""
-        filling_boxes_size = [self.size[0] / number_blocks_x, self.size[1] / number_blocks_y,
-                              self.size[2] / number_blocks_z]
+        filling_boxes_size = [
+            self.size[0] / number_blocks_x,
+            self.size[1] / number_blocks_y,
+            self.size[2] / number_blocks_z,
+        ]
         initial_frame_center = self.frame.origin.copy(deep=True).translation(
-            -design3d.Vector3D(self.size[0] / 2 - filling_boxes_size[0] / 2,
-                              self.size[1] / 2 - filling_boxes_size[1] / 2,
-                              self.size[2] / 2 - filling_boxes_size[2] / 2))
-        xyz = [design3d.Vector3D(filling_boxes_size[0], 0, 0), design3d.Vector3D(0, filling_boxes_size[1], 0),
-               design3d.Vector3D(0, 0, filling_boxes_size[2])]
+            -design3d.Vector3D(
+                self.size[0] / 2 - filling_boxes_size[0] / 2,
+                self.size[1] / 2 - filling_boxes_size[1] / 2,
+                self.size[2] / 2 - filling_boxes_size[2] / 2,
+            )
+        )
+        xyz = [
+            design3d.Vector3D(filling_boxes_size[0], 0, 0),
+            design3d.Vector3D(0, filling_boxes_size[1], 0),
+            design3d.Vector3D(0, 0, filling_boxes_size[2]),
+        ]
 
         dividing_blocks = []
         for z_box in range(number_blocks_z):
             for y_box in range(number_blocks_y):
                 for x_box in range(number_blocks_x):
-                    translation_vector = design3d.Vector3D(x_box * filling_boxes_size[0], y_box * filling_boxes_size[1],
-                                                          z_box * filling_boxes_size[2])
+                    translation_vector = design3d.Vector3D(
+                        x_box * filling_boxes_size[0], y_box * filling_boxes_size[1], z_box * filling_boxes_size[2]
+                    )
                     origin_point = initial_frame_center.translation(translation_vector)
                     block = Block(frame=design3d.Frame3D(origin_point, *xyz))
                     dividing_blocks.append(block)
@@ -451,15 +479,20 @@ class ExtrudedProfile(shells.ClosedShell3D):
 
     TODO: In the future change to a frame and a surface2D and an extrusion vector.
     """
-    _non_serializable_attributes = ['faces', 'inner_contours3d',
-                                    'outer_contour3d']
 
-    def __init__(self, frame: design3d.Frame3D,
-                 outer_contour2d: design3d.wires.Contour2D,
-                 inner_contours2d: List[design3d.wires.Contour2D],
-                 extrusion_length: float,
-                 color: Tuple[float, float, float] = None, alpha: float = 1.,
-                 reference_path: str = design3d.PATH_ROOT, name: str = ''):
+    _non_serializable_attributes = ["faces", "inner_contours3d", "outer_contour3d"]
+
+    def __init__(
+        self,
+        frame: design3d.Frame3D,
+        outer_contour2d: design3d.wires.Contour2D,
+        inner_contours2d: List[design3d.wires.Contour2D],
+        extrusion_length: float,
+        color: Tuple[float, float, float] = None,
+        alpha: float = 1.0,
+        reference_path: str = design3d.PATH_ROOT,
+        name: str = "",
+    ):
         self.frame = frame
 
         self.outer_contour2d = outer_contour2d
@@ -478,7 +511,7 @@ class ExtrudedProfile(shells.ClosedShell3D):
             else:
                 bool_areas.append(False)
         if any(bool_areas):
-            raise ValueError('At least one inner contour is not contained in outer_contour.')
+            raise ValueError("At least one inner contour is not contained in outer_contour.")
 
         faces = self.shell_faces()
 
@@ -490,14 +523,17 @@ class ExtrudedProfile(shells.ClosedShell3D):
 
         """
         dict_ = shells.ClosedShell3D.base_dict(self)
-        dict_.update({'color': self.color,
-                      'alpha': self.alpha,
-                      'frame': self.frame.to_dict(),
-                      'outer_contour2d': self.outer_contour2d.to_dict(),
-                      'inner_contours2d': [c.to_dict() for c in self.inner_contours2d],
-                      'extrusion_length': self.extrusion_length,
-                      'reference_path': self.reference_path
-                      })
+        dict_.update(
+            {
+                "color": self.color,
+                "alpha": self.alpha,
+                "frame": self.frame.to_dict(),
+                "outer_contour2d": self.outer_contour2d.to_dict(),
+                "inner_contours2d": [c.to_dict() for c in self.inner_contours2d],
+                "extrusion_length": self.extrusion_length,
+                "reference_path": self.reference_path,
+            }
+        )
 
         return dict_
 
@@ -514,18 +550,18 @@ class ExtrudedProfile(shells.ClosedShell3D):
             color=self.color,
             alpha=self.alpha,
             reference_path=self.reference_path,
-            name=self.name)
+            name=self.name,
+        )
 
     def shell_faces(self):
         """
         Computes the shell faces from init data.
 
         """
-        lower_plane = surfaces.Plane3D.from_plane_vectors(
-            self.frame.origin, self.frame.u, self.frame.v)
+        lower_plane = surfaces.Plane3D.from_plane_vectors(self.frame.origin, self.frame.u, self.frame.v)
         lower_face = design3d.faces.PlaneFace3D(
-            lower_plane, surfaces.Surface2D(self.outer_contour2d,
-                                            self.inner_contours2d))
+            lower_plane, surfaces.Surface2D(self.outer_contour2d, self.inner_contours2d)
+        )
 
         upper_face = lower_face.translation(self.extrusion_vector)
         lateral_faces = []
@@ -561,15 +597,16 @@ class ExtrudedProfile(shells.ClosedShell3D):
         """
         return ExtrudedProfile(
             frame=self.frame.frame_mapping(frame, side),
-            outer_contour2d=self.outer_contour2d, inner_contours2d=self.inner_contours2d,
+            outer_contour2d=self.outer_contour2d,
+            inner_contours2d=self.inner_contours2d,
             extrusion_length=self.extrusion_length,
             reference_path=self.reference_path,
-            color=self.color, alpha=self.alpha,
-            name=self.name
+            color=self.color,
+            alpha=self.alpha,
+            name=self.name,
         )
 
-    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D,
-                 angle: float):
+    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D, angle: float):
         """
         Extruded Profile rotation.
 
@@ -583,8 +620,10 @@ class ExtrudedProfile(shells.ClosedShell3D):
             outer_contour2d=self.outer_contour2d,
             inner_contours2d=self.inner_contours2d,
             extrusion_length=self.extrusion_length,
-            color=self.color, alpha=self.alpha,
-            reference_path=self.reference_path, name=self.name
+            color=self.color,
+            alpha=self.alpha,
+            reference_path=self.reference_path,
+            name=self.name,
         )
 
     def translation(self, offset: design3d.Vector3D):
@@ -599,8 +638,10 @@ class ExtrudedProfile(shells.ClosedShell3D):
             outer_contour2d=self.outer_contour2d,
             inner_contours2d=self.inner_contours2d,
             extrusion_length=self.extrusion_length,
-            color=self.color, alpha=self.alpha,
-            reference_path=self.reference_path, name=self.name
+            color=self.color,
+            alpha=self.alpha,
+            reference_path=self.reference_path,
+            name=self.name,
         )
 
 
@@ -610,15 +651,24 @@ class RevolvedProfile(shells.ClosedShell3D):
 
     """
 
-    def __init__(self, frame: design3d.Frame3D,
-                 contour2d: design3d.wires.Contour2D,
-                 axis_point: design3d.Point3D, axis: design3d.Vector3D,
-                 angle: float = 2 * math.pi, *,
-                 color: Tuple[float, float, float] = None, alpha: float = 1,
-                 reference_path: str = design3d.PATH_ROOT, name: str = ''):
+    def __init__(
+        self,
+        frame: design3d.Frame3D,
+        contour2d: design3d.wires.Contour2D,
+        axis_point: design3d.Point3D,
+        axis: design3d.Vector3D,
+        angle: float = 2 * math.pi,
+        *,
+        color: Tuple[float, float, float] = None,
+        alpha: float = 1,
+        reference_path: str = design3d.PATH_ROOT,
+        name: str = "",
+    ):
         if frame.w.cross(axis).is_close(design3d.Vector3D(0.0, 0.0, 0.0)):
-            raise ValueError(f"The normal vector of the Revolution's contour frame should not be parallel \n"
-                             f"to revolution axis. frame.w: {frame.w}; revolution_axis: {axis}")
+            raise ValueError(
+                f"The normal vector of the Revolution's contour frame should not be parallel \n"
+                f"to revolution axis. frame.w: {frame.w}; revolution_axis: {axis}"
+            )
         self.contour2d = contour2d
         self.axis_point = axis_point
         self.axis = axis
@@ -640,11 +690,10 @@ class RevolvedProfile(shells.ClosedShell3D):
         """
         if not self.__class__.__name__ == other.__class__.__name__:
             return False
-        for self_param, other_param in zip([self.frame,
-                                            self.contour2d, self.axis_point, self.axis, self.angle],
-                                           [other.frame,
-                                            other.contour2d, other.axis_point, other.axis, other.angle]
-                                           ):
+        for self_param, other_param in zip(
+            [self.frame, self.contour2d, self.axis_point, self.axis, self.angle],
+            [other.frame, other.contour2d, other.axis_point, other.axis, other.angle],
+        ):
             if not self_param == other_param:
                 return False
         return True
@@ -661,15 +710,18 @@ class RevolvedProfile(shells.ClosedShell3D):
         Custom to dict for performance.
         """
         dict_ = shells.ClosedShell3D.base_dict(self)
-        dict_.update({'color': self.color,
-                      'alpha': self.alpha,
-                      'frame': self.frame.to_dict(),
-                      'contour2d': self.contour2d.to_dict(),
-                      'axis_point': self.axis_point.to_dict(),
-                      'angle': self.angle,
-                      'axis': self.axis.to_dict(),
-                      'reference_path': self.reference_path
-                      })
+        dict_.update(
+            {
+                "color": self.color,
+                "alpha": self.alpha,
+                "frame": self.frame.to_dict(),
+                "contour2d": self.contour2d.to_dict(),
+                "axis_point": self.axis_point.to_dict(),
+                "angle": self.angle,
+                "axis": self.axis.to_dict(),
+                "reference_path": self.reference_path,
+            }
+        )
 
         return dict_
 
@@ -678,12 +730,17 @@ class RevolvedProfile(shells.ClosedShell3D):
         Creates a copy of Revolved-profile.
 
         """
-        return self.__class__(frame=self.frame.copy(),
-                              contour2d=self.contour2d.copy(deep=deep, memo=memo),
-                              axis=self.axis.copy(), angle=self.angle,
-                              axis_point=self.axis_point.copy(),
-                              color=self.color, alpha=self.alpha,
-                              reference_path=self.reference_path, name=self.name)
+        return self.__class__(
+            frame=self.frame.copy(),
+            contour2d=self.contour2d.copy(deep=deep, memo=memo),
+            axis=self.axis.copy(),
+            angle=self.angle,
+            axis_point=self.axis_point.copy(),
+            color=self.color,
+            alpha=self.alpha,
+            reference_path=self.reference_path,
+            name=self.name,
+        )
 
     def shell_faces(self):
         """
@@ -698,8 +755,7 @@ class RevolvedProfile(shells.ClosedShell3D):
         if not math.isclose(self.angle, design3d.TWO_PI, abs_tol=1e-9):
             # Adding contours face to close
             plane1 = surfaces.Plane3D(self.frame)
-            face1 = design3d.faces.PlaneFace3D(
-                plane1, surfaces.Surface2D(self.contour2d, []))
+            face1 = design3d.faces.PlaneFace3D(plane1, surfaces.Surface2D(self.contour2d, []))
             face2 = face1.rotation(self.axis_point, self.axis, self.angle)
             faces.append(face1)
             faces.append(face2)
@@ -720,10 +776,9 @@ class RevolvedProfile(shells.ClosedShell3D):
         if com is not False:
             dist = axis_2d.point_distance(com)
             return self.angle * dist * self.contour2d.area()
-        return 0.
+        return 0.0
 
-    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D,
-                 angle: float):
+    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D, angle: float):
         """
         Revolved profile rotation.
 
@@ -740,11 +795,12 @@ class RevolvedProfile(shells.ClosedShell3D):
             frame=self.frame.rotation(center, axis, angle),
             contour2d=self.contour2d,
             axis_point=self.axis_point.rotation(center, axis, angle),
-            axis=self.axis.rotation(center=design3d.O3D, axis=axis,
-                                    angle=angle),
+            axis=self.axis.rotation(center=design3d.O3D, axis=axis, angle=angle),
             angle=self.angle,
-            color=self.color, alpha=self.alpha,
-            reference_path=self.reference_path, name=self.name
+            color=self.color,
+            alpha=self.alpha,
+            reference_path=self.reference_path,
+            name=self.name,
         )
 
     def translation(self, offset: design3d.Vector3D):
@@ -760,19 +816,21 @@ class RevolvedProfile(shells.ClosedShell3D):
             axis_point=self.axis_point.translation(offset),
             axis=self.axis,
             angle=self.angle,
-            color=self.color, alpha=self.alpha,
-            reference_path=self.reference_path, name=self.name
+            color=self.color,
+            alpha=self.alpha,
+            reference_path=self.reference_path,
+            name=self.name,
         )
 
     def frame_mapping_parameters(self, frame: design3d.Frame3D, side: str):
         """Apply transformation to object's parameters."""
         basis = frame.basis()
-        if side == 'old':
+        if side == "old":
             axis = basis.local_to_global_coordinates(self.axis)
-        elif side == 'new':
+        elif side == "new":
             axis = basis.global_to_local_coordinates(self.axis)
         else:
-            raise ValueError('side must be either old or new')
+            raise ValueError("side must be either old or new")
 
         return axis
 
@@ -787,10 +845,12 @@ class RevolvedProfile(shells.ClosedShell3D):
             self.frame.frame_mapping(frame, side),
             self.contour2d,
             self.axis_point.frame_mapping(frame, side),
-            axis=axis, angle=self.angle,
-            color=self.color, alpha=self.alpha,
+            axis=axis,
+            angle=self.angle,
+            color=self.color,
+            alpha=self.alpha,
             reference_path=self.reference_path,
-            name=self.name
+            name=self.name,
         )
 
 
@@ -798,6 +858,7 @@ class Cylinder(shells.ClosedShell3D):
     """
     Represents a 3D cylinder defined by its frame, radius, and length.
     """
+
     # pylint: disable=too-many-arguments
 
     def __init__(
@@ -841,8 +902,9 @@ class Cylinder(shells.ClosedShell3D):
 
         faces = self.shell_faces()
 
-        shells.ClosedShell3D.__init__(self, faces=faces, color=color, alpha=alpha,
-                                      reference_path=reference_path, name=name)
+        shells.ClosedShell3D.__init__(
+            self, faces=faces, color=color, alpha=alpha, reference_path=reference_path, name=name
+        )
 
     def shell_faces(self):
         """
@@ -880,24 +942,24 @@ class Cylinder(shells.ClosedShell3D):
         point_a = self.position - self.length / 2 * self.axis
         point_b = self.position + self.length / 2 * self.axis
 
-        dx2 = (point_a[0] - point_b[0])**2
-        dy2 = (point_a[1] - point_b[1])**2
-        dz2 = (point_a[2] - point_b[2])**2
+        dx2 = (point_a[0] - point_b[0]) ** 2
+        dy2 = (point_a[1] - point_b[1]) ** 2
+        dz2 = (point_a[2] - point_b[2]) ** 2
 
         if point_a[0] > point_b[0]:
             point_a, point_b = point_b, point_a
-        xmin = point_a[0] - (((dy2 + dz2) / (dx2 + dy2 + dz2))**0.5) * radius
-        xmax = point_b[0] + (((dy2 + dz2) / (dx2 + dy2 + dz2))**0.5) * radius
+        xmin = point_a[0] - (((dy2 + dz2) / (dx2 + dy2 + dz2)) ** 0.5) * radius
+        xmax = point_b[0] + (((dy2 + dz2) / (dx2 + dy2 + dz2)) ** 0.5) * radius
 
         if point_a[1] > point_b[1]:
             point_a, point_b = point_b, point_a
-        ymin = point_a[1] - (((dx2 + dz2) / (dx2 + dy2 + dz2))**0.5) * radius
-        ymax = point_b[1] + (((dx2 + dz2) / (dx2 + dy2 + dz2))**0.5) * radius
+        ymin = point_a[1] - (((dx2 + dz2) / (dx2 + dy2 + dz2)) ** 0.5) * radius
+        ymax = point_b[1] + (((dx2 + dz2) / (dx2 + dy2 + dz2)) ** 0.5) * radius
 
         if point_a[2] > point_b[2]:
             point_a, point_b = point_b, point_a
-        zmin = point_a[2] - (((dx2 + dy2) / (dx2 + dy2 + dz2))**0.5) * radius
-        zmax = point_b[2] + (((dx2 + dy2) / (dx2 + dy2 + dz2))**0.5) * radius
+        zmin = point_a[2] - (((dx2 + dy2) / (dx2 + dy2 + dz2)) ** 0.5) * radius
+        zmax = point_b[2] + (((dx2 + dy2) / (dx2 + dy2 + dz2)) ** 0.5) * radius
 
         return design3d.core.BoundingBox(xmin, xmax, ymin, ymax, zmin, zmax)
 
@@ -952,8 +1014,15 @@ class Cylinder(shells.ClosedShell3D):
 
         frame = design3d.Frame3D(position, u_vector, v_vector, axis)
 
-        return cls(frame=frame, radius=radius, length=length, color=color, alpha=alpha,
-                   reference_path=reference_path, name=name)
+        return cls(
+            frame=frame,
+            radius=radius,
+            length=length,
+            color=color,
+            alpha=alpha,
+            reference_path=reference_path,
+            name=name,
+        )
 
     @classmethod
     def from_extremal_points(
@@ -982,7 +1051,7 @@ class Cylinder(shells.ClosedShell3D):
         alpha: float = 1,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
-    ) -> 'Cylinder':
+    ) -> "Cylinder":
         """
         Create a cylinder from a center point, an axis, radius, and length.
 
@@ -1011,10 +1080,17 @@ class Cylinder(shells.ClosedShell3D):
         v_vector = axis.cross(u_vector)
         frame = design3d.Frame3D(center_point, u_vector, v_vector, axis)
 
-        return cls(frame=frame, radius=radius, length=length, color=color, alpha=alpha,
-                   reference_path=reference_path, name=name)
+        return cls(
+            frame=frame,
+            radius=radius,
+            length=length,
+            color=color,
+            alpha=alpha,
+            reference_path=reference_path,
+            name=name,
+        )
 
-    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D, angle: float) -> 'Cylinder':
+    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D, angle: float) -> "Cylinder":
         """
         Cylinder rotation.
 
@@ -1038,7 +1114,7 @@ class Cylinder(shells.ClosedShell3D):
             name=self.name,
         )
 
-    def translation(self, offset: design3d.Vector3D) -> 'Cylinder':
+    def translation(self, offset: design3d.Vector3D) -> "Cylinder":
         """
         Cylinder translation.
 
@@ -1058,7 +1134,7 @@ class Cylinder(shells.ClosedShell3D):
             name=self.name,
         )
 
-    def frame_mapping(self, frame: design3d.Frame3D, side: str) -> 'Cylinder':
+    def frame_mapping(self, frame: design3d.Frame3D, side: str) -> "Cylinder":
         """
         Changes frame_mapping and return a new Frame3D.
 
@@ -1074,7 +1150,7 @@ class Cylinder(shells.ClosedShell3D):
             name=self.name,
         )
 
-    def copy(self, deep=True, memo=None) -> 'Cylinder':
+    def copy(self, deep=True, memo=None) -> "Cylinder":
         """
         Creates a copy of Cylinder.
 
@@ -1091,7 +1167,7 @@ class Cylinder(shells.ClosedShell3D):
             name=self.name,
         )
 
-    def min_distance_to_other_cylinder(self, other_cylinder: 'Cylinder') -> float:
+    def min_distance_to_other_cylinder(self, other_cylinder: "Cylinder") -> float:
         """
         Compute the minimal distance between two design3d cylinders.
 
@@ -1103,12 +1179,10 @@ class Cylinder(shells.ClosedShell3D):
         """
         # Basic check
         if self.point_belongs(other_cylinder.position) or other_cylinder.point_belongs(self.position):
-            return 0.
+            return 0.0
 
         # Local frames of cylinders
-        frame0 = design3d.Frame3D.from_point_and_vector(
-            point=self.position, vector=self.axis, main_axis=design3d.Z3D
-        )
+        frame0 = design3d.Frame3D.from_point_and_vector(point=self.position, vector=self.axis, main_axis=design3d.Z3D)
         frame1 = design3d.Frame3D.from_point_and_vector(
             point=other_cylinder.position,
             vector=other_cylinder.axis,
@@ -1122,9 +1196,7 @@ class Cylinder(shells.ClosedShell3D):
 
         # Euclidean distance
         def dist(point0, point1):
-            return math.sqrt(
-                (point0[0] - point1[0]) ** 2 + (point0[1] - point1[1]) ** 2 + (point0[2] - point1[2]) ** 2
-            )
+            return math.sqrt((point0[0] - point1[0]) ** 2 + (point0[1] - point1[1]) ** 2 + (point0[2] - point1[2]) ** 2)
 
         # Local coordinates to global coordinates
         def to_global_point(point, matrix, origin):
@@ -1233,7 +1305,7 @@ class Cylinder(shells.ClosedShell3D):
             jac=gradient_objective,
         ).fun
 
-    def is_intersecting_other_cylinder(self, other_cylinder: 'Cylinder') -> bool:
+    def is_intersecting_other_cylinder(self, other_cylinder: "Cylinder") -> bool:
         """
         Verifies if two cylinders are intersecting or not.
 
@@ -1321,8 +1393,8 @@ class Cylinder(shells.ClosedShell3D):
 
         local_point = local_frame.global_to_local_coordinates(point3d)
 
-        return (math.sqrt(local_point.x ** 2 + local_point.y ** 2) <= self.radius) and (
-                -self.length / 2 <= local_point.z <= self.length / 2
+        return (math.sqrt(local_point.x**2 + local_point.y**2) <= self.radius) and (
+            -self.length / 2 <= local_point.z <= self.length / 2
         )
 
     def interference_volume_with_other_cylinder(self, other_cylinder: "Cylinder", n_points: int = 1000) -> float:
@@ -1346,14 +1418,14 @@ class Cylinder(shells.ClosedShell3D):
             other_cylinder = self
 
         return (
-                len(
-                    [
-                        point
-                        for point in smallest_cylinder.lhs_points_inside(n_points)
-                        if other_cylinder.point_belongs(point)
-                    ]
-                )
-                / n_points
+            len(
+                [
+                    point
+                    for point in smallest_cylinder.lhs_points_inside(n_points)
+                    if other_cylinder.point_belongs(point)
+                ]
+            )
+            / n_points
         ) * smallest_cylinder.volume()
 
 
@@ -1361,6 +1433,7 @@ class Cone(shells.ClosedShell3D):
     """
     Represents a 3D cone defined by its frame, radius, and length.
     """
+
     # pylint: disable=too-many-arguments
 
     def __init__(
@@ -1403,8 +1476,9 @@ class Cone(shells.ClosedShell3D):
 
         faces = self.shell_faces()
 
-        shells.ClosedShell3D.__init__(self, faces=faces, color=color, alpha=alpha,
-                                      reference_path=reference_path, name=name)
+        shells.ClosedShell3D.__init__(
+            self, faces=faces, color=color, alpha=alpha, reference_path=reference_path, name=name
+        )
 
     def shell_faces(self):
         """
@@ -1442,28 +1516,37 @@ class Cone(shells.ClosedShell3D):
         point_a = self.position - self.length / 2 * self.axis
         point_b = self.position + self.length / 2 * self.axis
 
-        dx2 = (point_a[0] - point_b[0])**2
-        dy2 = (point_a[1] - point_b[1])**2
-        dz2 = (point_a[2] - point_b[2])**2
+        dx2 = (point_a[0] - point_b[0]) ** 2
+        dy2 = (point_a[1] - point_b[1]) ** 2
+        dz2 = (point_a[2] - point_b[2]) ** 2
 
-        x_bound = (point_a[0] - (((dy2 + dz2) / (dx2 + dy2 + dz2))**0.5) * self.radius,
-                   point_a[0] + (((dy2 + dz2) / (dx2 + dy2 + dz2))**0.5) * self.radius, point_b[0])
+        x_bound = (
+            point_a[0] - (((dy2 + dz2) / (dx2 + dy2 + dz2)) ** 0.5) * self.radius,
+            point_a[0] + (((dy2 + dz2) / (dx2 + dy2 + dz2)) ** 0.5) * self.radius,
+            point_b[0],
+        )
         xmin = min(x_bound)
         xmax = max(x_bound)
 
-        y_bound = (point_a[1] - (((dx2 + dz2) / (dx2 + dy2 + dz2))**0.5) * self.radius,
-                   point_a[1] + (((dx2 + dz2) / (dx2 + dy2 + dz2))**0.5) * self.radius, point_b[1])
+        y_bound = (
+            point_a[1] - (((dx2 + dz2) / (dx2 + dy2 + dz2)) ** 0.5) * self.radius,
+            point_a[1] + (((dx2 + dz2) / (dx2 + dy2 + dz2)) ** 0.5) * self.radius,
+            point_b[1],
+        )
         ymin = min(y_bound)
         ymax = max(y_bound)
 
-        z_bound = (point_a[2] - (((dx2 + dy2) / (dx2 + dy2 + dz2))**0.5) * self.radius,
-                   point_a[2] + (((dx2 + dy2) / (dx2 + dy2 + dz2))**0.5) * self.radius, point_b[2])
+        z_bound = (
+            point_a[2] - (((dx2 + dy2) / (dx2 + dy2 + dz2)) ** 0.5) * self.radius,
+            point_a[2] + (((dx2 + dy2) / (dx2 + dy2 + dz2)) ** 0.5) * self.radius,
+            point_b[2],
+        )
         zmin = min(z_bound)
         zmax = max(z_bound)
 
         return design3d.core.BoundingBox(xmin, xmax, ymin, ymax, zmin, zmax)
 
-    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D, angle: float) -> 'Cone':
+    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D, angle: float) -> "Cone":
         """
         Cone rotation.
 
@@ -1484,10 +1567,10 @@ class Cone(shells.ClosedShell3D):
             color=self.color,
             alpha=self.alpha,
             reference_path=self.reference_path,
-            name=self.name
+            name=self.name,
         )
 
-    def translation(self, offset: design3d.Vector3D) -> 'Cone':
+    def translation(self, offset: design3d.Vector3D) -> "Cone":
         """
         Cone translation.
 
@@ -1504,7 +1587,7 @@ class Cone(shells.ClosedShell3D):
             color=self.color,
             alpha=self.alpha,
             reference_path=self.reference_path,
-            name=self.name
+            name=self.name,
         )
 
     def volume(self) -> float:
@@ -1527,7 +1610,7 @@ class Cone(shells.ClosedShell3D):
         alpha: float = 1,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
-    ) -> 'Cone':
+    ) -> "Cone":
         """
         Create a cone from a center point, an axis, radius, and length.
 
@@ -1555,14 +1638,22 @@ class Cone(shells.ClosedShell3D):
         u_vector = axis.deterministic_unit_normal_vector()
         v_vector = axis.cross(u_vector)
         frame = design3d.Frame3D(center_point, u_vector, v_vector, axis)
-        return cls(frame=frame, radius=radius, length=length, color=color, alpha=alpha,
-                   reference_path=reference_path, name=name)
+        return cls(
+            frame=frame,
+            radius=radius,
+            length=length,
+            color=color,
+            alpha=alpha,
+            reference_path=reference_path,
+            name=name,
+        )
 
 
 class HollowCylinder(shells.ClosedShell3D):
     """
     Represents a 3D hollow cylinder defined by its frame, radii, and length.
     """
+
     # pylint: disable=too-many-arguments
 
     def __init__(
@@ -1610,8 +1701,9 @@ class HollowCylinder(shells.ClosedShell3D):
         self.length = length
 
         faces = self.shell_faces()
-        shells.ClosedShell3D.__init__(self, faces=faces, color=color, alpha=alpha,
-                                      reference_path=reference_path, name=name)
+        shells.ClosedShell3D.__init__(
+            self, faces=faces, color=color, alpha=alpha, reference_path=reference_path, name=name
+        )
 
     def shell_faces(self):
         """
@@ -1662,24 +1754,24 @@ class HollowCylinder(shells.ClosedShell3D):
         point_a = self.position - self.length / 2 * self.axis
         point_b = self.position + self.length / 2 * self.axis
 
-        dx2 = (point_a[0] - point_b[0])**2
-        dy2 = (point_a[1] - point_b[1])**2
-        dz2 = (point_a[2] - point_b[2])**2
+        dx2 = (point_a[0] - point_b[0]) ** 2
+        dy2 = (point_a[1] - point_b[1]) ** 2
+        dz2 = (point_a[2] - point_b[2]) ** 2
 
         if point_a[0] > point_b[0]:
             point_a, point_b = point_b, point_a
-        xmin = point_a[0] - (((dy2 + dz2) / (dx2 + dy2 + dz2))**0.5) * radius
-        xmax = point_b[0] + (((dy2 + dz2) / (dx2 + dy2 + dz2))**0.5) * radius
+        xmin = point_a[0] - (((dy2 + dz2) / (dx2 + dy2 + dz2)) ** 0.5) * radius
+        xmax = point_b[0] + (((dy2 + dz2) / (dx2 + dy2 + dz2)) ** 0.5) * radius
 
         if point_a[1] > point_b[1]:
             point_a, point_b = point_b, point_a
-        ymin = point_a[1] - (((dx2 + dz2) / (dx2 + dy2 + dz2))**0.5) * radius
-        ymax = point_b[1] + (((dx2 + dz2) / (dx2 + dy2 + dz2))**0.5) * radius
+        ymin = point_a[1] - (((dx2 + dz2) / (dx2 + dy2 + dz2)) ** 0.5) * radius
+        ymax = point_b[1] + (((dx2 + dz2) / (dx2 + dy2 + dz2)) ** 0.5) * radius
 
         if point_a[2] > point_b[2]:
             point_a, point_b = point_b, point_a
-        zmin = point_a[2] - (((dx2 + dy2) / (dx2 + dy2 + dz2))**0.5) * radius
-        zmax = point_b[2] + (((dx2 + dy2) / (dx2 + dy2 + dz2))**0.5) * radius
+        zmin = point_a[2] - (((dx2 + dy2) / (dx2 + dy2 + dz2)) ** 0.5) * radius
+        zmax = point_b[2] + (((dx2 + dy2) / (dx2 + dy2 + dz2)) ** 0.5) * radius
 
         return design3d.core.BoundingBox(xmin, xmax, ymin, ymax, zmin, zmax)
 
@@ -1745,7 +1837,7 @@ class HollowCylinder(shells.ClosedShell3D):
             color=color,
             alpha=alpha,
             reference_path=reference_path,
-            name=name
+            name=name,
         )
 
     @classmethod
@@ -1777,7 +1869,7 @@ class HollowCylinder(shells.ClosedShell3D):
         alpha: float = 1,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
-    ) -> 'HollowCylinder':
+    ) -> "HollowCylinder":
         """
         Create a hollow cylinder from a center point, an axis, radius, and length.
 
@@ -1820,7 +1912,7 @@ class HollowCylinder(shells.ClosedShell3D):
             name=name,
         )
 
-    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D, angle: float) -> 'HollowCylinder':
+    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D, angle: float) -> "HollowCylinder":
         """
         Hollow cylinder rotation.
 
@@ -1842,10 +1934,10 @@ class HollowCylinder(shells.ClosedShell3D):
             color=self.color,
             alpha=self.alpha,
             reference_path=self.reference_path,
-            name=self.name
+            name=self.name,
         )
 
-    def translation(self, offset: design3d.Vector3D) -> 'HollowCylinder':
+    def translation(self, offset: design3d.Vector3D) -> "HollowCylinder":
         """
         Hollow cylinder translation.
 
@@ -1863,10 +1955,10 @@ class HollowCylinder(shells.ClosedShell3D):
             color=self.color,
             alpha=self.alpha,
             reference_path=self.reference_path,
-            name=self.name
+            name=self.name,
         )
 
-    def frame_mapping(self, frame: design3d.Frame3D, side: str) -> 'HollowCylinder':
+    def frame_mapping(self, frame: design3d.Frame3D, side: str) -> "HollowCylinder":
         """
         Changes frame_mapping and return a new HollowCylinder.
 
@@ -1880,10 +1972,10 @@ class HollowCylinder(shells.ClosedShell3D):
             color=self.color,
             alpha=self.alpha,
             reference_path=self.reference_path,
-            name=self.name
+            name=self.name,
         )
 
-    def copy(self, *args, **kwargs) -> 'HollowCylinder':
+    def copy(self, *args, **kwargs) -> "HollowCylinder":
         """
         Creates a copy of HollowCylinder.
 
@@ -1898,7 +1990,7 @@ class HollowCylinder(shells.ClosedShell3D):
             color=self.color,
             alpha=self.alpha,
             reference_path=self.reference_path,
-            name=self.name
+            name=self.name,
         )
 
 
@@ -1926,19 +2018,24 @@ class Sweep(shells.ClosedShell3D):
     :type name: str
     """
 
-    def __init__(self, contour2d: design3d.wires.Contour2D,
-                 wire3d: design3d.wires.Wire3D,
-                 starting_frame=None, *,
-                 color: Tuple[float, float, float] = None, alpha: float = 1,
-                 reference_path: str = design3d.PATH_ROOT,
-                 name: str = ''):
+    def __init__(
+        self,
+        contour2d: design3d.wires.Contour2D,
+        wire3d: design3d.wires.Wire3D,
+        starting_frame=None,
+        *,
+        color: Tuple[float, float, float] = None,
+        alpha: float = 1,
+        reference_path: str = design3d.PATH_ROOT,
+        name: str = "",
+    ):
         self.contour2d = contour2d
         self.wire3d = wire3d
         self.starting_frame = starting_frame
         if self.starting_frame is None:
             origin = self.wire3d.primitives[0].start
-            w = self.wire3d.primitives[0].unit_direction_vector(0.)
-            u = self.wire3d.primitives[0].unit_normal_vector(0.)
+            w = self.wire3d.primitives[0].unit_direction_vector(0.0)
+            u = self.wire3d.primitives[0].unit_normal_vector(0.0)
             if not u:
                 u = w.deterministic_unit_normal_vector()
             v = w.cross(u)
@@ -1949,12 +2046,15 @@ class Sweep(shells.ClosedShell3D):
     def to_dict(self, *args, **kwargs):
         """Custom serialization for performance."""
         dict_ = shells.ClosedShell3D.base_dict(self)
-        dict_.update({'color': self.color,
-                      'alpha': self.alpha,
-                      'wire3d': self.wire3d.to_dict(),
-                      'contour2d': self.contour2d.to_dict(),
-                      'reference_path': self.reference_path
-                      })
+        dict_.update(
+            {
+                "color": self.color,
+                "alpha": self.alpha,
+                "wire3d": self.wire3d.to_dict(),
+                "contour2d": self.contour2d.to_dict(),
+                "reference_path": self.reference_path,
+            }
+        )
 
         return dict_
 
@@ -1964,16 +2064,16 @@ class Sweep(shells.ClosedShell3D):
 
         For now, it does not take into account rotation of sections.
         """
-        if not self.wire3d.point_at_abscissa(0.).is_close(self.starting_frame.origin):
+        if not self.wire3d.point_at_abscissa(0.0).is_close(self.starting_frame.origin):
             raise ValueError("Frame origin and wire start should be coincident.")
         start_plane = surfaces.Plane3D(self.starting_frame)
 
         faces = [design3d.faces.PlaneFace3D(start_plane, surfaces.Surface2D(self.contour2d, []))]
 
-        last_end_tangent = self.wire3d.primitives[0].unit_direction_vector(0.)
+        last_end_tangent = self.wire3d.primitives[0].unit_direction_vector(0.0)
         frame_contour = self.starting_frame
         for wire_primitive in self.wire3d.primitives:
-            start_tangent = wire_primitive.unit_direction_vector(0.)
+            start_tangent = wire_primitive.unit_direction_vector(0.0)
             if not start_tangent.is_close(last_end_tangent):
                 raise ValueError("""It seems that the wire3d provided to the sweep is not C1 continuous.
                  If you have a wire with discotinuites you can try to break it down into many sweeps or
@@ -2000,23 +2100,36 @@ class Sweep(shells.ClosedShell3D):
         :param side: 'old' or 'new'
         """
         new_wire = self.wire3d.frame_mapping(frame, side)
-        return Sweep(self.contour2d, new_wire, color=self.color,
-                     alpha=self.alpha, reference_path=self.reference_path, name=self.name)
+        return Sweep(
+            self.contour2d,
+            new_wire,
+            color=self.color,
+            alpha=self.alpha,
+            reference_path=self.reference_path,
+            name=self.name,
+        )
 
     def copy(self, deep=True, memo=None):
         """Creates a copy of the Sweep."""
         new_contour2d = self.contour2d.copy()
         new_wire3d = self.wire3d.copy()
-        return Sweep(new_contour2d, new_wire3d, color=self.color,
-                     alpha=self.alpha, reference_path=self.reference_path, name=self.name)
+        return Sweep(
+            new_contour2d,
+            new_wire3d,
+            color=self.color,
+            alpha=self.alpha,
+            reference_path=self.reference_path,
+            name=self.name,
+        )
+
 
 class Loft(shells.ClosedShell3D):
     """
     Define a loft of sections along a path.
 
     The loft is defined by a sections (contour2D) and a path with C1 continuity provided by
-    the 3D wire. 
-    
+    the 3D wire.
+
     The starting frame defines the position and orientation of the profile in the 3D space.
 
     :param sections: The 2D contours, defining the profile to be swept along the wire.
@@ -2035,11 +2148,15 @@ class Loft(shells.ClosedShell3D):
     :type name: str
     """
 
-    def __init__(self, sections2d: list[design3d.wires.Contour2D],
-                 sections_frames: list[design3d.Frame3D],
-                 wire3d: design3d.wires.Wire3D,
-                 color: Tuple[float, float, float] = None, alpha: float = 1,
-                 name: str = ''):
+    def __init__(
+        self,
+        sections2d: list[design3d.wires.Contour2D],
+        sections_frames: list[design3d.Frame3D],
+        wire3d: design3d.wires.Wire3D,
+        color: Tuple[float, float, float] = None,
+        alpha: float = 1,
+        name: str = "",
+    ):
         self.sections2d = sections2d
         self.sections_frames = sections_frames
         self.wire3d = wire3d
@@ -2049,12 +2166,14 @@ class Loft(shells.ClosedShell3D):
     def to_dict(self, *args, **kwargs):
         """Custom serialization for performance."""
         dict_ = shells.ClosedShell3D.base_dict(self)
-        dict_.update({'color': self.color,
-                      'alpha': self.alpha,
-                      'wire3d': self.wire3d.to_dict(),
-                      'sections2d': [c.to_dict() for c in self.sections2d],
-                      
-                      })
+        dict_.update(
+            {
+                "color": self.color,
+                "alpha": self.alpha,
+                "wire3d": self.wire3d.to_dict(),
+                "sections2d": [c.to_dict() for c in self.sections2d],
+            }
+        )
 
         return dict_
 
@@ -2064,16 +2183,16 @@ class Loft(shells.ClosedShell3D):
 
         For now, it does not take into account rotation of sections.
         """
-        if not self.wire3d.point_at_abscissa(0.).is_close(self.starting_frame.origin):
+        if not self.wire3d.point_at_abscissa(0.0).is_close(self.starting_frame.origin):
             raise ValueError("Frame origin and wire start should be coincident.")
         start_plane = surfaces.Plane3D(self.starting_frame)
 
         faces = [design3d.faces.PlaneFace3D(start_plane, surfaces.Surface2D(self.contour2d, []))]
 
-        last_end_tangent = self.wire3d.primitives[0].unit_direction_vector(0.)
+        last_end_tangent = self.wire3d.primitives[0].unit_direction_vector(0.0)
         frame_contour = self.starting_frame
         for wire_primitive in self.wire3d.primitives:
-            start_tangent = wire_primitive.unit_direction_vector(0.)
+            start_tangent = wire_primitive.unit_direction_vector(0.0)
             if not start_tangent.is_close(last_end_tangent):
                 raise ValueError("""It seems that the wire3d provided to the sweep is not C1 continuous.
                  If you have a wire with discotinuites you can try to break it down into many sweeps or
@@ -2100,25 +2219,43 @@ class Loft(shells.ClosedShell3D):
         :param side: 'old' or 'new'
         """
         new_wire = self.wire3d.frame_mapping(frame, side)
-        return Sweep(self.contour2d, new_wire, color=self.color,
-                     alpha=self.alpha, reference_path=self.reference_path, name=self.name)
+        return Sweep(
+            self.contour2d,
+            new_wire,
+            color=self.color,
+            alpha=self.alpha,
+            reference_path=self.reference_path,
+            name=self.name,
+        )
 
     def copy(self, deep=True, memo=None):
         """Creates a copy of the Sweep."""
         new_contour2d = self.contour2d.copy()
         new_wire3d = self.wire3d.copy()
-        return Sweep(new_contour2d, new_wire3d, color=self.color,
-                     alpha=self.alpha, reference_path=self.reference_path, name=self.name)
+        return Sweep(
+            new_contour2d,
+            new_wire3d,
+            color=self.color,
+            alpha=self.alpha,
+            reference_path=self.reference_path,
+            name=self.name,
+        )
 
-    
+
 class Sphere(shells.ClosedShell3D):
     """
     Defines a sphere at a given position & radius.
     """
 
-    def __init__(self, center: design3d.Point3D, radius: float,
-                 color: Tuple[float, float, float] = None, alpha: float = 1.,
-                 reference_path: str = design3d.PATH_ROOT, name: str = ''):
+    def __init__(
+        self,
+        center: design3d.Point3D,
+        radius: float,
+        color: Tuple[float, float, float] = None,
+        alpha: float = 1.0,
+        reference_path: str = design3d.PATH_ROOT,
+        name: str = "",
+    ):
         self.center = center
         self.radius = radius
         self.position = center
@@ -2126,8 +2263,9 @@ class Sphere(shells.ClosedShell3D):
         self.frame = design3d.Frame3D(center, design3d.X3D, design3d.Y3D, design3d.Z3D)
         spherical_surface = surfaces.SphericalSurface3D(self.frame, self.radius)
         spherical_face = design3d.faces.SphericalFace3D.from_surface_rectangular_cut(spherical_surface)
-        shells.ClosedShell3D.__init__(self, faces=[spherical_face], color=color, alpha=alpha,
-                                      reference_path=reference_path, name=name)
+        shells.ClosedShell3D.__init__(
+            self, faces=[spherical_face], color=color, alpha=alpha, reference_path=reference_path, name=name
+        )
 
     def volume(self):
         """
@@ -2152,8 +2290,9 @@ class Sphere(shells.ClosedShell3D):
 
         :param side: 'old' or 'new'
         """
-        return Sphere(self.center.frame_mapping(frame, side), self.radius,
-                      reference_path=self.reference_path, name=self.name)
+        return Sphere(
+            self.center.frame_mapping(frame, side), self.radius, reference_path=self.reference_path, name=self.name
+        )
 
     def skin_points(self, resolution: float = 1e-3):
         """Gives points on the skin with respect to a resolution."""
@@ -2176,9 +2315,7 @@ class Sphere(shells.ClosedShell3D):
                 skin_points.append(pt_floor_init)
 
             else:
-                center_floor = design3d.Point3D(design3d.X3D.dot(pt_floor_init),
-                                               self.center.y,
-                                               self.center.z)
+                center_floor = design3d.Point3D(design3d.X3D.dot(pt_floor_init), self.center.y, self.center.z)
 
                 r_floor = center_floor.point_distance(pt_floor_init)
                 theta_floor = resolution / r_floor
@@ -2218,8 +2355,9 @@ class Measure3D:
     Used to create a measure between two points in 3D.
     """
 
-    def __init__(self, point1: design3d.Point3D, point2: design3d.Point3D,
-                 color: Tuple[float, float, float] = (1., 0, 0)):
+    def __init__(
+        self, point1: design3d.Point3D, point2: design3d.Point3D, color: Tuple[float, float, float] = (1.0, 0, 0)
+    ):
         self.point1, self.point2 = point1, point2
         self.color = color
         self.distance = (point1 - point2).norm()

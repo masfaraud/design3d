@@ -1,4 +1,5 @@
 """design3d shells module."""
+
 import math
 import random
 import warnings
@@ -85,14 +86,18 @@ class Shell3D(design3d.core.CompositePrimitive3D):
     :param bounding_box: The bounding box of the shell.
     :type bounding_box: :class:`design3d.core.BoundingBox`
     """
+
     STEP_FUNCTION = None
 
-    def __init__(self, faces: List[design3d.faces.Face3D],
-                 color: Tuple[float, float, float] = None,
-                 alpha: float = 1.,
-                 name: str = '',
-                 bounding_box: design3d.core.BoundingBox = None,
-                 reference_path: str = design3d.PATH_ROOT):
+    def __init__(
+        self,
+        faces: List[design3d.faces.Face3D],
+        color: Tuple[float, float, float] = None,
+        alpha: float = 1.0,
+        name: str = "",
+        bounding_box: design3d.core.BoundingBox = None,
+        reference_path: str = design3d.PATH_ROOT,
+    ):
 
         self.faces = faces
         if not color:
@@ -109,9 +114,9 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         self._vertices_points = None
         self._shell_octree_decomposition = None
 
-        design3d.core.CompositePrimitive3D.__init__(self,
-                                                   primitives=faces, color=color, alpha=alpha,
-                                                   reference_path=reference_path, name=name)
+        design3d.core.CompositePrimitive3D.__init__(
+            self, primitives=faces, color=color, alpha=alpha, reference_path=reference_path, name=name
+        )
 
     def _data_hash(self):
         return len(self.faces)  # sum(face._data_hash() for face in self.faces)
@@ -151,7 +156,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
 
     @property
     def vertices_points(self):
-        """Gets the shell's vertices points. """
+        """Gets the shell's vertices points."""
         if self._vertices_points is None:
             self._vertices_points = self._helper_getter_vertices_points(self.faces)
         return self._vertices_points
@@ -268,7 +273,8 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         """
         if not self._faces_graph:
             self._faces_graph = self._helper_create_faces_graph(
-                self.faces, self.vertices_points, verify_connected_components)
+                self.faces, self.vertices_points, verify_connected_components
+            )
         return self._faces_graph
 
     def to_dict(self, *args, **kwargs):
@@ -289,11 +295,11 @@ class Shell3D(design3d.core.CompositePrimitive3D):
 
         """
         dict_ = {}
-        dict_.update({'color': self.color,
-                      'alpha': self.alpha,
-                      'faces': [f.to_dict(use_pointers=False) for f in self.faces]})
+        dict_.update(
+            {"color": self.color, "alpha": self.alpha, "faces": [f.to_dict(use_pointers=False) for f in self.faces]}
+        )
         if self._bbox:
-            dict_['bounding_box'] = self._bbox.to_dict()
+            dict_["bounding_box"] = self._bbox.to_dict()
 
         return dict_
 
@@ -326,8 +332,8 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         """
         Creates step file entities from design3d objects.
         """
-        step_content = ''
-        faces_content = ''
+        step_content = ""
+        faces_content = ""
         face_ids = []
 
         for face in self.faces:
@@ -343,8 +349,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
 
         shell_id = current_id + 1
 
-        step_content += f"#{shell_id} = {self.STEP_FUNCTION}('{self.name}'," \
-                        f"({step_ids_to_str(face_ids)}));\n"
+        step_content += f"#{shell_id} = {self.STEP_FUNCTION}('{self.name}'," f"({step_ids_to_str(face_ids)}));\n"
         manifold_id = shell_id + 1
         if self.STEP_FUNCTION == "CLOSED_SHELL":
             step_content += f"#{manifold_id} = MANIFOLD_SOLID_BREP('{self.name}',#{shell_id});\n"
@@ -357,8 +362,8 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         """
         Creates step file entities from design3d objects.
         """
-        step_content = ''
-        faces_content = ''
+        step_content = ""
+        faces_content = ""
         face_ids = []
 
         product_content, shape_definition_repr_id = product_writer(current_id, self.name)
@@ -385,37 +390,44 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         geometric_context_content, geometric_representation_context_id = geometric_context_writer(current_id)
 
         if self.STEP_FUNCTION == "CLOSED_SHELL":
-            step_content += f"#{brep_id} = ADVANCED_BREP_SHAPE_REPRESENTATION('',(#{frame_id},#{manifold_id})," \
-                            f"#{geometric_representation_context_id});\n"
+            step_content += (
+                f"#{brep_id} = ADVANCED_BREP_SHAPE_REPRESENTATION('',(#{frame_id},#{manifold_id}),"
+                f"#{geometric_representation_context_id});\n"
+            )
             step_content += frame_content
             step_content += f"#{manifold_id} = MANIFOLD_SOLID_BREP('{self.name}',#{shell_id});\n"
         else:
-            step_content += f"#{brep_id} = MANIFOLD_SURFACE_SHAPE_REPRESENTATION('',(#{frame_id},#{manifold_id})," \
-                            f"#{geometric_representation_context_id});\n"
+            step_content += (
+                f"#{brep_id} = MANIFOLD_SURFACE_SHAPE_REPRESENTATION('',(#{frame_id},#{manifold_id}),"
+                f"#{geometric_representation_context_id});\n"
+            )
             step_content += frame_content
             step_content += f"#{manifold_id} = SHELL_BASED_SURFACE_MODEL('{self.name}',(#{shell_id}));\n"
 
-        step_content += f"#{shell_id} = {self.STEP_FUNCTION}('{self.name}'," \
-                        f"({step_ids_to_str(face_ids)}));\n"
+        step_content += f"#{shell_id} = {self.STEP_FUNCTION}('{self.name}'," f"({step_ids_to_str(face_ids)}));\n"
         step_content += faces_content
 
         step_content += geometric_context_content
 
         product_related_category = geometric_representation_context_id + 1
-        step_content += f"#{product_related_category} = PRODUCT_RELATED_PRODUCT_CATEGORY(" \
-                        f"'part',$,(#{product_id}));\n"
+        step_content += (
+            f"#{product_related_category} = PRODUCT_RELATED_PRODUCT_CATEGORY(" f"'part',$,(#{product_id}));\n"
+        )
         draughting_id = product_related_category + 1
         step_content += f"#{draughting_id} = DRAUGHTING_PRE_DEFINED_CURVE_FONT('continuous');\n"
         color_id = draughting_id + 1
         primitive_color = (1, 1, 1)
-        if hasattr(self, 'color') and self.color is not None:
+        if hasattr(self, "color") and self.color is not None:
             primitive_color = self.color
-        step_content += f"#{color_id} = COLOUR_RGB('',{round(float(primitive_color[0]), 4)}," \
-                        f"{round(float(primitive_color[1]), 4)},{round(float(primitive_color[2]), 4)});\n"
+        step_content += (
+            f"#{color_id} = COLOUR_RGB('',{round(float(primitive_color[0]), 4)},"
+            f"{round(float(primitive_color[1]), 4)},{round(float(primitive_color[2]), 4)});\n"
+        )
 
         curve_style_id = color_id + 1
-        step_content += f"#{curve_style_id} = CURVE_STYLE('',#{draughting_id}," \
-                        f"POSITIVE_LENGTH_MEASURE(0.1),#{color_id});\n"
+        step_content += (
+            f"#{curve_style_id} = CURVE_STYLE('',#{draughting_id}," f"POSITIVE_LENGTH_MEASURE(0.1),#{color_id});\n"
+        )
 
         fill_area_color_id = curve_style_id + 1
         step_content += f"#{fill_area_color_id} = FILL_AREA_STYLE_COLOUR('',#{color_id});\n"
@@ -434,23 +446,25 @@ class Shell3D(design3d.core.CompositePrimitive3D):
 
         presentation_style_id = suface_style_usage_id + 1
 
-        step_content += f"#{presentation_style_id} = PRESENTATION_STYLE_ASSIGNMENT((#{suface_style_usage_id}," \
-                        f"#{curve_style_id}));\n"
+        step_content += (
+            f"#{presentation_style_id} = PRESENTATION_STYLE_ASSIGNMENT((#{suface_style_usage_id},"
+            f"#{curve_style_id}));\n"
+        )
 
         styled_item_id = presentation_style_id + 1
-        if self.__class__.__name__ == 'OpenShell3D':
+        if self.__class__.__name__ == "OpenShell3D":
             for face_id in face_ids:
-                step_content += f"#{styled_item_id} = STYLED_ITEM('color',(#{presentation_style_id})," \
-                                f"#{face_id});\n"
+                step_content += f"#{styled_item_id} = STYLED_ITEM('color',(#{presentation_style_id})," f"#{face_id});\n"
                 styled_item_id += 1
             styled_item_id -= 1
         else:
-            step_content += f"#{styled_item_id} = STYLED_ITEM('color',(#{presentation_style_id})," \
-                            f"#{manifold_id});\n"
+            step_content += f"#{styled_item_id} = STYLED_ITEM('color',(#{presentation_style_id})," f"#{manifold_id});\n"
         mechanical_design_id = styled_item_id + 1
-        step_content += f"#{mechanical_design_id} =" \
-                        f" MECHANICAL_DESIGN_GEOMETRIC_PRESENTATION_REPRESENTATION(" \
-                        f"'',(#{styled_item_id}),#{geometric_representation_context_id});\n"
+        step_content += (
+            f"#{mechanical_design_id} ="
+            f" MECHANICAL_DESIGN_GEOMETRIC_PRESENTATION_REPRESENTATION("
+            f"'',(#{styled_item_id}),#{geometric_representation_context_id});\n"
+        )
         current_id = mechanical_design_id
 
         return step_content, current_id, [brep_id, product_definition_id]
@@ -459,7 +473,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         """
         Creates step file entities from design3d objects.
         """
-        step_content = ''
+        step_content = ""
         face_ids = []
         for face in self.faces:
             if isinstance(face, design3d.faces.Face3D):
@@ -472,8 +486,9 @@ class Shell3D(design3d.core.CompositePrimitive3D):
             current_id = max(face_sub_ids) + 1
 
         shell_id = current_id
-        step_content += f"#{current_id} = {self.STEP_FUNCTION}('{self.name}'," \
-                        f"({design3d.core.step_ids_to_str(face_ids)}));\n"
+        step_content += (
+            f"#{current_id} = {self.STEP_FUNCTION}('{self.name}'," f"({design3d.core.step_ids_to_str(face_ids)}));\n"
+        )
         manifold_id = shell_id + 1
         step_content += f"#{manifold_id} = SHELL_BASED_SURFACE_MODEL('{self.name}',(#{shell_id}));\n"
 
@@ -484,8 +499,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
 
         return step_content, brep_id, face_ids
 
-    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D,
-                 angle: float):
+    def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D, angle: float):
         """
         Open Shell 3D / Closed Shell 3D rotation.
 
@@ -494,8 +508,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         :param angle: angle rotation.
         :return: a new rotated OpenShell3D.
         """
-        new_faces = [face.rotation(center, axis, angle) for face
-                     in self.faces]
+        new_faces = [face.rotation(center, axis, angle) for face in self.faces]
         return self.__class__(new_faces, color=self.color, alpha=self.alpha, name=self.name)
 
     def translation(self, offset: design3d.Vector3D):
@@ -505,10 +518,8 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         :param offset: translation vector.
         :return: A new translated Open Shell 3D.
         """
-        new_faces = [face.translation(offset) for face in
-                     self.faces]
-        return self.__class__(new_faces, color=self.color, alpha=self.alpha,
-                              name=self.name)
+        new_faces = [face.translation(offset) for face in self.faces]
+        return self.__class__(new_faces, color=self.color, alpha=self.alpha, name=self.name)
 
     def frame_mapping(self, frame: design3d.Frame3D, side: str):
         """
@@ -516,8 +527,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
 
         side = 'old' or 'new'.
         """
-        new_faces = [face.frame_mapping(frame, side) for face in
-                     self.faces]
+        new_faces = [face.frame_mapping(frame, side) for face in self.faces]
         return self.__class__(new_faces, name=self.name)
 
     def copy(self, deep=True, memo=None):
@@ -527,8 +537,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         :return: return a copy a shell 3D.
         """
         new_faces = [face.copy(deep=deep, memo=memo) for face in self.faces]
-        return self.__class__(new_faces, color=self.color, alpha=self.alpha,
-                              name=self.name)
+        return self.__class__(new_faces, color=self.color, alpha=self.alpha, name=self.name)
 
     @property
     def bounding_box(self):
@@ -563,9 +572,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         frame_block.u = 1.1 * frame_block.u
         frame_block.v = 1.1 * frame_block.v
         frame_block.w = 1.1 * frame_block.w
-        block = design3d.primitives3d.Block(frame_block,
-                                           color=(0.1, 0.2, 0.2),
-                                           alpha=0.6)
+        block = design3d.primitives3d.Block(frame_block, color=(0.1, 0.2, 0.2), alpha=0.6)
         face_3d = block.cut_by_orthogonal_plane(plane_3d)
         intersection_primitives = []
         for face in self.faces:
@@ -573,13 +580,12 @@ class Shell3D(design3d.core.CompositePrimitive3D):
             if intersection_wires:
                 for intersection_wire in intersection_wires:
                     intersection_primitives.extend(intersection_wire.primitives)
-        contours3d = wires.Contour3D.contours_from_edges(
-            intersection_primitives[:])
+        contours3d = wires.Contour3D.contours_from_edges(intersection_primitives[:])
         if not contours3d:
             return []
-        contours2d = [contour.to_2d(plane_3d.frame.origin,
-                                    plane_3d.frame.u,
-                                    plane_3d.frame.v) for contour in contours3d]
+        contours2d = [
+            contour.to_2d(plane_3d.frame.origin, plane_3d.frame.u, plane_3d.frame.v) for contour in contours3d
+        ]
         resulting_faces = []
         for contour2d in contours2d:
             if contour2d.area() > 1e-7:
@@ -587,8 +593,9 @@ class Shell3D(design3d.core.CompositePrimitive3D):
                 resulting_faces.append(design3d.faces.PlaneFace3D(plane_3d, surface2d))
         return resulting_faces
 
-    def linesegment_intersections(self, linesegment3d: edges.LineSegment3D) \
-            -> List[Tuple[design3d.faces.Face3D, List[design3d.Point3D]]]:
+    def linesegment_intersections(
+        self, linesegment3d: edges.LineSegment3D
+    ) -> List[Tuple[design3d.faces.Face3D, List[design3d.Point3D]]]:
         """
         Gets the intersections of a Shell3D with a Line Segment 3D.
 
@@ -602,9 +609,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
                 yield face, face_intersections
         # return intersections
 
-    def line_intersections(self,
-                           line3d: curves.Line3D) \
-            -> List[Tuple[design3d.faces.Face3D, List[design3d.Point3D]]]:
+    def line_intersections(self, line3d: curves.Line3D) -> List[Tuple[design3d.faces.Face3D, List[design3d.Point3D]]]:
         """
         Gets the intersections of a Shell3D with a Line Segment 3D.
 
@@ -629,19 +634,16 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         _, point1, point2 = self.minimum_distance(shell2, return_points=True)
         return point1, point2
 
-    def minimum_distance_point(self,
-                               point: design3d.Point3D) -> design3d.Point3D:
+    def minimum_distance_point(self, point: design3d.Point3D) -> design3d.Point3D:
         """
         Computes the distance of a point to a Shell3D, whether it is inside or outside the Shell3D.
 
         """
-        distance_min, point1_min = self.faces[0].distance_to_point(point,
-                                                                   return_other_point=True)
+        distance_min, point1_min = self.faces[0].distance_to_point(point, return_other_point=True)
         for face in self.faces[1:]:
             bbox_distance = self.bounding_box.distance_to_point(point)
             if bbox_distance < distance_min:
-                distance, point1 = face.distance_to_point(point,
-                                                          return_other_point=True)
+                distance, point1 = face.distance_to_point(point, return_other_point=True)
                 if distance < distance_min:
                     distance_min, point1_min = distance, point1
 
@@ -653,11 +655,13 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         Gets a set of points representing the shell, some kink of a cloud of points.
 
         """
-        list_set_points = [{point for face in faces
-                            for point in face.outer_contour3d.discretization_points(number_points=10)} for _, faces in
-                           shell_decomposition.items()]
-        list_set_points = [np.array([(point[0], point[1], point[2]) for point in sets_points1])
-                           for sets_points1 in list_set_points]
+        list_set_points = [
+            {point for face in faces for point in face.outer_contour3d.discretization_points(number_points=10)}
+            for _, faces in shell_decomposition.items()
+        ]
+        list_set_points = [
+            np.array([(point[0], point[1], point[2]) for point in sets_points1]) for sets_points1 in list_set_points
+        ]
         return list_set_points
 
     def get_minimum_distance_nearby_faces(self, other_shell):
@@ -711,8 +715,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
             self._shell_octree_decomposition = design3d.faces.octree_decomposition(self.bounding_box, self.faces)
         return self._shell_octree_decomposition
 
-    def intersection_internal_aabb_volume(self, shell2: 'OpenShell3D',
-                                          resolution: float):
+    def intersection_internal_aabb_volume(self, shell2: "OpenShell3D", resolution: float):
         """
         Aabb made of the intersection points and the points of self internal to shell2.
         """
@@ -723,7 +726,8 @@ class Shell3D(design3d.core.CompositePrimitive3D):
                 if intersection_points:
                     intersection_points = [
                         intersection_points[0].primitives[0].start,
-                        intersection_points[0].primitives[0].end]
+                        intersection_points[0].primitives[0].end,
+                    ]
                     intersections_points.extend(intersection_points)
 
         shell1_points_inside_shell2 = []
@@ -734,12 +738,10 @@ class Shell3D(design3d.core.CompositePrimitive3D):
 
         if len(intersections_points + shell1_points_inside_shell2) == 0:
             return 0
-        bbox = design3d.core.BoundingBox.from_points(
-            intersections_points + shell1_points_inside_shell2)
+        bbox = design3d.core.BoundingBox.from_points(intersections_points + shell1_points_inside_shell2)
         return bbox.volume()
 
-    def intersection_external_aabb_volume(self, shell2: 'OpenShell3D',
-                                          resolution: float):
+    def intersection_external_aabb_volume(self, shell2: "OpenShell3D", resolution: float):
         """
         Aabb made of the intersection points and the points of self external to shell2.
         """
@@ -750,20 +752,19 @@ class Shell3D(design3d.core.CompositePrimitive3D):
                 if intersection_points:
                     intersection_points = [
                         intersection_points[0].primitives[0].start,
-                        intersection_points[0].primitives[0].end]
+                        intersection_points[0].primitives[0].end,
+                    ]
                     intersections_points.extend(intersection_points)
 
         shell1_points_outside_shell2 = []
         for face in self.faces:
-            for point in face.outer_contour3d.discretization_points(
-                    angle_resolution=resolution):
+            for point in face.outer_contour3d.discretization_points(angle_resolution=resolution):
                 if not shell2.point_inside(point):
                     shell1_points_outside_shell2.append(point)
 
         if len(intersections_points + shell1_points_outside_shell2) == 0:
             return 0
-        bbox = design3d.core.BoundingBox.from_points(
-            intersections_points + shell1_points_outside_shell2)
+        bbox = design3d.core.BoundingBox.from_points(intersections_points + shell1_points_outside_shell2)
         return bbox.volume()
 
     def face_on_shell(self, face, abs_tol: float = 1e-6):
@@ -806,8 +807,10 @@ class Shell3D(design3d.core.CompositePrimitive3D):
                 if face_mesh:
                     meshes.append(face_mesh)
             except Exception as exception:
-                warnings.warn(f"Could not triangulate face {i} ({face.__class__.__name__}) in '{self.name}' "
-                              f"due to: {exception}. This may be due to a topology error in contour2d.")
+                warnings.warn(
+                    f"Could not triangulate face {i} ({face.__class__.__name__}) in '{self.name}' "
+                    f"due to: {exception}. This may be due to a topology error in contour2d."
+                )
 
         return display.Mesh3D.from_meshes(meshes)
 
@@ -840,19 +843,19 @@ class Shell3D(design3d.core.CompositePrimitive3D):
             face_babylon_meshes = face.babylon_meshes()
             if not face_babylon_meshes:
                 continue
-            if face_babylon_meshes[0]['positions']:
+            if face_babylon_meshes[0]["positions"]:
                 babylon_meshes.extend(face.babylon_meshes())
-        babylon_mesh = {'primitives_meshes': babylon_meshes}
+        babylon_mesh = {"primitives_meshes": babylon_meshes}
         babylon_mesh.update(self.babylon_param())
         return [babylon_mesh]
 
-    def plot(self, ax=None, color: str = 'k', alpha: float = 1.0):
+    def plot(self, ax=None, color: str = "k", alpha: float = 1.0):
         """
         Plot a Shell 3D using Matplotlib.
 
         """
         if ax is None:
-            ax = plt.figure().add_subplot(111, projection='3d')
+            ax = plt.figure().add_subplot(111, projection="3d")
 
         for face in self.faces:
             face.plot(ax=ax, color=color, alpha=alpha)
@@ -897,20 +900,20 @@ class Shell3D(design3d.core.CompositePrimitive3D):
                     pass
                 else:
                     for primitive in contour.primitives:
-                        if (not edge_in_list(primitive, primitives)
-                                and not edge_in_list(primitive.reverse(), primitives)):
+                        if not edge_in_list(primitive, primitives) and not edge_in_list(
+                            primitive.reverse(), primitives
+                        ):
                             primitives.append(primitive)
 
         indices_check = len(primitives) * [None]
 
-        point_account = update_data['point_account']
-        line_account, line_loop_account = update_data['line_account'] + 1, update_data['line_loop_account']
+        point_account = update_data["point_account"]
+        line_account, line_loop_account = update_data["line_account"] + 1, update_data["line_loop_account"]
         lines, line_surface, lines_tags = [], [], []
 
         points = list(points)
         for p_index, point in enumerate(points):
-            lines.append(point.get_geo_lines(tag=p_index + point_account + 1,
-                                             point_mesh_size=point_mesh_size))
+            lines.append(point.get_geo_lines(tag=p_index + point_account + 1, point_mesh_size=point_mesh_size))
 
         for f_index, face in enumerate(self.faces):
             line_surface = []
@@ -934,31 +937,42 @@ class Shell3D(design3d.core.CompositePrimitive3D):
                                 end_point_tag = get_point_index_in_list(discretization_points[1], points) + 1
 
                                 primitive_linesegments = design3d.edges.LineSegment3D(
-                                    discretization_points[0], discretization_points[1])
-                                lines.append(primitive_linesegments.get_geo_lines(tag=line_account,
-                                                                                  start_point_tag=start_point_tag
-                                                                                  + point_account,
-                                                                                  end_point_tag=end_point_tag
-                                                                                  + point_account))
+                                    discretization_points[0], discretization_points[1]
+                                )
+                                lines.append(
+                                    primitive_linesegments.get_geo_lines(
+                                        tag=line_account,
+                                        start_point_tag=start_point_tag + point_account,
+                                        end_point_tag=end_point_tag + point_account,
+                                    )
+                                )
 
                             if isinstance(primitive, design3d.edges.LineSegment):
 
                                 start_point_tag = get_point_index_in_list(primitive.start, points) + 1
                                 end_point_tag = get_point_index_in_list(primitive.end, points) + 1
 
-                                lines.append(primitive.get_geo_lines(tag=line_account,
-                                                                     start_point_tag=start_point_tag + point_account,
-                                                                     end_point_tag=end_point_tag + point_account))
+                                lines.append(
+                                    primitive.get_geo_lines(
+                                        tag=line_account,
+                                        start_point_tag=start_point_tag + point_account,
+                                        end_point_tag=end_point_tag + point_account,
+                                    )
+                                )
                             elif isinstance(primitive, design3d.edges.ArcMixin):
 
                                 start_point_tag = get_point_index_in_list(primitive.start, points) + 1
                                 center_point_tag = get_point_index_in_list(primitive.circle.center, points) + 1
                                 end_point_tag = get_point_index_in_list(primitive.end, points) + 1
 
-                                lines.append(primitive.get_geo_lines(tag=line_account,
-                                                                     start_point_tag=start_point_tag + point_account,
-                                                                     center_point_tag=center_point_tag + point_account,
-                                                                     end_point_tag=end_point_tag + point_account))
+                                lines.append(
+                                    primitive.get_geo_lines(
+                                        tag=line_account,
+                                        start_point_tag=start_point_tag + point_account,
+                                        center_point_tag=center_point_tag + point_account,
+                                        end_point_tag=end_point_tag + point_account,
+                                    )
+                                )
 
                             lines_tags.append(line_account)
                             indices_check[index] = line_account
@@ -973,21 +987,25 @@ class Shell3D(design3d.core.CompositePrimitive3D):
                     line_loop_account += 1
                     lines_tags = []
 
-            lines.append(face.get_geo_lines((f_index + 1 + update_data['surface_account']),
-                                            line_surface))
+            lines.append(face.get_geo_lines((f_index + 1 + update_data["surface_account"]), line_surface))
 
             line_surface = []
 
-        lines.append('Surface Loop(' + str(1 + update_data['surface_loop_account']) + ') = {'
-                     + str(list(range(update_data['surface_account'] + 1,
-                                      update_data['surface_account'] +
-                                      len(self.faces) + 1)))[1:-1] + '};')
+        lines.append(
+            "Surface Loop("
+            + str(1 + update_data["surface_loop_account"])
+            + ") = {"
+            + str(
+                list(range(update_data["surface_account"] + 1, update_data["surface_account"] + len(self.faces) + 1))
+            )[1:-1]
+            + "};"
+        )
 
-        update_data['point_account'] += len(points)
-        update_data['line_account'] += line_account - 1
-        update_data['line_loop_account'] += line_loop_account
-        update_data['surface_account'] += len(self.faces)
-        update_data['surface_loop_account'] += 1
+        update_data["point_account"] += len(points)
+        update_data["line_account"] += line_account - 1
+        update_data["line_loop_account"] += line_loop_account
+        update_data["surface_account"] += len(self.faces)
+        update_data["surface_loop_account"] += 1
 
         return lines, update_data
 
@@ -995,8 +1013,11 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         """Gets Shells' mesh lines with transfinite curves."""
         lines = []
         for face in self.faces:
-            lines.extend(face.surface2d.get_mesh_lines_with_transfinite_curves(
-                [[face.outer_contour3d], face.inner_contours3d], min_points, size))
+            lines.extend(
+                face.surface2d.get_mesh_lines_with_transfinite_curves(
+                    [[face.outer_contour3d], face.inner_contours3d], min_points, size
+                )
+            )
         return lines
 
     @staticmethod
@@ -1016,19 +1037,19 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         for n_index in faces_graph.nodes:
             face = faces[n_index]
             if any(
-                    not any(
-                        is_primitive_on_neighbor_face(prim, faces[neighbor])
-                        for neighbor in faces_graph.neighbors(n_index)
-                    )
-                    for prim in [prim for contour in [face.outer_contour3d] + face.inner_contours3d
-                                 for prim in contour.primitives]
+                not any(
+                    is_primitive_on_neighbor_face(prim, faces[neighbor]) for neighbor in faces_graph.neighbors(n_index)
+                )
+                for prim in [
+                    prim for contour in [face.outer_contour3d] + face.inner_contours3d for prim in contour.primitives
+                ]
             ):
                 return True
 
         return False
 
     @classmethod
-    def from_faces(cls, faces, name: str = ''):
+    def from_faces(cls, faces, name: str = ""):
         """
         Defines a List of separated OpenShell3D from a list of faces, based on the faces graph.
         """
@@ -1040,9 +1061,9 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         for index, graph_i in enumerate(components, start=1):
             faces_list = [faces[n_index] for n_index in graph_i.nodes]
             if cls.is_shell_open(faces, graph_i):
-                shells_list.append(OpenShell3D(faces_list, name=name + f'_{index}'))
+                shells_list.append(OpenShell3D(faces_list, name=name + f"_{index}"))
             else:
-                shells_list.append(ClosedShell3D(faces_list, name=name + f'_{index}'))
+                shells_list.append(ClosedShell3D(faces_list, name=name + f"_{index}"))
 
         return shells_list
 
@@ -1084,7 +1105,7 @@ class OpenShell3D(Shell3D):
     inherits all of its attributes and methods.
     """
 
-    STEP_FUNCTION = 'OPEN_SHELL'
+    STEP_FUNCTION = "OPEN_SHELL"
 
     def union(self, shell2):
         """
@@ -1093,7 +1114,7 @@ class OpenShell3D(Shell3D):
         :return: a new OpenShell3D with the combined faces.
         """
         new_faces = self.faces + shell2.faces
-        new_name = self.name + ' union ' + shell2.name
+        new_name = self.name + " union " + shell2.name
         new_color = self.color
         return self.__class__(new_faces, name=new_name, color=new_color)
 
@@ -1108,7 +1129,7 @@ class ClosedShell3D(Shell3D):
     to check whether a face is inside the shell.
     """
 
-    STEP_FUNCTION = 'CLOSED_SHELL'
+    STEP_FUNCTION = "CLOSED_SHELL"
 
     def volume(self):
         """
@@ -1128,12 +1149,18 @@ class ClosedShell3D(Shell3D):
                 point2_adj = (point2[0] - center_x, point2[1] - center_y, point2[2] - center_z)
                 point3_adj = (point3[0] - center_x, point3[1] - center_y, point3[2] - center_z)
 
-                volume_tetraedre = 1 / 6 * abs(-point3_adj[0] * point2_adj[1] * point1_adj[2] +
-                                               point2_adj[0] * point3_adj[1] * point1_adj[2] +
-                                               point3_adj[0] * point1_adj[1] * point2_adj[2] -
-                                               point1_adj[0] * point3_adj[1] * point2_adj[2] -
-                                               point2_adj[0] * point1_adj[1] * point3_adj[2] +
-                                               point1_adj[0] * point2_adj[1] * point3_adj[2])
+                volume_tetraedre = (
+                    1
+                    / 6
+                    * abs(
+                        -point3_adj[0] * point2_adj[1] * point1_adj[2]
+                        + point2_adj[0] * point3_adj[1] * point1_adj[2]
+                        + point3_adj[0] * point1_adj[1] * point2_adj[2]
+                        - point1_adj[0] * point3_adj[1] * point2_adj[2]
+                        - point2_adj[0] * point1_adj[1] * point3_adj[2]
+                        + point1_adj[0] * point2_adj[1] * point3_adj[2]
+                    )
+                )
 
                 volume += volume_tetraedre
 
@@ -1163,8 +1190,11 @@ class ClosedShell3D(Shell3D):
     def get_ray_casting_line_segment(self, point3d):
         """Gets the best ray for performing ray casting algorithm."""
         boxes_size = [self.bounding_box.size[0] / 2, self.bounding_box.size[1] / 2, self.bounding_box.size[2] / 2]
-        xyz = [design3d.Vector3D(boxes_size[0], 0, 0), design3d.Vector3D(0, boxes_size[1], 0),
-               design3d.Vector3D(0, 0, boxes_size[2])]
+        xyz = [
+            design3d.Vector3D(boxes_size[0], 0, 0),
+            design3d.Vector3D(0, boxes_size[1], 0),
+            design3d.Vector3D(0, 0, boxes_size[2]),
+        ]
         points = sorted(self.bounding_box.get_points_inside_bbox(2, 2, 2), key=point3d.point_distance)
         bbox_outside_points = []
         for vector in xyz:
@@ -1179,8 +1209,10 @@ class ClosedShell3D(Shell3D):
         vec2 = vec2.to_vector()
         vec3 = bbox_outside_points[2] - point3d
         vec3 = vec3.to_vector()
-        rays = [edges.LineSegment3D(
-                point3d, point3d + 2 * vec1 + random.random() * vec2 + random.random() * vec3) for _ in range(10)]
+        rays = [
+            edges.LineSegment3D(point3d, point3d + 2 * vec1 + random.random() * vec2 + random.random() * vec3)
+            for _ in range(10)
+        ]
         return rays
 
     def point_inside(self, point3d: design3d.Point3D, **kwargs):
@@ -1293,22 +1325,23 @@ class ClosedShell3D(Shell3D):
             for face2 in shell2.faces:
                 if face1.surface3d.is_coincident(face2.surface3d, abs_tol):
                     contour1 = face1.outer_contour3d.to_2d(
-                        face1.surface3d.frame.origin,
-                        face1.surface3d.frame.u,
-                        face1.surface3d.frame.v)
+                        face1.surface3d.frame.origin, face1.surface3d.frame.u, face1.surface3d.frame.v
+                    )
                     contour2 = face2.outer_contour3d.to_2d(
-                        face1.surface3d.frame.origin,
-                        face1.surface3d.frame.u,
-                        face1.surface3d.frame.v)
+                        face1.surface3d.frame.origin, face1.surface3d.frame.u, face1.surface3d.frame.v
+                    )
                     if contour1.bounding_rectangle.b_rectangle_intersection(contour2.bounding_rectangle):
                         list_coincident_faces.append((face1, face2))
 
         return list_coincident_faces
 
-    def set_operations_valid_exterior_faces(self, new_faces: List[design3d.faces.Face3D],
-                                            valid_faces: List[design3d.faces.Face3D],
-                                            list_coincident_faces: List[design3d.faces.Face3D],
-                                            shell2):
+    def set_operations_valid_exterior_faces(
+        self,
+        new_faces: List[design3d.faces.Face3D],
+        valid_faces: List[design3d.faces.Face3D],
+        list_coincident_faces: List[design3d.faces.Face3D],
+        shell2,
+    ):
         """
         Select the valid faces from the new faces created during Boolean operations.
 
@@ -1397,8 +1430,7 @@ class ClosedShell3D(Shell3D):
         faces = []
         for face in intersecting_faces:
             new_faces = face.set_operations_new_faces(dict_faces_intersections)
-            valid_faces = self.get_subtraction_valid_faces(new_faces, faces,
-                                                           shell2, keep_interior_faces)
+            valid_faces = self.get_subtraction_valid_faces(new_faces, faces, shell2, keep_interior_faces)
             faces.extend(valid_faces)
 
         return faces
@@ -1419,12 +1451,12 @@ class ClosedShell3D(Shell3D):
                 if new_face.point_belongs(point3d):
                     normal1 = point3d - 0.00001 * new_face.surface3d.frame.w.unit_vector()
                     normal2 = point3d + 0.00001 * new_face.surface3d.frame.w.unit_vector()
-                    if (self.point_inside(normal1) and shell2.point_inside(normal1)) or \
-                            (shell2.point_inside(normal2) and self.point_inside(normal2)):
+                    if (self.point_inside(normal1) and shell2.point_inside(normal1)) or (
+                        shell2.point_inside(normal2) and self.point_inside(normal2)
+                    ):
                         faces.append(new_face)
                 continue
-            inside_shell2 = shell2.point_inside(
-                new_face.random_point_inside())
+            inside_shell2 = shell2.point_inside(new_face.random_point_inside())
             if inside_shell2 and new_face not in valid_faces:
                 faces.append(new_face)
 
@@ -1443,8 +1475,7 @@ class ClosedShell3D(Shell3D):
         faces = []
         for face in intersecting_faces:
             new_faces = face.set_operations_new_faces(dict_faces_intersections)
-            valid_faces = self.valid_intersection_faces(
-                new_faces, faces, shell2)
+            valid_faces = self.valid_intersection_faces(new_faces, faces, shell2)
             faces.extend(valid_faces)
 
         return faces
@@ -1493,15 +1524,13 @@ class ClosedShell3D(Shell3D):
                 normal_at_point = face.normal_at_point(point3d)
                 normal1 = point3d - 0.00001 * normal_at_point
                 normal2 = point3d + 0.00001 * normal_at_point
-                if (self.point_inside(normal1) and
-                    shell2.point_inside(normal2)) or \
-                        (shell2.point_inside(normal1) and
-                         self.point_inside(normal2)):
+                if (self.point_inside(normal1) and shell2.point_inside(normal2)) or (
+                    shell2.point_inside(normal1) and self.point_inside(normal2)
+                ):
                     return True
         return False
 
-    def set_operations_exterior_face(self, new_face, valid_faces,
-                                     list_coincident_faces, shell2):
+    def set_operations_exterior_face(self, new_face, valid_faces, list_coincident_faces, shell2):
         """
         Selects exterior faces during bool operations, like union or subtraction.
 
@@ -1517,8 +1546,11 @@ class ClosedShell3D(Shell3D):
             inside_shell2 = shell2.point_inside(new_face.random_point_inside())
             face_on_shell2 = shell2.face_on_shell(new_face)
             if not inside_shell2 or face_on_shell2:
-                if list_coincident_faces and any(new_face.surface3d.is_coincident(face.surface3d)
-                                                 for faces in list_coincident_faces for face in faces):
+                if list_coincident_faces and any(
+                    new_face.surface3d.is_coincident(face.surface3d)
+                    for faces in list_coincident_faces
+                    for face in faces
+                ):
                     if self.is_face_between_shells(shell2, new_face):
                         return False
                 return True
@@ -1579,9 +1611,9 @@ class ClosedShell3D(Shell3D):
                         faces2.remove(face2)
         if len(faces1) + len(faces2) == len(self.faces) + len(shell2.faces):
             return [self, shell2]
-        return [ClosedShell3D(faces1+faces2)]
+        return [ClosedShell3D(faces1 + faces2)]
 
-    def union(self, shell2: 'ClosedShell3D', tol: float = 1e-8):
+    def union(self, shell2: "ClosedShell3D", tol: float = 1e-8):
         """
         Given Two closed shells, it returns a new united ClosedShell3D object.
 
@@ -1592,18 +1624,22 @@ class ClosedShell3D(Shell3D):
         list_coincident_faces = self.get_coincident_faces(shell2, tol)
         dict_face_intersections1, dict_face_intersections2 = self.intersecting_faces_combinations(shell2, tol)
         intersecting_faces_1, non_intersecting_faces1 = self._separate_intersecting_and_non_intersecting_faces(
-            dict_face_intersections1)
+            dict_face_intersections1
+        )
         intersecting_faces_2, non_intersecting_faces2 = self._separate_intersecting_and_non_intersecting_faces(
-            dict_face_intersections2)
+            dict_face_intersections2
+        )
         non_intersecting_faces1 = self.validate_non_intersecting_faces(shell2, non_intersecting_faces1)
         non_intersecting_faces2 = shell2.validate_non_intersecting_faces(self, non_intersecting_faces2)
         faces = non_intersecting_faces1 + non_intersecting_faces2
         if len(faces) == len(self.faces + shell2.faces) and not intersecting_faces_1 + intersecting_faces_2:
             return self._delete_coincident_faces(shell2, list_coincident_faces, tol)
-        new_valid_faces = self.union_faces(shell2, intersecting_faces_1,
-                                           dict_face_intersections1, list_coincident_faces)
-        new_valid_faces += shell2.union_faces(self, intersecting_faces_2,
-                                              dict_face_intersections2, list_coincident_faces)
+        new_valid_faces = self.union_faces(
+            shell2, intersecting_faces_1, dict_face_intersections1, list_coincident_faces
+        )
+        new_valid_faces += shell2.union_faces(
+            self, intersecting_faces_2, dict_face_intersections2, list_coincident_faces
+        )
         if list_coincident_faces:
             new_valid_faces = self.validate_set_operations_faces(new_valid_faces)
         faces += new_valid_faces
@@ -1677,17 +1713,19 @@ class ClosedShell3D(Shell3D):
 
         dict_face_intersections1, _ = self.intersecting_faces_combinations(shell2, tol)
         intersecting_faces_1, non_intersecting_faces1 = self._separate_intersecting_and_non_intersecting_faces(
-            dict_face_intersections1)
+            dict_face_intersections1
+        )
         non_intersecting_faces1 = self.validate_non_intersecting_faces(shell2, non_intersecting_faces1)
         faces = non_intersecting_faces1
         if len(intersecting_faces_1) == 0:
             return [self, shell2]
-        new_valid_faces = self.union_faces(shell2, intersecting_faces_1,  dict_face_intersections1,
-                                           list_coincident_faces)
+        new_valid_faces = self.union_faces(
+            shell2, intersecting_faces_1, dict_face_intersections1, list_coincident_faces
+        )
         faces += new_valid_faces
         return OpenShell3D.from_faces(faces)
 
-    def subtract_to_closed_shell(self, shell2: 'ClosedShell3D', tol: float = 1e-8):
+    def subtract_to_closed_shell(self, shell2: "ClosedShell3D", tol: float = 1e-8):
         """
         Subtracts shell2's volume from self.
 
@@ -1699,9 +1737,11 @@ class ClosedShell3D(Shell3D):
             return [self]
         dict_face_intersections1, dict_face_intersections2 = self.intersecting_faces_combinations(shell2, tol)
         intersecting_faces_1, non_intersecting_faces1 = self._separate_intersecting_and_non_intersecting_faces(
-            dict_face_intersections1)
+            dict_face_intersections1
+        )
         intersecting_faces_2, non_intersecting_faces2 = self._separate_intersecting_and_non_intersecting_faces(
-            dict_face_intersections2)
+            dict_face_intersections2
+        )
         non_intersecting_faces1 = self.validate_non_intersecting_faces(shell2, non_intersecting_faces1)
         non_intersecting_faces2 = shell2.validate_non_intersecting_faces(self, non_intersecting_faces2, True)
         faces = non_intersecting_faces1 + non_intersecting_faces2
@@ -1738,9 +1778,11 @@ class ClosedShell3D(Shell3D):
             return validate_set_operation
         dict_face_intersections1, dict_face_intersections2 = self.intersecting_faces_combinations(shell2, tol)
         intersecting_faces_1, non_intersecting_faces1 = self._separate_intersecting_and_non_intersecting_faces(
-            dict_face_intersections1)
+            dict_face_intersections1
+        )
         intersecting_faces_2, non_intersecting_faces2 = self._separate_intersecting_and_non_intersecting_faces(
-            dict_face_intersections2)
+            dict_face_intersections2
+        )
         non_intersecting_faces1 = self.validate_non_intersecting_faces(shell2, non_intersecting_faces1, True)
         non_intersecting_faces2 = shell2.validate_non_intersecting_faces(self, non_intersecting_faces2, True)
         faces = non_intersecting_faces1 + non_intersecting_faces2
@@ -1762,7 +1804,7 @@ class ClosedShell3D(Shell3D):
             neighbors = nx.neighbors(self.vertices_graph, node)
             for neighbor_node in neighbors:
                 for face in self.faces:
-                    if self.vertices_graph.edges[(node, neighbor_node)]['edge'] in face.outer_contour3d.primitives:
+                    if self.vertices_graph.edges[(node, neighbor_node)]["edge"] in face.outer_contour3d.primitives:
                         self.faces.remove(face)
                         break
         self._faces_graph = None
@@ -1956,8 +1998,15 @@ class OpenTriangleShell3D(OpenShell3D):
         # not rounding to make sure to retrieve the exact same object with 'dict_to_object'
         vertices, faces = self.to_mesh_data(round_vertices=False)
 
-        dict_.update({"vertices": vertices.tolist(), "faces": faces.tolist(), "alpha": self.alpha,
-                      "color": self.color, "reference_path": self.reference_path})
+        dict_.update(
+            {
+                "vertices": vertices.tolist(),
+                "faces": faces.tolist(),
+                "alpha": self.alpha,
+                "color": self.color,
+                "reference_path": self.reference_path,
+            }
+        )
         return dict_
 
     @classmethod
@@ -2058,8 +2107,9 @@ class DisplayTriangleShell3D(Shell3D):
     performance.
     """
 
-    def __init__(self, positions: NDArray[float], indices: NDArray[int],
-                 reference_path: str = design3d.PATH_ROOT, name: str = ""):
+    def __init__(
+        self, positions: NDArray[float], indices: NDArray[int], reference_path: str = design3d.PATH_ROOT, name: str = ""
+    ):
         """
         Instantiate the DisplayTriangleShell3D.
 
@@ -2069,7 +2119,7 @@ class DisplayTriangleShell3D(Shell3D):
         """
         warnings.warn(
             "'design3d.shells.DisplayTriangleShell3D' class is deprecated. Use 'design3d.display.Mesh3D' instead",
-            DeprecationWarning
+            DeprecationWarning,
         )
 
         self.positions = positions
@@ -2128,7 +2178,7 @@ class DisplayTriangleShell3D(Shell3D):
         return dict_
 
     @classmethod
-    def dict_to_object(cls, dict_, **kwargs) -> 'DisplayTriangleShell3D':
+    def dict_to_object(cls, dict_, **kwargs) -> "DisplayTriangleShell3D":
         """Overload of 'dict_to_object' for performance."""
         positions = np.array(dict_["positions"])
         indices = np.array(dict_["indices"])

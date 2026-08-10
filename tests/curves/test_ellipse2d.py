@@ -1,6 +1,7 @@
 """
 Unitests for wires.Ellipse2D
 """
+
 import math
 import unittest
 
@@ -9,9 +10,15 @@ from design3d import edges, curves
 
 
 class TestEllipse2D(unittest.TestCase):
-    ellipse2d = curves.Ellipse2D(4, 2, design3d.Frame2D(design3d.O2D,
-                                                       design3d.Vector2D(0.7071067811865475, 0.7071067811865475),
-                                                       design3d.Vector2D(-0.7071067811865475, 0.7071067811865475)))
+    ellipse2d = curves.Ellipse2D(
+        4,
+        2,
+        design3d.Frame2D(
+            design3d.O2D,
+            design3d.Vector2D(0.7071067811865475, 0.7071067811865475),
+            design3d.Vector2D(-0.7071067811865475, 0.7071067811865475),
+        ),
+    )
     discretized_points = ellipse2d.discretization_points(number_points=11)
 
     def test_length(self):
@@ -24,22 +31,24 @@ class TestEllipse2D(unittest.TestCase):
         line = curves.Line2D(design3d.O2D, design3d.Point2D(2, 3))
         line_intersections = self.ellipse2d.line_intersections(line)
         self.assertEqual(len(line_intersections), 2)
-        self.assertTrue(line_intersections[1].is_close(design3d.Point2D(-2.1009029257555607,
-                                                                       -3.151354388633341)))
-        self.assertTrue(line_intersections[0].is_close(design3d.Point2D(2.1009029257555607,
-                                                                       3.151354388633341)))
+        self.assertTrue(line_intersections[1].is_close(design3d.Point2D(-2.1009029257555607, -3.151354388633341)))
+        self.assertTrue(line_intersections[0].is_close(design3d.Point2D(2.1009029257555607, 3.151354388633341)))
 
-        ellipse2d = curves.Ellipse2D(1, 0.5,
-                                     design3d.Frame2D(
-                                         origin=design3d.Point2D(0.8660254037844388, -2.220446049250313e-16),
-                                         u=design3d.Vector2D(1.0, -2.220446049250313e-16),
-                                         v=design3d.Vector2D(-4.440892098500627e-16, 1.0)))
+        ellipse2d = curves.Ellipse2D(
+            1,
+            0.5,
+            design3d.Frame2D(
+                origin=design3d.Point2D(0.8660254037844388, -2.220446049250313e-16),
+                u=design3d.Vector2D(1.0, -2.220446049250313e-16),
+                v=design3d.Vector2D(-4.440892098500627e-16, 1.0),
+            ),
+        )
         line2d = curves.Line2D(design3d.Point2D(1.0, 0.0), design3d.Point2D(0.7660444431189781, 0.6427876096865393))
         intersections = ellipse2d.line_intersections(line2d)
         self.assertTrue(len(intersections), 2)
         self.assertTrue(intersections[0].is_close(design3d.Point2D(1.173187451788891, -0.47582861312286373)))
         self.assertTrue(intersections[1].is_close(design3d.Point2D(0.8182229267692979, 0.4994284040759036)))
-        line2d = curves.Line2D(design3d.Point2D(.25, -1), design3d.Point2D(0.25, 1))
+        line2d = curves.Line2D(design3d.Point2D(0.25, -1), design3d.Point2D(0.25, 1))
         intersections = ellipse2d.line_intersections(line2d)
         self.assertTrue(len(intersections), 2)
         self.assertTrue(intersections[0].is_close(design3d.Point2D(0.24999999999999933, 0.39386314307517345)))
@@ -49,15 +58,21 @@ class TestEllipse2D(unittest.TestCase):
         line_segment = edges.LineSegment2D(design3d.O2D, design3d.Point2D(4, 4))
         linesegment_intersections = self.ellipse2d.linesegment_intersections(line_segment)
         self.assertEqual(len(linesegment_intersections), 1)
-        self.assertTrue(linesegment_intersections[0].is_close(design3d.Point2D(2.82842712474619,
-                                                                              2.82842712474619)))
+        self.assertTrue(linesegment_intersections[0].is_close(design3d.Point2D(2.82842712474619, 2.82842712474619)))
 
         ellipse2d = curves.Ellipse2D(
-            1.5029657596067132, 1.4999999999999993,
-            design3d.Frame2D(origin=design3d.Point2D(-0.9980228269288582, -8.858169481883975e-16),
-                            u=design3d.Vector2D(1.0, -8.840689907867823e-16), v=design3d.Vector2D(0.0, -1.0)))
-        lineseg2d = edges.LineSegment2D(design3d.Point2D(0.17364817766693041, 0.984807753012208),
-                                        design3d.Point2D(-0.4999999999999998, 0.8660254037844388))
+            1.5029657596067132,
+            1.4999999999999993,
+            design3d.Frame2D(
+                origin=design3d.Point2D(-0.9980228269288582, -8.858169481883975e-16),
+                u=design3d.Vector2D(1.0, -8.840689907867823e-16),
+                v=design3d.Vector2D(0.0, -1.0),
+            ),
+        )
+        lineseg2d = edges.LineSegment2D(
+            design3d.Point2D(0.17364817766693041, 0.984807753012208),
+            design3d.Point2D(-0.4999999999999998, 0.8660254037844388),
+        )
         lineseg_intersections = ellipse2d.linesegment_intersections(lineseg2d)
         self.assertEqual(len(lineseg_intersections), 1)
         self.assertTrue(lineseg_intersections[0].is_close(design3d.Point2D(0.1406944277231128, 0.9789971177815928)))
@@ -83,28 +98,32 @@ class TestEllipse2D(unittest.TestCase):
         self.assertEqual(self.ellipse2d.abscissa(self.discretized_points[5]), 9.688448220547677)
 
     def test_point_angle_with_major_dir(self):
-        point_angle_with_major_axis = self.ellipse2d.point_angle_with_major_dir(
-            self.discretized_points[5])
+        point_angle_with_major_axis = self.ellipse2d.point_angle_with_major_dir(self.discretized_points[5])
         self.assertEqual(point_angle_with_major_axis, math.pi)
 
     def test_rotation(self):
         rotationed_ellipse = self.ellipse2d.rotation(design3d.O2D, math.pi / 4)
-        rotationed_major_axis_point = rotationed_ellipse.center +\
-            rotationed_ellipse.major_axis * rotationed_ellipse.major_dir
+        rotationed_major_axis_point = (
+            rotationed_ellipse.center + rotationed_ellipse.major_axis * rotationed_ellipse.major_dir
+        )
         self.assertTrue(rotationed_major_axis_point.is_close(design3d.Point2D(0.0, 4.0)))
 
     def test_translation(self):
         translated_ellipse = self.ellipse2d.translation(design3d.Vector2D(1, 0))
-        translated_ellipse_major_axis_point = translated_ellipse.center +\
-            translated_ellipse.major_axis * translated_ellipse.major_dir
-        self.assertTrue(translated_ellipse_major_axis_point.is_close(design3d.Point2D(3.8284271247461903,
-                                                                                     2.8284271247461903)))
+        translated_ellipse_major_axis_point = (
+            translated_ellipse.center + translated_ellipse.major_axis * translated_ellipse.major_dir
+        )
+        self.assertTrue(
+            translated_ellipse_major_axis_point.is_close(design3d.Point2D(3.8284271247461903, 2.8284271247461903))
+        )
 
     def test_frame_mapping(self):
         frame_mapped_ellipse = self.ellipse2d.frame_mapping(
-            design3d.Frame2D(design3d.Point2D(1, 1), self.ellipse2d.major_dir, self.ellipse2d.minor_dir), 'new')
-        frame_mapped_ellipse_major_axis_point = frame_mapped_ellipse.center +\
-            frame_mapped_ellipse.major_axis * frame_mapped_ellipse.major_dir
+            design3d.Frame2D(design3d.Point2D(1, 1), self.ellipse2d.major_dir, self.ellipse2d.minor_dir), "new"
+        )
+        frame_mapped_ellipse_major_axis_point = (
+            frame_mapped_ellipse.center + frame_mapped_ellipse.major_axis * frame_mapped_ellipse.major_dir
+        )
         self.assertTrue(frame_mapped_ellipse_major_axis_point.is_close(design3d.Point2D(2.585786437626905, 0.0)))
 
     def test_point_distance(self):
@@ -116,5 +135,5 @@ class TestEllipse2D(unittest.TestCase):
         self.assertAlmostEqual(point_distance, 0.08415399818595351)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main(verbosity=0)

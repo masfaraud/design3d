@@ -131,10 +131,9 @@ class MeshMixin:
 
         merged_vertices = np.concatenate((self.vertices, other.vertices))
         # merged_triangles = np.concatenate((self.triangles, other.triangles + len(self.vertices).astype(np.int32)))
-        merged_triangles = np.concatenate((
-            self.triangles.astype(np.int32), 
-            (other.triangles.astype(np.int32) + len(self.vertices))
-        ), dtype=np.int32)
+        merged_triangles = np.concatenate(
+            (self.triangles.astype(np.int32), (other.triangles.astype(np.int32) + len(self.vertices))), dtype=np.int32
+        )
 
         mesh = self.__class__(merged_vertices, merged_triangles, name=self.name)
 
@@ -490,10 +489,10 @@ class Mesh3D(MeshMixin, Primitive3D):
 
         if return_points:
 
-            closest_point_self = design3d.Point3D(closest_point_self[0],
-                                                 closest_point_self[1], closest_point_self[2])
-            closest_point_other = design3d.Point3D(closest_point_other[0],
-                                                  closest_point_other[1], closest_point_other[2])
+            closest_point_self = design3d.Point3D(closest_point_self[0], closest_point_self[1], closest_point_self[2])
+            closest_point_other = design3d.Point3D(
+                closest_point_other[0], closest_point_other[1], closest_point_other[2]
+            )
             return min_distance, closest_point_self, closest_point_other
 
         return min_distance
@@ -893,12 +892,10 @@ class Mesh3D(MeshMixin, Primitive3D):
         :return: A closed triangle shell representation of the Mesh3D object.
         :rtype: ClosedTriangleShell3D
         """
-        warnings.warn(
-            """
+        warnings.warn("""
             ClosedTriangleShell3D is not an efficient object to deal with mesh data.
             Try to stick to Mesh3D or Trimesh object if possible.
-            """
-        )
+            """)
 
         # pylint: disable=import-outside-toplevel, cyclic-import
         from design3d.shells import ClosedTriangleShell3D
@@ -912,12 +909,10 @@ class Mesh3D(MeshMixin, Primitive3D):
         :return: An open triangle shell representation of the Mesh3D object.
         :rtype: OpenTriangleShell3D
         """
-        warnings.warn(
-            """
+        warnings.warn("""
             OpenTriangleShell3D is not an efficient object to deal with mesh data.
             Try to stick to Mesh3D or Trimesh object if possible.
-            """
-        )
+            """)
 
         # pylint: disable=import-outside-toplevel, cyclic-import
         from design3d.shells import OpenTriangleShell3D

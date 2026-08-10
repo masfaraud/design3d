@@ -22,8 +22,11 @@ import design3d.curves
 import design3d.primitives3d
 import design3d.wires
 from design3d.utils import step_reader
-from design3d.utils.step_reader import (STEP_TO_design3d, STEP_REPRESENTATION_ENTITIES,
-                                       WIREFRAME_STEP_REPRESENTATION_ENTITIES)
+from design3d.utils.step_reader import (
+    STEP_TO_design3d,
+    STEP_REPRESENTATION_ENTITIES,
+    WIREFRAME_STEP_REPRESENTATION_ENTITIES,
+)
 
 
 class StepFunction:
@@ -39,19 +42,16 @@ class StepFunction:
 
         # TODO : modify this continuation and simplify
         if self.name == "":
-            if self.arg[1][0] == 'B_SPLINE_SURFACE':
-                self.simplify('B_SPLINE_SURFACE')
-            if self.arg[1][0] == 'B_SPLINE_CURVE':
-                self.simplify('B_SPLINE_CURVE')
+            if self.arg[1][0] == "B_SPLINE_SURFACE":
+                self.simplify("B_SPLINE_SURFACE")
+            if self.arg[1][0] == "B_SPLINE_CURVE":
+                self.simplify("B_SPLINE_CURVE")
 
     def to_dict(self, *args, **kwargs):
         """
         Custom to dict for performance.
         """
-        dict_ = {"id": self.id,
-                 "name": self.name,
-                 "arg": self.arg
-                 }
+        dict_ = {"id": self.id, "name": self.name, "arg": self.arg}
         return dict_
 
     @classmethod
@@ -61,8 +61,7 @@ class StepFunction:
     def simplify(self, new_name):
         """ADD DOCSTRING."""
         # ITERATE ON SUBFUNCTIONS
-        args = [subfun[1] for (i, subfun) in enumerate(self.arg) if
-                (len(subfun[1]) != 0 or i == 0)]
+        args = [subfun[1] for (i, subfun) in enumerate(self.arg) if (len(subfun[1]) != 0 or i == 0)]
         arguments = []
         for arg in args:
             if not arg:
@@ -83,7 +82,7 @@ class Step:
 
     _standalone_in_db = True
 
-    def __init__(self, lines: List[str], name: str = ''):
+    def __init__(self, lines: List[str], name: str = ""):
         self.functions, self.connections = self.read_lines(lines)
         self._graph = None
         self.global_uncertainty = 1e-6
@@ -91,7 +90,7 @@ class Step:
         self.angle_conversion_factor = 1
         # self.read_diagnostic = StepReaderReport
         self._roots_nodes = None
-        self.name=name
+        self.name = name
 
     @property
     def all_connections(self):
@@ -116,7 +115,7 @@ class Step:
         return self._graph
 
     @classmethod
-    def from_stream(cls, stream, name: str = ''):
+    def from_stream(cls, stream, name: str = ""):
         """Instantiate a Step object from a stream."""
         stream.seek(0)
         lines = []
@@ -127,7 +126,7 @@ class Step:
         return cls(lines, name=name)
 
     @classmethod
-    def from_file(cls, filepath: str = None, name: str = ''):
+    def from_file(cls, filepath: str = None, name: str = ""):
         """Instantiate a Step object from a step file."""
         with open(filepath, "r", encoding="ISO-8859-1") as file:
             lines = []
@@ -141,7 +140,7 @@ class Step:
         previous_line = ""
         functions = {}
         content = "".join(lines)
-        pattern = re.compile(r'\\X2\\([0-9A-Fa-f]+)\\X0\\')
+        pattern = re.compile(r"\\X2\\([0-9A-Fa-f]+)\\X0\\")
 
         flag = pattern.search(content)
         for line in lines:
@@ -153,7 +152,7 @@ class Step:
                 continue
 
             # ASSEMBLE LINES IF THEY ARE SEPARATED
-            if line[-1] != ';':
+            if line[-1] != ";":
                 previous_line = previous_line + line
                 continue
 
@@ -172,7 +171,8 @@ class Step:
             function_name = function_name_arg[0].replace(" ", "")
             if function_name:
                 entity_name_str, function_arg_string = step_reader.separate_entity_name_and_arguments(
-                    function_name_arg[1])
+                    function_name_arg[1]
+                )
             else:
                 entity_name_str = ""
                 function_arg_string = function_name_arg[1]
@@ -189,10 +189,9 @@ class Step:
             previous_line = str()
 
             # FUNCTION ARGUMENTS
-            functions, connections = self._helper_intantiate_step_functions(functions, connections,
-                                                                            [function_id, function_name,
-                                                                             entity_name_str,
-                                                                             function_arg_string])
+            functions, connections = self._helper_intantiate_step_functions(
+                functions, connections, [function_id, function_name, entity_name_str, function_arg_string]
+            )
 
             dict_connections[function_id] = connections
 
@@ -201,24 +200,24 @@ class Step:
     def _helper_intantiate_step_functions(self, functions, connections, function_parameters):
         """Helper function to read_lines."""
         function_id, function_name, entity_name_str, function_arg = function_parameters
-        new_name = ''
+        new_name = ""
         new_arguments = []
         if function_name == "":
             name_arg = self.step_subfunctions([function_arg])
             for name, arg in name_arg:
-                new_name += name + ', '
+                new_name += name + ", "
                 new_arguments.extend(arg)
             new_name = new_name[:-2]
             function_name = new_name
             arguments = new_arguments
             for arg in arguments:
-                if arg[0] == '#':
+                if arg[0] == "#":
                     connections.append(int(arg[1:]))
         else:
             arguments = step_reader.step_split_arguments(entity_name_str, function_arg)
 
         for i, argument in enumerate(arguments):
-            if argument[:2] == '(#' and argument[-1] == ')' and argument[-2] != ")":
+            if argument[:2] == "(#" and argument[-1] == ")" and argument[-2] != ")":
                 arg_list = step_reader.set_to_list(argument)
                 for arg in arg_list:
                     connections.append(int(arg[1:]))
@@ -246,7 +245,7 @@ class Step:
         labels = {}
 
         for function in self.functions.values():
-            if function.name == 'SHAPE_REPRESENTATION_RELATIONSHIP':
+            if function.name == "SHAPE_REPRESENTATION_RELATIONSHIP":
                 # Create short cut from id1 to id2
                 id1 = int(function.arg[2][1:])
                 id2 = int(function.arg[3][1:])
@@ -256,21 +255,17 @@ class Step:
                 self.all_connections.remove(elem2)
                 self.all_connections.append((elem1[1], elem2[1]))
 
-                self.functions[id1].arg.append(f'#{id2}')
+                self.functions[id1].arg.append(f"#{id2}")
 
             elif function.name in STEP_TO_design3d:
-                graph.add_node(function.id,
-                               color='rgb(0, 0, 0)',
-                               shape='.',
-                               name=str(function.id))
-                labels[function.id] = str(function.id) + ' ' + function.name
+                graph.add_node(function.id, color="rgb(0, 0, 0)", shape=".", name=str(function.id))
+                labels[function.id] = str(function.id) + " " + function.name
 
         # Delete connection if node not found
         node_list = list(graph.nodes())
         delete_connection = []
         for connection in self.all_connections:
-            if connection[0] not in node_list \
-                    or connection[1] not in node_list:
+            if connection[0] not in node_list or connection[1] not in node_list:
                 delete_connection.append(connection)
         for delete in delete_connection:
             self.all_connections.remove(delete)
@@ -301,7 +296,7 @@ class Step:
 
         """
 
-        delete = ['CARTESIAN_POINT', 'DIRECTION']
+        delete = ["CARTESIAN_POINT", "DIRECTION"]
         if graph is None:
             new_graph = self.create_graph()
         else:
@@ -310,10 +305,10 @@ class Step:
         labels = {}
         for id_nb, function in self.functions.items():
             if id_nb in new_graph.nodes and not reduced:
-                labels[id_nb] = str(id_nb) + ' ' + function.name
+                labels[id_nb] = str(id_nb) + " " + function.name
             elif id_nb in new_graph.nodes and reduced:
                 if function.name not in delete:
-                    labels[id_nb] = str(id_nb) + ' ' + function.name
+                    labels[id_nb] = str(id_nb) + " " + function.name
                 else:
                     new_graph.remove_node(id_nb)
         pos = nx.kamada_kawai_layout(new_graph)
@@ -356,18 +351,19 @@ class Step:
                 subfunction_arg += char
         return [
             (subfunction_names[i], step_reader.step_split_arguments("", subfunction_args[i]))
-            for i in range(len(subfunction_names))]
+            for i in range(len(subfunction_names))
+        ]
 
     def parse_arguments(self, arguments):
         """Converts the arguments IDs from string to integer."""
         for i, arg in enumerate(arguments):
-            if isinstance(arg, str) and arg[0] == '#':
+            if isinstance(arg, str) and arg[0] == "#":
                 arguments[i] = int(arg[1:])
-            elif isinstance(arg, str) and arg[0:2] == '(#':
+            elif isinstance(arg, str) and arg[0:2] == "(#":
                 argument = []
                 arg_id = ""
                 for char in arg[1:-1]:
-                    if char == ',':
+                    if char == ",":
                         argument.append(arg_id)
                         arg_id = ""
                         continue
@@ -381,23 +377,36 @@ class Step:
         Gives the design3d object related to the step function.
         """
         self.parse_arguments(arguments)
-        fun_name = name.replace(', ', '_')
+        fun_name = name.replace(", ", "_")
         fun_name = fun_name.lower()
         try:
             if hasattr(step_reader, fun_name):
-                design3d_object = getattr(step_reader, fun_name)(arguments, object_dict,
-                                                                length_conversion_factor=self.length_conversion_factor)
+                design3d_object = getattr(step_reader, fun_name)(
+                    arguments, object_dict, length_conversion_factor=self.length_conversion_factor
+                )
 
             elif name in STEP_TO_design3d and hasattr(STEP_TO_design3d[name], "from_step"):
                 design3d_object = STEP_TO_design3d[name].from_step(
-                    arguments, object_dict, name=name, step_id=step_id, global_uncertainty=self.global_uncertainty,
+                    arguments,
+                    object_dict,
+                    name=name,
+                    step_id=step_id,
+                    global_uncertainty=self.global_uncertainty,
                     length_conversion_factor=self.length_conversion_factor,
-                    angle_conversion_factor=self.angle_conversion_factor)
+                    angle_conversion_factor=self.angle_conversion_factor,
+                )
 
             else:
-                raise NotImplementedError(f'Dont know how to interpret #{step_id} = {name}({arguments})')
-        except (ValueError, NotImplementedError, IndexError,
-                AttributeError, ZeroDivisionError, UnboundLocalError, TypeError) as error:
+                raise NotImplementedError(f"Dont know how to interpret #{step_id} = {name}({arguments})")
+        except (
+            ValueError,
+            NotImplementedError,
+            IndexError,
+            AttributeError,
+            ZeroDivisionError,
+            UnboundLocalError,
+            TypeError,
+        ) as error:
             raise ValueError(f"Error while instantiating #{step_id} = {name}({arguments})") from error
         return design3d_object
 
@@ -440,7 +449,7 @@ class Step:
         """
         name_representation_entity = self.functions[id_representation_entity].name
         arg = self.functions[id_representation_entity].arg[1]
-        if arg[0][1:] == '':
+        if arg[0][1:] == "":
             print(True)
         if name_representation_entity == "MANIFOLD_SURFACE_SHAPE_REPRESENTATION":
             if self.functions[int(arg[0][1:])].name == "AXIS2_PLACEMENT_3D":
@@ -573,21 +582,23 @@ class Step:
                 shape_definition_representation.append(function.id)
             elif function.name in {"CLOSED_SHELL", "OPEN_SHELL"}:
                 shell_nodes.append(function.id)
-            elif function.name == 'BREP_WITH_VOIDS':
+            elif function.name == "BREP_WITH_VOIDS":
                 shell_nodes.append(function.id)
                 not_shell_nodes.append(int(function.arg[1][1:]))
             elif function.name == "CONTEXT_DEPENDENT_SHAPE_REPRESENTATION":
                 context_dependent_shape_representation.append(function.id)
         for node in not_shell_nodes:
             shell_nodes.remove(node)
-        return {"NEXT_ASSEMBLY_USAGE_OCCURRENCE": next_assembly_usage_occurrence,
-                "CONTEXT_DEPENDENT_SHAPE_REPRESENTATION": context_dependent_shape_representation,
-                "PRODUCT_DEFINITION": product_definitions,
-                "SHAPE_REPRESENTATION_RELATIONSHIP": shape_representation_relationship,
-                "SHAPE_REPRESENTATION": shape_representations,
-                "SHAPE_DEFINITION_REPRESENTATION": shape_definition_representation,
-                "GEOMETRIC_REPRESENTATION_CONTEXT": geometric_representation_context,
-                "SHELLS": shell_nodes}
+        return {
+            "NEXT_ASSEMBLY_USAGE_OCCURRENCE": next_assembly_usage_occurrence,
+            "CONTEXT_DEPENDENT_SHAPE_REPRESENTATION": context_dependent_shape_representation,
+            "PRODUCT_DEFINITION": product_definitions,
+            "SHAPE_REPRESENTATION_RELATIONSHIP": shape_representation_relationship,
+            "SHAPE_REPRESENTATION": shape_representations,
+            "SHAPE_DEFINITION_REPRESENTATION": shape_definition_representation,
+            "GEOMETRIC_REPRESENTATION_CONTEXT": geometric_representation_context,
+            "SHELLS": shell_nodes,
+        }
 
     def get_assembly_structure(self):
         """
@@ -618,9 +629,9 @@ class Step:
         for node in assembly_usage_occurence:
             function = self.functions[node]
             id_product_definition = int(function.arg[4][1:])
-            ids_shape_definition_representation = [int(arg[1:]) for
-                                                   arg in self.functions[id_product_definition].arg[4:]
-                                                   if int(arg[1:]) in valid_entities]
+            ids_shape_definition_representation = [
+                int(arg[1:]) for arg in self.functions[id_product_definition].arg[4:] if int(arg[1:]) in valid_entities
+            ]
             assembly_shapes.extend(ids_shape_definition_representation)
             id_context_dependent_shape_representation = int(function.arg[-1][1:])
             id_transformation = int(self.functions[id_context_dependent_shape_representation].arg[0][1:])
@@ -649,44 +660,47 @@ class Step:
         """
         Create connections between step entities.
         """
-        for node in self.root_nodes['SHAPE_REPRESENTATION_RELATIONSHIP']:
+        for node in self.root_nodes["SHAPE_REPRESENTATION_RELATIONSHIP"]:
             # Associate each step representation entity to its SHAPE_REPRESENTATION
             function = self.functions[node]
             id_shape_representation = int(function.arg[2][1:])
             id_shape = int(function.arg[3][1:])
             self.connections[id_shape_representation].append(id_shape)
-            self.functions[id_shape_representation].arg.append(f'#{id_shape}')
-        for node in self.root_nodes['SHAPE_DEFINITION_REPRESENTATION']:
+            self.functions[id_shape_representation].arg.append(f"#{id_shape}")
+        for node in self.root_nodes["SHAPE_DEFINITION_REPRESENTATION"]:
             # Associate each step representation entity to its SHAPE_REPRESENTATION
             function = self.functions[node]
             id_product_definition_shape = int(function.arg[0][1:])
             id_product_definition = int(self.functions[id_product_definition_shape].arg[2][1:])
             id_shape_representation = int(function.arg[1][1:])
             self.connections[id_product_definition].append(node)
-            self.functions[id_product_definition].arg.append(f'#{node}')
-            if self.functions[id_shape_representation].name == "SHAPE_REPRESENTATION" and \
-                    len(self.functions[id_shape_representation].arg) >= 4:
+            self.functions[id_product_definition].arg.append(f"#{node}")
+            if (
+                self.functions[id_shape_representation].name == "SHAPE_REPRESENTATION"
+                and len(self.functions[id_shape_representation].arg) >= 4
+            ):
                 # todo: Do we really need to take all the "arg" starting from index 3 to end???
                 #  maybe add a parameter "import_invisible_objects" to control this behavior? needs investigation...
                 id_shapes = [int(arg[1:]) for arg in self.functions[id_shape_representation].arg[3:]]
                 self.connections[id_product_definition].extend(id_shapes)
                 for id_shape in id_shapes:
-                    self.functions[id_product_definition].arg.append(f'#{id_shape}')
+                    self.functions[id_product_definition].arg.append(f"#{id_shape}")
             elif self.functions[id_shape_representation].name in STEP_REPRESENTATION_ENTITIES:
                 self.connections[id_product_definition].append(id_shape_representation)
-                self.functions[id_product_definition].arg.append(f'#{id_shape_representation}')
+                self.functions[id_product_definition].arg.append(f"#{id_shape_representation}")
 
             shell_node = self.shape_definition_representation_to_shell_node(node)
             if shell_node:
                 product_node = self.shape_definition_representation_to_product_node(node)
                 self.connections[shell_node].append(product_node)
-                self.functions[shell_node].arg.append(f'#{product_node}')
+                self.functions[shell_node].arg.append(f"#{product_node}")
 
-        for node in self.root_nodes['CONTEXT_DEPENDENT_SHAPE_REPRESENTATION']:
-            next_assembly_usage_occurrence = \
+        for node in self.root_nodes["CONTEXT_DEPENDENT_SHAPE_REPRESENTATION"]:
+            next_assembly_usage_occurrence = (
                 self.context_dependent_shape_representation_to_next_assembly_usage_occurrence(node)
+            )
             self.connections[next_assembly_usage_occurrence].append(node)
-            self.functions[next_assembly_usage_occurrence].arg.append(f'#{node}')
+            self.functions[next_assembly_usage_occurrence].arg.append(f"#{node}")
 
     def instatiate_assembly(self, object_dict):
         assemblies_structure, valid_entities = self.get_assembly_structure()
@@ -712,7 +726,8 @@ class Step:
                     assembly_frame = object_dict[ids_frames[0]]
 
                     assembly_shape_ids, assembly_position_ids = self.get_assembly_data(
-                        assemblies_structure[instantiate_id], valid_entities, assembly_frame, object_dict)
+                        assemblies_structure[instantiate_id], valid_entities, assembly_frame, object_dict
+                    )
                     assembly_positions = []
                     list_primitives = []
                     for id_shape, id_frame in zip(assembly_shape_ids, assembly_position_ids):
@@ -723,8 +738,9 @@ class Step:
                     if not list_primitives:
                         none_primitives.add(instantiate_id)
 
-                    design3d_object = design3d.core.Assembly(list_primitives, assembly_positions, assembly_frame,
-                                                           name=name)
+                    design3d_object = design3d.core.Assembly(
+                        list_primitives, assembly_positions, assembly_frame, name=name
+                    )
                     object_dict[instantiate_id] = design3d_object
                     last_error = None
                 error = False
@@ -732,7 +748,7 @@ class Step:
                 # Sometimes the search don't instantiate the nodes of a
                 # depth in the right order, leading to error
                 if last_error == key.args[0]:
-                    raise NotImplementedError('Error instantiating assembly') from key
+                    raise NotImplementedError("Error instantiating assembly") from key
                 if key.args[0] in assembly_shape_ids:
                     instantiate_ids.append(key.args[0])
                 else:
@@ -759,8 +775,7 @@ class Step:
         # TODO: This isn't a 100% right. Each SHAPE_REPRESENTATION has its own geometric context
         geometric_representation_dict = root_nodes["GEOMETRIC_REPRESENTATION_CONTEXT"]
         geometric_representation_nodes = list(geometric_representation_dict.values())
-        object_dict, times = self._helper_instantiate(geometric_representation_nodes[0],
-                                                      object_dict, times, show_times)
+        object_dict, times = self._helper_instantiate(geometric_representation_nodes[0], object_dict, times, show_times)
         arguments = self.functions[geometric_representation_nodes[0]].arg[:]
         self.global_uncertainty = object_dict[int(arguments[1][0][1:])]
         self.length_conversion_factor = object_dict[int(arguments[2][0][1:])]
@@ -780,14 +795,17 @@ class Step:
         if show_times:
             print()
             for key, value in times.items():
-                print(f'| {key} : {value}')
+                print(f"| {key} : {value}")
             print()
 
         if self.root_nodes["NEXT_ASSEMBLY_USAGE_OCCURRENCE"]:
             return design3d.core.VolumeModel([self.instatiate_assembly(object_dict)])
         primitives = []
-        shapes = [object_dict[shape] for shape in shape_representations
-                  if self.functions[shape].name in STEP_REPRESENTATION_ENTITIES]
+        shapes = [
+            object_dict[shape]
+            for shape in shape_representations
+            if self.functions[shape].name in STEP_REPRESENTATION_ENTITIES
+        ]
         for shape in shapes:
             if isinstance(shape, list):
                 primitives.extend(shape)
@@ -811,7 +829,10 @@ class Step:
                     t_tracker = time.time()
                     design3d_object = self.instantiate(
                         self.functions[instantiate_id].name,
-                        self.functions[instantiate_id].arg[:], object_dict, instantiate_id)
+                        self.functions[instantiate_id].arg[:],
+                        object_dict,
+                        instantiate_id,
+                    )
                     t_tracker = time.time() - t_tracker
                     object_dict[instantiate_id] = design3d_object
                     if show_times:
@@ -833,14 +854,13 @@ class Step:
         object_dict = {}
         points3d = []
         for stepfunction in self.functions.values():
-            if stepfunction.name == 'CARTESIAN_POINT':
+            if stepfunction.name == "CARTESIAN_POINT":
                 # INSTANTIATION
                 name = self.functions[stepfunction.id].name
                 arguments = self.functions[stepfunction.id].arg[:]
                 self.parse_arguments(arguments)
-                if arguments[1].count(',') == 2:
-                    design3d_object = STEP_TO_design3d[name].from_step(
-                        arguments, object_dict)
+                if arguments[1].count(",") == 2:
+                    design3d_object = STEP_TO_design3d[name].from_step(arguments, object_dict)
                     points3d.append(design3d_object)
 
         # remove first point because it refers to origin
@@ -849,9 +869,13 @@ class Step:
     def plot_data(self):
         graph = self.graph().copy()
 
-        graph.remove_nodes_from([stepfunction.id for stepfunction
-                                 in self.functions.values()
-                                 if stepfunction.name in ['CARTESIAN_POINT', 'DIRECTION']])
+        graph.remove_nodes_from(
+            [
+                stepfunction.id
+                for stepfunction in self.functions.values()
+                if stepfunction.name in ["CARTESIAN_POINT", "DIRECTION"]
+            ]
+        )
         return [plot_data.graph.NetworkxGraph(graph=graph)]
 
 
@@ -860,6 +884,7 @@ class StepReaderReport:
     """
     Data class to save a report after translating a step file to design3d object.
     """
+
     step_name: str = " "
     total_number_of_faces: int = 0
     faces_read: int = 0

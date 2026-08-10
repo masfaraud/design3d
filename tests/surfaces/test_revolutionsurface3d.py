@@ -8,28 +8,47 @@ import design3d.wires as d3dw
 import design3d.faces
 from design3d import surfaces
 
-
-folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'objects_revolution_tests')
+folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_revolution_tests")
 
 
 class TestRevolutionSurface3D(unittest.TestCase):
     linesegment = d3de.LineSegment3D(design3d.Point3D(0.5, 0, 0), design3d.Point3D(0.5, 0, 0.5))
-    arc = d3de.Arc3D.from_3_points(design3d.Point3D(0.5, 0, 0.5),
-                    design3d.Point3D(0.3 + 0.2 * math.cos(math.pi / 6), 0, 0.5 + 0.2 * math.sin(math.pi / 6)),
-                    design3d.Point3D(0.3 + 0.2 * math.cos(math.pi / 3), 0, 0.5 + 0.2 * math.sin(math.pi / 3)))
+    arc = d3de.Arc3D.from_3_points(
+        design3d.Point3D(0.5, 0, 0.5),
+        design3d.Point3D(0.3 + 0.2 * math.cos(math.pi / 6), 0, 0.5 + 0.2 * math.sin(math.pi / 6)),
+        design3d.Point3D(0.3 + 0.2 * math.cos(math.pi / 3), 0, 0.5 + 0.2 * math.sin(math.pi / 3)),
+    )
 
     axis_point = design3d.O3D
     axis = design3d.Z3D
     surface = surfaces.RevolutionSurface3D(arc, axis_point, axis)
 
     def test_parametric_points_to_3d(self):
-        parametric_points = np.array([[0.0, 0.0], [0.5 * math.pi, 0.0], [math.pi, 0.0], [1.5 * math.pi, 0.0],
-                                      [0.0, 0.2], [0.5 * math.pi, 0.2], [math.pi, 0.2], [1.5 * math.pi, 0.2]])
+        parametric_points = np.array(
+            [
+                [0.0, 0.0],
+                [0.5 * math.pi, 0.0],
+                [math.pi, 0.0],
+                [1.5 * math.pi, 0.0],
+                [0.0, 0.2],
+                [0.5 * math.pi, 0.2],
+                [math.pi, 0.2],
+                [1.5 * math.pi, 0.2],
+            ]
+        )
         points3d = self.surface.parametric_points_to_3d(parametric_points)
-        expected_points = np.array([[0.5, 0.0, 0.5], [0.0, 0.5, 0.5], [-0.5, 0.0, 0.5], [0.0, -0.5, 0.5],
-                                    [0.40806046117362793, 0.0, 0.6682941969615793],
-                                    [0.0, 0.40806046117362793, 0.6682941969615792],
-                                    [-0.40806046117362793, 0.0, 0.6682941969615793], [0.0, -0.40806046117362793, 0.6682941969615793]])
+        expected_points = np.array(
+            [
+                [0.5, 0.0, 0.5],
+                [0.0, 0.5, 0.5],
+                [-0.5, 0.0, 0.5],
+                [0.0, -0.5, 0.5],
+                [0.40806046117362793, 0.0, 0.6682941969615793],
+                [0.0, 0.40806046117362793, 0.6682941969615792],
+                [-0.40806046117362793, 0.0, 0.6682941969615793],
+                [0.0, -0.40806046117362793, 0.6682941969615793],
+            ]
+        )
         for point, expected_point in zip(points3d, expected_points):
             self.assertAlmostEqual(np.linalg.norm(point - expected_point), 0.0)
 
@@ -54,7 +73,8 @@ class TestRevolutionSurface3D(unittest.TestCase):
     def test_rectangular_cut(self):
         surface = surfaces.RevolutionSurface3D(edge=self.arc, axis_point=self.axis_point, axis=self.axis)
         rectangular_cut = design3d.faces.RevolutionFace3D.from_surface_rectangular_cut(
-            surface, 0, design3d.TWO_PI, 0, 1)
+            surface, 0, design3d.TWO_PI, 0, 1
+        )
         self.assertEqual(rectangular_cut.surface2d.area(), design3d.TWO_PI)
 
     def arc3d_to_2d(self):
@@ -80,12 +100,11 @@ class TestRevolutionSurface3D(unittest.TestCase):
         self.assertTrue(new_surface.frame.origin.is_close(design3d.Point3D(0, 1, 0)))
 
     def test_simplify(self):
-        rev1 = surfaces.RevolutionSurface3D.from_json(
-            os.path.join(folder, "revolutionsurface_simplify_spherical.json"))
-        rev2 = surfaces.RevolutionSurface3D.from_json(
-            os.path.join(folder, "revolutionsurface_simplify_conical.json"))
+        rev1 = surfaces.RevolutionSurface3D.from_json(os.path.join(folder, "revolutionsurface_simplify_spherical.json"))
+        rev2 = surfaces.RevolutionSurface3D.from_json(os.path.join(folder, "revolutionsurface_simplify_conical.json"))
         rev3 = surfaces.RevolutionSurface3D.from_json(
-            os.path.join(folder, "revolutionsurface_simplify_cylindrical.json"))
+            os.path.join(folder, "revolutionsurface_simplify_cylindrical.json")
+        )
 
         sphere = rev1.simplify()
         self.assertTrue(isinstance(sphere, surfaces.SphericalSurface3D))
@@ -98,27 +117,28 @@ class TestRevolutionSurface3D(unittest.TestCase):
 
     def test_linesegment2d_to_3d(self):
         surface = surfaces.RevolutionSurface3D.from_json(
-            os.path.join(folder, "revolutionsurface_linesegment2d_to_3d.json"))
+            os.path.join(folder, "revolutionsurface_linesegment2d_to_3d.json")
+        )
         linesegment1 = d3de.LineSegment2D.from_json(os.path.join(folder, "linesegment2d_arc3d.json"))
         arc = surface.linesegment2d_to_3d(linesegment1)[0]
         self.assertAlmostEqual(arc.circle.radius, 0.02404221842799788)
 
-        linesegment2 = d3de.LineSegment2D.from_json(
-            os.path.join(folder, "linesegment2d_rotated_primitive.json"))
+        linesegment2 = d3de.LineSegment2D.from_json(os.path.join(folder, "linesegment2d_rotated_primitive.json"))
         arc = surface.linesegment2d_to_3d(linesegment2)[0]
         self.assertAlmostEqual(arc.circle.radius, 0.022500000035448893)
         self.assertAlmostEqual(arc.angle, 0.7195087615152496, 5)
 
-        linesegment3 = d3de.LineSegment2D.from_json(
-            os.path.join(folder, "linesegment2d_split_primitive.json"))
+        linesegment3 = d3de.LineSegment2D.from_json(os.path.join(folder, "linesegment2d_split_primitive.json"))
         arc = surface.linesegment2d_to_3d(linesegment3)[0]
         self.assertAlmostEqual(arc.circle.radius, 0.022500000035448893)
         self.assertAlmostEqual(arc.angle, 0.15581712793343738)
 
         surface = surfaces.RevolutionSurface3D.from_json(
-            os.path.join(folder, "revolutionsurface_periodical_linesegment2d_to_3d.json"))
+            os.path.join(folder, "revolutionsurface_periodical_linesegment2d_to_3d.json")
+        )
         linesegment = d3de.LineSegment2D.from_json(
-            os.path.join(folder, "revolutionsurface_periodical_linesegment2d_to_3d_linesegment2d.json"))
+            os.path.join(folder, "revolutionsurface_periodical_linesegment2d_to_3d_linesegment2d.json")
+        )
         arc = surface.linesegment2d_to_3d(linesegment)[0]
         self.assertAlmostEqual(arc.radius, 0.017000000000019)
         self.assertTrue(arc.center.is_close(design3d.Point3D(0.0, 0.007299999999984744, -8.104628079745562e-19)))
@@ -141,21 +161,21 @@ class TestRevolutionSurface3D(unittest.TestCase):
         self.assertTrue(contour2d.is_ordered())
         self.assertAlmostEqual(contour2d.area(), 0.00031415327300491437 * math.pi, 2)
 
-        surface = surfaces.RevolutionSurface3D.from_json(os.path.join(folder,
-                                                                           "revolutionsurface_with_singularity.json"))
+        surface = surfaces.RevolutionSurface3D.from_json(
+            os.path.join(folder, "revolutionsurface_with_singularity.json")
+        )
         contour = d3dw.Contour3D.from_json(os.path.join(folder, "revolutionsurface_with_singularity_contour.json"))
         contour2d = surface.contour3d_to_2d(contour)
         self.assertTrue(contour2d.is_ordered())
         self.assertAlmostEqual(contour2d.area(), surface.edge.length() * math.pi, 2)
 
-        surface = surfaces.RevolutionSurface3D.from_json(os.path.join(folder,
-                                                                        "revolutionsurface_with_singularity_1.json"))
-        contour = d3dw.Contour3D.from_json(os.path.join(folder,
-                                                            "revolutionsurface_with_singularity_contour_1.json"))
+        surface = surfaces.RevolutionSurface3D.from_json(
+            os.path.join(folder, "revolutionsurface_with_singularity_1.json")
+        )
+        contour = d3dw.Contour3D.from_json(os.path.join(folder, "revolutionsurface_with_singularity_contour_1.json"))
         contour2d = surface.contour3d_to_2d(contour)
         self.assertTrue(contour2d.is_ordered())
         self.assertAlmostEqual(contour2d.area(), surface.edge.length() * math.pi, 2)
-
 
     def test_arc3d_to_2d(self):
         surface = surfaces.RevolutionSurface3D.from_json(os.path.join(folder, "arc3d_to_2d_surface.json"))
@@ -172,14 +192,13 @@ class TestRevolutionSurface3D(unittest.TestCase):
 
     def test_v_iso(self):
         surface = surfaces.RevolutionSurface3D.from_json(
-            os.path.join(folder, "revolutionsurface_periodical_linesegment2d_to_3d.json"))
+            os.path.join(folder, "revolutionsurface_periodical_linesegment2d_to_3d.json")
+        )
         v = 0.023550776716126855
         arc = surface.v_iso(v)
         self.assertAlmostEqual(arc.radius, 0.017000000000019)
         self.assertTrue(arc.center.is_close(design3d.Point3D(0.0, 0.007299999999984744, -8.104628079745562e-19)))
 
 
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

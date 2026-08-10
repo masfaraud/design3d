@@ -12,14 +12,17 @@ class TestEdgeCollection3D(unittest.TestCase):
         objt_dict = collection.to_dict()
 
         self.assertEqual(len(objt_dict["primitives"]), 1)
-        self.assertEqual(objt_dict["primitives"][0], {'object_class': 'design3d.edges.LineSegment3D',
-                                                      'name': '',
-                                                      'start': {'object_class': 'design3d.Point3D',
-                                                                'x': 1.0, 'y': 2.0, 'z': 3.0},
-                                                      'end': {'object_class': 'design3d.Point3D',
-                                                              'x': 2.0, 'y': 3.0, 'z': 4.0},
-                                                      'reference_path': "#"})
+        self.assertEqual(
+            objt_dict["primitives"][0],
+            {
+                "object_class": "design3d.edges.LineSegment3D",
+                "name": "",
+                "start": {"object_class": "design3d.Point3D", "x": 1.0, "y": 2.0, "z": 3.0},
+                "end": {"object_class": "design3d.Point3D", "x": 2.0, "y": 3.0, "z": 4.0},
+                "reference_path": "#",
+            },
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

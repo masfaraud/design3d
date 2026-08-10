@@ -1,6 +1,7 @@
 """
 Unit tests for functions defined in design3d.core.py
 """
+
 import unittest
 import design3d
 from design3d.core import delete_double_point, step_ids_to_str

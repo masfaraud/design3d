@@ -59,17 +59,16 @@ def parametric_face_inside(face1, face2, abs_tol: float = 1e-6):
     It returns True if face2 is inside or False if the opposite.
     """
     if face1.surface3d.is_coincident(face2.surface3d, abs_tol):
-        if not face1.bounding_box.is_intersecting(face2.bounding_box) and \
-                not face1.bounding_box.is_inside_bbox(face2.bounding_box):
+        if not face1.bounding_box.is_intersecting(face2.bounding_box) and not face1.bounding_box.is_inside_bbox(
+            face2.bounding_box
+        ):
             return False
         self_contour2d = face1.surface2d.outer_contour
         face2_contour2d = face2.surface2d.outer_contour
         if self_contour2d.is_inside(face2_contour2d):
             if self_contour2d.is_inside(face2_contour2d):
                 for inner_contour2d in face1.surface2d.inner_contours:
-                    if inner_contour2d.is_inside(face2_contour2d) or inner_contour2d.is_superposing(
-                            face2_contour2d
-                    ):
+                    if inner_contour2d.is_inside(face2_contour2d) or inner_contour2d.is_superposing(face2_contour2d):
                         return False
             return True
         if self_contour2d.is_superposing(face2_contour2d):
@@ -86,8 +85,9 @@ class Face3D(design3d.core.Primitive3D):
     min_y_density = 1
     face_tolerance = 1e-6
 
-    def __init__(self, surface3d, surface2d: surfaces.Surface2D,
-                 reference_path: str = design3d.PATH_ROOT, name: str = ""):
+    def __init__(
+        self, surface3d, surface2d: surfaces.Surface2D, reference_path: str = design3d.PATH_ROOT, name: str = ""
+    ):
         self.surface3d = surface3d
         self.surface2d = surface2d
         self._outer_contour3d = None
@@ -130,8 +130,9 @@ class Face3D(design3d.core.Primitive3D):
         Gives the 3d version of the outer contour of the face.
         """
         if not self._outer_contour3d:
-            outer_contour3d, primitives_mapping = self.surface3d.contour2d_to_3d(self.surface2d.outer_contour,
-                                                                                 return_primitives_mapping=True)
+            outer_contour3d, primitives_mapping = self.surface3d.contour2d_to_3d(
+                self.surface2d.outer_contour, return_primitives_mapping=True
+            )
             self._outer_contour3d = outer_contour3d
             if self._primitives_mapping is None:
                 self._primitives_mapping = primitives_mapping
@@ -152,8 +153,9 @@ class Face3D(design3d.core.Primitive3D):
             primitives_mapping = {}
             inner_contours3d = []
             for contour2d in self.surface2d.inner_contours:
-                inner_contour3d, contour2d_mapping = self.surface3d.contour2d_to_3d(contour2d,
-                                                                                    return_primitives_mapping=True)
+                inner_contour3d, contour2d_mapping = self.surface3d.contour2d_to_3d(
+                    contour2d, return_primitives_mapping=True
+                )
                 inner_contours3d.append(inner_contour3d)
                 primitives_mapping.update(contour2d_mapping)
             self._inner_contours3d = inner_contours3d
@@ -260,18 +262,21 @@ class Face3D(design3d.core.Primitive3D):
         """
         outer_contour3d, inner_contours3d = None, []
         if len(contours3d) == 1:
-            outer_contour2d, primitives_mapping = surface.contour3d_to_2d(contours3d[0],
-                                                                          return_primitives_mapping=True)
+            outer_contour2d, primitives_mapping = surface.contour3d_to_2d(contours3d[0], return_primitives_mapping=True)
             outer_contour3d = contours3d[0]
             inner_contours2d = []
 
         elif len(contours3d) > 1:
-            outer_contour2d, inner_contours2d, outer_contour3d, \
-                inner_contours3d, primitives_mapping = cls.from_contours3d_with_inner_contours(surface, contours3d)
+            outer_contour2d, inner_contours2d, outer_contour3d, inner_contours3d, primitives_mapping = (
+                cls.from_contours3d_with_inner_contours(surface, contours3d)
+            )
         else:
-            raise ValueError('Must have at least one contour')
-        if ((not outer_contour2d) or (not all(outer_contour2d.primitives)) or
-                (not surface.brep_connectivity_check(outer_contour2d, tol=5e-5))):
+            raise ValueError("Must have at least one contour")
+        if (
+            (not outer_contour2d)
+            or (not all(outer_contour2d.primitives))
+            or (not surface.brep_connectivity_check(outer_contour2d, tol=5e-5))
+        ):
             return None
         # if outer_contour3d and outer_contour3d.primitives and not outer_contour3d.is_ordered(1e-5):
         #     outer_contour2d = contour2d_healing(outer_contour2d)
@@ -303,8 +308,9 @@ class Face3D(design3d.core.Primitive3D):
         check_contours = [not contour2d.is_ordered(tol=1e-2) for contour2d in contours2d]
         if (surface.x_periodicity or surface.y_periodicity) and sum(1 for value in check_contours if value) >= 2:
             outer_contour2d, inner_contours2d = surface.connect_contours(contours2d[0], contours2d[1:])
-            outer_contour3d, primitives_mapping = surface.contour2d_to_3d(outer_contour2d,
-                                                                          return_primitives_mapping=True)
+            outer_contour3d, primitives_mapping = surface.contour2d_to_3d(
+                outer_contour2d, return_primitives_mapping=True
+            )
             inner_contours3d = []
             for contour2d in inner_contours2d:
                 contour3d, contour_mapping = surface.contour2d_to_3d(contour2d, return_primitives_mapping=True)
@@ -315,8 +321,9 @@ class Face3D(design3d.core.Primitive3D):
                 outer_contour2d, inner_contours2d = contours2d[0], contours2d[1:]
                 outer_contour3d, inner_contours3d = contours3d[0], contours3d[1:]
                 if surface.x_periodicity or surface.y_periodicity:
-                    Face3D.helper_repair_inner_contours_periodicity(surface, outer_contour2d,
-                                                                    inner_contours2d, primitives_mapping)
+                    Face3D.helper_repair_inner_contours_periodicity(
+                        surface, outer_contour2d, inner_contours2d, primitives_mapping
+                    )
             else:
                 area = -1
                 for contour2d, contour3d in zip(contours2d, contours3d):
@@ -330,8 +337,9 @@ class Face3D(design3d.core.Primitive3D):
                 inner_contours2d.remove(outer_contour2d)
                 inner_contours3d.remove(outer_contour3d)
                 if surface.x_periodicity or surface.y_periodicity:
-                    Face3D.helper_repair_inner_contours_periodicity(surface, outer_contour2d,
-                                                                    inner_contours2d, primitives_mapping)
+                    Face3D.helper_repair_inner_contours_periodicity(
+                        surface, outer_contour2d, inner_contours2d, primitives_mapping
+                    )
 
         return outer_contour2d, inner_contours2d, outer_contour3d, inner_contours3d, primitives_mapping
 
@@ -436,8 +444,9 @@ class Face3D(design3d.core.Primitive3D):
                 for i, u_i in enumerate(u):
                     grid_points.append((u_i, v_j))
                     points_indexes_map[(i, j)] = len(grid_points) - 1
-            grid_points = update_face_grid_points_with_inner_polygons(inner_polygons,
-                                                                      [grid_points, u, v, points_indexes_map])
+            grid_points = update_face_grid_points_with_inner_polygons(
+                inner_polygons, [grid_points, u, v, points_indexes_map]
+            )
         else:
             grid_points = np.array([[u_i, v_j] for v_j in v for u_i in u], dtype=np.float64)
         grid_points = self._update_grid_points_with_outer_polygon(outer_polygon, grid_points)
@@ -480,8 +489,10 @@ class Face3D(design3d.core.Primitive3D):
             return points
 
         outer_polygon = design3d.wires.ClosedPolygon2D(get_polygon_points(self.surface2d.outer_contour.primitives))
-        inner_polygons = [design3d.wires.ClosedPolygon2D(get_polygon_points(inner_contour.primitives))
-                          for inner_contour in self.surface2d.inner_contours]
+        inner_polygons = [
+            design3d.wires.ClosedPolygon2D(get_polygon_points(inner_contour.primitives))
+            for inner_contour in self.surface2d.inner_contours
+        ]
         return outer_polygon, inner_polygons
 
     def grid_size(self):
@@ -503,11 +514,12 @@ class Face3D(design3d.core.Primitive3D):
         """
         vertices_grid = [(p.x, p.y) for p in points_grid]
         vertices.extend(vertices_grid)
-        tri = {'vertices': np.array(vertices).reshape((-1, 2)),
-               'segments': np.array(segments).reshape((-1, 2)),
-               }
+        tri = {
+            "vertices": np.array(vertices).reshape((-1, 2)),
+            "segments": np.array(segments).reshape((-1, 2)),
+        }
         triangulation = triangle_lib.triangulate(tri, tri_opt)
-        return d3dd.Mesh2D(triangulation['vertices'], triangles=triangulation['triangles'])
+        return d3dd.Mesh2D(triangulation["vertices"], triangles=triangulation["triangles"])
 
     def helper_to_mesh(self, polygon_data=None) -> design3d.display.Mesh2D:
         """
@@ -520,7 +532,7 @@ class Face3D(design3d.core.Primitive3D):
         """
         area = self.surface2d.bounding_rectangle().area()
         tri_opt = "p"
-        if math.isclose(area, 0., abs_tol=1e-8):
+        if math.isclose(area, 0.0, abs_tol=1e-8):
             return None
         grid_size = self.grid_size()
         points_grid = []
@@ -552,8 +564,7 @@ class Face3D(design3d.core.Primitive3D):
                     point_index[point] = n
                     n += 1
 
-            for point1, point2 in zip(inner_polygon_nodes[:-1],
-                                      inner_polygon_nodes[1:]):
+            for point1, point2 in zip(inner_polygon_nodes[:-1], inner_polygon_nodes[1:]):
                 segments.append((point_index[point1], point_index[point2]))
             segments.append((point_index[inner_polygon_nodes[-1]], point_index[inner_polygon_nodes[0]]))
             rpi = inner_polygon.barycenter()
@@ -565,12 +576,13 @@ class Face3D(design3d.core.Primitive3D):
             vertices_grid = [(p.x, p.y) for p in points_grid]
             vertices.extend(vertices_grid)
 
-        tri = {'vertices': np.array(vertices).reshape((-1, 2)),
-               'segments': np.array(segments).reshape((-1, 2)),
-               'holes': np.array(holes).reshape((-1, 2))
-               }
+        tri = {
+            "vertices": np.array(vertices).reshape((-1, 2)),
+            "segments": np.array(segments).reshape((-1, 2)),
+            "holes": np.array(holes).reshape((-1, 2)),
+        }
         triangulation = triangle_lib.triangulate(tri, tri_opt)
-        return d3dd.Mesh2D(triangulation['vertices'], triangles=triangulation['triangles'].astype(np.int32))
+        return d3dd.Mesh2D(triangulation["vertices"], triangles=triangulation["triangles"].astype(np.int32))
 
     def triangulation(self):
         """Triangulates the face."""
@@ -629,8 +641,9 @@ class Face3D(design3d.core.Primitive3D):
         It returns True if face2 is inside or False if the opposite.
         """
         if self.surface3d.is_coincident(face2.surface3d, abs_tol):
-            if not self.bounding_box.is_intersecting(face2.bounding_box) and \
-                    not self.bounding_box.is_inside_bbox(face2.bounding_box):
+            if not self.bounding_box.is_intersecting(face2.bounding_box) and not self.bounding_box.is_inside_bbox(
+                face2.bounding_box
+            ):
                 return False
             self_contour2d = self.outer_contour3d.to_2d(
                 self.surface3d.frame.origin, self.surface3d.frame.u, self.surface3d.frame.v
@@ -691,7 +704,9 @@ class Face3D(design3d.core.Primitive3D):
 
         return intersections
 
-    def linesegment_intersections(self, linesegment: d3de.LineSegment3D, abs_tol: float = 1e-6) -> List[design3d.Point3D]:
+    def linesegment_intersections(
+        self, linesegment: d3de.LineSegment3D, abs_tol: float = 1e-6
+    ) -> List[design3d.Point3D]:
         """
         Get intersections between a face 3d and a Line Segment 3D.
 
@@ -1024,9 +1039,9 @@ class Face3D(design3d.core.Primitive3D):
         connected_at_two_ends = []
         for cutting_contour in list_cutting_contours:
             for split_contour in list_split_inner_contours:
-                if split_contour.point_belongs(
-                    cutting_contour.primitives[0].start
-                ) and split_contour.point_belongs(cutting_contour.primitives[-1].end):
+                if split_contour.point_belongs(cutting_contour.primitives[0].start) and split_contour.point_belongs(
+                    cutting_contour.primitives[-1].end
+                ):
                     connected_at_two_ends.append(split_contour)
                     break
         list_split_inner_contours = [
@@ -1211,7 +1226,8 @@ class Face3D(design3d.core.Primitive3D):
         new_inner_contours = len(new_faces_contours) * [[]]
         if self.surface2d.inner_contours:
             new_faces_contours, new_inner_contours = self.get_open_contour_divided_faces_inner_contours(
-                new_faces_contours, abs_tol)
+                new_faces_contours, abs_tol
+            )
         if isinstance(self, Triangle3D):
             class_to_instanciate = PlaneFace3D
         else:
@@ -1232,8 +1248,10 @@ class Face3D(design3d.core.Primitive3D):
         :return: list divided faces
         """
         for closed_cutting_contour in list_closed_cutting_contours:
-            if closed_cutting_contour.area() / self.surface2d.outer_contour.area() > 1e-9 and\
-                    closed_cutting_contour.primitives[0].start.is_close(closed_cutting_contour.primitives[-1].end):
+            if (
+                closed_cutting_contour.area() / self.surface2d.outer_contour.area() > 1e-9
+                and closed_cutting_contour.primitives[0].start.is_close(closed_cutting_contour.primitives[-1].end)
+            ):
                 inner_contours1 = []
                 inner_contours2 = []
                 if list_faces:
@@ -1371,25 +1389,29 @@ class Face3D(design3d.core.Primitive3D):
         for intersection_wire in intersections:
             wire2d = self.surface3d.contour3d_to_2d(intersection_wire)
             for primitive2d in wire2d.primitives:
-                if self.surface3d.x_periodicity is not None and not \
-                        self.surface2d.outer_contour.is_edge_inside(primitive2d):
+                if self.surface3d.x_periodicity is not None and not self.surface2d.outer_contour.is_edge_inside(
+                    primitive2d
+                ):
                     primitive_plus_periodicity = primitive2d.translation(
-                        design3d.Vector2D(self.surface3d.x_periodicity, 0))
+                        design3d.Vector2D(self.surface3d.x_periodicity, 0)
+                    )
                     if self.surface2d.outer_contour.is_edge_inside(primitive_plus_periodicity, self.face_tolerance):
                         face_intersecting_primitives2d.append(primitive_plus_periodicity)
                         continue
                     primitive_minus_periodicity = primitive2d.translation(
-                        design3d.Vector2D(- self.surface3d.x_periodicity, 0))
+                        design3d.Vector2D(-self.surface3d.x_periodicity, 0)
+                    )
                     if self.surface2d.outer_contour.is_edge_inside(primitive_minus_periodicity, self.face_tolerance):
                         face_intersecting_primitives2d.append(primitive_minus_periodicity)
                         continue
-                if design3d.core.edge_in_list(primitive2d, face_intersecting_primitives2d) or design3d.core.edge_in_list(
-                        primitive2d.reverse(), face_intersecting_primitives2d
-                ):
+                if design3d.core.edge_in_list(
+                    primitive2d, face_intersecting_primitives2d
+                ) or design3d.core.edge_in_list(primitive2d.reverse(), face_intersecting_primitives2d):
                     continue
-                if not self.surface2d.outer_contour.primitive_over_contour(primitive2d, tol=1e-7) and \
-                        not any(inner_contour.primitive_over_contour(primitive2d, tol=1e-7)
-                                for inner_contour in self.surface2d.inner_contours):
+                if not self.surface2d.outer_contour.primitive_over_contour(primitive2d, tol=1e-7) and not any(
+                    inner_contour.primitive_over_contour(primitive2d, tol=1e-7)
+                    for inner_contour in self.surface2d.inner_contours
+                ):
                     face_intersecting_primitives2d.append(primitive2d)
         return face_intersecting_primitives2d
 
@@ -1429,8 +1451,9 @@ class Face3D(design3d.core.Primitive3D):
             return True
         return False
 
-    def linesegment_intersections_approximation(self, linesegment: d3de.LineSegment3D,
-                                                abs_tol: float = 1e-6) -> List[design3d.Point3D]:
+    def linesegment_intersections_approximation(
+        self, linesegment: d3de.LineSegment3D, abs_tol: float = 1e-6
+    ) -> List[design3d.Point3D]:
         """Approximation of intersections face 3D and a line segment 3D."""
         if not self._is_linesegment_intersection_possible(linesegment):
             return []
@@ -1630,7 +1653,7 @@ class Face3D(design3d.core.Primitive3D):
         :return:
         """
         if not self.point_belongs(point):
-            raise ValueError(f'Point {point} not in this face.')
+            raise ValueError(f"Point {point} not in this face.")
         return self.surface3d.normal_at_point(point)
 
 
@@ -1644,8 +1667,13 @@ class PlaneFace3D(Face3D):
     :type surface2d: Surface2D.
     """
 
-    def __init__(self, surface3d: surfaces.Plane3D, surface2d: surfaces.Surface2D,
-                 reference_path: str = design3d.PATH_ROOT, name: str = ""):
+    def __init__(
+        self,
+        surface3d: surfaces.Plane3D,
+        surface2d: surfaces.Surface2D,
+        reference_path: str = design3d.PATH_ROOT,
+        name: str = "",
+    ):
         self._bbox = None
         Face3D.__init__(self, surface3d=surface3d, surface2d=surface2d, reference_path=reference_path, name=name)
 
@@ -1678,8 +1706,8 @@ class PlaneFace3D(Face3D):
         other_point = self.surface3d.point2d_to_3d(design3d.Point2D(*other_point))
 
         if return_other_point:
-            return (projection_distance ** 2 + border_distance ** 2) ** 0.5, other_point
-        return (projection_distance ** 2 + border_distance ** 2) ** 0.5
+            return (projection_distance**2 + border_distance**2) ** 0.5, other_point
+        return (projection_distance**2 + border_distance**2) ** 0.5
 
     def distance_to_point(self, point, return_other_point=False):
         """
@@ -1994,9 +2022,7 @@ class PlaneFace3D(Face3D):
                 if inner_contour_merged:
                     list_coincident_faces.remove(face)
                     inner_contours2d = [
-                        inner_contour.to_2d(
-                            face.surface3d.frame.origin, face.surface3d.frame.u, face.surface3d.frame.v
-                        )
+                        inner_contour.to_2d(face.surface3d.frame.origin, face.surface3d.frame.u, face.surface3d.frame.v)
                         for inner_contour in new_inner_contours
                     ]
                     current_face = PlaneFace3D(
@@ -2440,8 +2466,7 @@ class Triangle3D(PlaneFace3D):
         vector = (new_points[0] - new_points[1]).unit_vector()
         points_01 = [new_points[1]]
         points_01 += [
-            new_points[1] + vector * min(k * resolution, max_length)
-            for k in range(1, int(max_length / resolution) + 2)
+            new_points[1] + vector * min(k * resolution, max_length) for k in range(1, int(max_length / resolution) + 2)
         ]
 
         vector, length_2_1 = (new_points[2] - new_points[1]).unit_vector(), new_points[2].point_distance(new_points[1])
@@ -2942,7 +2967,9 @@ class ConicalFace3D(PeriodicalFaceMixin, Face3D):
         start_contour2d = contour2d.primitives[0].start
         end_contour2d = contour2d.primitives[-1].end
         linesegment2d_1 = d3de.LineSegment2D(end_contour2d, design3d.Point2D(end_contour2d.x, 0))
-        linesegment2d_2 = d3de.LineSegment2D(design3d.Point2D(end_contour2d.x, 0), design3d.Point2D(start_contour2d.x, 0))
+        linesegment2d_2 = d3de.LineSegment2D(
+            design3d.Point2D(end_contour2d.x, 0), design3d.Point2D(start_contour2d.x, 0)
+        )
         linesegment2d_3 = d3de.LineSegment2D(design3d.Point2D(start_contour2d.x, 0), start_contour2d)
 
         primitives2d = contour2d.primitives + [linesegment2d_1, linesegment2d_2, linesegment2d_3]
@@ -3046,8 +3073,15 @@ class SphericalFace3D(PeriodicalFaceMixin, Face3D):
             points = np.array(points, dtype=np.float64)
             points = update_face_grid_points_with_inner_polygons(inner_polygons, [points, u, v, points_indexes_map])
         else:
-            points = np.array([(u[i], v_j) for j, v_j in enumerate(v) for i in range(u_size) if
-                              (j % 2 == 0 and i % 2 == 0) or (j % 2 != 0 and i % 2 != 0)], dtype=np.float64)
+            points = np.array(
+                [
+                    (u[i], v_j)
+                    for j, v_j in enumerate(v)
+                    for i in range(u_size)
+                    if (j % 2 == 0 and i % 2 == 0) or (j % 2 != 0 and i % 2 != 0)
+                ],
+                dtype=np.float64,
+            )
 
         points = self._update_grid_points_with_outer_polygon(outer_polygon, points)
 
@@ -3311,8 +3345,15 @@ class RevolutionFace3D(Face3D):
             points = np.array(points, dtype=np.float64)
             points = update_face_grid_points_with_inner_polygons(inner_polygons, [points, u, v, points_indexes_map])
         else:
-            points = np.array([(u[i], v_j) for j, v_j in enumerate(v) for i in range(u_size) if
-                              (j % 2 == 0 and i % 2 == 0) or (j % 2 != 0 and i % 2 != 0)], dtype=np.float64)
+            points = np.array(
+                [
+                    (u[i], v_j)
+                    for j, v_j in enumerate(v)
+                    for i in range(u_size)
+                    if (j % 2 == 0 and i % 2 == 0) or (j % 2 != 0 and i % 2 != 0)
+                ],
+                dtype=np.float64,
+            )
 
         points = self._update_grid_points_with_outer_polygon(outer_polygon, points)
 
@@ -3358,7 +3399,8 @@ class RevolutionFace3D(Face3D):
         scale_factor = 1
         if number_points_x > 1 and number_points_y > 1:
             scale_factor = 10 ** math.floor(
-                math.log10((delta_x/(number_points_x - 1))/(delta_y/(number_points_y - 1))))
+                math.log10((delta_x / (number_points_x - 1)) / (delta_y / (number_points_y - 1)))
+            )
 
         def get_polygon_points(primitives):
             points = []
@@ -3373,8 +3415,10 @@ class RevolutionFace3D(Face3D):
             return points
 
         outer_polygon = design3d.wires.ClosedPolygon2D(get_polygon_points(self.surface2d.outer_contour.primitives))
-        inner_polygons = [design3d.wires.ClosedPolygon2D(get_polygon_points(inner_contour.primitives))
-                          for inner_contour in self.surface2d.inner_contours]
+        inner_polygons = [
+            design3d.wires.ClosedPolygon2D(get_polygon_points(inner_contour.primitives))
+            for inner_contour in self.surface2d.inner_contours
+        ]
         return outer_polygon, inner_polygons, scale_factor
 
     def triangulation(self):
@@ -3403,6 +3447,7 @@ class BSplineFace3D(Face3D):
     :param name: The name of the face.
     :type name: str
     """
+
     face_tolerance = 1e-5
 
     def __init__(self, surface3d: surfaces.BSplineSurface3D, surface2d: surfaces.Surface2D, name: str = ""):
@@ -3519,7 +3564,12 @@ class BSplineFace3D(Face3D):
         """Returns the side of the faces that are adjacent."""
         extremities = self.extremities(other_bspline_face3d)
         start1, start2 = extremities[0], extremities[2]
-        borders_points = [design3d.Point2D(0, 0), design3d.Point2D(1, 0), design3d.Point2D(1, 1), design3d.Point2D(0, 1)]
+        borders_points = [
+            design3d.Point2D(0, 0),
+            design3d.Point2D(1, 0),
+            design3d.Point2D(1, 1),
+            design3d.Point2D(0, 1),
+        ]
 
         # TODO: compute nearest_point in 'bounding_box points' instead of borders_points
         nearest_start1 = start1.nearest_point(borders_points)
@@ -3558,7 +3608,12 @@ class BSplineFace3D(Face3D):
         """Returns the side of the faces that are adjacent."""
         extremities = self.extremities(other_bspline_face3d)
         start1, start2 = extremities[0], extremities[2]
-        borders_points = [design3d.Point2D(0, 0), design3d.Point2D(1, 0), design3d.Point2D(1, 1), design3d.Point2D(0, 1)]
+        borders_points = [
+            design3d.Point2D(0, 0),
+            design3d.Point2D(1, 0),
+            design3d.Point2D(1, 1),
+            design3d.Point2D(0, 1),
+        ]
 
         # TODO: compute nearest_point in 'bounding_box points' instead of borders_points
         nearest_start1 = start1.nearest_point(borders_points)
@@ -3596,7 +3651,12 @@ class BSplineFace3D(Face3D):
         """
         extremities = self.extremities(other_bspline_face3d)
         start1, start2 = extremities[0], extremities[2]
-        borders_points = [design3d.Point2D(0, 0), design3d.Point2D(1, 0), design3d.Point2D(1, 1), design3d.Point2D(0, 1)]
+        borders_points = [
+            design3d.Point2D(0, 0),
+            design3d.Point2D(1, 0),
+            design3d.Point2D(1, 1),
+            design3d.Point2D(0, 1),
+        ]
 
         # TODO: compute nearest_point in 'bounding_box points' instead of borders_points
         nearest_start1 = start1.nearest_point(borders_points)
@@ -3631,7 +3691,12 @@ class BSplineFace3D(Face3D):
         """
         extremities = self.extremities(other_bspline_face3d)
         start1, start2 = extremities[0], extremities[2]
-        borders_points = [design3d.Point2D(0, 0), design3d.Point2D(1, 0), design3d.Point2D(1, 1), design3d.Point2D(0, 1)]
+        borders_points = [
+            design3d.Point2D(0, 0),
+            design3d.Point2D(1, 0),
+            design3d.Point2D(1, 1),
+            design3d.Point2D(0, 1),
+        ]
 
         # TODO: compute nearest_point in 'bounding_box points' instead of borders_points
         nearest_start1 = start1.nearest_point(borders_points)
@@ -3927,7 +3992,9 @@ class BSplineFace3D(Face3D):
             return design3d.wires.Wire3D([neutral_fiber.trim(point1, neutral_fiber.point_projection(point3d_max)[0])])
         return design3d.wires.Wire3D([neutral_fiber.trim(point1, neutral_fiber.end)])
 
-    def linesegment_intersections(self, linesegment: d3de.LineSegment3D, abs_tol: float = 1e-6) -> List[design3d.Point3D]:
+    def linesegment_intersections(
+        self, linesegment: d3de.LineSegment3D, abs_tol: float = 1e-6
+    ) -> List[design3d.Point3D]:
         """
         Get intersections between a BSpline face 3d and a Line Segment 3D.
 

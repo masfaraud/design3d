@@ -6,7 +6,6 @@ from design3d.utils.common_operations import split_wire_by_plane
 from design3d import primitives3d
 import random
 
-
 random.seed(2)
 
 p1 = design3d.Point3D(0, 0, 0)
@@ -26,12 +25,14 @@ for i in range(6):
     radius[4 + i] = 0.01 + 0.03 * random.random()
 
 
-open_rounded_line_segements = primitives3d.OpenRoundedLineSegments3D(points, radius, adapt_radius=True, name='wire')
+open_rounded_line_segements = primitives3d.OpenRoundedLineSegments3D(points, radius, adapt_radius=True, name="wire")
+
 
 class TestCommonOperations(unittest.TestCase):
     def test_split_wire_by_plane(self):
-        plane = Plane3D.from_plane_vectors(design3d.Point3D(0.4, 0.4, 0.2), design3d.Vector3D(1, 0, 0),
-                                           design3d.Vector3D(0, 1, 0))
+        plane = Plane3D.from_plane_vectors(
+            design3d.Point3D(0.4, 0.4, 0.2), design3d.Vector3D(1, 0, 0), design3d.Vector3D(0, 1, 0)
+        )
         wire1, wire2 = split_wire_by_plane(open_rounded_line_segements, plane)
         self.assertEqual(wire1.length(), 1.4187473149621863)
         self.assertAlmostEqual(wire2.length(), 0.6182864075957109)

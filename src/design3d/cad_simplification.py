@@ -1,6 +1,7 @@
 """
 volmdlr cad simplification module.
 """
+
 import math
 from typing import Union
 

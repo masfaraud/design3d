@@ -2,6 +2,7 @@
 design3d utils for calculating 3D to surface parametric domain operation.
 
 """
+
 import bisect
 import math
 import numpy as np
@@ -45,8 +46,9 @@ def angle_discontinuity(angle_list):
         for index in indexes_sign_changes:
             sign = round(angle_list[index - 1] / abs(angle_list[index - 1]), 2)
             delta = max(abs(angle_list[index] + sign * design3d.TWO_PI - angle_list[index - 1]), 1e-4)
-            if math.isclose(abs(angle_list[index]), math.pi, abs_tol=1.1 * delta) and \
-                    not math.isclose(abs(angle_list[index]), 0, abs_tol=1.1 * delta):
+            if math.isclose(abs(angle_list[index]), math.pi, abs_tol=1.1 * delta) and not math.isclose(
+                abs(angle_list[index]), 0, abs_tol=1.1 * delta
+            ):
                 indexes_angle_discontinuity.append(index)
                 discontinuity = True
     return discontinuity, indexes_angle_discontinuity
@@ -159,8 +161,7 @@ def repair_arc3d_angle_continuity(angle_start, angle_end, periodicity):
     return angle_start, angle_end
 
 
-def arc3d_to_cylindrical_coordinates_verification(start_end, start_end_theta_state, reference_points,
-                                                  discontinuity):
+def arc3d_to_cylindrical_coordinates_verification(start_end, start_end_theta_state, reference_points, discontinuity):
     """
     Verifies theta from start and end of an Arc3D after transformation from spatial to parametric coordinates.
     """
@@ -198,8 +199,9 @@ def fullarc_to_cylindrical_coordinates_verification(start, end, normal_dot_produ
     return [start, end]
 
 
-def toroidal_repair_start_end_angle_periodicity(start, end, start_end_angles_state,
-                                                point_after_start, point_before_end):
+def toroidal_repair_start_end_angle_periodicity(
+    start, end, start_end_angles_state, point_after_start, point_before_end
+):
     """
     Verifies theta and phi from start and end of an arc 3D after transformation from spatial to parametric coordinates.
     """
@@ -237,15 +239,15 @@ def spherical_repair_start_end_angle_periodicity(start, end, point_after_start, 
     return design3d.Point2D(theta1, phi1), design3d.Point2D(theta2, phi2)
 
 
-def arc3d_to_toroidal_coordinates_verification(start_end, start_end_angles_state, reference_points,
-                                               discontinuity):
+def arc3d_to_toroidal_coordinates_verification(start_end, start_end_angles_state, reference_points, discontinuity):
     """
     Verifies theta and phi from start and end of an arc 3D after transformation from spatial to parametric coordinates.
     """
     start, end = start_end
     point_after_start, point_before_end = reference_points
-    start, end = toroidal_repair_start_end_angle_periodicity(start, end, start_end_angles_state, point_after_start,
-                                                             point_before_end)
+    start, end = toroidal_repair_start_end_angle_periodicity(
+        start, end, start_end_angles_state, point_after_start, point_before_end
+    )
     theta1, phi1 = start
     theta2, phi2 = end
     theta_discontinuity, phi_discontinuity = discontinuity
@@ -333,10 +335,12 @@ def contour2d_healing_close_gaps(contour2d, contour3d):
     Heals topologies incoherencies on the boundary representation.
     """
     new_primitives = []
-    for prim1_3d, prim2_3d, prim1, prim2 in zip(contour3d.primitives,
-                                                contour3d.primitives[1:] + [contour3d.primitives[0]],
-                                                contour2d.primitives,
-                                                contour2d.primitives[1:] + [contour2d.primitives[0]]):
+    for prim1_3d, prim2_3d, prim1, prim2 in zip(
+        contour3d.primitives,
+        contour3d.primitives[1:] + [contour3d.primitives[0]],
+        contour2d.primitives,
+        contour2d.primitives[1:] + [contour2d.primitives[0]],
+    ):
         if prim1 and prim2:
             if not prim1_3d.end.is_close(prim2_3d.start) and not prim1.end.is_close(prim2.start):
                 new_primitives.append(d3de.LineSegment2D(prim1.end, prim2.start))
@@ -352,8 +356,7 @@ def contour2d_healing_self_intersection(contour2d):
     Heals topologies incoherencies on the boundary representation.
     """
     primitives = contour2d.primitives
-    for i, (prim1, prim2) in enumerate(
-            zip(contour2d.primitives, contour2d.primitives[1:] + [contour2d.primitives[0]])):
+    for i, (prim1, prim2) in enumerate(zip(contour2d.primitives, contour2d.primitives[1:] + [contour2d.primitives[0]])):
         if not prim1.end.is_close(prim2.start):
             # check intersection
             intersections = prim1.intersections(prim2, force_sort=True)
@@ -413,14 +416,15 @@ def verify_repeated_parametric_points(points):
 def repair_undefined_brep(surface, primitives2d, primitives_mapping, i, previous_primitive):
     """Helper function to repair_primitives_periodicity."""
     old_primitive = primitives2d[i]
-    primitives2d[i] = surface.fix_undefined_brep_with_neighbors(primitives2d[i], previous_primitive,
-                                                                primitives2d[(i + 1) % len(primitives2d)
-                                                                             ])
+    primitives2d[i] = surface.fix_undefined_brep_with_neighbors(
+        primitives2d[i], previous_primitive, primitives2d[(i + 1) % len(primitives2d)]
+    )
     primitives_mapping[primitives2d[i]] = primitives_mapping.pop(old_primitive)
     delta = previous_primitive.end - primitives2d[i].start
     if not math.isclose(delta.norm(), 0, abs_tol=1e-3):
-        if surface.is_singularity_point(surface.point2d_to_3d(primitives2d[i - 1].end), tol=1e-5) and \
-             surface.is_singularity_point(surface.point2d_to_3d(primitives2d[i].start), tol=1e-5):
+        if surface.is_singularity_point(
+            surface.point2d_to_3d(primitives2d[i - 1].end), tol=1e-5
+        ) and surface.is_singularity_point(surface.point2d_to_3d(primitives2d[i].start), tol=1e-5):
             surface.repair_singularity(primitives2d, i, primitives2d[i - 1])
         else:
             surface.repair_translation(primitives2d, primitives_mapping, i, delta)

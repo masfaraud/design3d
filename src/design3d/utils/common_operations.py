@@ -2,6 +2,7 @@
 Concatenate common operation for two or more objects.
 
 """
+
 import math
 import random
 
@@ -32,21 +33,24 @@ def plot_circle(circle, ax=None, edge_style: EdgeStyle = EdgeStyle()):
         ax.set_xlim(x_min, x_max)
         ax.set_ylim(y_min, y_max)
     if circle.radius > 0:
-        ax.add_patch(matplotlib.patches.Arc((circle.center.x, circle.center.y),
-                                            2 * circle.radius,
-                                            2 * circle.radius,
-                                            angle=0,
-                                            theta1=0,
-                                            theta2=360,
-                                            color=edge_style.color,
-                                            alpha=edge_style.alpha,
-                                            linestyle=edge_style.linestyle,
-                                            linewidth=edge_style.linewidth))
+        ax.add_patch(
+            matplotlib.patches.Arc(
+                (circle.center.x, circle.center.y),
+                2 * circle.radius,
+                2 * circle.radius,
+                angle=0,
+                theta1=0,
+                theta2=360,
+                color=edge_style.color,
+                alpha=edge_style.alpha,
+                linestyle=edge_style.linestyle,
+                linewidth=edge_style.linewidth,
+            )
+        )
     if edge_style.plot_points:
-        ax.plot([circle.start.x], [circle.start.y], 'o',
-                color=edge_style.color, alpha=edge_style.alpha)
+        ax.plot([circle.start.x], [circle.start.y], "o", color=edge_style.color, alpha=edge_style.alpha)
     if edge_style.equal_aspect:
-        ax.set_aspect('equal')
+        ax.set_aspect("equal")
 
     return ax
 
@@ -135,7 +139,7 @@ def plot_from_discretization_points(ax, edge_style, element, number_points: int 
     return ax
 
 
-def minimum_distance_points_circle3d_linesegment3d(circle3d,  linesegment3d):
+def minimum_distance_points_circle3d_linesegment3d(circle3d, linesegment3d):
     """
     Gets the points from the arc and the line that gives the minimal distance between them.
 
@@ -143,15 +147,22 @@ def minimum_distance_points_circle3d_linesegment3d(circle3d,  linesegment3d):
     :param linesegment3d: Other line segment 3d.
     :return: Minimum distance points.
     """
+
     def distance_squared(x, u_param, v_param, k_param, w_param):
         """Calculates the squared distance."""
-        return (u_param.dot(u_param) * x[0] ** 2 + w_param.dot(w_param) + v_param.dot(v_param) * (
-                (math.sin(x[1])) ** 2) * radius ** 2 + k_param.dot(k_param) * ((math.cos(x[1])) ** 2) * radius ** 2
-                - 2 * x[0] * w_param.dot(u_param) - 2 * x[0] * radius * math.sin(x[1]) * u_param.dot(v_param) - 2 * x[
-                    0] * radius * math.cos(x[1]) * u_param.dot(k_param)
-                + 2 * radius * math.sin(x[1]) * w_param.dot(v_param) +
-                2 * radius * math.cos(x[1]) * w_param.dot(k_param)
-                + math.sin(2 * x[1]) * v_param.dot(k_param) * radius ** 2)
+        return (
+            u_param.dot(u_param) * x[0] ** 2
+            + w_param.dot(w_param)
+            + v_param.dot(v_param) * ((math.sin(x[1])) ** 2) * radius**2
+            + k_param.dot(k_param) * ((math.cos(x[1])) ** 2) * radius**2
+            - 2 * x[0] * w_param.dot(u_param)
+            - 2 * x[0] * radius * math.sin(x[1]) * u_param.dot(v_param)
+            - 2 * x[0] * radius * math.cos(x[1]) * u_param.dot(k_param)
+            + 2 * radius * math.sin(x[1]) * w_param.dot(v_param)
+            + 2 * radius * math.cos(x[1]) * w_param.dot(k_param)
+            + math.sin(2 * x[1]) * v_param.dot(k_param) * radius**2
+        )
+
     radius = circle3d.radius
     linseg_direction_vector = linesegment3d.direction_vector()
     vector_point_origin = circle3d.point_at_abscissa(0.0) - circle3d.frame.origin
@@ -161,9 +172,14 @@ def minimum_distance_points_circle3d_linesegment3d(circle3d,  linesegment3d):
 
     results = []
     for initial_value in [np.array([0.5, circle3d.angle / 2]), np.array([0.5, 0]), np.array([0.5, circle3d.angle])]:
-        results.append(least_squares(distance_squared, initial_value,
-                                     bounds=[(0, 0), (1, circle3d.angle)],
-                                     args=(linseg_direction_vector, v, vector_point_origin, w)))
+        results.append(
+            least_squares(
+                distance_squared,
+                initial_value,
+                bounds=[(0, 0), (1, circle3d.angle)],
+                args=(linseg_direction_vector, v, vector_point_origin, w),
+            )
+        )
 
     point1 = linesegment3d.point_at_abscissa(results[0].x[0] * linesegment3d.length())
     point2 = circle3d.point_at_abscissa(results[1].x[1] * circle3d.radius)
@@ -177,8 +193,9 @@ def minimum_distance_points_circle3d_linesegment3d(circle3d,  linesegment3d):
     return point1, point2
 
 
-def get_abscissa_discretization(primitive, abscissa1, abscissa2, max_number_points: int = 10,
-                                return_abscissas: bool = True):
+def get_abscissa_discretization(
+    primitive, abscissa1, abscissa2, max_number_points: int = 10, return_abscissas: bool = True
+):
     """
     Gets n discretization points between two given points of the edge.
 
@@ -228,7 +245,7 @@ def get_point_distance_to_edge(edge, point, start, end):
     distance = best_distance
     point1_ = start
     point2_ = end
-    linesegment_class_ = getattr(design3d.edges, 'LineSegment' + edge.__class__.__name__[-2:])
+    linesegment_class_ = getattr(design3d.edges, "LineSegment" + edge.__class__.__name__[-2:])
     while True:
         discretized_points_between_1_2 = edge.local_discretization(point1_, point2_, number_points)
         if not discretized_points_between_1_2:
@@ -251,8 +268,9 @@ def get_point_distance_to_edge(edge, point, start, end):
     return distance
 
 
-def generic_minimum_distance(self, element, point1_edge1_, point2_edge1_, point1_edge2_,
-                              point2_edge2_, return_points=False):
+def generic_minimum_distance(
+    self, element, point1_edge1_, point2_edge1_, point1_edge2_, point2_edge2_, return_points=False
+):
     """
     Gets the minimum distance between two elements.
 
@@ -267,20 +285,23 @@ def generic_minimum_distance(self, element, point1_edge1_, point2_edge1_, point1
     distance_points = None
     distance = best_distance
 
-    linesegment_class_ = getattr(design3d.edges, 'LineSegment' + self.__class__.__name__[-2:])
+    linesegment_class_ = getattr(design3d.edges, "LineSegment" + self.__class__.__name__[-2:])
     while True:
-        edge1_discretized_points_between_1_2 = self.local_discretization(point1_edge1_, point2_edge1_,
-                                                                         number_points=10 * n)
+        edge1_discretized_points_between_1_2 = self.local_discretization(
+            point1_edge1_, point2_edge1_, number_points=10 * n
+        )
         edge2_discretized_points_between_1_2 = element.local_discretization(point1_edge2_, point2_edge2_)
         if not edge1_discretized_points_between_1_2:
             break
         distance = edge2_discretized_points_between_1_2[0].point_distance(edge1_discretized_points_between_1_2[0])
         distance_points = [edge2_discretized_points_between_1_2[0], edge1_discretized_points_between_1_2[0]]
-        for point1_edge1, point2_edge1 in zip(edge1_discretized_points_between_1_2[:-1],
-                                              edge1_discretized_points_between_1_2[1:]):
+        for point1_edge1, point2_edge1 in zip(
+            edge1_discretized_points_between_1_2[:-1], edge1_discretized_points_between_1_2[1:]
+        ):
             lineseg1 = linesegment_class_(point1_edge1, point2_edge1)
-            for point1_edge2, point2_edge2 in zip(edge2_discretized_points_between_1_2[:-1],
-                                                  edge2_discretized_points_between_1_2[1:]):
+            for point1_edge2, point2_edge2 in zip(
+                edge2_discretized_points_between_1_2[:-1], edge2_discretized_points_between_1_2[1:]
+            ):
                 lineseg2 = linesegment_class_(point1_edge2, point2_edge2)
                 dist, min_dist_point1_, min_dist_point2_ = lineseg1.minimum_distance(lineseg2, True)
                 if dist < distance:
@@ -307,9 +328,11 @@ def ellipse_abscissa_angle_integration(ellipse3d, point_abscissa, angle_start, i
     :param initial_angle: angle abscissa's initial value.
     :return: final angle abscissa's value.
     """
+
     def ellipse_arc_length(theta):
-        return math.sqrt((ellipse3d.major_axis ** 2) * math.sin(theta) ** 2 +
-                         (ellipse3d.minor_axis ** 2) * math.cos(theta) ** 2)
+        return math.sqrt(
+            (ellipse3d.major_axis**2) * math.sin(theta) ** 2 + (ellipse3d.minor_axis**2) * math.cos(theta) ** 2
+        )
 
     iter_counter = 0
     while True:
@@ -347,8 +370,9 @@ def get_plane_point_distance(plane_frame, point3d):
     :return: point plane distance.
     """
     coefficient_a, coefficient_b, coefficient_c, coefficient_d = get_plane_equation_coefficients(plane_frame)
-    return abs(plane_frame.w.dot(point3d) + coefficient_d) / math.sqrt(coefficient_a ** 2 +
-                                                                       coefficient_b ** 2 + coefficient_c ** 2)
+    return abs(plane_frame.w.dot(point3d) + coefficient_d) / math.sqrt(
+        coefficient_a**2 + coefficient_b**2 + coefficient_c**2
+    )
 
 
 def order_points_list_for_nearest_neighbor(points):
@@ -397,7 +421,7 @@ def separate_points_by_closeness(points):
 
     # Apply DBSCAN clustering with a small epsilon to separate close points
     distances = sorted(np.linalg.norm(points_[1:] - points_[0], axis=1))
-    eps = max(min(np.mean(distances[:max(int(len(points)*0.1), 30)]) / 2, 0.35), 0.02)
+    eps = max(min(np.mean(distances[: max(int(len(points) * 0.1), 30)]) / 2, 0.35), 0.02)
     # eps = np.mean(distances[:max(int(len(points)*0.1), 30)]) / 2
 
     dbscan = DBSCAN(eps=eps, min_samples=1)

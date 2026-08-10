@@ -92,8 +92,9 @@ def get_version():
         try:
             version = check_output(cmd.split(), stderr=STDOUT).decode().strip()[:]
         except CalledProcessError as exception:
-            raise RuntimeError("Unable to get version number from git tags, rc=", exception.returncode,
-                               "output=", exception.output)
+            raise RuntimeError(
+                "Unable to get version number from git tags, rc=", exception.returncode, "output=", exception.output
+            )
 
         return version_from_git_describe(version)
     else:
@@ -148,7 +149,7 @@ setup(
     package_dir={"": "src"},
     include_package_data=True,
     install_requires=[
-        "packaging", 
+        "packaging",
         "Cython>=3.0.0",
         "numpy",
         "orjson",
@@ -166,18 +167,26 @@ setup(
         "pyfqmr",
         "CGAL",
         "scikit-learn",
-        "lxml"
+        "lxml",
     ],
-    extras_require={"test": ["coverage"],
-                    "doc": ["sphinx", "nbsphinx", "sphinx_book_theme", "nbformat", "nbconvert",
-                            "sphinx_copybutton", "sphinx_design"]},
-    classifiers=["Topic :: Scientific/Engineering",
-                 "Topic :: Multimedia :: Graphics :: 3D Modeling",
-                 "Development Status :: 5 - Production/Stable"],
-
-
-    ext_modules=cythonize(extensions,
-                          language_level = "3"),
+    extras_require={
+        "test": ["coverage"],
+        "doc": [
+            "sphinx",
+            "nbsphinx",
+            "sphinx_book_theme",
+            "nbformat",
+            "nbconvert",
+            "sphinx_copybutton",
+            "sphinx_design",
+        ],
+    },
+    classifiers=[
+        "Topic :: Scientific/Engineering",
+        "Topic :: Multimedia :: Graphics :: 3D Modeling",
+        "Development Status :: 5 - Production/Stable",
+    ],
+    ext_modules=cythonize(extensions, language_level="3"),
     include_dirs=[np.get_include()],
     python_requires=">=3.9",
 )

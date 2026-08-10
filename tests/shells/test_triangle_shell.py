@@ -38,29 +38,27 @@ class TestTriangleShell3D(unittest.TestCase):
             closed_triangle_shell.babylonjs()
 
     def test_display_triangle_shell(self):
-        display_triangle_shell = OpenTriangleShell3D(
-            self.faces
-        ).to_display_triangle_shell()
+        display_triangle_shell = OpenTriangleShell3D(self.faces).to_display_triangle_shell()
         self.assertEqual(12, len(display_triangle_shell.indices))
         self.assertEqual(8, len(display_triangle_shell.positions))
-        self.assertEqual(display_triangle_shell, DisplayTriangleShell3D.dict_to_object(display_triangle_shell.to_dict()))
-        self.assertEqual(len(display_triangle_shell.indices), len((display_triangle_shell + display_triangle_shell).indices))
+        self.assertEqual(
+            display_triangle_shell, DisplayTriangleShell3D.dict_to_object(display_triangle_shell.to_dict())
+        )
+        self.assertEqual(
+            len(display_triangle_shell.indices), len((display_triangle_shell + display_triangle_shell).indices)
+        )
 
         if SHOW_BABYLONJS:
             display_triangle_shell.babylonjs()
 
     def test_turn_normals_outwards(self):
-        closed_shell = SerializableObject.from_json(
-            os.path.join(folder, "closedtriangleshell3d.json")
-        )
+        closed_shell = SerializableObject.from_json(os.path.join(folder, "closedtriangleshell3d.json"))
         self.assertFalse(closed_shell.are_normals_pointing_outwards())
         new_closed_shell = closed_shell.turn_normals_outwards()
         self.assertTrue(new_closed_shell.are_normals_pointing_outwards())
 
     def test_turn_normals_inwards(self):
-        closed_shell = SerializableObject.from_json(
-            os.path.join(folder, "closedtriangleshell3d.json")
-        )
+        closed_shell = SerializableObject.from_json(os.path.join(folder, "closedtriangleshell3d.json"))
         self.assertFalse(closed_shell.are_normals_pointing_inwards())
         new_closed_shell = closed_shell.turn_normals_inwards()
         self.assertTrue(new_closed_shell.are_normals_pointing_inwards())
@@ -149,8 +147,9 @@ class TestDisplayTriangleShell3D(unittest.TestCase):
 
         expected_positions = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 0]])
 
-        np.testing.assert_array_equal(np.sort(concatenated_shell.positions, axis=0),
-                                      np.sort(expected_positions, axis=0))
+        np.testing.assert_array_equal(
+            np.sort(concatenated_shell.positions, axis=0), np.sort(expected_positions, axis=0)
+        )
         # Compare indices carefully since their correctness depends on the order of positions
 
     def test_add_operator(self):
@@ -158,8 +157,7 @@ class TestDisplayTriangleShell3D(unittest.TestCase):
 
         expected_positions = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 0]])
 
-        np.testing.assert_array_equal(np.sort(combined_shell.positions, axis=0),
-                                      np.sort(expected_positions, axis=0))
+        np.testing.assert_array_equal(np.sort(combined_shell.positions, axis=0), np.sort(expected_positions, axis=0))
         # Compare indices carefully since their correctness depends on the order of positions
 
     def test_concatenate_cube(self):
@@ -180,5 +178,5 @@ class TestDisplayTriangleShell3D(unittest.TestCase):
         self.assertNotEqual(self.shell1, self.shell1 + self.shell2)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

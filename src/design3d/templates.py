@@ -5,8 +5,7 @@ design3d to babylonjs templates.
 import os
 from string import Template
 
-
-BABYLON_UNPACKER_CDN_HEADER = Template('''
+BABYLON_UNPACKER_CDN_HEADER = Template("""
 <!doctype html>
 <html>
 <head>
@@ -32,9 +31,9 @@ BABYLON_UNPACKER_CDN_HEADER = Template('''
       <script src='https://unpkg.com/earcut@3.2.3/dist/earcut.min.js'></script>
       <script src='https://cdn.babylonjs.com/gui/babylon.gui.min.js'></script>
 </head>
-''')
+""")
 
-BABYLON_UNPACKER_EMBEDDED_HEADER = '''
+BABYLON_UNPACKER_EMBEDDED_HEADER = """
 <!doctype html>
 <html>
 <head>
@@ -55,28 +54,27 @@ BABYLON_UNPACKER_EMBEDDED_HEADER = '''
       }
    </style>
    <script>
-   '''
+   """
 
 base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "assets/js/"))
 
 
-for filename in ['babylon.js', 'babylonjs.loaders.min.js', 'earcut.min.js', 'pep.js']:
+for filename in ["babylon.js", "babylonjs.loaders.min.js", "earcut.min.js", "pep.js"]:
     file_path = os.path.join(base_path, filename)
 
-    with open(file_path, 'r', encoding='utf-8') as fjs:
+    with open(file_path, "r", encoding="utf-8") as fjs:
         BABYLON_UNPACKER_EMBEDDED_HEADER += fjs.read()
 
 
-BABYLON_UNPACKER_EMBEDDED_HEADER += '''
+BABYLON_UNPACKER_EMBEDDED_HEADER += """
       </script>
 </head>
-'''
+"""
 
 BABYLON_UNPACKER_EMBEDDED_HEADER = Template(BABYLON_UNPACKER_EMBEDDED_HEADER)
 
 
-BABYLON_UNPACKER_BODY_TEMPLATE = Template(
-    '''
+BABYLON_UNPACKER_BODY_TEMPLATE = Template("""
 <body>
    <canvas id="renderCanvas"></canvas>
    <script type="text/javascript">
@@ -428,5 +426,4 @@ BABYLON_UNPACKER_BODY_TEMPLATE = Template(
 
 </html>
 
-'''
-)
+""")

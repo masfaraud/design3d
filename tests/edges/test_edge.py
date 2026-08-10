@@ -30,13 +30,18 @@ class TestEdge(unittest.TestCase):
     vector3 = vector1.cross(vector2)
 
     circle3d = curves.Circle3D(design3d.Frame3D(design3d.O3D, vector1, vector2, vector3), 1)
-    arc3d = edges.Arc3D(circle3d, start=design3d.Point3D(0.5773502691896258, 0.5773502691896258, 0.5773502691896258),
-                       end=design3d.Point3D(-0.9855985596534886, -0.11957315586905026, -0.11957315586905026))
+    arc3d = edges.Arc3D(
+        circle3d,
+        start=design3d.Point3D(0.5773502691896258, 0.5773502691896258, 0.5773502691896258),
+        end=design3d.Point3D(-0.9855985596534886, -0.11957315586905026, -0.11957315586905026),
+    )
 
     ellipse3d = curves.Ellipse3D(2, 1, design3d.Frame3D(design3d.Point3D(1, 2, 1), vector3, vector1, vector2))
-    arc_ellipse3d = edges.ArcEllipse3D(ellipse3d,
-                                start=design3d.Point3D(0.42264973081037405, 1.4226497308103743, 0.42264973081037427),
-                                end=design3d.Point3D(1.577350269189626, 2.5773502691896253, 1.5773502691896257))
+    arc_ellipse3d = edges.ArcEllipse3D(
+        ellipse3d,
+        start=design3d.Point3D(0.42264973081037405, 1.4226497308103743, 0.42264973081037427),
+        end=design3d.Point3D(1.577350269189626, 2.5773502691896253, 1.5773502691896257),
+    )
 
     def test_direction_independent_is_close(self):
         self.assertFalse(self.bspline1.direction_independent_is_close(self.arc))
@@ -61,7 +66,7 @@ class TestEdge(unittest.TestCase):
         self.assertTrue(new_arc3d.end.is_close(point1))
 
     def test_from_step(self):
-        step = design3d.step.Step.from_file(filepath='edges/test_edge_from_step.stp')
+        step = design3d.step.Step.from_file(filepath="edges/test_edge_from_step.stp")
         model = step.to_volume_model()
         self.assertTrue(model.primitives[0].faces[0].outer_contour3d.is_ordered())
 
@@ -78,5 +83,5 @@ class TestEdge(unittest.TestCase):
         self.assertIn("EDGE_CURVE", content)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
