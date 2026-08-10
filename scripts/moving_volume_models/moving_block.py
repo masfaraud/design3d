@@ -9,15 +9,16 @@ Created on Mon Jan 27 10:54:45 2020
 import volmdlr as d3d
 import volmdlr.primitives3D as primitives3D
 
-block1 = primitives3D.Block(d3d.Frame3D(d3d.O3D.copy(),
-                                       d3d.X3D.copy(), d3d.Y3D.copy(), d3d.Z3D.copy()),
-                            color=(0.8, 0.1, 0.1),
-                            alpha=0.5,
-                            name='Block 1')
+block1 = primitives3D.Block(
+    d3d.Frame3D(d3d.O3D.copy(), d3d.X3D.copy(), d3d.Y3D.copy(), d3d.Z3D.copy()),
+    color=(0.8, 0.1, 0.1),
+    alpha=0.5,
+    name="Block 1",
+)
 
 block2 = block1.copy()
 block2.color = [0.1, 0.1, 0.8]
-block2.name = 'Block 2'
+block2.name = "Block 2"
 
 
 f1 = d3d.OXYZ.copy()
@@ -41,7 +42,7 @@ model.babylonjs()
 # Fetching baybylon data to put custom labels
 babylon_data = model.babylon_data()
 
-for i, d in enumerate(babylon_data['steps']):
-    d['label'] = 'custom label {}'.format(i + 1)
+for i, d in enumerate(babylon_data["steps"]):
+    d["label"] = "custom label {}".format(i + 1)
 
 model.babylonjs_from_babylon_data(babylon_data)

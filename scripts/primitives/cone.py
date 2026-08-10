@@ -1,6 +1,7 @@
 """
 Demo usage of Cone class.
 """
+
 import math
 
 import design3d

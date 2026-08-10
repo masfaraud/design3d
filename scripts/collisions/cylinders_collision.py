@@ -46,41 +46,29 @@ volume_model.babylonjs()
 print("Collision detection methods")
 start = perf_counter()
 
-print(
-    f"""\nRed & green:
+print(f"""\nRed & green:
 min distance computed is {cylinders[0].min_distance_to_other_cylinder(cylinders[1])}m, 
-collision: {cylinders[0].is_intersecting_other_cylinder(cylinders[1])}"""
-)
+collision: {cylinders[0].is_intersecting_other_cylinder(cylinders[1])}""")
 
-print(
-    f"""\nRed & blue:
+print(f"""\nRed & blue:
 min distance computed is {cylinders[0].min_distance_to_other_cylinder(cylinders[2])}m, 
-collision: {cylinders[0].is_intersecting_other_cylinder(cylinders[2])}"""
-)
+collision: {cylinders[0].is_intersecting_other_cylinder(cylinders[2])}""")
 
-print(
-    f"""\nGreen & blue:
+print(f"""\nGreen & blue:
 min distance computed is {cylinders[1].min_distance_to_other_cylinder(cylinders[2])}m, 
-collision: {cylinders[1].is_intersecting_other_cylinder(cylinders[2])}"""
-)
+collision: {cylinders[1].is_intersecting_other_cylinder(cylinders[2])}""")
 
-print(
-    f"""\nRed & purple:
+print(f"""\nRed & purple:
 min distance computed is {cylinders[0].min_distance_to_other_cylinder(cylinders[3])}m, 
-collision: {cylinders[0].is_intersecting_other_cylinder(cylinders[3])}"""
-)
+collision: {cylinders[0].is_intersecting_other_cylinder(cylinders[3])}""")
 
-print(
-    f"""\nGreen & purple:
+print(f"""\nGreen & purple:
 min distance computed is {cylinders[1].min_distance_to_other_cylinder(cylinders[3])}m, 
-collision: {cylinders[1].is_intersecting_other_cylinder(cylinders[3])}"""
-)
+collision: {cylinders[1].is_intersecting_other_cylinder(cylinders[3])}""")
 
-print(
-    f"""\nPurple & blue:
+print(f"""\nPurple & blue:
 min distance computed is {cylinders[3].min_distance_to_other_cylinder(cylinders[2])}m,
-collision: {cylinders[3].is_intersecting_other_cylinder(cylinders[2])}"""
-)
+collision: {cylinders[3].is_intersecting_other_cylinder(cylinders[2])}""")
 # interpenetration: {cylinders[3].interference_volume_with_other_cylinder(cylinders[2])}
 
 end = perf_counter()

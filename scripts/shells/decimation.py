@@ -1,6 +1,7 @@
 """
 Showcase of decimation of a STL file.
 """
+
 import os
 import urllib.request
 

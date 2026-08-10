@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import design3d.grid
 from design3d.models import bspline_surfaces
 from design3d import faces
+
 # %% Read Step file
 
 # file_path = 'bspline_surface_2.step'
@@ -42,7 +43,7 @@ contour2d = bspline_surface.contour3d_to_2d(contour3d)
 
 # %%% Dimensionned frame
 
-grid2d = design3d.grid.Grid2D.from_properties((0,1),(0,1),(10,10))
+grid2d = design3d.grid.Grid2D.from_properties((0, 1), (0, 1), (10, 10))
 contour2d_dim = bspline_surface.contour2d_parametric_to_dimension(contour2d, grid2d)
 
 # %%% Display
@@ -51,5 +52,5 @@ fig, (ax1, ax2) = plt.subplots(1, 2)
 contour2d.plot(ax=ax1)
 contour2d_dim.plot(ax=ax2)
 
-ax1.set_title('Parametric frame')
-ax2.set_title('Dimensionned frame')
+ax1.set_title("Parametric frame")
+ax2.set_title("Dimensionned frame")

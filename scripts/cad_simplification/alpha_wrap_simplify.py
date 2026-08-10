@@ -1,6 +1,7 @@
 """
 Showcase of the 'AlphaWrapSimplify' class.
 """
+
 import time
 
 from volmdlr.cad_simplification import AlphaWrapSimplify

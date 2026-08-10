@@ -16,9 +16,10 @@ import design3d.wires
 
 # %% Function -plot-
 
+
 def plot_cutted_contours2d(contour1, contour2, contours):
-    n = int((len(contours) + 1) /2)
-    if int((len(contours) + 1) /2) != ((len(contours) + 1) /2):
+    n = int((len(contours) + 1) / 2)
+    if int((len(contours) + 1) / 2) != ((len(contours) + 1) / 2):
         n += 1
 
     count = 0
@@ -28,16 +29,17 @@ def plot_cutted_contours2d(contour1, contour2, contours):
             if i == j and i == 0:
                 contour1.plot(ax=axs[i][j])
                 for prim in contour2.primitives:
-                    prim.plot(ax=axs[i][j], edge_style=EdgeStyle(width=2, color='r'))
+                    prim.plot(ax=axs[i][j], edge_style=EdgeStyle(width=2, color="r"))
                 axs[i][j].set_title("Contour2d 1 + Contour2d 2")
 
             else:
                 contour1.plot(ax=axs[i][j])
-                contour2.plot(ax=axs[i][j], edge_style=EdgeStyle(color='r'))
+                contour2.plot(ax=axs[i][j], edge_style=EdgeStyle(color="r"))
                 for p in contours[count].primitives:
-                    p.plot(ax=axs[i][j], edge_style=EdgeStyle(width=2, color='b'))
-                    axs[i][j].set_title("Cutted Contour2d n° "+str(count+1))
+                    p.plot(ax=axs[i][j], edge_style=EdgeStyle(width=2, color="b"))
+                    axs[i][j].set_title("Cutted Contour2d n° " + str(count + 1))
                 count += 1
+
 
 # %% Contour 1
 
@@ -69,7 +71,9 @@ points = [
     d3d.Point2D(0.04545459207437027, 0.19659788603626316),
     d3d.Point2D(0.05203818215846509, 0.10517733497317228),
     d3d.Point2D(0.09686210943003962, 0.04545460320088811),
-    d3d.Point2D(0.15573034610061637, 0.04966777166777087), d3d.Point2D(0.20308817713481986, 0.04966773764193705)]
+    d3d.Point2D(0.15573034610061637, 0.04966777166777087),
+    d3d.Point2D(0.20308817713481986, 0.04966773764193705),
+]
 
 contour1 = design3d.wires.Contour2D.from_points(points)
 
@@ -103,7 +107,9 @@ points = [
     d3d.Point2D(0.7969119981329132, 0.012323366834239619),
     d3d.Point2D(0.7828402953854121, 0.0),
     d3d.Point2D(0.21715982313378532, 0.0),
-    d3d.Point2D(0.2030881157414971, 0.012323183603131671), d3d.Point2D(0.2030881575366132, 0.04966771677601732)]
+    d3d.Point2D(0.2030881157414971, 0.012323183603131671),
+    d3d.Point2D(0.2030881575366132, 0.04966771677601732),
+]
 
 
 contour2 = design3d.wires.Contour2D.from_points(points)

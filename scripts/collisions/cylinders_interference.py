@@ -31,12 +31,10 @@ cylinders = [
 volume_model = d3d.core.VolumeModel(cylinders)
 volume_model.babylonjs()
 
-print(
-    f"""
+print(f"""
 Purple & blue:
 min distance computed is {cylinders[0].min_distance_to_other_cylinder(cylinders[1])}m, 
-collision: {cylinders[0].is_intersecting_other_cylinder(cylinders[0])}"""
-)
+collision: {cylinders[0].is_intersecting_other_cylinder(cylinders[0])}""")
 
 
 print("Interpenetration")
@@ -48,14 +46,12 @@ n_points = 2000
 
 for _ in range(n_draws):
     volumes.append(cylinders[1].interference_volume_with_other_cylinder(cylinders[0], n_points=n_points))
-    print(
-        f"interpenetration volume: {volumes[-1]}"
-    )
+    print(f"interpenetration volume: {volumes[-1]}")
 
 end = time()
 print(f"\n{n_draws} draws, {n_points} points")
 print(f"Total interference computation time: {end - start}s")
 print(f"Time per computation: {(end - start)/n_draws}s")
 print(f"Mean interference volume : {sum(volumes) / n_draws} m³")
-print(f'Standard deviation : {numpy.std(volumes)}')
-print(f'Variation coefficient : {(numpy.std(volumes) / (sum(volumes) / n_draws))*100} %')
+print(f"Standard deviation : {numpy.std(volumes)}")
+print(f"Variation coefficient : {(numpy.std(volumes) / (sum(volumes) / n_draws))*100} %")

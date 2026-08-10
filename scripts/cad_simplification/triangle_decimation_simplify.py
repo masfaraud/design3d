@@ -1,6 +1,7 @@
 """
 Showcase of the 'TriangleDecimationSimplify' class.
 """
+
 import time
 
 from volmdlr.cad_simplification import TriangleDecimationSimplify

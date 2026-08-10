@@ -1,6 +1,7 @@
 """
 Showcase of the 'TripleExtrusionSimplify' class.
 """
+
 import time
 
 from volmdlr.cad_simplification import TripleExtrusionSimplify

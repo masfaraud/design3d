@@ -3,14 +3,13 @@ import matplotlib.pyplot as plt
 import design3d
 import design3d.edges
 
-
 i = design3d.Point2D(-0.2, -0.25)
 e = design3d.Point2D(-1, 2)
 s = design3d.Point2D(1.5, 2)
 
-print('i', i)
-print('s', s)
-print('e', e)
+print("i", i)
+print("s", s)
+print("e", e)
 
 a = design3d.edges.Arc2D.from_3_points(s, i, e)
 start1 = design3d.Point2D(-2, -1.5)
@@ -25,9 +24,9 @@ l3 = design3d.edges.LineSegment2D(start3, end3)
 
 
 ax = a.plot()
-l1.plot(ax=ax, color='r')
-l2.plot(ax=ax, color='b')
-l3.plot(ax=ax, color='g')
+l1.plot(ax=ax, color="r")
+l2.plot(ax=ax, color="b")
+l3.plot(ax=ax, color="g")
 ax.set_xlim(-3, 3)
 ax.set_ylim(-3, 3)
 
@@ -58,9 +57,9 @@ l3 = design3d.edges.LineSegment2D(start3, end3)
 
 
 ax = a.plot()
-l1.plot(ax=ax, color='r')
-l2.plot(ax=ax, color='b')
-l3.plot(ax=ax, color='g')
+l1.plot(ax=ax, color="r")
+l2.plot(ax=ax, color="b")
+l3.plot(ax=ax, color="g")
 ax.set_xlim(-3, 3)
 ax.set_ylim(-3, 3)
 
