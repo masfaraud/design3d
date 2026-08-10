@@ -44,7 +44,7 @@ contours = contour.cut_by_wire(wire)
 
 fig, axs = plt.subplots(1, 3)
 
-titles = ["Initial Contour2d + Wire2d", "1st Cutted Contour2d 'green'", "2nd Cutted Contour2d 'blue'"]
+titles = ["Initial Contour2d + Wire2d", "1st Cut Contour2d 'green'", "2nd Cut Contour2d 'blue'"]
 colors = ["g", "b"]
 for i in range(len(axs)):
     contour.plot(ax=axs[i])

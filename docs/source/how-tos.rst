@@ -432,7 +432,7 @@ Object's description
 ArcEllipse3D
 ------------
 
-Object's descrition
+Object's description
 
 .. grid:: 1
 

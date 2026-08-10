@@ -36,8 +36,8 @@ For example, to calculate the intersections between a Ellipse2D and Circle2D you
         p.plot(ax, 'b')
 
 
-Intersections betweeen edges
-****************************
+Intersections between edges
+***************************
 
 Edges are generally objects having a curve as its base tragectoty and a start and end points on that curve.
 We Have edges like LineSegment, Arc, FullArc, ArcEllipse, FullArcEllipse, BSplineCurve, both in 2-D and in 3-D.

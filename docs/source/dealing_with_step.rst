@@ -8,7 +8,7 @@ It is a widely used format in the field of engineering, manufacturing, and produ
 A STEP file is designed to facilitate the seamless exchange of complex 3D product information across various software platforms.
 It provides a standardized way to represent geometric and non-geometric data associated with a product's design, such as its shape, dimensions, assembly structure, materials, and other attributes.
 
-To help users coming from another CAD software, the Volmdlr library provides a module called `step.py that enables you to import STEP files and perform powerfull analysis within design3d features.
+To help users coming from another CAD software, the design3d library provides a module called `step.py that enables you to import STEP files and perform powerful analysis within design3d features.
 
 Import a STEP file
 *****************

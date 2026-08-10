@@ -8283,7 +8283,7 @@ class BSplineSurface3D(Surface3D):
     @staticmethod
     def _get_params_from_evaluation_position_bounds_and_sizes(index, bounds, sample_size_u, sample_size_v):
         """
-        Gets the values of u, v of an evalution point from its index in a list that follows a known structure.
+        Gets the values of u, v of an evaluation point from its index in a list that follows a known structure.
         """
         u_start, u_stop, v_start, v_stop = bounds
         u_idx = int(index / sample_size_v)

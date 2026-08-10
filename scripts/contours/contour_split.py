@@ -38,9 +38,9 @@ line2.plot(ax=ax1, edge_style=EdgeStyle(color="g"))
 split_contours1 = contour.cut_by_line(line)
 for c in split_contours1:
     c.plot(ax=ax2, edge_style=EdgeStyle(color=random_color()))
-ax2.set_title("{} splitted contours".format(len(split_contours1)))
+ax2.set_title("{} split contours".format(len(split_contours1)))
 
 split_contours2 = contour.cut_by_line(line2)
 for c in split_contours2:
     c.plot(ax=ax3, edge_style=EdgeStyle(color="g"))
-ax3.set_title("{} splitted contours".format(len(split_contours2)))
+ax3.set_title("{} split contours".format(len(split_contours2)))

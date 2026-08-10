@@ -37,7 +37,7 @@ def plot_cutted_contours2d(contour1, contour2, contours):
                 contour2.plot(ax=axs[i][j], edge_style=EdgeStyle(color="r"))
                 for p in contours[count].primitives:
                     p.plot(ax=axs[i][j], edge_style=EdgeStyle(width=2, color="b"))
-                    axs[i][j].set_title("Cutted Contour2d n° " + str(count + 1))
+                    axs[i][j].set_title("Cut Contour2d n° " + str(count + 1))
                 count += 1
 
 
