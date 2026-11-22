@@ -33,5 +33,5 @@ l = d3de.LineSegment2D(p2, a.circle.center)
 # list_node = a.Discretise()
 
 c = d3dw.Contour2D([a, l])
-print(c.plot_data())
+c.plot()
 print(c.area())
