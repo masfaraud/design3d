@@ -8,8 +8,8 @@ Created on Thu Mar 3 2022.
 
 # %% Libraries
 from geomdl import BSpline
-import volmdlr as d3d
-from volmdlr import faces, surfaces
+import design3d as d3d
+from design3d import faces, surfaces
 
 # %% Surface 1
 # %%% Control points

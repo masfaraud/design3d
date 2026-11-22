@@ -9,7 +9,7 @@
 
 import json
 
-import dessia_common.core as dc
+from design3d.base import SerializableObject
 import geomdl
 
 import design3d as d3d
@@ -187,4 +187,4 @@ bspline_face = d3df.BSplineFace3D.from_surface_rectangular_cut(bspline_surface, 
 # bspline_face.babylonjs()
 
 
-bspline_face2 = dc.DessiaObject.dict_to_object(json.loads(json.dumps(bspline_face.to_dict())))
+bspline_face2 = SerializableObject.dict_to_object(json.loads(json.dumps(bspline_face.to_dict())))

@@ -9,8 +9,8 @@ import random
 
 import matplotlib.pyplot as plt
 
-import volmdlr as d3d
-import volmdlr.edges as d3de
+import design3d as d3d
+import design3d.edges as d3de
 
 ##### cas 9 arc/arc
 

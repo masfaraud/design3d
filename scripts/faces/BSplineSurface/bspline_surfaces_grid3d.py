@@ -9,7 +9,13 @@
 
 import design3d as d3d
 import design3d.grid
-from design3d.models import bspline_surfaces
+
+# bspline_surfaces model is defined in the scripts root folder (run from this script folder)
+import os  # noqa: E402
+import sys  # noqa: E402
+
+sys.path.insert(0, os.path.abspath(os.path.join("..", "..")))
+import bspline_surfaces  # noqa: E402
 from design3d import faces
 
 bspline_faces = [

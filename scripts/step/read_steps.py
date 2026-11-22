@@ -3,10 +3,10 @@
 import io
 import os
 
-# import volmdlr as d3d
-import volmdlr.step
+# import design3d as d3d
+import design3d.step
 
-# import volmdlr.cloud as d3dcd
+# import design3d.cloud as d3dcd
 
 for step_file in [
     "tore1.step",
@@ -20,7 +20,7 @@ for step_file in [
 ]:
     print("Reading step file: ", step_file)
     # filepath = os.path.join('step', step_file)
-    step = volmdlr.step.Step.from_file(filepath=step_file)
+    step = design3d.step.Step.from_file(filepath=step_file)
     model = step.to_volume_model()
     assert len(model.primitives) > 0.0
     model.to_step(step_file + "_reexport")
@@ -29,7 +29,7 @@ for step_file in [
     model.babylonjs()
 
     file_io = io.FileIO(step_file, "r")
-    step = volmdlr.step.Step.from_stream(stream=file_io)
+    step = design3d.step.Step.from_stream(stream=file_io)
     model = step.to_volume_model()
     assert len(model.primitives) > 0.0
     model.to_step(step_file + "_reexport")
@@ -39,4 +39,5 @@ for step_file in [
     # model2 = model.copy()
     # assert model == model2
 
-    model._check_platform()
+    # Serialization round trip
+    design3d.core.VolumeModel.dict_to_object(model.to_dict())

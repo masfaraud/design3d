@@ -1,5 +1,5 @@
-import volmdlr as d3d
-from volmdlr import faces, wires
+import design3d as d3d
+from design3d import faces, wires
 
 polygons = [
     (

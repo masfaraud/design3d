@@ -6,12 +6,12 @@ Created on Wed Mar 14 15:32:37 2018
 @author: Steven Masfaraud masfaraud@dessia.tech
 """
 
-# import volmdlr.primitives2D as primitives2D
+# import design3d.primitives2D as primitives2D
 import numpy as npy
 
-import volmdlr as d3d
-import volmdlr.edges as d3de
-import volmdlr.wires as d3dw
+import design3d as d3d
+import design3d.edges as d3de
+import design3d.wires as d3dw
 
 # for i in range(20):
 triangle_points = [d3d.Point2D.random(0, 1, 0, 1) for i in range(3)]

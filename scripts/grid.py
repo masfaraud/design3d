@@ -10,9 +10,9 @@ Created on Wed Mar 2 2022
 
 import matplotlib.pyplot as plt
 
-import volmdlr
-import volmdlr.grid
-from volmdlr.core import EdgeStyle
+import design3d
+import design3d.grid
+from design3d.core import EdgeStyle
 
 # %% Grid2D
 
@@ -21,7 +21,7 @@ y_limits = (0, 1)
 points_nbr = (5, 5)
 direction = ["+x", "+y"]
 
-grid2d = volmdlr.grid.Grid2D.from_properties(x_limits, y_limits, points_nbr, direction)
+grid2d = design3d.grid.Grid2D.from_properties(x_limits, y_limits, points_nbr, direction)
 
 patterns = grid2d.grid_pattern()
 

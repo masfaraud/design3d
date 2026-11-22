@@ -12,12 +12,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.spatial import Delaunay
 
-import volmdlr as d3d
-import volmdlr.cloud
-import volmdlr.core
-import volmdlr.edges as d3de
-import volmdlr.faces as d3df
-import volmdlr.wires as d3dw
+import design3d as d3d
+import design3d.cloud
+import design3d.core
+import design3d.edges as d3de
+import design3d.faces as d3df
+import design3d.wires as d3dw
 
 polygons_points = [
     [

@@ -9,9 +9,9 @@ import random
 
 import matplotlib.pyplot as plt
 
-import volmdlr as d3d
-import volmdlr.edges as d3de
-from volmdlr.utils.common_operations import minimum_distance_points_circle3d_linesegment3d
+import design3d as d3d
+import design3d.edges as d3de
+from design3d.utils.common_operations import minimum_distance_points_circle3d_linesegment3d
 
 ### Cas arc/LS
 

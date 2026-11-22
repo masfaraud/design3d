@@ -4,8 +4,8 @@ Showcase of the 'AlphaWrapSimplify' class.
 
 import time
 
-from volmdlr.cad_simplification import AlphaWrapSimplify
-from volmdlr.step import Step
+from design3d.cad_simplification import AlphaWrapSimplify
+from design3d.step import Step
 
 # Load
 volume_model = Step.from_file("../step/engine.step").to_volume_model()
