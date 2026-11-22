@@ -250,7 +250,10 @@ class TestConicalSurface3D(unittest.TestCase):
         self.assertTrue(contour.is_ordered())
 
     def test_bsplinecurve3d_to_2d(self):
-        conical_surface3 = self.conical_surface3
+        # The control points below lie on this cone, not on self.conical_surface3
+        conical_surface3 = surfaces.ConicalSurface3D(
+            Frame3D(Point3D(0.0, 0.0, -0.0022143719324716786), X3D, Y3D, Z3D), 1.0471975511966
+        )
         control_points = [
             design3d.Point3D(-0.00235270234694772, 0.004075, 0.000502294734194974),
             design3d.Point3D(-0.00158643061573795, 0.004075, 0.000281091139051792),
@@ -313,7 +316,7 @@ class TestConicalSurface3D(unittest.TestCase):
         conical_surface = surfaces.ConicalSurface3D(design3d.OXYZ, math.pi / 6, 0.5773502691896257)
         expected_number_intersections = [2, 2, 2, 1, 0, 2]
         for i, line in enumerate(lines):
-            intersections = self.conical_surface1.line_intersections(line)
+            intersections = conical_surface.line_intersections(line)
             self.assertEqual(len(intersections), expected_number_intersections[i])
             for intersection in intersections:
                 self.assertTrue(line.point_belongs(intersection))
