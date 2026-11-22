@@ -866,18 +866,6 @@ class Step:
         # remove first point because it refers to origin
         return points3d[1:]
 
-    def plot_data(self):
-        graph = self.graph().copy()
-
-        graph.remove_nodes_from(
-            [
-                stepfunction.id
-                for stepfunction in self.functions.values()
-                if stepfunction.name in ["CARTESIAN_POINT", "DIRECTION"]
-            ]
-        )
-        return [plot_data.graph.NetworkxGraph(graph=graph)]
-
 
 @dataclass
 class StepReaderReport:
