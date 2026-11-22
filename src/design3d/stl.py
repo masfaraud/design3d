@@ -6,17 +6,32 @@ STL reader & writer.
 https://en.wikipedia.org/wiki/STL_(file_format)
 """
 
+import os
 import struct
 import warnings
 from typing import List
 
-from binaryornot.check import is_binary
 from kaitaistruct import KaitaiStream
 
 import design3d as d3d
 import design3d.core as d3dc
 import design3d.faces as d3df
 from design3d import shells
+
+
+def is_binary(filepath: str) -> bool:
+    """
+    Tells if an STL file is in binary format.
+
+    A binary STL is an 80 bytes header, a 4 bytes triangle count, then 50 bytes per triangle.
+    """
+    file_size = os.path.getsize(filepath)
+    if file_size < 84:
+        return False
+    with open(filepath, "rb") as file:
+        file.seek(80)
+        number_triangles = struct.unpack("<I", file.read(4))[0]
+    return file_size == 84 + 50 * number_triangles
 
 
 class Stl:

@@ -159,7 +159,6 @@ setup(
         "networkx",
         "triangle",
         "kaitaistruct",
-        "binaryornot",
         "sympy",
         "trimesh",
         "rtree",
