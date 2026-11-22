@@ -1,9 +1,12 @@
+import os
 import unittest
 from geomdl import utilities
 
 import design3d
 from design3d import edges, curves
 import design3d.step
+
+folder = os.path.dirname(os.path.realpath(__file__))
 
 
 class TestEdge(unittest.TestCase):
@@ -59,14 +62,14 @@ class TestEdge(unittest.TestCase):
     def test_trim(self):
         point1 = design3d.Point3D(0.1744332430903422, 0.033444245563080795, 0.07798520478978595)
         point2 = design3d.Point3D(0.177922447446, 0.03351981629780013, 0.07827867754649165)
-        arc3d = edges.Arc3D.from_json("edges/arc3d_split_between_two_points.json")
+        arc3d = edges.Arc3D.from_json(os.path.join(folder, "arc3d_split_between_two_points.json"))
         new_arc3d = arc3d.trim(point1, point2)
         self.assertTrue(new_arc3d)
         self.assertTrue(new_arc3d.start.is_close(point2))
         self.assertTrue(new_arc3d.end.is_close(point1))
 
     def test_from_step(self):
-        step = design3d.step.Step.from_file(filepath="edges/test_edge_from_step.stp")
+        step = design3d.step.Step.from_file(filepath=os.path.join(folder, "test_edge_from_step.stp"))
         model = step.to_volume_model()
         self.assertTrue(model.primitives[0].faces[0].outer_contour3d.is_ordered())
 

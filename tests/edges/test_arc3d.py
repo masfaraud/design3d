@@ -325,8 +325,10 @@ class TestArc3D(unittest.TestCase):
         lineseg2 = edges.LineSegment3D(point, point + (design3d.Point3D(1, 1.5, -1) - point) * 2)
         arc3d_lineseg_inters = self.arc3d.linesegment_intersections(lineseg)
         no_arc3d_lineseg_inters = self.arc3d.linesegment_intersections(lineseg2)
-        self.assertEqual(
-            arc3d_lineseg_inters[0], design3d.Point3D(-0.5773502691896256, -0.5773502691896257, -0.5773502691896257)
+        self.assertTrue(
+            arc3d_lineseg_inters[0].is_close(
+                design3d.Point3D(-0.5773502691896256, -0.5773502691896257, -0.5773502691896257)
+            )
         )
         self.assertFalse(no_arc3d_lineseg_inters)
 

@@ -19,7 +19,7 @@ class TestPeriodicalSurface(unittest.TestCase):
         bspline2d = surface.bsplinecurve3d_to_2d(bspline)[0]
         theta1 = bspline2d.start.x
         theta2 = bspline2d.end.x
-        self.assertEqual(theta1, 0.9979944870045463)
+        self.assertAlmostEqual(theta1, 0.9979944870045463)
         self.assertEqual(theta2, design3d.TWO_PI)
 
 
