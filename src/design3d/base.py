@@ -237,7 +237,7 @@ class SerializableObject:
         else:
             package_version = None
 
-        dict_ = {"object_class": self.full_classname}
+        dict_ = {"object_class": self.full_classname, "name": getattr(self, "name", "")}
         if package_version:
             dict_["package_version"] = package_version
         return dict_
