@@ -2455,6 +2455,18 @@ class TestBSplineSurface3D(unittest.TestCase):
         bezier_patches = surface.decompose()
         self.assertEqual(len(bezier_patches), 116)
 
+    def test_evaluation_follows_sample_size(self):
+        surface = surfaces.BSplineSurface3D.from_json(os.path.join(folder, "periodic_surface_smallbsplinecurve3d.json"))
+        self.assertEqual(len(surface.evalpts), surface.sample_size_u * surface.sample_size_v)
+        self.assertEqual(len(surface.vertices()), surface.sample_size_u * surface.sample_size_v)
+
+        # Changing the sampling after a first evaluation must not keep the points of the previous grid.
+        surface.sample_size_u, surface.sample_size_v = 8, 5
+        self.assertEqual(len(surface.evalpts), 40)
+        self.assertEqual(len(surface.vertices()), 40)
+        for (u, v), point in zip(surface.vertices(), surface.evalpts):
+            self.assertTrue(surface.point2d_to_3d(design3d.Point2D(u, v)).is_close(design3d.Point3D(*point)))
+
     def test_index_off_singular_line(self):
         # Polar grid: the line at radius 0 is a singular line, all its points are the origin.
         angles = np.linspace(0.0, 1.5 * np.pi, 7)

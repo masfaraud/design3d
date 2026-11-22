@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   parametric point, instead of an ill-conditioned point inversion
 - BSplineSurface3D: point inversion near a singularity no longer depends on rounding to pick its starting point,
   which could give an open face contour on some platforms
+- BSplineSurface3D: changing the sample size now resets the points evaluated on the previous sampling grid
 
 ### Build
 

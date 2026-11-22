@@ -7575,8 +7575,15 @@ class BSplineSurface3D(Surface3D):
         if float(value) <= 0 or float(value) >= 1:
             raise ValueError("Surface evaluation delta (u-direction) must be between 0.0 and 1.0")
 
-        # Set new delta value
-        self._delta[0] = float(value)
+        # Set new delta value, the evaluation cache of the previous grid is no longer valid
+        if float(value) != self._delta[0]:
+            self._delta[0] = float(value)
+            self._reset_sampling_cache()
+
+    def _reset_sampling_cache(self):
+        """Clears the points evaluated on the sampling grid, after the sample size has changed."""
+        self._eval_points = None
+        self._vertices = None
 
     @property
     def delta_v(self):
@@ -7595,8 +7602,10 @@ class BSplineSurface3D(Surface3D):
         if float(value) <= 0 or float(value) >= 1:
             raise ValueError("Surface evaluation delta (v-direction) should be between 0.0 and 1.0")
 
-        # Set new delta value
-        self._delta[1] = float(value)
+        # Set new delta value, the evaluation cache of the previous grid is no longer valid
+        if float(value) != self._delta[1]:
+            self._delta[1] = float(value)
+            self._reset_sampling_cache()
 
     @property
     def delta(self):
