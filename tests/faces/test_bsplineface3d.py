@@ -1487,7 +1487,7 @@ class TestBSplineFace3D(unittest.TestCase):
         contour3d = wires.Contour3D.from_json(os.path.join(folder, "bsplineface_closed_surface_3_contour.json"))
         face = faces.BSplineFace3D.from_contours3d(surface, [contour3d])
         self.assertTrue(face.surface2d.outer_contour.is_ordered())
-        self.assertAlmostEqual(face.surface2d.area(), 0.9870950470519074, 2)
+        self.assertAlmostEqual(face.surface2d.area(), 0.999831428093051, 2)
 
         surface = surfaces.BSplineSurface3D.from_json(os.path.join(folder, "bsplineface_spiral_bug_surface.json"))
         contour3d = wires.Contour3D.from_json(os.path.join(folder, "bsplineface_spiral_bug_contour.json"))

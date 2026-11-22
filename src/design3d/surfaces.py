@@ -8783,19 +8783,19 @@ class BSplineSurface3D(Surface3D):
         """
         Helper function to fix start and end points on surfaces with singularities.
         """
+        # The rest of the edge is a line along u or v: the singular point takes the constant coordinate of its
+        # neighbour parametric point. Inverting a 3D point close to the singularity instead is ill-conditioned there.
         start = parametric_points[0].copy()
         end = parametric_points[-1].copy()
-        point_after_start = self.point3d_to_2d(edge3d.point_at_abscissa(0.02 * edge3d.length()))
-        point_before_end = self.point3d_to_2d(edge3d.point_at_abscissa(0.98 * edge3d.length()))
         fixed = False
         if start_flag := self.is_singularity_point(edge3d.start) and self._is_line_segment(parametric_points[1:]):
             direction_vector = parametric_points[-1] - parametric_points[-2]
             if direction_vector.is_colinear_to(design3d.X2D, 1e-2):
-                start.y = point_after_start.y
+                start.y = parametric_points[1].y
                 parametric_points[0] = start
                 fixed = True
             elif direction_vector.is_colinear_to(design3d.Y2D, 1e-2):
-                start.x = point_after_start.x
+                start.x = parametric_points[1].x
                 parametric_points[0] = start
                 fixed = True
             else:
@@ -8803,11 +8803,11 @@ class BSplineSurface3D(Surface3D):
         if end_flag := self.is_singularity_point(edge3d.end) and self._is_line_segment(parametric_points[:-1]):
             direction_vector = parametric_points[1] - parametric_points[0]
             if direction_vector.is_colinear_to(design3d.X2D, 1e-2):
-                end.y = point_before_end.y
+                end.y = parametric_points[-2].y
                 parametric_points[-1] = end
                 fixed = True
             elif direction_vector.is_colinear_to(design3d.Y2D, 1e-2):
-                end.x = point_before_end.x
+                end.x = parametric_points[-2].x
                 parametric_points[-1] = end
                 fixed = True
             else:
