@@ -6430,7 +6430,7 @@ class ExtrusionSurface3D(Surface3D):
             u_values[u_values < 0] += self.x_periodicity
         v_values = points[:, 1]
 
-        points_at_curve = np.asarray([self.edge.point_at_abscissa(u) for u in u_values])
+        points_at_curve = np.asarray([self.edge.point_at_abscissa(u) for u in u_values[:, 0]])
 
         return points_at_curve + v_values * z
 
@@ -6877,7 +6877,7 @@ class RevolutionSurface3D(UPeriodicalSurface):
 
         cos_u = np.cos(u_values)
 
-        points_at_curve = np.asarray([self.edge.point_at_abscissa(v) for v in v_values])
+        points_at_curve = np.asarray([self.edge.point_at_abscissa(v) for v in v_values[:, 0]])
         points_at_curve_minus_center = points_at_curve - center
 
         return (
