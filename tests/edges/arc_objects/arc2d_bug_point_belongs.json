@@ -5,7 +5,9 @@
     "object_class": "design3d.curves.Circle2D",
     "name": "",
     "center": {
-      "$ref": "#/_references/63c5c30d-150f-11ee-a569-68545aefcc97"
+      "object_class": "design3d.Point2D",
+      "x": -3.202390890400004,
+      "y": -0.2780888335399998
     },
     "radius": 3.22798446159,
     "frame": {
@@ -42,15 +44,10 @@
     "y": 0.006529636830000074
   },
   "center": {
-    "$ref": "#/_references/63c5c30d-150f-11ee-a569-68545aefcc97"
+    "object_class": "design3d.Point2D",
+    "x": -3.202390890400004,
+    "y": -0.2780888335399998
   },
   "angle1": 0.08627328934363958,
-  "angle2": 0.08828684169077536,
-  "_references": {
-    "63c5c30d-150f-11ee-a569-68545aefcc97": {
-      "object_class": "design3d.Point2D",
-      "x": -3.202390890400004,
-      "y": -0.2780888335399998
-    }
-  }
+  "angle2": 0.08828684169077536
 }

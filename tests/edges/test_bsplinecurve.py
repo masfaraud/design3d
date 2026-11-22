@@ -23,7 +23,7 @@ dict_bspline = {
     "start": {"object_class": "design3d.Point2D", "x": -0.4544751134860842, "y": 1.5707977686871983, "name": ""},
     "end": {"object_class": "design3d.Point2D", "x": -0.3124009292097013, "y": -3.141592653588988, "name": ""},
     "control_points": [
-        {"$ref": "#/start"},
+        {"object_class": "design3d.Point2D", "x": -0.4544751134860842, "y": 1.5707977686871983, "name": ""},
         {"object_class": "design3d.Point2D", "x": -0.4553429239113792, "y": 1.620595708870625, "name": ""},
         {"object_class": "design3d.Point2D", "x": -0.45583687948274487, "y": 1.7225897961445817, "name": ""},
         {"object_class": "design3d.Point2D", "x": -0.4520590939005643, "y": 1.8859455670744714, "name": ""},
@@ -41,7 +41,7 @@ dict_bspline = {
         {"object_class": "design3d.Point2D", "x": -0.31834827936261717, "y": 3.031890968787418, "name": ""},
         {"object_class": "design3d.Point2D", "x": -0.31362756905698363, "y": 3.086173401011527, "name": ""},
         {"object_class": "design3d.Point2D", "x": -0.31239657524755504, "y": 3.1230758830026706, "name": ""},
-        {"$ref": "#/end"},
+        {"object_class": "design3d.Point2D", "x": -0.3124009292097013, "y": -3.141592653588988, "name": ""},
     ],
     "knots": [
         0.0,
@@ -64,7 +64,7 @@ dict_bspline = {
     ],
     "knot_multiplicities": [4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4],
     "points": [
-        {"$ref": "#/start"},
+        {"object_class": "design3d.Point2D", "x": -0.4544751134860842, "y": 1.5707977686871983, "name": ""},
         {"object_class": "design3d.Point2D", "x": -0.4548466635787877, "y": 1.5950384158111264, "name": ""},
         {"object_class": "design3d.Point2D", "x": -0.45511756697976646, "y": 1.6194803667255397, "name": ""},
         {"object_class": "design3d.Point2D", "x": -0.45528447308284226, "y": 1.6441370032839118, "name": ""},
@@ -163,7 +163,7 @@ dict_bspline = {
         {"object_class": "design3d.Point2D", "x": -0.3128156865577697, "y": 2.255734781785127, "name": ""},
         {"object_class": "design3d.Point2D", "x": -0.3125862361892262, "y": 1.1760661662539973, "name": ""},
         {"object_class": "design3d.Point2D", "x": -0.3124467948790285, "y": -0.569994609360928, "name": ""},
-        {"$ref": "#/end"},
+        {"object_class": "design3d.Point2D", "x": -0.3124009292097013, "y": -3.141592653588988, "name": ""},
     ],
 }
 

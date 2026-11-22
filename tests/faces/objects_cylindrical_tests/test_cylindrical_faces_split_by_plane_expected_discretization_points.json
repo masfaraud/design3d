@@ -128,7 +128,10 @@
     ],
     [
       {
-        "$ref": "#/_references/1f57da1a-5324-11ee-9202-d2c33e3011fe"
+        "object_class": "design3d.Point3D",
+        "x": 0.08947272158327713,
+        "y": -0.12039365470190433,
+        "z": 0.2500000000000461
       },
       {
         "object_class": "design3d.Point3D",
@@ -187,7 +190,10 @@
     ],
     [
       {
-        "$ref": "#/_references/1f57da1a-5324-11ee-9202-d2c33e3011fe"
+        "object_class": "design3d.Point3D",
+        "x": 0.08947272158327713,
+        "y": -0.12039365470190433,
+        "z": 0.2500000000000461
       },
       {
         "object_class": "design3d.Point3D",
@@ -238,16 +244,11 @@
         "z": 0.25
       },
       {
-        "$ref": "#/_references/1f57da1a-5324-11ee-9202-d2c33e3011fe"
+        "object_class": "design3d.Point3D",
+        "x": 0.08947272158327713,
+        "y": -0.12039365470190433,
+        "z": 0.2500000000000461
       }
     ]
-  ],
-  "_references": {
-    "1f57da1a-5324-11ee-9202-d2c33e3011fe": {
-      "object_class": "design3d.Point3D",
-      "x": 0.08947272158327713,
-      "y": -0.12039365470190433,
-      "z": 0.2500000000000461
-    }
-  }
+  ]
 }

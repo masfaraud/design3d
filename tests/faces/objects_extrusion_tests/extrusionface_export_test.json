@@ -3,11 +3,6 @@
   "name": "",
   "primitives": [
     {
-      "$ref": "#/_references/b859b469-7a5e-11ee-a75a-68545aefcc97"
-    }
-  ],
-  "_references": {
-    "b859b469-7a5e-11ee-a75a-68545aefcc97": {
       "object_class": "design3d.shells.OpenShell3D",
       "name": "",
       "color": null,
@@ -589,5 +584,5 @@
         "zmax": -7.752538186351
       }
     }
-  }
+  ]
 }

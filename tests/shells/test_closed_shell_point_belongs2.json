@@ -3,17 +3,6 @@
   "name": "",
   "primitives": [
     {
-      "$ref": "#/_references/b973194e-fca7-11ed-9dda-d2c33e3011fd"
-    },
-    {
-      "object_class": "design3d.Point3D",
-      "x": -0.287522562519,
-      "y": -0.574786328164,
-      "z": 0.157256628036
-    }
-  ],
-  "_references": {
-    "b973194e-fca7-11ed-9dda-d2c33e3011fd": {
       "object_class": "design3d.shells.ClosedShell3D",
       "name": "",
       "color": [
@@ -3177,6 +3166,12 @@
         "zmin": -0.018,
         "zmax": 0.382586578369
       }
+    },
+    {
+      "object_class": "design3d.Point3D",
+      "x": -0.287522562519,
+      "y": -0.574786328164,
+      "z": 0.157256628036
     }
-  }
+  ]
 }

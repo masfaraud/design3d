@@ -244,122 +244,230 @@
   "control_points_table": [
     [
       {
-        "$ref": "#/control_points/0"
+        "object_class": "design3d.Point3D",
+        "x": 1.21051315299,
+        "y": -0.8981178718239999,
+        "z": 0.9493104138239999
       },
       {
-        "$ref": "#/control_points/1"
+        "object_class": "design3d.Point3D",
+        "x": 1.21051408735,
+        "y": -0.898117855027,
+        "z": 0.949385063733
       },
       {
-        "$ref": "#/control_points/2"
+        "object_class": "design3d.Point3D",
+        "x": 1.2105150202800001,
+        "y": -0.898103987707,
+        "z": 0.9494597120439999
       },
       {
-        "$ref": "#/control_points/3"
+        "object_class": "design3d.Point3D",
+        "x": 1.2105158977100001,
+        "y": -0.89807625342,
+        "z": 0.949530905912
       },
       {
-        "$ref": "#/control_points/4"
+        "object_class": "design3d.Point3D",
+        "x": 1.21051666607,
+        "y": -0.898035986644,
+        "z": 0.949595214099
       },
       {
-        "$ref": "#/control_points/5"
+        "object_class": "design3d.Point3D",
+        "x": 1.21051728912,
+        "y": -0.897985530456,
+        "z": 0.949650105626
       }
     ],
     [
       {
-        "$ref": "#/control_points/6"
+        "object_class": "design3d.Point3D",
+        "x": 1.21057928725,
+        "y": -0.8981178651389999,
+        "z": 0.949309771363
       },
       {
-        "$ref": "#/control_points/7"
+        "object_class": "design3d.Point3D",
+        "x": 1.21058574624,
+        "y": -0.898117847539,
+        "z": 0.949382591253
       },
       {
-        "$ref": "#/control_points/8"
+        "object_class": "design3d.Point3D",
+        "x": 1.21059220405,
+        "y": -0.8981045266580001,
+        "z": 0.949455409388
       },
       {
-        "$ref": "#/control_points/9"
+        "object_class": "design3d.Point3D",
+        "x": 1.21059837601,
+        "y": -0.8980778877560001,
+        "z": 0.949525002658
       },
       {
-        "$ref": "#/control_points/10"
+        "object_class": "design3d.Point3D",
+        "x": 1.21060397846,
+        "y": -0.8980391657850001,
+        "z": 0.949588166885
       },
       {
-        "$ref": "#/control_points/11"
+        "object_class": "design3d.Point3D",
+        "x": 1.2106087928,
+        "y": -0.897990536184,
+        "z": 0.949642506892
       }
     ],
     [
       {
-        "$ref": "#/control_points/12"
+        "object_class": "design3d.Point3D",
+        "x": 1.21064536344,
+        "y": -0.898117859848,
+        "z": 0.9493030269480001
       },
       {
-        "$ref": "#/control_points/13"
+        "object_class": "design3d.Point3D",
+        "x": 1.21065713984,
+        "y": -0.8981178413170001,
+        "z": 0.94937359854
       },
       {
-        "$ref": "#/control_points/14"
+        "object_class": "design3d.Point3D",
+        "x": 1.2106689153299999,
+        "y": -0.898104950839,
+        "z": 0.949444168235
       },
       {
-        "$ref": "#/control_points/15"
+        "object_class": "design3d.Point3D",
+        "x": 1.21068021997,
+        "y": -0.898079174684,
+        "z": 0.9495117252830001
       },
       {
-        "$ref": "#/control_points/16"
+        "object_class": "design3d.Point3D",
+        "x": 1.21069058473,
+        "y": -0.8980416797520001,
+        "z": 0.949573276291
       },
       {
-        "$ref": "#/control_points/17"
+        "object_class": "design3d.Point3D",
+        "x": 1.21069963194,
+        "y": -0.8979945230759999,
+        "z": 0.94962656522
       }
     ],
     [
       {
-        "$ref": "#/control_points/18"
+        "object_class": "design3d.Point3D",
+        "x": 1.2107100671600002,
+        "y": -0.898117856142,
+        "z": 0.949289938614
       },
       {
-        "$ref": "#/control_points/19"
+        "object_class": "design3d.Point3D",
+        "x": 1.21072712147,
+        "y": -0.898117836785,
+        "z": 0.949357981923
       },
       {
-        "$ref": "#/control_points/20"
+        "object_class": "design3d.Point3D",
+        "x": 1.2107441750999999,
+        "y": -0.8981052603220001,
+        "z": 0.949426023218
       },
       {
-        "$ref": "#/control_points/21"
+        "object_class": "design3d.Point3D",
+        "x": 1.21076058827,
+        "y": -0.8980801136390001,
+        "z": 0.949491235551
       },
       {
-        "$ref": "#/control_points/22"
+        "object_class": "design3d.Point3D",
+        "x": 1.2107757221,
+        "y": -0.8980435188479999,
+        "z": 0.9495508084700001
       },
       {
-        "$ref": "#/control_points/23"
+        "object_class": "design3d.Point3D",
+        "x": 1.21078905184,
+        "y": -0.897997453824,
+        "z": 0.9496026162660001
       }
     ],
     [
       {
-        "$ref": "#/control_points/24"
+        "object_class": "design3d.Point3D",
+        "x": 1.2107715347799999,
+        "y": -0.89811785428,
+        "z": 0.949270214982
       },
       {
-        "$ref": "#/control_points/25"
+        "object_class": "design3d.Point3D",
+        "x": 1.21079423357,
+        "y": -0.8981178348350001,
+        "z": 0.949335692697
       },
       {
-        "$ref": "#/control_points/26"
+        "object_class": "design3d.Point3D",
+        "x": 1.2108169318,
+        "y": -0.898105475125,
+        "z": 0.9494011683610001
       },
       {
-        "$ref": "#/control_points/27"
+        "object_class": "design3d.Point3D",
+        "x": 1.21083877843,
+        "y": -0.8980807627230001,
+        "z": 0.949463961791
       },
       {
-        "$ref": "#/control_points/28"
+        "object_class": "design3d.Point3D",
+        "x": 1.2108589246199999,
+        "y": -0.898044782112,
+        "z": 0.949521408294
       },
       {
-        "$ref": "#/control_points/29"
+        "object_class": "design3d.Point3D",
+        "x": 1.21087668367,
+        "y": -0.897999449167,
+        "z": 0.949571487069
       }
     ],
     [
       {
-        "$ref": "#/control_points/30"
+        "object_class": "design3d.Point3D",
+        "x": 1.21082721953,
+        "y": -0.8981178546190001,
+        "z": 0.949243441793
       },
       {
-        "$ref": "#/control_points/31"
+        "object_class": "design3d.Point3D",
+        "x": 1.2108567134100001,
+        "y": -0.898117837185,
+        "z": 0.9493066911229999
       },
       {
-        "$ref": "#/control_points/32"
+        "object_class": "design3d.Point3D",
+        "x": 1.2108862064400001,
+        "y": -0.8981056458309999,
+        "z": 0.949369938568
       },
       {
-        "$ref": "#/control_points/33"
+        "object_class": "design3d.Point3D",
+        "x": 1.21091449992,
+        "y": -0.8980812694610001,
+        "z": 0.949430613504
       },
       {
-        "$ref": "#/control_points/34"
+        "object_class": "design3d.Point3D",
+        "x": 1.21094040105,
+        "y": -0.898045735727,
+        "z": 0.9494861580130001
       },
       {
-        "$ref": "#/control_points/35"
+        "object_class": "design3d.Point3D",
+        "x": 1.21096299477,
+        "y": -0.898000876856,
+        "z": 0.949534609765
       }
     ]
   ]
