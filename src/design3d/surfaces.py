@@ -8488,7 +8488,7 @@ class BSplineSurface3D(Surface3D):
             results.append((res.x, res.fun))
         return design3d.Point2D(*min(results, key=lambda r: r[1])[0])
 
-    def point_inversion(self, x, point3d, tol, maxiter: int = 50):
+    def point_inversion(self, x, point3d, tol, maxiter: int = 50, seam_switched: bool = False):
         """
         Performs point inversion.
 
@@ -8512,9 +8512,35 @@ class BSplineSurface3D(Surface3D):
             new_x = x
         residual = (new_x[0] - x[0]) * surface_derivatives[1][0] + (new_x[1] - x[1]) * surface_derivatives[0][1]
         if residual.norm() <= 1e-12:
+            # The step is blocked by the domain bounds. On the seam of a periodic direction, the same 3D point is
+            # also at the opposite bound, from where the step may be possible: try once from there.
+            switched_x = None if seam_switched else self._switch_seam_side(x)
+            if switched_x is not None:
+                return self.point_inversion(switched_x, point3d, tol, maxiter=maxiter - 1, seam_switched=True)
             return x, False, dist
         x = new_x
-        return self.point_inversion(x, point3d, tol, maxiter=maxiter - 1)
+        return self.point_inversion(x, point3d, tol, maxiter=maxiter - 1, seam_switched=seam_switched)
+
+    def _switch_seam_side(self, x):
+        """
+        Returns the parameters of the same point on the other side of a periodic seam.
+
+        :return: The switched parameters, or None if x is not on a periodic seam.
+        """
+        u, v = x
+        a, b, c, d = self.domain
+        switched = False
+        if self.x_periodicity:
+            if u == a:
+                u, switched = b, True
+            elif u == b:
+                u, switched = a, True
+        if self.y_periodicity:
+            if v == c:
+                v, switched = d, True
+            elif v == d:
+                v, switched = c, True
+        return [u, v] if switched else None
 
     def point_inversion_funcs(self, x, point3d):
         """Returns functions evaluated at x."""

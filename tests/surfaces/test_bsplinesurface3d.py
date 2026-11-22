@@ -2455,6 +2455,18 @@ class TestBSplineSurface3D(unittest.TestCase):
         bezier_patches = surface.decompose()
         self.assertEqual(len(bezier_patches), 116)
 
+    def test_point_inversion_from_periodic_seam(self):
+        # This surface is periodic in v: v=0 and v=1 are the same seam. The point is close to the seam, on the v=0
+        # side. Starting Newton iterations from the v=1 side must still converge, by crossing the seam.
+        surface = surfaces.BSplineSurface3D.from_json(os.path.join(folder, "periodic_surface_smallbsplinecurve3d.json"))
+        curve = d3de.BSplineCurve3D.from_json(os.path.join(folder, "periodic_surface_smallbsplinecurve3d_curve.json"))
+        point = curve.start
+        for start_on_seam in ([0.0, 0.0], [0.0, 1.0]):
+            uv, converged, distance = surface.point_inversion(start_on_seam, point, 1e-7)
+            self.assertTrue(converged)
+            self.assertLess(distance, 1e-7)
+            self.assertAlmostEqual(uv[1], 0.006419627118992597, 6)
+
     def test_point_inversion_grid_search(self):
         surface = surfaces.BSplineSurface3D.from_json(
             os.path.join(folder, "bsplinesurface_point3d_to_2d_grid_search_1.json")
