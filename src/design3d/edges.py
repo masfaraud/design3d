@@ -34,6 +34,7 @@ from design3d import get_minimum_distance_points_lines, PATH_ROOT
 import design3d.utils.common_operations as d3d_common_operations
 import design3d.utils.intersections as d3d_utils_intersections
 from design3d.core import EdgeStyle
+from design3d.utils.step_writer import step_values_to_str
 
 # pylint: disable=arguments-differ
 
@@ -2278,7 +2279,8 @@ class BSplineCurve2D(BSplineCurve):
         content += (
             f"#{point_id} = B_SPLINE_CURVE_WITH_KNOTS('{self.name}',{self.degree},"
             f"({design3d.core.step_ids_to_str(points_ids)}),"
-            f".UNSPECIFIED.,.F.,.F.,{tuple(self.knot_multiplicities)},{tuple(self.knots)},.UNSPECIFIED.);\n"
+            f".UNSPECIFIED.,.F.,.F.,{step_values_to_str(self.knot_multiplicities)},"
+            f"{step_values_to_str(self.knots)},.UNSPECIFIED.);\n"
         )
         return content, point_id + 1
 
@@ -5489,8 +5491,8 @@ class BSplineCurve3D(BSplineCurve):
         content += (
             f"#{curve_id} = B_SPLINE_CURVE_WITH_KNOTS('{self.name}',{self.degree},"
             f"({design3d.core.step_ids_to_str(points_ids)}),"
-            f".UNSPECIFIED.,.F.,.F.,{tuple(self.knot_multiplicities)},{tuple(self.knots)},"
-            f".UNSPECIFIED.);\n"
+            f".UNSPECIFIED.,.F.,.F.,{step_values_to_str(self.knot_multiplicities)},"
+            f"{step_values_to_str(self.knots)},.UNSPECIFIED.);\n"
         )
 
         if surface_id and curve2d:

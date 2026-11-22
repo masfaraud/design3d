@@ -27,6 +27,7 @@ import design3d.utils.intersections as d3d_utils_intersections
 import design3d.utils.parametric as d3d_parametric
 from design3d import display, edges, grid, wires, curves
 from design3d.core import EdgeStyle
+from design3d.utils.step_writer import step_values_to_str
 from design3d.nurbs.core import evaluate_surface, derivatives_surface, point_inversion
 from design3d.nurbs.fitting import approximate_surface, interpolate_surface
 from design3d.nurbs.operations import (
@@ -9140,8 +9141,10 @@ class BSplineSurface3D(Surface3D):
 
         content += (
             f"#{current_id} = B_SPLINE_SURFACE_WITH_KNOTS('{self.name}',{self.degree_u},{self.degree_v},"
-            f"{point_matrix_ids},.UNSPECIFIED.,{u_close},{v_close},.F.,{tuple(self.u_multiplicities)},"
-            f"{tuple(self.v_multiplicities)},{tuple(self.u_knots)},{tuple(self.v_knots)},.UNSPECIFIED.);\n"
+            f"{point_matrix_ids},.UNSPECIFIED.,{u_close},{v_close},.F.,"
+            f"{step_values_to_str(self.u_multiplicities)},"
+            f"{step_values_to_str(self.v_multiplicities)},{step_values_to_str(self.u_knots)},"
+            f"{step_values_to_str(self.v_knots)},.UNSPECIFIED.);\n"
         )
         return content, [current_id]
 

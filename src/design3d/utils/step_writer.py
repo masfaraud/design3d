@@ -113,6 +113,19 @@ def step_ids_to_str(ids):
     return ",".join([f"#{i}" for i in ids])
 
 
+def step_values_to_str(values):
+    """
+    Returns a STEP list of numbers, like '(4,1,4)' or '(0.0,0.5,1.0)'.
+
+    Numpy scalars are converted to Python numbers, so that their repr (e.g. 'np.float64(0.5)') is not written.
+
+    :param values: A sequence of integers or floats
+    :return: A string containing the STEP list, with parentheses
+    :rtype: str
+    """
+    return "(" + ",".join(str(value.item() if hasattr(value, "item") else value) for value in values) + ")"
+
+
 STEP_HEADER = """ISO-10303-21;
 HEADER;
 FILE_DESCRIPTION(('{name}'),'2;1');
