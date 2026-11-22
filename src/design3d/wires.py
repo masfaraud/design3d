@@ -2203,15 +2203,19 @@ class Contour2D(ContourMixin, Wire2D):
 
         :return: Contour's center of mass.
         """
-        center = self.edge_polygon.area() * self.edge_polygon.center_of_mass()
+        signed_area = self.edge_polygon.area()
+        center = signed_area * self.edge_polygon.center_of_mass()
         if self.edge_polygon.is_trigo:
             trigo = 1
         else:
             trigo = -1
         for edge in self.primitives:
-            center += trigo * edge.straight_line_area() * edge.straight_line_center_of_mass()
+            edge_area = trigo * edge.straight_line_area()
+            signed_area += edge_area
+            center += edge_area * edge.straight_line_center_of_mass()
 
-        return center / self.area()
+        # Dividing by the signed area keeps the sign consistent with the moments above
+        return center / signed_area
 
     def second_moment_area(self, point):
         """Returns the second moment of are of the contour."""
