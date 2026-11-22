@@ -11,7 +11,7 @@ mesh_data = triangle_shell_1.to_mesh_data(round_vertices=False)
 triangle_shell_2 = ClosedTriangleShell3D.from_mesh_data(mesh_data[0], mesh_data[1])
 
 triangle_shell_1.save_to_file("triangle_shell.json")
-triangle_shell_3 = ClosedTriangleShell3D.load_from_file("triangle_shell.json")
+triangle_shell_3 = ClosedTriangleShell3D.from_json("triangle_shell.json")
 
 print(triangle_shell_3 == triangle_shell_1)
 print(triangle_shell_2 == triangle_shell_1)
