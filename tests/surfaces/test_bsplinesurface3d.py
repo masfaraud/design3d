@@ -2455,6 +2455,28 @@ class TestBSplineSurface3D(unittest.TestCase):
         bezier_patches = surface.decompose()
         self.assertEqual(len(bezier_patches), 116)
 
+    def test_index_off_singular_line(self):
+        # Polar grid: the line at radius 0 is a singular line, all its points are the origin.
+        angles = np.linspace(0.0, 1.5 * np.pi, 7)
+        radii = np.linspace(0.0, 1.0, 5)
+        point = np.array([0.01 * np.cos(angles[4]), 0.01 * np.sin(angles[4]), 0.0])
+
+        # Singular line along u (radius is v): any index of the line is a closest point, the one approaching the
+        # point is the angle index 4.
+        grid = np.array([[r * np.cos(a), r * np.sin(a), 0.0] for a in angles for r in radii])
+        index = surfaces.BSplineSurface3D._index_off_singular_line(grid, point, 0, 7, 5)
+        self.assertEqual(index, 4 * 5 + 0)
+
+        # Same grid with u and v swapped: the singular line is along v.
+        grid = np.array([[r * np.cos(a), r * np.sin(a), 0.0] for r in radii for a in angles])
+        index = surfaces.BSplineSurface3D._index_off_singular_line(grid, point, 6, 5, 7)
+        self.assertEqual(index, 0 * 7 + 4)
+
+        # Grid lines with a single point are left unchanged.
+        self.assertEqual(surfaces.BSplineSurface3D._index_off_singular_line(grid[:7], point, 3, 1, 7), 3)
+        # Points that do not match the grid sizes are left unchanged.
+        self.assertEqual(surfaces.BSplineSurface3D._index_off_singular_line(grid[:7], point, 3, 5, 7), 3)
+
     def test_point_inversion_from_periodic_seam(self):
         # This surface is periodic in v: v=0 and v=1 are the same seam. The point is close to the seam, on the v=0
         # side. Starting Newton iterations from the v=1 side must still converge, by crossing the seam.

@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BSplineSurface3D: point inversion no longer gets stuck when it starts on the seam of a periodic surface
 - BSplineSurface3D: parametric coordinate of an edge start/end lying on a singularity is taken from its neighbour
   parametric point, instead of an ill-conditioned point inversion
+- BSplineSurface3D: point inversion near a singularity no longer depends on rounding to pick its starting point,
+  which could give an open face contour on some platforms
 
 ### Build
 

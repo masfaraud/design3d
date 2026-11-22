@@ -8221,6 +8221,29 @@ class BSplineSurface3D(Surface3D):
         index = indexes[0]
         return index, distances[index]
 
+    @staticmethod
+    def _index_off_singular_line(matrix_points, point, index, sample_size_u, sample_size_v, tol: float = 1e-7):
+        """
+        Fixes the grid index of the closest point when it lies on a singular line of the grid.
+
+        All the points of a singular line are the same 3D point: which one is the closest is decided by rounding,
+        which is platform dependent. The parameter along the singular line is taken from the closest point of the
+        neighbouring grid line instead, which gives the direction from which the point approaches the singularity.
+        """
+        if sample_size_u < 2 or sample_size_v < 2 or len(matrix_points) != sample_size_u * sample_size_v:
+            return index
+        grid = matrix_points.reshape(sample_size_u, sample_size_v, 3)
+        u_idx, v_idx = divmod(int(index), sample_size_v)
+        line = grid[:, v_idx]
+        if v_idx in (0, sample_size_v - 1) and np.linalg.norm(line - line[0], axis=1).max() <= tol:
+            neighbour_line = grid[:, 1 if v_idx == 0 else sample_size_v - 2]
+            u_idx = int(np.argmin(np.linalg.norm(neighbour_line - point, axis=1)))
+        line = grid[u_idx]
+        if u_idx in (0, sample_size_u - 1) and np.linalg.norm(line - line[0], axis=1).max() <= tol:
+            neighbour_line = grid[1 if u_idx == 0 else sample_size_u - 2]
+            v_idx = int(np.argmin(np.linalg.norm(neighbour_line - point, axis=1)))
+        return u_idx * sample_size_v + v_idx
+
     def _point_inversion_initialization(self, point3d_array):
         """
         Helper function to initialize parameters.
@@ -8232,6 +8255,9 @@ class BSplineSurface3D(Surface3D):
             self.sample_size_u, self.sample_size_v = 5, 80
 
         initial_index, minimal_distance = self._find_index_min(self.evalpts, point3d_array)
+        initial_index = self._index_off_singular_line(
+            self.evalpts, point3d_array, initial_index, self.sample_size_u, self.sample_size_v
+        )
 
         u, v, delta_u, delta_v = self._get_params_from_evaluation_position_bounds_and_sizes(
             initial_index, self.domain, self.sample_size_u, self.sample_size_v

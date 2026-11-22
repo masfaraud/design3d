@@ -1,10 +1,12 @@
 import unittest
 import os
+from unittest import mock
 from time import perf_counter
 import design3d
 from design3d import edges, surfaces, wires, faces, core
 import design3d.primitives3d
 
+import numpy as np
 from geomdl import BSpline
 
 # %% Surface 1
@@ -1515,6 +1517,24 @@ class TestBSplineFace3D(unittest.TestCase):
         face = faces.BSplineFace3D.from_contours3d(surface, [contour3d])
         self.assertTrue(face.surface2d.outer_contour.is_ordered(1e-3))
         self.assertAlmostEqual(face.surface2d.area(), 0.06664116660242458, 4)
+
+    def test_from_contours3d_grid_search_tie_at_singularity(self):
+        """
+        Near a singularity, all grid points of the singular line are the same 3D point, at the last bit. Which one
+        is the closest is then decided by rounding (platform dependent) and must not change the resulting face.
+        """
+
+        def find_index_min_first_tie(matrix_points, point):
+            distances = np.linalg.norm(matrix_points - point, axis=1)
+            index = np.argmin(distances)  # First of the tied minima
+            return index, distances[index]
+
+        surface = surfaces.BSplineSurface3D.from_json(os.path.join(folder, "bsplineface_closed_surface_4.json"))
+        contour3d = wires.Contour3D.from_json(os.path.join(folder, "bsplineface_closed_surface_4_contour.json"))
+        with mock.patch.object(surfaces.BSplineSurface3D, "_find_index_min", staticmethod(find_index_min_first_tie)):
+            face = faces.BSplineFace3D.from_contours3d(surface, [contour3d])
+        self.assertTrue(face.surface2d.outer_contour.is_ordered(1e-3))
+        self.assertAlmostEqual(face.surface2d.area(), 0.9661056644919168, 2)
 
     def test_neutral_fiber(self):
         face = faces.BSplineFace3D.from_json(os.path.join(folder, "test_neutral_fiber.json"))
