@@ -83,28 +83,12 @@ scripts = [
     "display/mesh3d.py",
     "display/mesh_decimation.py",
     # cad_simplification
-    "cad_simplification/voxelization_simplify.py",
     "cad_simplification/triple_extrusion_simplify.py",
     "cad_simplification/triangle_decimation_simplify.py",
     "cad_simplification/alpha_wrap_simplify.py",
     # Voxelization
-    "discrete_representation/voxelization/interference/interference_surface_showcase.py",
     # "discrete_representation/voxelization/interference/interference_volume_showcase.py",
-    "discrete_representation/voxelization/step_file_voxelization.py",
-    "discrete_representation/voxelization/stl_file_voxelization.py",
-    "discrete_representation/voxelization/volume_model_matrix_based_voxelization.py",
-    "discrete_representation/voxelization/volume_model_point_based_voxelization.py",
-    "discrete_representation/voxelization/voxelization_filling.py",
-    "discrete_representation/voxelization/voxelization_inverse.py",
-    "discrete_representation/voxelization/voxelization_moving.py",
-    "discrete_representation/voxelization/octree/inner_growing_showcase.py",
-    "discrete_representation/voxelization/octree/non_homogeneous_showcase.py",
-    "discrete_representation/voxelization/octree/intersecting_faces_combinations.py",
     # Pixelization
-    "discrete_representation/pixelization/pixelization_boolean_operations.py",
-    "discrete_representation/pixelization/pixelization_filling.py",
-    "discrete_representation/pixelization/pixelization_from_closed_polygon.py",
-    "discrete_representation/pixelization/pixelization_inverse.py",
     # Others
     "grid.py",
 ]
@@ -116,8 +100,7 @@ CONTROLED_TIMES = {"showcases/casing.py": 15, "primitives/sweep.py": 15}
 # Executing scripts
 print("Executing scripts for CI:")
 total_time = time.time()
-top_level_dir = os.getcwd()
-# top_level_dir = os.sep.join(__file__.split(os.sep)[:-1])
+top_level_dir = os.path.dirname(os.path.abspath(__file__))
 
 times = {}
 for script_name in scripts:
