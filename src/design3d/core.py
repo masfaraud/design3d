@@ -33,7 +33,6 @@ from design3d.utils.step_writer import (
     STEP_FOOTER,
     step_ids_to_str,
 )
-from design3d.geometry import get_transfer_matrix_from_basis
 
 np.seterr(divide="raise")
 
@@ -173,15 +172,8 @@ def map_primitive_with_initial_and_final_frames(primitive, initial_frame, final_
         return primitive
     if initial_frame == primitive:
         return final_frame
-    transfer_matrix = get_transfer_matrix_from_basis(initial_frame.basis(), final_frame.basis())
-    u_vector = design3d.Vector3D(*transfer_matrix[0])
-    v_vector = design3d.Vector3D(*transfer_matrix[1])
-    w_vector = design3d.Vector3D(*transfer_matrix[2])
-    new_frame = design3d.Frame3D(final_frame.origin, u_vector, v_vector, w_vector)
-    if new_frame == design3d.OXYZ:
-        return primitive
-    new_primitive = primitive.frame_mapping(new_frame, "old")
-    return new_primitive
+    # Express the primitive in the initial frame local coordinates, then place these local coordinates in final frame
+    return primitive.frame_mapping(initial_frame, "new").frame_mapping(final_frame, "old")
 
 
 def helper_babylon_data(babylon_data, display_points):
