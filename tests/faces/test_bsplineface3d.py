@@ -3,6 +3,7 @@ import os
 from time import perf_counter
 import design3d
 from design3d import edges, surfaces, wires, faces, core
+import design3d.primitives3d
 
 from geomdl import BSpline
 
