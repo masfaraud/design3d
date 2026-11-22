@@ -15,7 +15,7 @@ import numpy as np
 
 import design3d as d3d
 import design3d.edges as d3de
-import design3d.gmsh_d3d
+import design3d.gmsh_vm
 import design3d.wires as d3dw
 from design3d.core import EdgeStyle
 
@@ -734,7 +734,7 @@ class Mesh:
         :type gmsh_parser: GmshParser
         """
 
-        if not isinstance(gmsh_parser, design3d.gmsh_d3d.GmshParser):
+        if not isinstance(gmsh_parser, design3d.gmsh_vm.GmshParser):
             raise ValueError("It must be design3d.GmshParser class")
         self._gmsh = gmsh_parser
 

@@ -7,14 +7,13 @@ Gmsh and related objects.
 
 from typing import Dict
 
-from dessia_common.core import DessiaObject  # isort: skip
-from dessia_common.files import BinaryFile
 
 import design3d
+from design3d.base import DataEqualityObject
 import design3d.mesh
 
 
-class GmshParser(DessiaObject):
+class GmshParser(DataEqualityObject):
     """
     A class to read and parse a .msh file to extract mesh data.
 
@@ -57,10 +56,8 @@ class GmshParser(DessiaObject):
         self.element_node_data = element_node_data
         self.name = name
 
-        DessiaObject.__init__(self, name=name)
-
     @classmethod
-    def from_file(cls, file_stream: BinaryFile, name: str = ""):
+    def from_file(cls, file_stream: str, name: str = ""):
         """
         Defines a gmsh object from .msh file.
         """

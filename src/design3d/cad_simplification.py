@@ -1,5 +1,5 @@
 """
-volmdlr cad simplification module.
+design3d cad simplification module.
 """
 
 import math
@@ -9,21 +9,20 @@ import numpy as np
 from CGAL.CGAL_Alpha_wrap_3 import alpha_wrap_3
 from CGAL.CGAL_Kernel import Point_3
 from CGAL.CGAL_Polyhedron_3 import Polyhedron_3
-from dessia_common.core import DessiaObject
 
-import volmdlr
-from volmdlr import Point3D
-from volmdlr.cloud import PointCloud3D
-from volmdlr.core import VolumeModel
-from volmdlr.discrete_representation import MatrixBasedVoxelization
-from volmdlr.display import Mesh3D
-from volmdlr.faces import Triangle3D
-from volmdlr.primitives3d import ExtrudedProfile
-from volmdlr.shells import ClosedTriangleShell3D, OpenTriangleShell3D
-from volmdlr.wires import Contour2D
+import design3d
+from design3d import Point3D
+from design3d.cloud import PointCloud3D
+from design3d.base import DataEqualityObject
+from design3d.core import VolumeModel
+from design3d.display import Mesh3D
+from design3d.faces import Triangle3D
+from design3d.primitives3d import ExtrudedProfile
+from design3d.shells import ClosedTriangleShell3D, OpenTriangleShell3D
+from design3d.wires import Contour2D
 
 
-class Simplify(DessiaObject):
+class Simplify(DataEqualityObject):
     """CAD simplification abstract class."""
 
     def __init__(self, volume_model: VolumeModel, name: str = ""):
@@ -36,8 +35,7 @@ class Simplify(DessiaObject):
         :type name: str
         """
         self.volume_model = volume_model
-
-        DessiaObject.__init__(self, name=name)
+        self.name = name
 
 
 class TripleExtrusionSimplify(Simplify):
@@ -52,7 +50,7 @@ class TripleExtrusionSimplify(Simplify):
         """
         points = [Point3D(*point) for point in self.volume_model.to_mesh().vertices]
 
-        point_cloud3d = PointCloud3D([volmdlr.Point3D(*point) for point in points])
+        point_cloud3d = PointCloud3D([design3d.Point3D(*point) for point in points])
         simplified_volume_model = VolumeModel(
             [self.extrusion_union_cloud_simplifier(point_cloud3d)], name=f"{self.volume_model.name} voxel simplified"
         )
@@ -78,15 +76,15 @@ class TripleExtrusionSimplify(Simplify):
         ly = bbox.ymax - bbox.ymin
         lz = bbox.zmax - bbox.zmin
 
-        for w_vector, length, center in zip([volmdlr.X3D, volmdlr.Y3D, volmdlr.Z3D], [lx, ly, lz], bbox.center):
+        for w_vector, length, center in zip([design3d.X3D, design3d.Y3D, design3d.Z3D], [lx, ly, lz], bbox.center):
             u_vector = w_vector.random_unit_normal_vector()
             v_vector = w_vector.cross(u_vector)
 
-            cloud2d = point_cloud3d.to_2d(volmdlr.O3D, u_vector, v_vector)
+            cloud2d = point_cloud3d.to_2d(design3d.O3D, u_vector, v_vector)
             polygon2d = cloud2d.to_polygon(convex=True)
             contour2d = Contour2D(polygon2d.line_segments)
 
-            frame = volmdlr.Frame3D(((center - 0.5 * length) * w_vector).to_point(), u_vector, v_vector, w_vector)
+            frame = design3d.Frame3D(((center - 0.5 * length) * w_vector).to_point(), u_vector, v_vector, w_vector)
             dir_shell = ExtrudedProfile(frame, contour2d, [], length)
             dir_shell.merge_faces()
 
@@ -98,30 +96,6 @@ class TripleExtrusionSimplify(Simplify):
                 simplified_shell = list_shells[0]
 
         return simplified_shell
-
-
-class VoxelizationSimplify(Simplify):
-    """CAD simplification using 'voxelization' method."""
-
-    def simplify(self, voxel_size: float, fill: bool = True) -> VolumeModel:
-        """
-        Simplify the volume model using the 'voxelization' method, and return it.
-
-        :param voxel_size: The size of the voxels used for simplification.
-        :type voxel_size: float
-        :param fill: Control the filling of the voxelization, default is True.
-        :type fill: bool
-
-        :return: The simplified volume model.
-        :rtype: VolumeModel
-        """
-        voxelization = MatrixBasedVoxelization.from_volume_model(
-            self.volume_model, voxel_size, name=f"{self.volume_model.name} voxel simplified"
-        )
-        if fill:
-            voxelization = voxelization.fill_enclosed_voxels()
-
-        return VolumeModel(voxelization.volmdlr_primitives())
 
 
 class TriangleDecimationSimplify(Simplify):
@@ -282,7 +256,7 @@ class AlphaWrapSimplify(Simplify):
 
     @staticmethod
     def _polyhedron_to_shell(polyhedron: Polyhedron_3) -> Union[ClosedTriangleShell3D, OpenTriangleShell3D]:
-        """Convert a CGAL Polyhedron_3 to a volmdlr shell."""
+        """Convert a CGAL Polyhedron_3 to a design3d shell."""
         triangles = []
 
         for facet in polyhedron.facets():  # Iterate over each face
