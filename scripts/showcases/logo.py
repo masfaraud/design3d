@@ -7,11 +7,11 @@ Created on Thu Mar 23 13:03:54 2023
 """
 
 import math
-import volmdlr as d3d
-from volmdlr import core as d3dc
-from volmdlr import wires as d3dw
-from volmdlr import primitives2d as p2d
-from volmdlr import primitives3d as p3d
+import design3d as d3d
+from design3d import core as d3dc
+from design3d import wires as d3dw
+from design3d import primitives2d as p2d
+from design3d import primitives3d as p3d
 
 GAP = 8
 SNAKE_WIDTH = 61
@@ -34,7 +34,7 @@ p8 = d3d.Point2D(-TAIL_OFFSET, -SNAKE_WIDTH - TAIL_OFFSET)
 p9 = d3d.Point2D(-TAIL_OFFSET - SNAKE_WIDTH, -SNAKE_WIDTH - TAIL_OFFSET)
 p10 = d3d.Point2D(-TAIL_OFFSET - SNAKE_WIDTH, 0.0)
 
-snake1_eye = d3dw.Circle2D(eye_center, EYE_RADIUS)
+snake1_eye = d3dw.Contour2D.from_circle(d3d.curves.Circle2D(d3d.Frame2D(eye_center, d3d.X2D, d3d.Y2D), EYE_RADIUS))
 
 snake1_contour = p2d.ClosedRoundedLineSegments2D(
     [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10], {3: radius, 4: radius, 5: radius, 6: radius, 8: radius, 9: radius}
@@ -43,12 +43,10 @@ snake1_contour = p2d.ClosedRoundedLineSegments2D(
 snake1_contour.plot()
 
 snake1 = p3d.ExtrudedProfile(
-    d3d.O3D,
-    d3d.X3D,
-    d3d.Y3D,
+    d3d.OXYZ,
     snake1_contour,
     [snake1_eye],
-    GAP * d3d.Z3D,
+    GAP,
     color=(0.188, 0.412, 0.596),
     name="Blue snake",
 )

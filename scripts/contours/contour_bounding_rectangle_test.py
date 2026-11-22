@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 
-import volmdlr as d3d
-import volmdlr.edges as d3de
-import volmdlr.wires as d3dw
-from volmdlr.core import BoundingRectangle
+import design3d as d3d
+import design3d.edges as d3de
+import design3d.wires as d3dw
+from design3d.core import BoundingRectangle
 
 line_seg1 = d3de.LineSegment2D(d3d.Point2D(-0.5, -0.2), d3d.O2D)
 line_seg2 = d3de.LineSegment2D(d3d.O2D, d3d.Point2D(0.3, 1))

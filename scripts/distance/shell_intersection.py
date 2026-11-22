@@ -1,5 +1,5 @@
-import volmdlr as d3d
-import volmdlr.primitives3d as primitives3d
+import design3d as d3d
+import design3d.primitives3d as primitives3d
 
 resolution = 0.0010
 
@@ -13,8 +13,8 @@ box = primitives3d.Block(
     alpha=0.6,
 )
 
-box.frame_mapping_inplace(
-    d3d.Frame3D(d3d.Point3D(-0.07, -0.07, -0.07), d3d.Point3D(1, 0, 0), d3d.Point3D(0, 1, 0), d3d.Point3D(0, 0, 1)),
+box = box.frame_mapping(
+    d3d.Frame3D(d3d.Point3D(-0.07, -0.07, -0.07), d3d.X3D, d3d.Y3D, d3d.Z3D),
     side="old",
 )
 
@@ -29,7 +29,7 @@ box_red = primitives3d.Block(
     alpha=0.6,
 )
 
-assert type(box_red.shell_intersection(box, resolution=0.001)) == tuple
+assert box_red.is_intersecting_with(box)
 
 vol = d3d.core.VolumeModel([box, box_red])
 vol.babylonjs()

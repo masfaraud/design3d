@@ -6,9 +6,9 @@ Created on Mon Aug 16 12:36:10 2021
 @author: dasilva
 """
 
-import volmdlr as d3d
-import volmdlr.edges as edges
-import volmdlr.wires as wires
+import design3d as d3d
+import design3d.edges as edges
+import design3d.wires as wires
 
 points_poly1 = [
     d3d.Point3D(-0.02785286331176758, 0.14365164184570312, 0.16285931396484374),

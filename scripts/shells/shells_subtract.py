@@ -8,11 +8,11 @@ Created on Wed Jun 14 2023
 
 import numpy as npy
 
-import volmdlr as d3d
-import volmdlr.edges as edges
-import volmdlr.primitives2d as primitives2d
-import volmdlr.primitives3d as primitives3d
-import volmdlr.wires as wires
+import design3d as d3d
+import design3d.edges as edges
+import design3d.primitives2d as primitives2d
+import design3d.primitives3d as primitives3d
+import design3d.wires as wires
 
 
 def get_color():
@@ -33,7 +33,9 @@ radius = {0: 0.01, 2: 0.01, 3: 0.015}
 
 outer_profile = primitives2d.ClosedRoundedLineSegments2D([p1, p2, p3, p4, p5], radius)
 
-profile = primitives3d.ExtrudedProfile(d3d.O3D, d3d.Y3D, d3d.Z3D, outer_profile, [], d3d.X3D * 0.1, name="extrusion")
+profile = primitives3d.ExtrudedProfile(
+    d3d.Frame3D(d3d.O3D, d3d.Y3D, d3d.Z3D, d3d.X3D), outer_profile, [], 0.1, name="extrusion"
+)
 
 shell1 = d3d.shells.ClosedShell3D(profile.faces)
 
@@ -52,7 +54,7 @@ l4 = edges.LineSegment2D(p9, p6)
 outer_profile = wires.Contour2D([l1, l2, l3, l4])
 
 profile = primitives3d.ExtrudedProfile(
-    d3d.Point3D(-0.1, 0, 0), d3d.Y3D, d3d.Z3D, outer_profile, [], d3d.X3D * 0.3, name="extrusion"
+    d3d.Frame3D(d3d.Point3D(-0.1, 0, 0), d3d.Y3D, d3d.Z3D, d3d.X3D), outer_profile, [], 0.3, name="extrusion"
 )
 
 shell2 = d3d.shells.ClosedShell3D(profile.faces)

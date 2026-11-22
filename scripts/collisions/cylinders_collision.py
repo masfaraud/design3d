@@ -5,34 +5,34 @@ Generate random cylinders and create the casing for them
 
 from time import perf_counter
 
-import volmdlr as d3d
-import volmdlr.core
-from volmdlr.primitives3d import Cylinder
+import design3d as d3d
+import design3d.core
+from design3d.primitives3d import Cylinder
 
 cylinders = [
-    Cylinder(
-        position=d3d.Point3D(0, 0.1, 0),
+    Cylinder.from_center_point_and_axis(
+        center_point=d3d.Point3D(0, 0.1, 0),
         axis=d3d.Vector3D(1, 0, 0),
         radius=0.01,
         length=0.1,
         color=(1, 0, 0),
     ),
-    Cylinder(
-        position=d3d.Point3D(0, 0.05, 0),
+    Cylinder.from_center_point_and_axis(
+        center_point=d3d.Point3D(0, 0.05, 0),
         axis=d3d.Vector3D(1, 1, 0),
         radius=0.005,
         length=0.1,
         color=(0, 1, 0),
     ),
-    Cylinder(
-        position=d3d.Point3D(0, 0.159, 0),
+    Cylinder.from_center_point_and_axis(
+        center_point=d3d.Point3D(0, 0.159, 0),
         axis=d3d.Vector3D(1, 1, 0),
         radius=0.02,
         length=0.1,
         color=(0, 0, 1),
     ),
-    Cylinder(
-        position=d3d.Point3D(0, 0.1, 0.016),
+    Cylinder.from_center_point_and_axis(
+        center_point=d3d.Point3D(0, 0.1, 0.016),
         axis=d3d.Vector3D(0, 1, 0),
         radius=0.01,
         length=0.1,
