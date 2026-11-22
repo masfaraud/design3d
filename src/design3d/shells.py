@@ -294,9 +294,9 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
 
         """
-        dict_ = {}
+        dict_ = self.base_dict()
         dict_.update(
-            {"color": self.color, "alpha": self.alpha, "faces": [f.to_dict(use_pointers=False) for f in self.faces]}
+            {"name": self.name, "color": self.color, "alpha": self.alpha, "faces": [f.to_dict() for f in self.faces]}
         )
         if self._bbox:
             dict_["bounding_box"] = self._bbox.to_dict()

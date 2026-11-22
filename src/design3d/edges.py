@@ -3205,18 +3205,12 @@ class Arc2D(ArcMixin, Edge):
             and self.is_trigo == other_arc.is_trigo
         )
 
-    def to_dict(self, use_pointers: bool = False, memo=None, path: str = "#", id_method=True, id_memo=None, **kwargs):
+    def to_dict(self, *args, **kwargs):
         """Stores all Arc 2D attributes in a dict object."""
         dict_ = self.base_dict()
-        dict_["circle"] = self.circle.to_dict(
-            use_pointers=use_pointers, memo=memo, id_method=id_method, id_memo=id_memo, path=f"{path}/circle"
-        )
-        dict_["start"] = self.start.to_dict(
-            use_pointers=use_pointers, memo=memo, id_method=id_method, id_memo=id_memo, path=f"{path}/start"
-        )
-        dict_["end"] = self.end.to_dict(
-            use_pointers=use_pointers, memo=memo, id_method=id_method, id_memo=id_memo, path=f"{path}/end"
-        )
+        dict_["circle"] = self.circle.to_dict()
+        dict_["start"] = self.start.to_dict()
+        dict_["end"] = self.end.to_dict()
         dict_["reference_path"] = self.reference_path
         return dict_
 
@@ -3752,16 +3746,12 @@ class FullArc2D(FullArcMixin, Arc2D):
         self.angle1 = 0.0
         self.angle2 = design3d.TWO_PI
 
-    def to_dict(self, use_pointers: bool = False, memo=None, path: str = "#", id_method=True, id_memo=None, **kwargs):
+    def to_dict(self, *args, **kwargs):
         """Stores all Full Arc 2D attributes in a dict object."""
         dict_ = self.base_dict()
-        dict_["circle"] = self.circle.to_dict(
-            use_pointers=use_pointers, memo=memo, id_method=id_method, id_memo=id_memo, path=f"{path}/circle"
-        )
+        dict_["circle"] = self.circle.to_dict()
         dict_.update({"angle": self.angle, "is_trigo": self.is_trigo, "reference_path": self.reference_path})
-        dict_["start_end"] = self.start.to_dict(
-            use_pointers=use_pointers, memo=memo, id_method=id_method, id_memo=id_memo, path=f"{path}/start_end"
-        )
+        dict_["start_end"] = self.start.to_dict()
         return dict_
 
     @classmethod
@@ -5870,18 +5860,12 @@ class Arc3D(ArcMixin, Edge):
         """Return True if circle is counterclockwise."""
         return True
 
-    def to_dict(self, use_pointers: bool = False, memo=None, path: str = "#", id_method=True, id_memo=None):
+    def to_dict(self, *args, **kwargs):
         """Saves the object parameters into a dictionary."""
         dict_ = self.base_dict()
-        dict_["circle"] = self.circle.to_dict(
-            use_pointers=use_pointers, memo=memo, id_method=id_method, id_memo=id_memo, path=path + "/circle"
-        )
-        dict_["start"] = self.start.to_dict(
-            use_pointers=use_pointers, memo=memo, id_method=id_method, id_memo=id_memo, path=path + "/start"
-        )
-        dict_["end"] = self.end.to_dict(
-            use_pointers=use_pointers, memo=memo, id_method=id_method, id_memo=id_memo, path=path + "/end"
-        )
+        dict_["circle"] = self.circle.to_dict()
+        dict_["start"] = self.start.to_dict()
+        dict_["end"] = self.end.to_dict()
         return dict_
 
     @property
@@ -6407,13 +6391,13 @@ class FullArc3D(FullArcMixin, Arc3D):
         """Returns a new instance with the same parameters."""
         return FullArc3D(self.circle.copy(), self.end.copy())
 
-    def to_dict(self, use_pointers: bool = False, memo=None, path: str = "#"):
+    def to_dict(self, *args, **kwargs):
         """Object serialization."""
         dict_ = self.base_dict()
-        dict_["circle"] = self.circle.to_dict(use_pointers=use_pointers, memo=memo, path=path + "/circle")
+        dict_["circle"] = self.circle.to_dict()
         dict_["angle"] = self.angle
         dict_["is_trigo"] = self.is_trigo
-        dict_["start_end"] = self.start.to_dict(use_pointers=use_pointers, memo=memo, path=path + "/start_end")
+        dict_["start_end"] = self.start.to_dict()
         dict_["name"] = self.name
         return dict_
 
@@ -7020,11 +7004,11 @@ class FullArcEllipse3D(FullArcEllipse, ArcEllipse3D):
         FullArcEllipse.__init__(self, self.ellipse, start_end, name)
         ArcEllipse3D.__init__(self, self.ellipse, start_end, start_end)
 
-    def to_dict(self, use_pointers: bool = False, memo=None, path: str = "#"):
+    def to_dict(self, *args, **kwargs):
         """Transforms an instance of a Full arc ellipse into a dictionary."""
         dict_ = self.base_dict()
-        dict_["ellipse"] = self.ellipse.to_dict(use_pointers=use_pointers, memo=memo, path=path + "/ellipse")
-        dict_["start_end"] = self.start_end.to_dict(use_pointers=use_pointers, memo=memo, path=path + "/start_end")
+        dict_["ellipse"] = self.ellipse.to_dict()
+        dict_["start_end"] = self.start_end.to_dict()
         return dict_
 
     @classmethod

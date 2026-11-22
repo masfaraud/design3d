@@ -7,7 +7,6 @@ Base models for design3d.
 import sys
 import json
 import math
-import warnings
 import inspect
 import collections
 import collections.abc
@@ -85,15 +84,7 @@ def serialize(value):
     Calls recursively itself serialize_sequence and serialize_dict.
     """
     if isinstance(value, SerializableObject):
-        try:
-            serialized_value = value.to_dict(use_pointers=False)
-        except TypeError:
-            warnings.warn(
-                f"specific to_dict of class {value.__class__} "
-                "should implement use_pointers, memo and path arguments",
-                Warning,
-            )
-            serialized_value = value.to_dict()
+        serialized_value = value.to_dict()
     elif isinstance(value, dict):
         serialized_value = serialize_dict(value)
     elif is_sequence(value):
