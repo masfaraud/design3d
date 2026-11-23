@@ -1,7 +1,8 @@
 import unittest
+
 import design3d
-import design3d.primitives3d as p3d
 import design3d.core
+import design3d.primitives3d as p3d
 
 
 class TestAssembly(unittest.TestCase):

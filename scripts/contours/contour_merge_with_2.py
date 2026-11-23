@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 
 @author: s.bendjebla
@@ -10,8 +9,8 @@
 import matplotlib.pyplot as plt
 
 import design3d as d3d
-from design3d.core import EdgeStyle
 import design3d.wires
+from design3d.core import EdgeStyle
 
 # %% Contours2d
 
@@ -37,8 +36,8 @@ p2 = [
     d3d.Point2D(-1, 4),
 ]
 
-contour1 = design3d.wires.Contour2D((d3d.wires.ClosedPolygon2D(p1).line_segments))
-contour2 = design3d.wires.Contour2D((d3d.wires.ClosedPolygon2D(p2).line_segments))
+contour1 = design3d.wires.Contour2D(d3d.wires.ClosedPolygon2D(p1).line_segments)
+contour2 = design3d.wires.Contour2D(d3d.wires.ClosedPolygon2D(p2).line_segments)
 
 fig, axs = plt.subplots(2, 4)
 for i in range(0, 2):

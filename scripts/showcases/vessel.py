@@ -1,6 +1,5 @@
 import design3d
-from design3d import edges, curves, surfaces, faces, wires, shells
-from design3d.core import EdgeStyle
+from design3d import curves, edges, faces, shells, surfaces, wires
 
 ellipse = curves.Ellipse3D(4, 3, frame=design3d.Frame3D(design3d.O3D, design3d.Z3D, design3d.X3D, design3d.Y3D))
 

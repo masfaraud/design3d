@@ -3,8 +3,9 @@
 import math
 import random
 import warnings
+from collections.abc import Iterable
 from itertools import chain, product
-from typing import Iterable, List, Tuple, Union
+from typing import Union
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -20,8 +21,6 @@ import design3d.geometry
 from design3d import curves, display, edges, surfaces, wires
 from design3d.core import edge_in_list, get_edge_index_in_list, get_point_index_in_list, point_in_list
 from design3d.utils.step_writer import geometric_context_writer, product_writer, step_ids_to_str
-
-# pylint: disable=unused-argument
 
 
 def union_list_of_shells(list_shells, abs_tol: float = 1e-6):
@@ -91,8 +90,8 @@ class Shell3D(design3d.core.CompositePrimitive3D):
 
     def __init__(
         self,
-        faces: List[design3d.faces.Face3D],
-        color: Tuple[float, float, float] = None,
+        faces: list[design3d.faces.Face3D],
+        color: tuple[float, float, float] = None,
         alpha: float = 1.0,
         name: str = "",
         bounding_box: design3d.core.BoundingBox = None,
@@ -342,7 +341,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
 
         shell_id = current_id + 1
 
-        step_content += f"#{shell_id} = {self.STEP_FUNCTION}('{self.name}'," f"({step_ids_to_str(face_ids)}));\n"
+        step_content += f"#{shell_id} = {self.STEP_FUNCTION}('{self.name}',({step_ids_to_str(face_ids)}));\n"
         manifold_id = shell_id + 1
         if self.STEP_FUNCTION == "CLOSED_SHELL":
             step_content += f"#{manifold_id} = MANIFOLD_SOLID_BREP('{self.name}',#{shell_id});\n"
@@ -397,15 +396,13 @@ class Shell3D(design3d.core.CompositePrimitive3D):
             step_content += frame_content
             step_content += f"#{manifold_id} = SHELL_BASED_SURFACE_MODEL('{self.name}',(#{shell_id}));\n"
 
-        step_content += f"#{shell_id} = {self.STEP_FUNCTION}('{self.name}'," f"({step_ids_to_str(face_ids)}));\n"
+        step_content += f"#{shell_id} = {self.STEP_FUNCTION}('{self.name}',({step_ids_to_str(face_ids)}));\n"
         step_content += faces_content
 
         step_content += geometric_context_content
 
         product_related_category = geometric_representation_context_id + 1
-        step_content += (
-            f"#{product_related_category} = PRODUCT_RELATED_PRODUCT_CATEGORY(" f"'part',$,(#{product_id}));\n"
-        )
+        step_content += f"#{product_related_category} = PRODUCT_RELATED_PRODUCT_CATEGORY('part',$,(#{product_id}));\n"
         draughting_id = product_related_category + 1
         step_content += f"#{draughting_id} = DRAUGHTING_PRE_DEFINED_CURVE_FONT('continuous');\n"
         color_id = draughting_id + 1
@@ -419,7 +416,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
 
         curve_style_id = color_id + 1
         step_content += (
-            f"#{curve_style_id} = CURVE_STYLE('',#{draughting_id}," f"POSITIVE_LENGTH_MEASURE(0.1),#{color_id});\n"
+            f"#{curve_style_id} = CURVE_STYLE('',#{draughting_id},POSITIVE_LENGTH_MEASURE(0.1),#{color_id});\n"
         )
 
         fill_area_color_id = curve_style_id + 1
@@ -440,18 +437,17 @@ class Shell3D(design3d.core.CompositePrimitive3D):
         presentation_style_id = suface_style_usage_id + 1
 
         step_content += (
-            f"#{presentation_style_id} = PRESENTATION_STYLE_ASSIGNMENT((#{suface_style_usage_id},"
-            f"#{curve_style_id}));\n"
+            f"#{presentation_style_id} = PRESENTATION_STYLE_ASSIGNMENT((#{suface_style_usage_id},#{curve_style_id}));\n"
         )
 
         styled_item_id = presentation_style_id + 1
         if self.__class__.__name__ == "OpenShell3D":
             for face_id in face_ids:
-                step_content += f"#{styled_item_id} = STYLED_ITEM('color',(#{presentation_style_id})," f"#{face_id});\n"
+                step_content += f"#{styled_item_id} = STYLED_ITEM('color',(#{presentation_style_id}),#{face_id});\n"
                 styled_item_id += 1
             styled_item_id -= 1
         else:
-            step_content += f"#{styled_item_id} = STYLED_ITEM('color',(#{presentation_style_id})," f"#{manifold_id});\n"
+            step_content += f"#{styled_item_id} = STYLED_ITEM('color',(#{presentation_style_id}),#{manifold_id});\n"
         mechanical_design_id = styled_item_id + 1
         step_content += (
             f"#{mechanical_design_id} ="
@@ -480,7 +476,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
 
         shell_id = current_id
         step_content += (
-            f"#{current_id} = {self.STEP_FUNCTION}('{self.name}'," f"({design3d.core.step_ids_to_str(face_ids)}));\n"
+            f"#{current_id} = {self.STEP_FUNCTION}('{self.name}',({design3d.core.step_ids_to_str(face_ids)}));\n"
         )
         manifold_id = shell_id + 1
         step_content += f"#{manifold_id} = SHELL_BASED_SURFACE_MODEL('{self.name}',(#{shell_id}));\n"
@@ -588,7 +584,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
 
     def linesegment_intersections(
         self, linesegment3d: edges.LineSegment3D
-    ) -> List[Tuple[design3d.faces.Face3D, List[design3d.Point3D]]]:
+    ) -> list[tuple[design3d.faces.Face3D, list[design3d.Point3D]]]:
         """
         Gets the intersections of a Shell3D with a Line Segment 3D.
 
@@ -602,7 +598,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
                 yield face, face_intersections
         # return intersections
 
-    def line_intersections(self, line3d: curves.Line3D) -> List[Tuple[design3d.faces.Face3D, List[design3d.Point3D]]]:
+    def line_intersections(self, line3d: curves.Line3D) -> list[tuple[design3d.faces.Face3D, list[design3d.Point3D]]]:
         """
         Gets the intersections of a Shell3D with a Line Segment 3D.
 
@@ -922,7 +918,6 @@ class Shell3D(design3d.core.CompositePrimitive3D):
                             index = get_edge_index_in_list(primitive.reverse(), primitives)
 
                         if primitives[index].is_close(primitive):
-
                             if isinstance(primitive, design3d.edges.BSplineCurve3D):
                                 discretization_points = primitive.discretization_points()
 
@@ -941,7 +936,6 @@ class Shell3D(design3d.core.CompositePrimitive3D):
                                 )
 
                             if isinstance(primitive, design3d.edges.LineSegment):
-
                                 start_point_tag = get_point_index_in_list(primitive.start, points) + 1
                                 end_point_tag = get_point_index_in_list(primitive.end, points) + 1
 
@@ -953,7 +947,6 @@ class Shell3D(design3d.core.CompositePrimitive3D):
                                     )
                                 )
                             elif isinstance(primitive, design3d.edges.ArcMixin):
-
                                 start_point_tag = get_point_index_in_list(primitive.start, points) + 1
                                 center_point_tag = get_point_index_in_list(primitive.circle.center, points) + 1
                                 end_point_tag = get_point_index_in_list(primitive.end, points) + 1
@@ -1330,9 +1323,9 @@ class ClosedShell3D(Shell3D):
 
     def set_operations_valid_exterior_faces(
         self,
-        new_faces: List[design3d.faces.Face3D],
-        valid_faces: List[design3d.faces.Face3D],
-        list_coincident_faces: List[design3d.faces.Face3D],
+        new_faces: list[design3d.faces.Face3D],
+        valid_faces: list[design3d.faces.Face3D],
+        list_coincident_faces: list[design3d.faces.Face3D],
         shell2,
     ):
         """
@@ -1823,8 +1816,8 @@ class OpenTriangleShell3D(OpenShell3D):
 
     def __init__(
         self,
-        faces: List[design3d.faces.Triangle3D],
-        color: Tuple[float, float, float] = None,
+        faces: list[design3d.faces.Triangle3D],
+        color: tuple[float, float, float] = None,
         alpha: float = 1.0,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -1840,7 +1833,7 @@ class OpenTriangleShell3D(OpenShell3D):
 
         return design3d.core.BoundingBox(bbox_min[0], bbox_max[0], bbox_min[1], bbox_max[1], bbox_min[2], bbox_max[2])
 
-    def to_mesh_data(self, round_vertices: bool, n_decimals: int = 9) -> Tuple[NDArray[float], NDArray[int]]:
+    def to_mesh_data(self, round_vertices: bool, n_decimals: int = 9) -> tuple[NDArray[float], NDArray[int]]:
         """
         Convert the TriangleShell3D to mesh data: vertices and faces described as index of vertices.
 
@@ -1940,7 +1933,6 @@ class OpenTriangleShell3D(OpenShell3D):
         :return: The decimated triangle shell.
         :rtype: OpenTriangleShell3D
         """
-        # pylint: disable=too-many-arguments
 
         vertices, triangles = self.to_mesh_data(round_vertices=True, n_decimals=9)
 
@@ -2046,8 +2038,8 @@ class ClosedTriangleShell3D(OpenTriangleShell3D, ClosedShell3D):
 
     def __init__(
         self,
-        faces: List[design3d.faces.Triangle3D],
-        color: Tuple[float, float, float] = None,
+        faces: list[design3d.faces.Triangle3D],
+        color: tuple[float, float, float] = None,
         alpha: float = 1.0,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",

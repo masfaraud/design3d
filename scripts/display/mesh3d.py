@@ -3,6 +3,7 @@ Showcase of Mesh3D class.
 """
 
 import numpy as np
+
 from design3d.display import Mesh3D
 
 positions3 = np.array(

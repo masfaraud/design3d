@@ -1,13 +1,14 @@
-import unittest
 import os
-from unittest import mock
+import unittest
 from time import perf_counter
-import design3d
-from design3d import edges, surfaces, wires, faces, core
-import design3d.primitives3d
+from unittest import mock
 
 import numpy as np
 from geomdl import BSpline
+
+import design3d
+import design3d.primitives3d
+from design3d import core, edges, faces, surfaces, wires
 
 # %% Surface 1
 # %%% Control points

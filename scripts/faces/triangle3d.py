@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """ """
 
 import design3d as d3d
-import design3d.core as d3dc
 import design3d.faces as faces
 
 p1 = d3d.Point3D.random(0, 0.1, 0, 0.1, -0.1, 0)

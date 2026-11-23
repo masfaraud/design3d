@@ -1,8 +1,9 @@
-import os
 import math
 import os
-import numpy as npy
 import unittest
+
+import numpy as npy
+
 import design3d
 from design3d import faces, surfaces, wires
 

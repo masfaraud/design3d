@@ -4,8 +4,8 @@ Showcase of TriangleShell3D import / export.
 
 import json
 
-from design3d.stl import Stl
 from design3d.shells import ClosedTriangleShell3D
+from design3d.stl import Stl
 
 triangle_shell_1 = Stl.load_from_file("../stl/simple.stl").to_closed_shell()
 

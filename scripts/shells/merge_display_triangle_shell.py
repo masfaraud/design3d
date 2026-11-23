@@ -3,8 +3,9 @@ Testing merge of DisplayTriangleShell class
 """
 
 from numpy import array
-from design3d.shells import DisplayTriangleShell3D
+
 from design3d.core import VolumeModel
+from design3d.shells import DisplayTriangleShell3D
 
 indices_1 = array(
     [

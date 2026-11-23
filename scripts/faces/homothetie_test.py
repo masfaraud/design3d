@@ -1,18 +1,14 @@
-# -*- coding: utf-8 -*-
 """ """
 
-import math
-
-from scipy.optimize import bisect, minimize
+from scipy.optimize import minimize
 
 import design3d
 import design3d.cloud
-import design3d.faces as d3df
 import design3d.primitives3d as p3d
 import design3d.stl as d3ds
 
 stl = d3ds.Stl.from_file(
-    "C:\\Users\\Mack_Pro\\Documents\\git\\Renault\\DynamicLoop\Mise a jour GMP S30\\jeu2\\forbi_disc\\new_HR18 FDU piece chaude.stl"
+    "C:\\Users\\Mack_Pro\\Documents\\git\\Renault\\DynamicLoop\\Mise a jour GMP S30\\jeu2\\forbi_disc\\new_HR18 FDU piece chaude.stl"
 )
 shell3d = stl.to_closed_shell()
 
@@ -36,7 +32,6 @@ vol.babylonjs()
 
 dmin = shell3d.faces[0].point1.point_distance(new_shell_displaced.faces[0].point1)
 for face1, face2 in zip(shell3d.faces, new_shell_displaced.faces):
-
     p1, p2, p3 = face1.point1, face1.point2, face1.point3
     p12, p22, p32 = face2.point1, face2.point2, face2.point3
 

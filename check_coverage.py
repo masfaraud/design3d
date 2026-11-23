@@ -9,8 +9,8 @@ coverage can never go back down.
 import json
 import sys
 
-MIN_FILE_COVERAGE = 55.6
-MIN_PROJECT_COVERAGE = 74.8
+MIN_FILE_COVERAGE = 58.6
+MIN_PROJECT_COVERAGE = 75.1
 
 # Modules compiled by Cython, which coverage cannot trace.
 UNTRACKED_MODULES = [
@@ -21,7 +21,7 @@ UNTRACKED_MODULES = [
 
 def main(report_path: str = "coverage.json") -> int:
     """Checks the coverage report against the thresholds, and returns the exit code."""
-    with open(report_path, "r", encoding="utf-8") as file:
+    with open(report_path, encoding="utf-8") as file:
         report = json.load(file)
 
     errors = []

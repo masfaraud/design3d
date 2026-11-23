@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Fri Mar 10 17:02:36 2017
 
@@ -9,7 +8,6 @@ import math
 import time
 
 import design3d as d3d
-import design3d.primitives2d as primitives2d
 import design3d.wires as d3dw
 
 p1 = d3d.Point2D(0, 0)
@@ -52,7 +50,6 @@ polygon3 = d3dw.ClosedPolygon2D(
 )
 
 for polygon in [polygon1, polygon2, polygon3]:
-
     cog = polygon.center_of_mass()
     (xmin, ymin), (xmax, ymax) = polygon.bounding_points()
 
@@ -61,7 +58,6 @@ for polygon in [polygon1, polygon2, polygon3]:
     points_outside = []
 
     for i in range(100):
-
         pt = d3d.Point2D.random(xmin, xmax, ymin, ymax)
         if polygon.point_inside(pt):
             points_inside.append(pt)
@@ -89,7 +85,7 @@ for polygon in [polygon1, polygon2, polygon3]:
         #    print(p.PointDistance(pt))
         polygon.point_inside(pt)
     t = time.time() - t
-    print("time spent: {}s, {}s/eval".format(t, t / n))
+    print(f"time spent: {t}s, {t / n}s/eval")
 
     ax = polygon.plot()
 

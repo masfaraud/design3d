@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Mon Mar  6 14:51:21 2017
 
@@ -7,8 +6,6 @@ Created on Mon Mar  6 14:51:21 2017
 """
 
 import math
-
-import numpy as npy
 
 import volmdlr as d3d
 import volmdlr.primitives2d as primitives2D

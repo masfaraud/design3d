@@ -1,9 +1,10 @@
 import math
 import unittest
 from copy import deepcopy
+
 import design3d
+from design3d.core import BoundingBox, VolumeModel
 from design3d.primitives3d import Block
-from design3d.core import VolumeModel, BoundingBox
 
 
 class TestVolumeModel(unittest.TestCase):

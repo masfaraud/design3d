@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Mon Feb 14 2022
 
@@ -11,7 +10,6 @@ import os
 import design3d.step
 
 for step_file in ["bsplineface_with_inner_contours.stp", "planeface_with_inner_contour.step"]:
-
     print("Reading step file: ", step_file)
 
     filepath = os.path.join("../faces", step_file)

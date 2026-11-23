@@ -8,7 +8,6 @@ path = os.getcwd()
 
 
 for stl_file in ["simple.stl", "cube_ascii.stl", "double_space.stl"]:
-
     shells = []
     stl = d3dstl.Stl.load_from_file(stl_file)
     shell = stl.to_closed_shell()

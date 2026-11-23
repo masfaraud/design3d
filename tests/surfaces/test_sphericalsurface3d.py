@@ -1,9 +1,11 @@
-import unittest
 import math
 import os
+import unittest
+
 import numpy as np
+
 import design3d
-from design3d import surfaces, wires, edges, curves
+from design3d import curves, edges, surfaces, wires
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_spherical_tests")
 

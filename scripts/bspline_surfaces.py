@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Thu Mar 3 2022.
 
@@ -8,6 +7,7 @@ Created on Thu Mar 3 2022.
 
 # %% Libraries
 from geomdl import BSpline
+
 import design3d as d3d
 from design3d import faces, surfaces
 

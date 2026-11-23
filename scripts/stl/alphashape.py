@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Tue Aug 10 14:11:53 2021
 
@@ -8,12 +7,8 @@ Created on Tue Aug 10 14:11:53 2021
 
 import os
 
-import numpy as np
-from scipy.spatial import ConvexHull
-
 import volmdlr.cloud
 import volmdlr.core
-import volmdlr.stl as d3dstl
 
 # import volmdlr as d3d
 # import volmdlr.wires as d3dw

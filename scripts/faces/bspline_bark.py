@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Thu Nov  4 17:46:36 2021
 
@@ -8,7 +7,7 @@ Created on Thu Nov  4 17:46:36 2021
 
 import design3d as d3d
 import design3d.faces as d3df
-from design3d import surfaces, shells
+from design3d import shells, surfaces
 
 base_points1 = [d3d.Point2D(0, 0), d3d.Point2D(0.1, 0.05), d3d.Point2D(0.2, 0.1), d3d.Point2D(0.2, 0.3)]
 

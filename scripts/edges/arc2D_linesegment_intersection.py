@@ -1,5 +1,3 @@
-import matplotlib.pyplot as plt
-
 import design3d
 import design3d.edges
 

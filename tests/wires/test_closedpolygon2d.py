@@ -3,7 +3,9 @@ Unittest for ClosedPolygon2D class
 """
 
 import unittest
+
 import numpy as np
+
 import design3d
 import design3d.display as d3dd
 import design3d.wires as d3dw

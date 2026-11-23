@@ -1,17 +1,18 @@
 import math
-import unittest
 import os
+import unittest
+
 import numpy as np
-from design3d.base import SerializableObject
+
 import design3d
-from design3d import edges, surfaces, curves, wires
+from design3d import curves, edges, surfaces, wires
+from design3d.base import SerializableObject
 from design3d.surfaces import Plane3D
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_plane_test")
 
 
 class TestPlane3D(unittest.TestCase):
-
     plane1 = surfaces.Plane3D(design3d.OXYZ)
     plane2 = surfaces.Plane3D(
         design3d.OYZX.translation(design3d.Vector3D(1, 2, 1)).rotation(
@@ -268,7 +269,6 @@ class TestPlane3D(unittest.TestCase):
                 design3d.Point3D(12.0, 0.0, 0.6956521739130439),
             ),
         ]:
-
             surface = surfaces.Plane3D.from_3_points(p1, p2, p3)
             self.assertTrue(surface.point_belongs(p1))
             self.assertTrue(surface.point_belongs(p2))

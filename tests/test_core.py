@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Testing core module functions
 """
@@ -11,7 +10,6 @@ import design3d.wires
 
 
 class TestContour(unittest.TestCase):
-
     def test_is_overlapping(self):
 
         v2D_1 = d3d.Vector2D.random(-3, 3, -3, 3)

@@ -1,9 +1,9 @@
-import unittest
 import os
+import unittest
 
-from design3d.base import SerializableObject
 import design3d
 from design3d import shells
+from design3d.base import SerializableObject
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)))
 

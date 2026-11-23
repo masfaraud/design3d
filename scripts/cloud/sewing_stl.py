@@ -1,5 +1,5 @@
 import design3d as d3d
-from design3d import faces, wires
+from design3d import faces
 
 polygons = [
     (

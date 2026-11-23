@@ -1,9 +1,10 @@
 import math
-import unittest
 import os
+import unittest
+
 import design3d
-from design3d.edges import Arc2D
 from design3d import curves
+from design3d.edges import Arc2D
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "arc_objects")
 

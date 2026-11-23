@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Gmsh and related objects.
 
 """
 
-from typing import Dict
-
-
 import design3d
-from design3d.base import DataEqualityObject
 import design3d.mesh
+from design3d.base import DataEqualityObject
 
 
 class GmshParser(DataEqualityObject):
@@ -27,10 +23,10 @@ class GmshParser(DataEqualityObject):
 
     def __init__(
         self,
-        mesh_format: Dict[any, any],
-        nodes: Dict[any, any],
-        elements: Dict[any, any],
-        entities: Dict[any, any],
+        mesh_format: dict[any, any],
+        nodes: dict[any, any],
+        elements: dict[any, any],
+        entities: dict[any, any],
         physical_names=None,
         partitioned_entities=None,
         periodic=None,
@@ -441,7 +437,7 @@ class GmshParser(DataEqualityObject):
             "InterpolationScheme": [],
         }
 
-        with open(file_path, "r", encoding="utf-8") as file:
+        with open(file_path, encoding="utf-8") as file:
             # lines = []
             while True:
                 line = file.readline().strip()

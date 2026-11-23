@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """ """
 
 import design3d as d3d

@@ -5,7 +5,6 @@ design3d curves.
 
 import math
 import sys
-from typing import List, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,12 +13,12 @@ from matplotlib import __version__ as _mpl_version
 from packaging import version
 
 import design3d
-from design3d.base import DataEqualityObject
-from design3d import core, geometry, get_minimum_distance_points_lines
-from design3d.nurbs.helpers import generate_knot_vector
 import design3d.utils.common_operations as d3d_common_operations
 import design3d.utils.intersections as design3d_intersections
+from design3d import core, geometry, get_minimum_distance_points_lines
+from design3d.base import DataEqualityObject
 from design3d.core import EdgeStyle
+from design3d.nurbs.helpers import generate_knot_vector
 
 
 def hyperbola_parabola_control_point_and_weight(start, start_tangent, end, end_tangent, point):
@@ -105,7 +104,7 @@ class Curve(DataEqualityObject):
         intersections = design3d_intersections.get_bsplinecurve_intersections(other_curve, self, abs_tol)
         return intersections
 
-    def sort_points_along_curve(self, points: List[Union[design3d.Point2D, design3d.Point3D]]):
+    def sort_points_along_curve(self, points: list[design3d.Point2D | design3d.Point3D]):
         """
         Sort point along a curve.
 
@@ -142,7 +141,7 @@ class ClosedCurve(Curve):
         :rtype: Union[:class:`design3d.Point2D`, :class:`design3d.Point3D`]
         """
         raise NotImplementedError(
-            f"point_at_abscissa method using abscissa" f"{abscissa} not implemented by {self.__class__.__name__}"
+            f"point_at_abscissa method using abscissa{abscissa} not implemented by {self.__class__.__name__}"
         )
 
     def local_discretization(self, point1, point2, number_points: int = 10):
@@ -220,8 +219,8 @@ class Line(Curve):
     @classmethod
     def from_point_and_vector(
         cls,
-        point: Union[design3d.Point2D, design3d.Point3D],
-        direction_vector: Union[design3d.Vector2D, design3d.Vector3D],
+        point: design3d.Point2D | design3d.Point3D,
+        direction_vector: design3d.Vector2D | design3d.Vector3D,
         name: str = "",
     ):
         """
@@ -373,7 +372,7 @@ class Line(Curve):
         return content, current_id
 
     def is_between_points(
-        self, point1: Union[design3d.Point2D, design3d.Point3D], point2: Union[design3d.Point2D, design3d.Point3D]
+        self, point1: design3d.Point2D | design3d.Point3D, point2: design3d.Point2D | design3d.Point3D
     ):
         """
         Verifies if a line is between two points.
@@ -609,7 +608,7 @@ class Line2D(Line):
 
     @staticmethod
     def _change_reference_frame(vector_i, vector_a, vector_b, vector_c, vector_d):
-        new_u = design3d.Vector2D((vector_b - vector_a))
+        new_u = design3d.Vector2D(vector_b - vector_a)
         new_u = new_u.unit_vector()
         new_v = new_u.unit_normal_vector()
         new_basis = design3d.Frame2D(vector_i, new_u, new_v)
@@ -1052,8 +1051,8 @@ class CircleMixin:
 
     def trim(
         self,
-        point1: Union[design3d.Point2D, design3d.Point3D],
-        point2: Union[design3d.Point2D, design3d.Point3D],
+        point1: design3d.Point2D | design3d.Point3D,
+        point2: design3d.Point2D | design3d.Point3D,
         same_sense: bool = True,
         abs_tol: float = 1e-6,
     ):
@@ -2851,7 +2850,7 @@ class Ellipse3D(ConicMixin, EllipseMixin, ClosedCurve):
         content, frame_id = self.frame.to_step(current_id)
         curve_id = frame_id + 1
         content += (
-            f"#{curve_id} = ELLIPSE('{self.name}',#{frame_id},{self.major_axis * 1000}," f"{self.minor_axis * 1000});\n"
+            f"#{curve_id} = ELLIPSE('{self.name}',#{frame_id},{self.major_axis * 1000},{self.minor_axis * 1000});\n"
         )
         current_id = curve_id
 
@@ -2878,7 +2877,7 @@ class HyperbolaMixin(Curve):
 
     def __init__(
         self,
-        frame: Union[design3d.Frame2D, design3d.Frame3D],
+        frame: design3d.Frame2D | design3d.Frame3D,
         semi_major_axis: float,
         semi_minor_axis: float,
         name: str = "",
@@ -3169,7 +3168,7 @@ class Hyperbola3D(ConicMixin, HyperbolaMixin):
             new_point.x**2 / self.semi_major_axis**2 - new_point.y**2 / self.semi_minor_axis**2, 1.0, abs_tol=tol
         )
 
-    def sort_points_along_curve(self, points: List[Union[design3d.Point2D, design3d.Point3D]]):
+    def sort_points_along_curve(self, points: list[design3d.Point2D | design3d.Point3D]):
         """
         Sort point along a curve.
 
@@ -3499,7 +3498,7 @@ class Parabola3D(ConicMixin, ParabolaMixin):
         new_point = self.frame.global_to_local_coordinates(point)
         return math.isclose(new_point.y, self.vrtx_equation_a * new_point.x**2, abs_tol=tol)
 
-    def sort_points_along_curve(self, points: List[Union[design3d.Point2D, design3d.Point3D]]):
+    def sort_points_along_curve(self, points: list[design3d.Point2D | design3d.Point3D]):
         """
         Sort point along a curve.
 

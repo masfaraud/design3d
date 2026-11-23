@@ -58,7 +58,7 @@ Continuous integration
 About continuous integration, your contribution may be refused by our CI. In
 this case:
 
-- pre-commit hooks fail (black, codespell, cython-lint)
+- pre-commit hooks fail (ruff, codespell, cython-lint)
 - a test or a CI script fails
 - the coverage of the project or of a file drops below its threshold
 - the documentation build emits a Sphinx warning

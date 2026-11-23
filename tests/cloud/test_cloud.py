@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Fri Jul  7 16:38:35 2023
 
@@ -7,6 +6,7 @@ Created on Fri Jul  7 16:38:35 2023
 """
 
 import random
+
 import design3d
 import design3d.cloud
 

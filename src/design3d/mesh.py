@@ -1,17 +1,13 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# pylint: disable=invalid-unary-operand-type
 """
 Module containing mesh and relative objects.
 """
 
 import math
 from itertools import combinations
-from typing import List
 
 import matplotlib.pyplot as plt
 import numpy as np
-
 
 import design3d as d3d
 import design3d.edges as d3de
@@ -148,7 +144,7 @@ class TriangularElement(d3dw.Triangle):
     _non_data_hash_attributes = ["name"]
     _generic_eq = True
 
-    def __init__(self, points: List[design3d.Point2D]):
+    def __init__(self, points: list[design3d.Point2D]):
         # super().__init__(*points)
         self.points = points
         # self.linear_elements = self._to_linear_elements()
@@ -362,7 +358,7 @@ class QuadrilateralElement2D(d3dw.ClosedPolygon2D):
     _non_data_hash_attributes = ["name"]
     _generic_eq = True
 
-    def __init__(self, points: List[design3d.Point2D]):
+    def __init__(self, points: list[design3d.Point2D]):
         self.points = points
         # self.linear_elements = self._to_linear_elements()
         # self.form_functions = self._form_functions()
@@ -559,7 +555,7 @@ class Mesh:
     _non_data_hash_attributes = ["name"]
     _generic_eq = True
 
-    def __init__(self, elements_groups: List[ElementsGroup]):
+    def __init__(self, elements_groups: list[ElementsGroup]):
         self.elements_groups = elements_groups
         self.nodes = self._set_nodes_number()
         self.node_to_index = {self.nodes[i]: i for i in range(len(self.nodes))}

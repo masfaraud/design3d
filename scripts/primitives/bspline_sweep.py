@@ -1,18 +1,12 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 A sweep using a bspline.
 """
 
-import math
-
-import matplotlib.pyplot as plt
-
 import design3d as d3d
 import design3d.edges as d3de
 import design3d.wires as d3dw
-from design3d import primitives3d, curves
-from design3d.core import EdgeStyle
+from design3d import curves, primitives3d
 
 degree = 5
 control_points = [

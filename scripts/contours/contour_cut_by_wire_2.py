@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Tue Oct 18 2022
 
@@ -11,8 +10,8 @@ Created on Tue Oct 18 2022
 import matplotlib.pyplot as plt
 
 import design3d as d3d
-from design3d.core import EdgeStyle
 import design3d.wires
+from design3d.core import EdgeStyle
 
 # %% Function -plot-
 

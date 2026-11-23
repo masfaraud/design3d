@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Thu Apr  2 10:51:54 2020
 
@@ -6,8 +5,6 @@ Created on Thu Apr  2 10:51:54 2020
 """
 
 import math
-
-import matplotlib.pyplot as plt
 
 import volmdlr as d3d
 import volmdlr.primitives3d as primitives3d

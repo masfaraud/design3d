@@ -2,9 +2,8 @@ import math
 
 import design3d as d3d
 import design3d.faces as d3df
-import design3d.primitives3d as primitives3D
 import design3d.wires as d3dw
-from design3d import surfaces, shells
+from design3d import shells, surfaces
 
 poly1_vol1 = d3dw.ClosedPolygon3D(
     [

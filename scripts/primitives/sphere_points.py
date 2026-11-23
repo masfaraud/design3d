@@ -6,7 +6,6 @@ import math
 import random
 
 import design3d as d3d
-import design3d.core as d3dc
 import design3d.primitives3d as p3d
 
 center = d3d.Point3D.random(0, 0.1, 0, 0.1, -0.1, 0)

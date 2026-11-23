@@ -2,16 +2,17 @@
 Unit tests for design3d.faces.BSplineCurve
 """
 
-import unittest
 import os
+import unittest
+
 from geomdl import BSpline
+
 import design3d
+import design3d.edges
 import design3d.edges as d3de
+import design3d.nurbs.helpers as nurbs_helpers
 from design3d import curves
 from design3d.base import SerializableObject
-import design3d.nurbs.helpers as nurbs_helpers
-
-import design3d.edges
 
 dict_bspline = {
     "name": "",

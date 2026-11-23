@@ -1,11 +1,9 @@
 import math
 
-import matplotlib.pyplot as plt
-
 import design3d as d3d
-from design3d.core import Assembly, EdgeStyle
+from design3d.core import Assembly
 from design3d.curves import Circle2D
-from design3d.edges import Arc2D, FullArc2D, LineSegment2D
+from design3d.edges import Arc2D, LineSegment2D
 from design3d.faces import PlaneFace3D
 from design3d.primitives2d import ClosedRoundedLineSegments2D
 from design3d.primitives3d import (
@@ -145,7 +143,6 @@ def hexnut(diameter: float, height: float, name="Hex nut"):
 
 
 def radial_bearing(d, D, B, name="Bearing"):
-    delta = 0.5 * (D - d)
     return HollowCylinder(d3d.OXYZ, inner_radius=0.5 * d, outer_radius=0.5 * D, length=B, name=name)
 
 
@@ -226,7 +223,6 @@ def brake_disk(
     remaining_angle = screw_angle - screw_sector_angle
     brake_disk_inner_contours = []
     if remaining_angle > 0:
-
         p1 = d3d.Point2D(0, 0.5 * bottom_diameter).rotation(d3d.O2D, -0.5 * screw_sector_angle)
         p2 = d3d.Point2D(0, 0.5 * bottom_diameter).rotation(d3d.O2D, 0.5 * screw_sector_angle)
         p3 = d3d.Point2D(0, 0.5 * inner_diameter).rotation(d3d.O2D, 0.5 * screw_sector_angle)

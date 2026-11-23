@@ -46,7 +46,7 @@ browser tabs when running them locally.
 
 Your contribution may be refused by our CI. In this case:
 
-- pre-commit hooks fail (black, codespell, cython-lint): run `pre-commit run --all-files`
+- pre-commit hooks fail (ruff, codespell, cython-lint): run `pre-commit run --all-files`
 - a test or a CI script fails: fix it, or add a test for the new behavior
 - the coverage of the project or of a file drops below its threshold in `check_coverage.py`: add some tests
 - the documentation build emits a Sphinx warning: fix the docstring or page

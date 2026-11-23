@@ -9,8 +9,8 @@ import random
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.optimize import least_squares
 import scipy.integrate as scipy_integrate
+from scipy.optimize import least_squares
 from sklearn.cluster import DBSCAN
 
 import design3d.core

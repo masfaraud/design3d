@@ -1,5 +1,6 @@
-import unittest
 import os
+import unittest
+
 import design3d
 from design3d.core import VolumeModel
 from design3d.step import Step
@@ -8,7 +9,6 @@ folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_revo
 
 
 class TestRevolutionFace3D(unittest.TestCase):
-
     def test_to_step(self):
         model = VolumeModel.from_json(os.path.join(folder, "revolutionface_export_test.json"))
         model.to_step(os.path.join(folder, "test_export.step"))

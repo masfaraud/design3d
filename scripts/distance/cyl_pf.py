@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Wed Jun  3 12:11:37 2020
 
@@ -9,8 +8,6 @@ import math
 import random
 
 import matplotlib.pyplot as plt
-import numpy as npy
-
 import volmdlr as volmdlr
 import volmdlr.primitives2D as primitives2D
 import volmdlr.primitives3D as primitives3D

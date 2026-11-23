@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Fri May 22 11:16:18 2020
 
@@ -8,10 +7,7 @@ Created on Fri May 22 11:16:18 2020
 import random
 
 import matplotlib.pyplot as plt
-import numpy as npy
-
 import volmdlr as volmdlr
-import volmdlr.primitives2D as primitives2D
 import volmdlr.primitives3D as primitives3D
 
 ######## SWEEP TEST RANDOM

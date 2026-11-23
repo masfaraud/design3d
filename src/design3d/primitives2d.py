@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Extended primitives 2D classes.
 """
 
 import math
-from typing import List, Dict
 
 import matplotlib.patches
 
 import design3d
-from design3d import wires, edges, curves, PATH_ROOT
+from design3d import PATH_ROOT, curves, edges, wires
 from design3d.core import EdgeStyle
 from design3d.primitives import RoundedLineSegments
 
@@ -38,8 +36,8 @@ class RoundedLineSegments2D(RoundedLineSegments):
 
     def __init__(
         self,
-        points: List[design3d.Point2D],
-        radius: Dict[int, float],
+        points: list[design3d.Point2D],
+        radius: dict[int, float],
         adapt_radius: bool = False,
         reference_path: str = PATH_ROOT,
         name: str = "",
@@ -217,9 +215,9 @@ class RoundedLineSegments2D(RoundedLineSegments):
             if not self.closed:
                 pass
             else:
-                dir_vec_2 = design3d.Vector2D((self.points[0] - self.points[1]))
+                dir_vec_2 = design3d.Vector2D(self.points[0] - self.points[1])
         elif self.closed and line_indexes[-1] == len(self.points) - 2:
-            dir_vec_2 = design3d.Vector2D((self.points[line_indexes[-1] + 1] - self.points[0]))
+            dir_vec_2 = design3d.Vector2D(self.points[line_indexes[-1] + 1] - self.points[0])
         else:
             dir_vec_2 = self.points[line_indexes[-1] + 1] - self.points[line_indexes[-1] + 2]
 
@@ -350,8 +348,8 @@ class OpenedRoundedLineSegments2D(RoundedLineSegments2D, wires.Wire2D):
 
     def __init__(
         self,
-        points: List[design3d.Point2D],
-        radius: Dict[int, float],
+        points: list[design3d.Point2D],
+        radius: dict[int, float],
         adapt_radius: bool = False,
         reference_path: str = PATH_ROOT,
         name: str = "",
@@ -375,8 +373,8 @@ class ClosedRoundedLineSegments2D(RoundedLineSegments2D, wires.Contour2D):
 
     def __init__(
         self,
-        points: List[design3d.Point2D],
-        radius: Dict[int, float],
+        points: list[design3d.Point2D],
+        radius: dict[int, float],
         adapt_radius: bool = False,
         reference_path: str = PATH_ROOT,
         name: str = "",

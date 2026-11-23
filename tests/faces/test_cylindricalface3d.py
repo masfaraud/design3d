@@ -1,6 +1,7 @@
 import math
-import unittest
 import os
+import unittest
+
 import design3d
 from design3d import edges, faces, surfaces, wires
 from design3d.base import SerializableObject
@@ -139,7 +140,7 @@ class TestCylindricalFace3D(unittest.TestCase):
         split_by_plane = cylindricalface.split_by_plane(plane_face_3.surface3d)
         self.assertTrue(len(split_by_plane), 4)
         list_expected_points = SerializableObject.from_json(
-            os.path.join(folder, "test_cylindrical_faces_split_by_plane_" "expected_discretization_points.json")
+            os.path.join(folder, "test_cylindrical_faces_split_by_plane_expected_discretization_points.json")
         ).primitives
         for i, face in enumerate(split_by_plane):
             points = face.outer_contour3d.discretization_points(number_points=10)

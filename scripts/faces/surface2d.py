@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Surface2D examples
 """
 
 import design3d
-import design3d.primitives2d as p2d
-from design3d import wires, surfaces, curves
+from design3d import curves, surfaces
 
 l = 0.12
 e1 = 0.015

@@ -6,46 +6,44 @@ import warnings
 from collections import deque
 from functools import cached_property, lru_cache
 from itertools import chain
-from typing import List, Union
 
-import numpy as np
-from numpy.typing import NDArray
 import matplotlib.pyplot as plt
+import numpy as np
 import triangle as triangle_lib
-
 from geomdl import NURBS, BSpline
+from numpy.typing import NDArray
 from scipy.linalg import lu_factor, lu_solve
 from scipy.optimize import least_squares, minimize
 
-import design3d.nurbs.helpers as nurbs_helpers
-from design3d.nurbs.helpers import generate_knot_vector
 import design3d.core
-from design3d.base import DataEqualityObject
 import design3d.geometry
+import design3d.nurbs.helpers as nurbs_helpers
 import design3d.utils.common_operations as d3d_common_operations
 import design3d.utils.intersections as d3d_utils_intersections
 import design3d.utils.parametric as d3d_parametric
-from design3d import display, edges, grid, wires, curves
+from design3d import curves, display, edges, grid, wires
+from design3d.base import DataEqualityObject
 from design3d.core import EdgeStyle
-from design3d.utils.step_writer import step_values_to_str
-from design3d.nurbs.core import evaluate_surface, derivatives_surface, point_inversion
+from design3d.nurbs.core import derivatives_surface, evaluate_surface, point_inversion
 from design3d.nurbs.fitting import approximate_surface, interpolate_surface
+from design3d.nurbs.helpers import generate_knot_vector
 from design3d.nurbs.operations import (
-    split_surface_u,
-    split_surface_v,
     decompose_surface,
     extract_surface_curve_u,
     extract_surface_curve_v,
+    split_surface_u,
+    split_surface_v,
 )
 from design3d.utils.parametric import (
-    array_range_search,
-    repair_start_end_angle_periodicity,
     angle_discontinuity,
+    array_range_search,
     find_parametric_point_at_singularity,
     is_isocurve,
-    verify_repeated_parametric_points,
+    repair_start_end_angle_periodicity,
     repair_undefined_brep,
+    verify_repeated_parametric_points,
 )
+from design3d.utils.step_writer import step_values_to_str
 
 
 def knots_vector_inv(knots_vector):
@@ -66,7 +64,7 @@ class Surface2D(DataEqualityObject):
 
     """
 
-    def __init__(self, outer_contour: wires.Contour2D, inner_contours: List[wires.Contour2D], name: str = "name"):
+    def __init__(self, outer_contour: wires.Contour2D, inner_contours: list[wires.Contour2D], name: str = "name"):
         self.outer_contour = outer_contour
         self.inner_contours = inner_contours
         self._area = None
@@ -791,7 +789,7 @@ class Surface3D(DataEqualityObject):
         """
         raise NotImplementedError(f"point3d_to_2d is abstract and should be implemented in {self.__class__.__name__}")
 
-    def face_from_contours3d(self, contours3d: List[wires.Contour3D], name: str = ""):
+    def face_from_contours3d(self, contours3d: list[wires.Contour3D], name: str = ""):
         """Deprecated method, 'Use Face3D from_contours3d method'."""
         raise AttributeError("Use Face3D from_contours3d method")
 
@@ -807,7 +805,6 @@ class Surface3D(DataEqualityObject):
         :return: A list of primitives.
         :rtype: list
         """
-        # pylint: disable= too-many-locals
         tol = 1e-2
         if self.__class__.__name__ == "ExtrusionSurface3D":
             tol = 5e-6
@@ -927,7 +924,7 @@ class Surface3D(DataEqualityObject):
         :return: NotImplementedError: If the method is not implemented in the subclass.
         """
         raise NotImplementedError(
-            f"connect_contours is abstract and should be implemented in " f"{self.__class__.__name__}"
+            f"connect_contours is abstract and should be implemented in {self.__class__.__name__}"
         )
 
     @staticmethod
@@ -1191,8 +1188,7 @@ class Surface3D(DataEqualityObject):
         if hasattr(other_surface, method_name):
             return getattr(other_surface, method_name)(self)
         raise NotImplementedError(
-            f"No method available for calculating intersections between {self.__class__} and "
-            f"{other_surface.__class__}"
+            f"No method available for calculating intersections between {self.__class__} and {other_surface.__class__}"
         )
 
     def line_intersections(self, line: curves.Line3D):
@@ -1255,7 +1251,6 @@ class Surface3D(DataEqualityObject):
         for curve_plane_intersection in curve_plane_intersections:
             inters = curve_plane_intersection.intersections(curve)
             for intersection in inters:
-
                 if not intersection.in_list(intersections):
                     intersections.append(intersection)
         return intersections
@@ -1551,7 +1546,7 @@ class Plane3D(Surface3D):
 
     def linesegment_intersections(
         self, linesegment3d: edges.LineSegment3D, abs_tol: float = 1e-6
-    ) -> List[design3d.Point3D]:
+    ) -> list[design3d.Point3D]:
         """
         Gets the intersections of a plane a line segment 3d.
 
@@ -4155,7 +4150,6 @@ class ToroidalSurface3D(UVPeriodicalSurface):
             else:
                 raise NotImplementedError
             for sign in [1, -1]:
-
                 normal1 = design3d.Vector3D(
                     -(self.minor_radius / self.major_radius) * sin_s,
                     (self.minor_radius / self.major_radius) * cos_s,
@@ -6309,7 +6303,7 @@ class ExtrusionSurface3D(Surface3D):
     y_periodicity = None
 
     def __init__(
-        self, edge: Union[edges.FullArcEllipse3D, edges.BSplineCurve3D], direction: design3d.Vector3D, name: str = ""
+        self, edge: edges.FullArcEllipse3D | edges.BSplineCurve3D, direction: design3d.Vector3D, name: str = ""
     ):
         self.edge = edge
         direction = direction.unit_vector()
@@ -6653,8 +6647,8 @@ class ExtrusionSurface3D(Surface3D):
         return start, end
 
     def _repair_points_order(
-        self, points: List[design3d.Point2D], edge3d, points3d: List[design3d.Point3D]
-    ) -> List[design3d.Point2D]:
+        self, points: list[design3d.Point2D], edge3d, points3d: list[design3d.Point3D]
+    ) -> list[design3d.Point2D]:
         """
         Helper function to reorder discretization points along a parametric domain for an extrusion surface.
 
@@ -7300,14 +7294,14 @@ class BSplineSurface3D(Surface3D):
         self,
         degree_u: int,
         degree_v: int,
-        control_points: List[design3d.Point3D],
+        control_points: list[design3d.Point3D],
         nb_u: int,
         nb_v: int,
-        u_multiplicities: List[int],
-        v_multiplicities: List[int],
-        u_knots: List[float],
-        v_knots: List[float],
-        weights: List[float] = None,
+        u_multiplicities: list[int],
+        v_multiplicities: list[int],
+        u_knots: list[float],
+        v_knots: list[float],
+        weights: list[float] = None,
         name: str = "",
     ):
         self.ctrlpts = np.asarray(control_points)
@@ -7745,7 +7739,7 @@ class BSplineSurface3D(Surface3D):
         # Return shapes as a dict object
         return {"u": crvlist_u, "v": crvlist_v}
 
-    def extract_curves(self, u: List[float] = None, v: List[float] = None):
+    def extract_curves(self, u: list[float] = None, v: list[float] = None):
         """
         Extracts curves from a surface.
 
@@ -9898,7 +9892,7 @@ class BSplineSurface3D(Surface3D):
 
     @classmethod
     def from_points_interpolation(
-        cls, points_3d: List[design3d.Point3D], size_u: int, size_v: int, degree_u: int, degree_v: int, name: str = ""
+        cls, points_3d: list[design3d.Point3D], size_u: int, size_v: int, degree_u: int, degree_v: int, name: str = ""
     ):
         """
         Bspline Surface interpolation through 3d points.
@@ -9950,7 +9944,7 @@ class BSplineSurface3D(Surface3D):
     @classmethod
     def from_points_approximation(
         cls,
-        points_3d: List[design3d.Point3D],
+        points_3d: list[design3d.Point3D],
         size_u: int,
         size_v: int,
         degree_u: int,
@@ -10509,7 +10503,7 @@ class BSplineSurface3D(Surface3D):
                     dis.append(point1.point_distance(point2))
                 distances.append(dis)
 
-            i = distances.index((min(distances)))
+            i = distances.index(min(distances))
             j = distances[i].index(min(distances[i]))
 
             curves_ = [contour2.primitives[j], contour1.primitives[i]]
@@ -10970,7 +10964,7 @@ class BezierSurface3D(BSplineSurface3D):
     """
 
     def __init__(
-        self, degree_u: int, degree_v: int, control_points: List[List[design3d.Point3D]], nb_u: int, nb_v: int, name=""
+        self, degree_u: int, degree_v: int, control_points: list[list[design3d.Point3D]], nb_u: int, nb_v: int, name=""
     ):
         u_knots = generate_knot_vector(degree_u, nb_u)
         v_knots = generate_knot_vector(degree_v, nb_v)

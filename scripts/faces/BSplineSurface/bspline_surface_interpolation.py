@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 
 @author: s.bendjebla
@@ -8,7 +7,6 @@
 # %% Libraries
 
 import design3d as d3d
-import design3d.faces as d3df
 from design3d import surfaces
 
 # %% Bspline-surface points

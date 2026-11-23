@@ -1,9 +1,7 @@
+import volmdlr as d3d
 from dessia_common.files import BinaryFile
 from dessia_common.workflow.blocks import CadView, ClassMethod, ClassMethodType, Export, MethodType, ModelMethod
 from dessia_common.workflow.core import Pipe, Workflow
-
-import volmdlr as d3d
-from volmdlr import step
 
 read_step_method_type = ClassMethodType(class_=d3d.step.Step, name="from_stream")
 cls_method_step = ClassMethod(read_step_method_type, name="Stepfile")

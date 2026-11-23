@@ -1,5 +1,6 @@
-import unittest
 import os
+import unittest
+
 import design3d.step
 from design3d.utils import step_reader
 
@@ -7,7 +8,6 @@ folder = os.path.dirname(os.path.realpath(__file__))
 
 
 class TestStep(unittest.TestCase):
-
     def test_to_volume_model(self):
         step = design3d.step.Step.from_file(filepath=os.path.join(folder, "test_conversion_factor.step"))
         model = step.to_volume_model()

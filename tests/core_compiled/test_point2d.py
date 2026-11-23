@@ -6,9 +6,6 @@ import unittest
 
 import matplotlib
 
-import design3d
-
-import unittest
 from design3d import Point2D, Vector2D, Vector3D
 
 

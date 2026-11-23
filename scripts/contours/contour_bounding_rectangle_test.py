@@ -1,5 +1,3 @@
-import matplotlib.pyplot as plt
-
 import design3d as d3d
 import design3d.edges as d3de
 import design3d.wires as d3dw

@@ -3,6 +3,7 @@ Unittest for design3d.Vector2D
 """
 
 import unittest
+
 from design3d import Vector2D
 
 

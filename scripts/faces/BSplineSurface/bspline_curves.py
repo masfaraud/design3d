@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Bspline curves scripts
 
@@ -9,12 +8,12 @@ Bspline curves scripts
 
 import matplotlib.patches as mpatches
 
-import design3d as d3d
-from design3d.core import EdgeStyle
-
 # %% Libraries
 from geomdl import BSpline
+
+import design3d as d3d
 from design3d import faces, surfaces
+from design3d.core import EdgeStyle
 
 # %% Surface 1
 # %%% Control points

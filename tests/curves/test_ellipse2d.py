@@ -6,7 +6,7 @@ import math
 import unittest
 
 import design3d
-from design3d import edges, curves
+from design3d import curves, edges
 
 
 class TestEllipse2D(unittest.TestCase):

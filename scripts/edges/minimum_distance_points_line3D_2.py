@@ -1,19 +1,11 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Tue May 12 17:14:06 2020
 
 @author: masfaraud
 """
 
-import random
-
-import matplotlib.pyplot as plt
-import numpy as npy
-
 import design3d as design3d
-import design3d.core as design3dc
-import design3d.primitives2d as primitives2D
 import design3d.primitives3d as primitives3D
 
 radius_circle = 0.008

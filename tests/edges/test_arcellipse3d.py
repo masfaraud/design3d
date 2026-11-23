@@ -3,7 +3,7 @@ import unittest
 from itertools import product
 
 import design3d
-from design3d import edges, curves
+from design3d import curves, edges
 
 
 class TestArcEllipse3D(unittest.TestCase):

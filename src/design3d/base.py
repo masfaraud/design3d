@@ -1,22 +1,18 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Base models for design3d.
 """
 
-import sys
-import json
-import math
-import inspect
 import collections
 import collections.abc
-from copy import copy, deepcopy
-
-import orjson
-from importlib import import_module
+import inspect
+import json
+import math
+import sys
 from ast import literal_eval
-from typing import get_origin, get_args, Union, Any, BinaryIO, TextIO, Dict, Type
+from copy import copy, deepcopy
 from functools import cached_property
+from importlib import import_module
 
 import numpy as npy
 
@@ -44,12 +40,12 @@ def is_sequence(obj) -> bool:
 
 def is_list(obj) -> bool:
     """Check if given obj is exactly of type list (not instance of). Used mainly for performance."""
-    return obj.__class__ == list
+    return obj.__class__ is list
 
 
 def is_tuple(obj) -> bool:
     """Check if given obj is exactly of type tuple (not instance of). Used mainly for performance."""
-    return obj.__class__ == tuple
+    return obj.__class__ is tuple
 
 
 def is_simple(obj):
@@ -105,7 +101,7 @@ def serialize(value):
 _PYTHON_CLASS_CACHE = {}
 
 
-def get_python_class_from_class_name(full_class_name: str) -> Type:
+def get_python_class_from_class_name(full_class_name: str) -> type:
     """Get python class object corresponding to given class name."""
     cached_value = _PYTHON_CLASS_CACHE.get(full_class_name, None)
     if cached_value is not None:
@@ -269,7 +265,7 @@ class SerializableObject:
 
     @classmethod
     def from_json(cls, filepath: str):
-        with open(filepath, "r") as file:
+        with open(filepath) as file:
             return cls.dict_to_object(json.load(file))
 
 
@@ -339,7 +335,6 @@ def sequence_data_eq(seq1, seq2):
 
 
 class DataEqualityObject(SerializableObject):
-
     def __hash__(self):
         """Compute a int from object."""
         return self._data_hash()

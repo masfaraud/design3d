@@ -3,6 +3,7 @@ Unit tests for design3d.faces.BSplineCurve
 """
 
 import unittest
+
 import design3d
 import design3d.edges as d3de
 

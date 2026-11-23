@@ -1,7 +1,7 @@
 import unittest
 
 import design3d
-from design3d import wires, curves, faces, primitives3d
+from design3d import curves, faces, primitives3d, wires
 from design3d.primitives3d import Sweep
 
 

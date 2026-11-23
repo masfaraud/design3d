@@ -1,27 +1,24 @@
-# -*- coding: utf-8 -*-
 """
 Cloud of points classes.
 
 """
 
 import math
-from typing import List, Tuple
 import random
-
 
 import matplotlib.pyplot as plt
 from trimesh.proximity import closest_point
 
 import design3d as d3d
 import design3d.faces as d3df
-from design3d import shells as d3dshells
-from design3d import surfaces
 import design3d.primitives3d as p3d
 import design3d.step as vstep
 import design3d.stl as d3dstl
 
 # import design3d.core
 import design3d.wires as d3dw
+from design3d import shells as d3dshells
+from design3d import surfaces
 
 
 class PointCloud3D:
@@ -31,7 +28,7 @@ class PointCloud3D:
     :param points: a list of points.
     """
 
-    def __init__(self, points: List[d3d.Point3D], name: str = ""):
+    def __init__(self, points: list[d3d.Point3D], name: str = ""):
         self.points = points
         self.__bounding_box = None
         self.name = name
@@ -154,7 +151,6 @@ class PointCloud3D:
                 new_polygon = new_poly.to_3d(position_plane[n] * normal, vec1, vec2)
                 polygons_3d.append(new_polygon)
             else:
-
                 polygon2d.append(poly)
                 new_polygon = poly.to_3d(position_plane[n] * normal, vec1, vec2)
                 polygons_3d.append(new_polygon)
@@ -210,7 +206,7 @@ class PointCloud3D:
     @classmethod
     def generate_shell(
         cls,
-        polygons_3d: List[d3d.wires.ClosedPolygon3D],
+        polygons_3d: list[d3d.wires.ClosedPolygon3D],
         normal: d3d.Vector3D,
         vec1: d3d.Vector3D,
         vec2: d3d.Vector3D,
@@ -274,7 +270,7 @@ class PointCloud3D:
     def _helper_sew_polygons(poly1, poly2, vec1, vec2):
         return poly1.sewing(poly2, vec1, vec2)
 
-    def shell_distances(self, shells: d3dshells.OpenTriangleShell3D) -> Tuple["PointCloud3D", List[float], List[int]]:
+    def shell_distances(self, shells: d3dshells.OpenTriangleShell3D) -> tuple["PointCloud3D", list[float], list[int]]:
         """
         Computes distance of point to shell for each point in self.points.
 
@@ -300,7 +296,7 @@ class PointCloud3D:
         shells_trimesh = shells.to_trimesh()
         return closest_point(shells_trimesh, self.to_coord_matrix())
 
-    def to_coord_matrix(self) -> List[List[float]]:
+    def to_coord_matrix(self) -> list[list[float]]:
         """Generate an n_points x 3 matrix of coordinates."""
         return [point.coordinates() for point in self.points]
 
@@ -355,7 +351,7 @@ class PointCloud3D:
         return extended_points
 
     @staticmethod
-    def offset_to_shell(positions_plane: List[surfaces.Plane3D], polygons2d: List[d3dw.ClosedPolygon2D], offset: float):
+    def offset_to_shell(positions_plane: list[surfaces.Plane3D], polygons2d: list[d3dw.ClosedPolygon2D], offset: float):
         """Offsets a Shell."""
         origin_f, origin_l = positions_plane[0], positions_plane[-1]
 
@@ -441,7 +437,7 @@ class PointCloud2D:
                 clean_points += poly.points
         return PointCloud2D(clean_points, name=self.name + "_clean")
 
-    def to_coord_matrix(self) -> List[List[float]]:
+    def to_coord_matrix(self) -> list[list[float]]:
         """
         Generate an n_points x 2 matrix of coordinates.
         """

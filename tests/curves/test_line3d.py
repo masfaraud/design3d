@@ -1,7 +1,7 @@
 import unittest
 
 import design3d
-from design3d import edges, curves
+from design3d import curves
 
 
 class TestLine3D(unittest.TestCase):

@@ -73,3 +73,28 @@ include-package-data = true
 where = ["src"]
 
 [tool.setuptools_scm]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+# pycodestyle, pyflakes, isort and pyupgrade
+select = ["E", "W", "F", "I", "UP"]
+ignore = [
+    # Long lines are handled by the formatter, the remaining ones are strings that cannot be split
+    "E501",
+    # Single-letter names such as l are common in geometry formulas
+    "E741",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# The package init re-exports the compiled core objects
+"src/design3d/__init__.py" = ["F401"]
+# Compiled by Cython in pure Python mode: cimports and C types are not visible to ruff
+"src/design3d/nurbs/fitting.py" = ["F821"]
+# The HTML and JavaScript templates are indented with tabs inside Python strings
+"src/design3d/templates.py" = ["E101"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["design3d"]

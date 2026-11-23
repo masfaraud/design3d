@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Thu Jul 23 16:14:08 2020
 
@@ -10,8 +9,6 @@ import math
 import random
 
 import matplotlib.pyplot as plt
-import numpy as npy
-
 import volmdlr as d3d
 import volmdlr.primitives2D as primitives2D
 import volmdlr.primitives3D as primitives3D
@@ -354,7 +351,6 @@ for step in range(0, nb_step):
                     name="top",
                 )
             else:
-
                 top = primitives3D.ExtrudedProfile(
                     origin + extrusion_vector * list_height_polyfloor[enum + 1],
                     x,

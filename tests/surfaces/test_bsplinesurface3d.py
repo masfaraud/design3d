@@ -2,25 +2,25 @@
 Unit tests for design3d.faces.BSplineSurface3D
 """
 
-import unittest
 import os
+import unittest
+
 import numpy as np
+from geomdl import BSpline
+
 import design3d.edges as d3de
-import design3d.wires as d3dw
 import design3d.faces as d3df
 import design3d.grid
+import design3d.wires as d3dw
 
 # from design3d.models import bspline_surfaces
 from design3d import surfaces
-
-from geomdl import BSpline
 
 DELTA = 0.001
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_bspline_test")
 
 
 class TestBSplineSurface3D(unittest.TestCase):
-
     control_points = [
         design3d.Point3D(1.95067028031, 1.20347039895, 0.0836398269635),
         design3d.Point3D(1.94618683437, 1.22586931185, -0.0252478180436),

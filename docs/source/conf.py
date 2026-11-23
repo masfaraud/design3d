@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Configuration file for the Sphinx documentation builder.
 #
@@ -20,12 +19,11 @@ sys.path.insert(0, os.path.abspath("../../design3d"))
 
 
 # -- Project information -----------------------------------------------------
-import datetime
 
 project = "design3d"
 author = "The design3d team"
 
-import design3d
+import design3d  # noqa: E402
 
 version = design3d.__version__
 # The full version, including alpha/beta/rc tags

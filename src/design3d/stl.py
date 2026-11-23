@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 STL reader & writer.
 
@@ -9,7 +8,6 @@ https://en.wikipedia.org/wiki/STL_(file_format)
 import os
 import struct
 import warnings
-from typing import List
 
 from kaitaistruct import KaitaiStream
 
@@ -57,7 +55,7 @@ class Stl:
 
     _dessia_methods = ["from_text_stream", "from_text_stream", "to_closed_shell", "to_open_shell"]
 
-    def __init__(self, triangles: List[d3df.Triangle3D], name: str = ""):
+    def __init__(self, triangles: list[d3df.Triangle3D], name: str = ""):
         warnings.warn(
             "'design3d.stl.Stl' class is deprecated. Use 'design3d.display.Mesh3D' instead", DeprecationWarning
         )
@@ -231,7 +229,7 @@ class Stl:
             with open(filepath, "rb") as file:
                 return cls.from_binary_stream(file, distance_multiplier=distance_multiplier)
 
-        with open(filepath, "r", encoding="utf-8", errors="ignore") as file:
+        with open(filepath, encoding="utf-8", errors="ignore") as file:
             return cls.from_text_stream(file, distance_multiplier=distance_multiplier)
 
     def save_to_binary_file(self, filepath, distance_multiplier=1000):

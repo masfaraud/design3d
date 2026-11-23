@@ -5,6 +5,7 @@ design3d utils for calculating 3D to surface parametric domain operation.
 
 import bisect
 import math
+
 import numpy as np
 
 import design3d

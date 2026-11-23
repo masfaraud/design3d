@@ -2,7 +2,7 @@ import design3d
 import design3d.edges
 import design3d.faces
 import design3d.wires
-from design3d import faces, surfaces
+from design3d import surfaces
 from design3d.core import EdgeStyle
 
 p1 = design3d.Point3D(0.15, 0.48, 0.5)
@@ -53,8 +53,8 @@ ax2 = face.surface2d.plot()
 plane_inter_1_2d.plot(ax=ax2, color="b")
 plane_inter_2_2d.plot(ax=ax2, color="g")
 
-assert surface2d.point_belongs(plane_inter_1_2d) == True
-assert surface2d.point_belongs(plane_inter_2_2d) == False
+assert surface2d.point_belongs(plane_inter_1_2d)
+assert not surface2d.point_belongs(plane_inter_2_2d)
 
 p1_2dto3d = plane.point2d_to_3d(plane_inter_1_2d)
 p1_2dto3d.plot(ax=ax, color="b")

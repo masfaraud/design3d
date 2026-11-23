@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Mon Jun  7 16:23:04 2021
 
@@ -7,7 +6,6 @@ Created on Mon Jun  7 16:23:04 2021
 """
 
 import design3d as d3d
-import design3d.core as d3dc
 import design3d.wires as d3dw
 
 p1 = d3d.Point2D(0, 0)

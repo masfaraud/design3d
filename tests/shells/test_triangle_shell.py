@@ -3,14 +3,14 @@ import unittest
 
 import numpy as np
 
+from design3d import OXYZ
 from design3d.base import SerializableObject
+from design3d.primitives3d import Block
 from design3d.shells import (
-    OpenTriangleShell3D,
     ClosedTriangleShell3D,
     DisplayTriangleShell3D,
+    OpenTriangleShell3D,
 )
-from design3d.primitives3d import Block
-from design3d import OXYZ
 
 SHOW_BABYLONJS = False
 
@@ -71,7 +71,6 @@ class TestTriangleShell3D(unittest.TestCase):
 
 
 class TestDisplayTriangleShell3D(unittest.TestCase):
-
     def setUp(self):
         # Sample data for testing
         self.positions1 = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0]])

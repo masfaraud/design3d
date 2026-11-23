@@ -1,11 +1,13 @@
-import unittest
 import math
 import os
+import unittest
+
 import numpy as np
+
 import design3d
 import design3d.edges as d3de
-import design3d.wires as d3dw
 import design3d.faces
+import design3d.wires as d3dw
 from design3d import surfaces
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_revolution_tests")

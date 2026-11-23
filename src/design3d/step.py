@@ -1,31 +1,28 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 ISO STEP reader/writer.
 """
 
 import re
 import time
-from typing import List
 from collections import deque
 from dataclasses import dataclass, field
 
 import matplotlib.pyplot as plt
 import networkx as nx
 
-
 import design3d
 import design3d.core
+import design3d.curves
 import design3d.edges
 import design3d.faces
-import design3d.curves
 import design3d.primitives3d
 import design3d.wires
 from design3d.utils import step_reader
 from design3d.utils.step_reader import (
-    STEP_TO_design3d,
     STEP_REPRESENTATION_ENTITIES,
     WIREFRAME_STEP_REPRESENTATION_ENTITIES,
+    STEP_TO_design3d,
 )
 
 
@@ -82,7 +79,7 @@ class Step:
 
     _standalone_in_db = True
 
-    def __init__(self, lines: List[str], name: str = ""):
+    def __init__(self, lines: list[str], name: str = ""):
         self.functions, self.connections = self.read_lines(lines)
         self._graph = None
         self.global_uncertainty = 1e-6
@@ -128,7 +125,7 @@ class Step:
     @classmethod
     def from_file(cls, filepath: str = None, name: str = ""):
         """Instantiate a Step object from a step file."""
-        with open(filepath, "r", encoding="ISO-8859-1") as file:
+        with open(filepath, encoding="ISO-8859-1") as file:
             lines = []
             for line in file:
                 lines.append(line)
@@ -160,7 +157,7 @@ class Step:
 
             # SKIP HEADER
             if line[0] != "#":
-                previous_line = str()
+                previous_line = ""
                 continue
             if flag:
                 line = step_reader.replace_unicode_escapes(line, pattern)
@@ -186,7 +183,7 @@ class Step:
                         function_connection = int(connect[0])
                         connections.append(function_connection)
 
-            previous_line = str()
+            previous_line = ""
 
             # FUNCTION ARGUMENTS
             functions, connections = self._helper_intantiate_step_functions(
@@ -327,7 +324,6 @@ class Step:
         subfunction_name = ""
         subfunction_arg = ""
         for char in subfunctions:
-
             if char == "(":
                 parenthesis_count += 1
                 if parenthesis_count == 1:

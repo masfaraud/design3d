@@ -8,7 +8,6 @@ import design3d.wires
 
 
 class TestContour(unittest.TestCase):
-
     def test_is_overlapping(self):
         p1 = [
             design3d.Point2D(-0.2, -0.2),

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Edges related classes.
 """
@@ -7,36 +6,31 @@ Edges related classes.
 import math
 import sys
 import warnings
-from itertools import product
-from typing import List, Union
 from functools import cached_property
-
-import numpy as np
+from itertools import product
 
 import matplotlib.patches
 import matplotlib.pyplot as plt
-from numpy.typing import NDArray
+import numpy as np
 import scipy.integrate as scipy_integrate
-from scipy.optimize import least_squares, minimize
 from geomdl import NURBS, BSpline
+from numpy.typing import NDArray
+from scipy.optimize import least_squares, minimize
 
-from design3d.nurbs.operations import split_curve, decompose_curve, link_curves
-from design3d.nurbs.core import evaluate_curve, derivatives_curve
-from design3d.nurbs import fitting
-import design3d.nurbs.helpers as nurbs_helpers
-
-from design3d.base import DataEqualityObject
 import design3d.core
 import design3d.core_compiled
 import design3d.geometry
-from design3d import curves as design3d_curves
-from design3d import get_minimum_distance_points_lines, PATH_ROOT
+import design3d.nurbs.helpers as nurbs_helpers
 import design3d.utils.common_operations as d3d_common_operations
 import design3d.utils.intersections as d3d_utils_intersections
+from design3d import PATH_ROOT, get_minimum_distance_points_lines
+from design3d import curves as design3d_curves
+from design3d.base import DataEqualityObject
 from design3d.core import EdgeStyle
+from design3d.nurbs import fitting
+from design3d.nurbs.core import derivatives_curve, evaluate_curve
+from design3d.nurbs.operations import decompose_curve, link_curves, split_curve
 from design3d.utils.step_writer import step_values_to_str
-
-# pylint: disable=arguments-differ
 
 
 class Edge(DataEqualityObject):
@@ -150,8 +144,11 @@ class Edge(DataEqualityObject):
         """
         Deprecated method of discretization_points.
         """
-        warnings.warn("polygon_points is deprecated,\
-        please use discretization_points instead", DeprecationWarning)
+        warnings.warn(
+            "polygon_points is deprecated,\
+        please use discretization_points instead",
+            DeprecationWarning,
+        )
         return self.discretization_points(number_points=discretization_resolution)
 
     @classmethod
@@ -199,7 +196,7 @@ class Edge(DataEqualityObject):
 
         :return: the normal vector
         """
-        raise NotImplementedError("the normal_vector method must be" "overloaded by subclassing class")
+        raise NotImplementedError("the normal_vector method must beoverloaded by subclassing class")
 
     def unit_normal_vector(self, abscissa: float = 0.0):
         """
@@ -219,7 +216,7 @@ class Edge(DataEqualityObject):
         :param abscissa: edge abscissa
         :return: direction vector
         """
-        raise NotImplementedError("the direction_vector method must be" "overloaded by subclassing class")
+        raise NotImplementedError("the direction_vector method must beoverloaded by subclassing class")
 
     def unit_direction_vector(self, abscissa: float = 0.0):
         """
@@ -245,7 +242,7 @@ class Edge(DataEqualityObject):
             or False otherwise
         """
         raise NotImplementedError(
-            f"the straight_line_point_belongs method must be" f" overloaded by {self.__class__.__name__}"
+            f"the straight_line_point_belongs method must be overloaded by {self.__class__.__name__}"
         )
 
     def point_belongs(self, point, abs_tol: float = 1e-6):
@@ -260,7 +257,7 @@ class Edge(DataEqualityObject):
         :return: `True` if the point belongs to the edge, `False` otherwise
         :rtype: bool
         """
-        raise NotImplementedError(f"the point_belongs method must be" f" overloaded by {self.__class__.__name__}")
+        raise NotImplementedError(f"the point_belongs method must be overloaded by {self.__class__.__name__}")
 
     def touching_points(self, edge2):
         """
@@ -452,7 +449,7 @@ class Edge(DataEqualityObject):
                 break
         return new_split_edge
 
-    def point_distance(self, point: Union[design3d.Point2D, design3d.Point3D]):
+    def point_distance(self, point: design3d.Point2D | design3d.Point3D):
         """
         Calculates the distance from a given point.
 
@@ -530,7 +527,7 @@ class Edge(DataEqualityObject):
             self, abscissa1, abscissa2, max_number_points, return_abscissas
         )
 
-    def sort_points_along_curve(self, points: List[Union[design3d.Point2D, design3d.Point3D]]):
+    def sort_points_along_curve(self, points: list[design3d.Point2D | design3d.Point3D]):
         """
         Sort point along a curve.
 
@@ -638,8 +635,7 @@ class Edge(DataEqualityObject):
             end_content, end_id = self.end.to_step(start_id, vertex=False)
             current_id = end_id + 1
             curve_content = (
-                f"#{current_id} = TRIMMED_CURVE('{self.name}',#{curve_id},"
-                f"(#{start_id}),(#{end_id}),.T.,.CARTESIAN.);\n"
+                f"#{current_id} = TRIMMED_CURVE('{self.name}',#{curve_id},(#{start_id}),(#{end_id}),.T.,.CARTESIAN.);\n"
             )
         else:
             start_content, start_id = self.start.to_step(curve_id, vertex=True)
@@ -658,8 +654,8 @@ class LineSegment(Edge):
 
     def __init__(
         self,
-        start: Union[design3d.Point2D, design3d.Point3D],
-        end: Union[design3d.Point2D, design3d.Point3D],
+        start: design3d.Point2D | design3d.Point3D,
+        end: design3d.Point2D | design3d.Point3D,
         reference_path: str = PATH_ROOT,
         name: str = "",
     ):
@@ -840,7 +836,7 @@ class LineSegment(Edge):
         """
         return self.point_belongs(point)
 
-    def point_belongs(self, point: Union[design3d.Point2D, design3d.Point3D], abs_tol: float = 1e-6):
+    def point_belongs(self, point: design3d.Point2D | design3d.Point3D, abs_tol: float = 1e-6):
         """
         Checks if a point belongs to the line segment. It uses the point_distance.
 
@@ -908,10 +904,10 @@ class BSplineCurve(Edge):
     def __init__(
         self,
         degree: int,
-        control_points: Union[List[design3d.Point2D], List[design3d.Point3D], NDArray],
-        knot_multiplicities: Union[List[int], NDArray],
-        knots: Union[List[float], NDArray],
-        weights: Union[List[float], NDArray] = None,
+        control_points: list[design3d.Point2D] | list[design3d.Point3D] | NDArray,
+        knot_multiplicities: list[int] | NDArray,
+        knots: list[float] | NDArray,
+        weights: list[float] | NDArray = None,
         name: str = "",
     ):
         self.ctrlpts = np.asarray(control_points)
@@ -1243,7 +1239,7 @@ class BSplineCurve(Edge):
         # print('u', u)
         return [getattr(design3d, vector_name)(*point) for point in derivatives_curve(datadict, u, order)]
 
-    def split(self, split_point: Union[design3d.Point2D, design3d.Point3D], tol: float = 1e-6):
+    def split(self, split_point: design3d.Point2D | design3d.Point3D, tol: float = 1e-6):
         """
         Splits of B-spline curve in two pieces using a 2D or 3D point.
 
@@ -1416,7 +1412,7 @@ class BSplineCurve(Edge):
         derivatives = self.derivatives(u, 1)
         return derivatives[1]
 
-    def point_to_parameter(self, point: Union[design3d.Point2D, design3d.Point3D]):
+    def point_to_parameter(self, point: design3d.Point2D | design3d.Point3D):
         """
         Search for the value of the normalized evaluation parameter u.
 
@@ -1441,7 +1437,7 @@ class BSplineCurve(Edge):
             u = u * (u_max - u_min) + u_min
         return u
 
-    def abscissa(self, point: Union[design3d.Point2D, design3d.Point3D], tol: float = 1e-7):
+    def abscissa(self, point: design3d.Point2D | design3d.Point3D, tol: float = 1e-7):
         """
         Computes the abscissa of a 2D or 3D point using the least square method.
 
@@ -1573,7 +1569,7 @@ class BSplineCurve(Edge):
             u = b
         return u
 
-    def translation(self, offset: Union[design3d.Vector2D, design3d.Vector3D]):
+    def translation(self, offset: design3d.Vector2D | design3d.Vector3D):
         """
         Translates the B-spline curve.
 
@@ -1586,7 +1582,7 @@ class BSplineCurve(Edge):
         control_points = [point.translation(offset) for point in self.control_points]
         return self.__class__(self.degree, control_points, self.knot_multiplicities, self.knots, self.weights)
 
-    def point_belongs(self, point: Union[design3d.Point2D, design3d.Point3D], abs_tol: float = 1e-6):
+    def point_belongs(self, point: design3d.Point2D | design3d.Point3D, abs_tol: float = 1e-6):
         """
         Checks if a 2D or 3D point belongs to the B-spline curve or not. It uses the point_distance.
 
@@ -1603,7 +1599,7 @@ class BSplineCurve(Edge):
             return True
         return False
 
-    def merge_with_curves(self, curves: List["BSplineCurve"]):
+    def merge_with_curves(self, curves: list["BSplineCurve"]):
         """
         Merges consecutive B-spline curves to define a new merged one.
 
@@ -1627,7 +1623,7 @@ class BSplineCurve(Edge):
         return self.merge_with_curves([bspline_curve])
 
     @classmethod
-    def from_bsplines(cls, bsplines: List["BSplineCurve"], discretization_points: int = 10, name: str = ""):
+    def from_bsplines(cls, bsplines: list["BSplineCurve"], discretization_points: int = 10, name: str = ""):
         """
         Creates a B-spline curve from a list of B-spline curves.
 
@@ -1656,7 +1652,7 @@ class BSplineCurve(Edge):
 
     @classmethod
     def from_points_approximation(
-        cls, points: Union[List[design3d.Point2D], List[design3d.Point3D]], degree: int, name: str = "", **kwargs
+        cls, points: list[design3d.Point2D] | list[design3d.Point3D], degree: int, name: str = "", **kwargs
     ):
         """
         Creates a B-spline curve approximation using least squares method with fixed number of control points.
@@ -1704,7 +1700,7 @@ class BSplineCurve(Edge):
     @classmethod
     def from_points_interpolation(
         cls,
-        points: Union[List[design3d.Point2D], List[design3d.Point3D]],
+        points: list[design3d.Point2D] | list[design3d.Point3D],
         degree: int,
         centripetal: bool = True,
         name: str = " ",
@@ -1732,8 +1728,7 @@ class BSplineCurve(Edge):
         set_points = set(points)
         if len(set_points) < len(points) - 1:
             warnings.warn(
-                "Not able to perform point interpolation."
-                "There are repeated points not in the edges of the point list."
+                "Not able to perform point interpolation.There are repeated points not in the edges of the point list."
             )
             return None
         point_name = "Point" + points[0].__class__.__name__[-2:]
@@ -1770,7 +1765,7 @@ class BSplineCurve(Edge):
         point_name = "Point" + self.__class__.__name__[-2:]
         return [getattr(design3d, point_name)(*point) for point in points_list]
 
-    def get_geo_lines(self, tag: int, control_points_tags: List[int]):
+    def get_geo_lines(self, tag: int, control_points_tags: list[int]):
         """
         Gets the lines that define a BsplineCurve in a .geo file.
 
@@ -1956,7 +1951,7 @@ class BSplineCurve(Edge):
             or False otherwise
         """
         raise NotImplementedError(
-            f"the straight_line_point_belongs method must be" f" overloaded by {self.__class__.__name__}"
+            f"the straight_line_point_belongs method must be overloaded by {self.__class__.__name__}"
         )
 
     def point_projection(self, point):
@@ -2071,7 +2066,7 @@ class BSplineCurve(Edge):
                     return True
         return False
 
-    def frame_mapping(self, frame: Union[design3d.Frame3D, design3d.Frame2D], side: str):
+    def frame_mapping(self, frame: design3d.Frame3D | design3d.Frame2D, side: str):
         """
         Returns a new Revolution Surface positioned in the specified frame.
 
@@ -2194,10 +2189,10 @@ class BSplineCurve2D(BSplineCurve):
     def __init__(
         self,
         degree: int,
-        control_points: List[design3d.Point2D],
-        knot_multiplicities: List[int],
-        knots: List[float],
-        weights: List[float] = None,
+        control_points: list[design3d.Point2D],
+        knot_multiplicities: list[int],
+        knots: list[float],
+        weights: list[float] = None,
         name: str = "",
     ):
         self._bounding_rectangle = None
@@ -2430,7 +2425,7 @@ class BezierCurve2D(BSplineCurve2D):
     :type name: str, optional
     """
 
-    def __init__(self, degree: int, control_points: List[design3d.Point2D], name: str = ""):
+    def __init__(self, degree: int, control_points: list[design3d.Point2D], name: str = ""):
         knotvector = nurbs_helpers.generate_knot_vector(degree, len(control_points))
         knot_multiplicity = [1] * len(knotvector)
 
@@ -3125,8 +3120,8 @@ class FullArcMixin(ArcMixin):
 
     def __init__(
         self,
-        circle: Union[design3d.curves.Circle2D, design3d.curves.Circle3D],
-        start_end: Union[design3d.Point2D, design3d.Point3D],
+        circle: design3d.curves.Circle2D | design3d.curves.Circle3D,
+        start_end: design3d.Point2D | design3d.Point3D,
         name: str = "",
     ):
         self.circle = circle
@@ -4447,7 +4442,7 @@ class ArcEllipse2D(ArcEllipseMixin, Edge):
             or False otherwise
         """
         raise NotImplementedError(
-            f"the straight_line_point_belongs method must be" f" overloaded by {self.__class__.__name__}"
+            f"the straight_line_point_belongs method must be overloaded by {self.__class__.__name__}"
         )
 
     def straight_line_center_of_mass(self):
@@ -4511,8 +4506,8 @@ class FullArcEllipse(Edge):
 
     def __init__(
         self,
-        ellipse: Union[design3d_curves.Ellipse2D, design3d_curves.Ellipse3D],
-        start_end: Union[design3d.Point2D, design3d.Point3D],
+        ellipse: design3d_curves.Ellipse2D | design3d_curves.Ellipse3D,
+        start_end: design3d.Point2D | design3d.Point3D,
         name: str = "",
     ):
         self.start_end = start_end
@@ -4555,7 +4550,7 @@ class FullArcEllipse(Edge):
         """
         return self.ellipse.length()
 
-    def point_belongs(self, point: Union[design3d.Point2D, design3d.Point3D], abs_tol: float = 1e-2):
+    def point_belongs(self, point: design3d.Point2D | design3d.Point3D, abs_tol: float = 1e-2):
         """
         Verifies if a given point lies on the ellipse.
 
@@ -4587,7 +4582,7 @@ class FullArcEllipse(Edge):
             or False otherwise
         """
         raise NotImplementedError(
-            f"the straight_line_point_belongs method must be" f" overloaded by {self.__class__.__name__}"
+            f"the straight_line_point_belongs method must be overloaded by {self.__class__.__name__}"
         )
 
     def abscissa(self, point, tol: float = 1e-6):
@@ -4667,7 +4662,7 @@ class FullArcEllipse2D(FullArcEllipse, ArcEllipse2D):
         """
         return FullArcEllipse2D(self.ellipse.translation(offset), self.start_end.translation(offset), self.name)
 
-    def abscissa(self, point: Union[design3d.Point2D, design3d.Point3D], tol: float = 1e-6):
+    def abscissa(self, point: design3d.Point2D | design3d.Point3D, tol: float = 1e-6):
         """
         Calculates the abscissa of a given point.
 
@@ -5316,10 +5311,10 @@ class BSplineCurve3D(BSplineCurve):
     def __init__(
         self,
         degree: int,
-        control_points: List[design3d.Point3D],
-        knot_multiplicities: List[int],
-        knots: List[float],
-        weights: List[float] = None,
+        control_points: list[design3d.Point3D],
+        knot_multiplicities: list[int],
+        knots: list[float],
+        weights: list[float] = None,
         name: str = "",
     ):
 
@@ -5817,7 +5812,7 @@ class BezierCurve3D(BSplineCurve3D):
     :type name: str, optional
     """
 
-    def __init__(self, degree: int, control_points: List[design3d.Point3D], name: str = ""):
+    def __init__(self, degree: int, control_points: list[design3d.Point3D], name: str = ""):
         knotvector = nurbs_helpers.generate_knot_vector(degree, len(control_points))
         knot_multiplicity = [1] * len(knotvector)
 
@@ -6206,7 +6201,6 @@ class Arc3D(ArcMixin, Edge):
 
         # Sphere
         if math.isclose(tore_center.point_distance(self.circle.center), 0.0, abs_tol=1e-6):
-
             start_p, _ = line3d.point_projection(self.start)
             u = self.start - start_p
 
@@ -6955,7 +6949,7 @@ class ArcEllipse3D(ArcEllipseMixin, Edge):
         ellipse_linesegment_intersections = self.ellipse.linesegment_intersections(linesegment, abs_tol)
         return self.validate_intersections(ellipse_linesegment_intersections, abs_tol)
 
-    def validate_intersections(self, intersections: List[design3d.Point3D], abs_tol: float = 1e-6):
+    def validate_intersections(self, intersections: list[design3d.Point3D], abs_tol: float = 1e-6):
         """Helper function to validate edge intersections."""
         valid_intersections = []
         for intersection in intersections:

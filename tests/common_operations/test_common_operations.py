@@ -1,10 +1,10 @@
+import random
 import unittest
 
 import design3d
+from design3d import primitives3d
 from design3d.surfaces import Plane3D
 from design3d.utils.common_operations import split_wire_by_plane
-from design3d import primitives3d
-import random
 
 random.seed(2)
 

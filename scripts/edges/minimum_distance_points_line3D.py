@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Minimum distance line between two lines
 """
 
 import design3d as d3d
-import design3d.primitives3d as primitives3d
 from design3d import curves
 
 # import numpy as npy

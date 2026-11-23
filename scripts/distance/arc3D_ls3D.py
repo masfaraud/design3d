@@ -1,11 +1,8 @@
-# -*- coding: utf-8 -*-
 """
 Created on Fri May 22 11:17:00 2020
 
 @author: Mack Pro
 """
-
-import random
 
 import matplotlib.pyplot as plt
 

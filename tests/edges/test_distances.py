@@ -2,9 +2,10 @@ import unittest
 from itertools import product
 
 from geomdl import utilities
+
 import design3d
-from design3d import curves
 import design3d.edges as d3de
+from design3d import curves
 
 # import design3d.models.edges as edges_models
 
@@ -70,7 +71,6 @@ def bspline_curve3d():
 
 
 class TestEdgesDistances(unittest.TestCase):
-
     def test_edges_distances_2d(self):
         expected_distances = [
             3.0,
