@@ -78,6 +78,22 @@ shock_lower_mount_distance = 0.150
 shock_lower_mount_height = 0.050
 shock_upper_mount_offset = d3d.Vector3D(0.0, 0, 0.300)
 
+# Engine (estimated position): single cylinder, inclined forward, the front sprocket being on the gearbox output shaft,
+# close to the swingarm pivot
+crankshaft_center = d3d.Point3D(0.560, 0, 0.330)
+cylinder_inclination = math.radians(15)  # forward, from the vertical
+engine_bore = 0.052
+engine_stroke = 0.0586
+front_sprocket_offset = d3d.Vector3D(-0.070, 0, -0.025)  # from the swingarm pivot
+
+# Chain drive: 428 chain (pitch 1/2 inch)
+chain_pitch = 0.0127
+front_sprocket_teeth = 14
+rear_sprocket_teeth = 48
+
+# Ground clearance of the MT-125, used to check the model
+target_ground_clearance = 0.140
+
 # Overall dimensions of the MT-125, used to check the model (they do not drive it)
 target_length = 1.955
 target_width = 0.740
@@ -119,6 +135,23 @@ shock_lower_mount = swingarm_frame.local_to_global_coordinates(
     d3d.Point3D(shock_lower_mount_distance, 0, shock_lower_mount_height)
 )
 shock_upper_mount = swingarm_pivot + shock_upper_mount_offset
+front_sprocket_center = swingarm_pivot + front_sprocket_offset
+cylinder_axis = d3d.Vector3D(-math.sin(cylinder_inclination), 0, math.cos(cylinder_inclination))
+
+
+def sprocket_pitch_radius(number_teeth: int) -> float:
+    return 0.5 * chain_pitch / math.sin(math.pi / number_teeth)
+
+
+front_sprocket_radius = sprocket_pitch_radius(front_sprocket_teeth)
+rear_sprocket_radius = sprocket_pitch_radius(rear_sprocket_teeth)
+sprockets_distance = front_sprocket_center.point_distance(rear_axle_center)
+# Number of chain links (standard formula for two sprockets)
+chain_links = (
+    2 * sprockets_distance / chain_pitch
+    + 0.5 * (front_sprocket_teeth + rear_sprocket_teeth)
+    + chain_pitch * ((rear_sprocket_teeth - front_sprocket_teeth) / (2 * math.pi)) ** 2 / sprockets_distance
+)
 
 # ======================================================================================================================
 # Detail parameters: they shape the parts without changing the architecture
@@ -199,6 +232,19 @@ subframe_rail_half_spacing = 0.095
 subframe_stay_points = [(0.790, 0.470), (1.150, 0.745)]
 subframe_tube_diameter = 0.025
 
+# Engine
+crankcase_profile = [(0.460, 0.215), (0.760, 0.230), (0.770, 0.350), (0.700, 0.440), (0.520, 0.430), (0.450, 0.320)]
+crankcase_right_side = 0.120  # the left side is set by the chain line, the front sprocket being outside the crankcase
+cylinder_block_size = 0.100
+cylinder_block_distance = (0.070, 0.200)  # from the crankshaft along the cylinder axis
+cylinder_head_size = 0.115
+cylinder_head_height = 0.080
+
+# Sprockets
+sprocket_width = 0.006
+sprocket_tooth_height = 0.008
+chain_height = 0.012
+
 # Rear shock
 shock_eye_diameter = 0.030
 shock_eye_width = 0.025
@@ -219,6 +265,9 @@ handlebar_base_width = 0.150
 tyre_black = (0.15, 0.15, 0.15)
 asphalt = (112 / 256, 110 / 256, 106 / 256)
 frame_grey = (0.27, 0.28, 0.29)  # dark painted steel
+engine_grey = (0.33, 0.33, 0.34)  # cast aluminium, painted dark grey
+chain_dark = (0.19, 0.19, 0.2)
+steel = (0.55, 0.55, 0.56)
 spring_red = (0.55, 0.16, 0.13)
 
 # Steering head: middle of the frame pivot, between the fork crowns, on the steering axis
@@ -716,6 +765,121 @@ fork_assembly = Assembly(
 )
 
 
+## Engine
+def xz_profile_extrusion(profile, y_min: float, y_max: float, inner_contours=None, name: str = "", color=None):
+    """Extrusion along the Y axis, between y_min and y_max, of a profile drawn in the XZ plane (2D x is X, y is Z)."""
+    if not isinstance(profile, Contour2D):
+        profile = ClosedPolygon2D([d3d.Point2D(x, z) for x, z in profile])
+    return ExtrudedProfile(
+        d3d.Frame3D(d3d.Point3D(0, y_max, 0), d3d.X3D, d3d.Z3D, -d3d.Y3D),
+        profile,
+        inner_contours or [],
+        y_max - y_min,
+        color=color,
+        name=name,
+    )
+
+
+crankcase_left_side = chain_line - chain_side * (0.5 * chain_width + 0.005)
+crankcase = xz_profile_extrusion(
+    crankcase_profile, crankcase_left_side, crankcase_right_side, name="Crankcase", color=engine_grey
+)
+
+
+def cylinder_frame(distance: float) -> d3d.Frame3D:
+    """Frame on the cylinder axis, at a distance from the crankshaft: w along the axis, u along Y."""
+    return d3d.Frame3D(
+        crankshaft_center + distance * cylinder_axis, d3d.Y3D, cylinder_axis.cross(d3d.Y3D), cylinder_axis
+    )
+
+
+cylinder_block = Loft(
+    [rounded_rectangle(cylinder_block_size, cylinder_block_size, 0.015)] * 2,
+    [cylinder_frame(distance) for distance in cylinder_block_distance],
+    color=engine_grey,
+    name="Cylinder block",
+)
+cylinder_head = Loft(
+    [
+        rounded_rectangle(cylinder_head_size, cylinder_head_size, 0.015),
+        rounded_rectangle(cylinder_head_size, cylinder_head_size, 0.015),
+        rounded_rectangle(0.8 * cylinder_head_size, 0.8 * cylinder_head_size, 0.015),
+    ],
+    [
+        cylinder_frame(cylinder_block_distance[1]),
+        cylinder_frame(cylinder_block_distance[1] + 0.7 * cylinder_head_height),
+        cylinder_frame(cylinder_block_distance[1] + cylinder_head_height),
+    ],
+    color=engine_grey,
+    name="Cylinder head",
+)
+engine = Assembly([crankcase, cylinder_block, cylinder_head], [d3d.OXYZ] * 3, name="Engine")
+
+
+## Chain drive, in the chain plane (y = chain_line)
+def belt_contour(center1: d3d.Point2D, radius1: float, center2: d3d.Point2D, radius2: float) -> Contour2D:
+    """Contour around two circles, made of their external tangents and arcs."""
+    circle1 = Circle2D.from_center_and_radius(center1, radius1, is_trigo=False)
+    circle2 = Circle2D.from_center_and_radius(center2, radius2, is_trigo=False)
+    tangent1, _ = LineSegment2D.external_circle_tangents(circle1, circle2)
+    tangent2, _ = LineSegment2D.external_circle_tangents(circle2, circle1)
+    return Contour2D(
+        [tangent1, Arc2D(circle2, tangent1.end, tangent2.start), tangent2, Arc2D(circle1, tangent2.end, tangent1.start)]
+    )
+
+
+def sprocket(center: d3d.Point3D, number_teeth: int, bore_diameter: float, name: str) -> ExtrudedProfile:
+    """Sprocket with simplified teeth, in the chain plane."""
+    radius = sprocket_pitch_radius(number_teeth)
+    teeth_points = [
+        d3d.Point2D(center.x, center.z)
+        + (radius + (0.5 if i % 2 == 0 else -0.5) * sprocket_tooth_height)
+        * d3d.Vector2D(math.cos(math.pi * i / number_teeth), math.sin(math.pi * i / number_teeth))
+        for i in range(2 * number_teeth)
+    ]
+    bore = Contour2D.from_circle(Circle2D.from_center_and_radius(d3d.Point2D(center.x, center.z), 0.5 * bore_diameter))
+    return xz_profile_extrusion(
+        ClosedPolygon2D(teeth_points),
+        chain_line - 0.5 * sprocket_width,
+        chain_line + 0.5 * sprocket_width,
+        [bore],
+        name=name,
+        color=steel,
+    )
+
+
+front_sprocket_center2d = d3d.Point2D(front_sprocket_center.x, front_sprocket_center.z)
+rear_sprocket_center2d = d3d.Point2D(rear_axle_center.x, rear_axle_center.z)
+chain = xz_profile_extrusion(
+    belt_contour(
+        front_sprocket_center2d,
+        front_sprocket_radius + 0.5 * chain_height,
+        rear_sprocket_center2d,
+        rear_sprocket_radius + 0.5 * chain_height,
+    ),
+    chain_line - 0.5 * chain_width,
+    chain_line + 0.5 * chain_width,
+    [
+        belt_contour(
+            front_sprocket_center2d,
+            front_sprocket_radius - 0.5 * chain_height,
+            rear_sprocket_center2d,
+            rear_sprocket_radius - 0.5 * chain_height,
+        )
+    ],
+    name="Chain",
+    color=chain_dark,
+)
+transmission = Assembly(
+    [
+        sprocket(front_sprocket_center, front_sprocket_teeth, 0.020, "Front sprocket"),
+        sprocket(rear_axle_center, rear_sprocket_teeth, 0.090, "Rear sprocket"),
+        chain,
+    ],
+    [d3d.OXYZ] * 3,
+    name="Transmission",
+)
+
 # The fork assembly is built with the front axle at its origin and the fork tubes along its Z axis
 fork_frame = d3d.XYZ.rotation(d3d.Y3D, caster_angle).to_frame(front_axle_center)
 
@@ -790,8 +954,8 @@ frame = Assembly(
 )
 
 motorcycle = Assembly(
-    [fork_assembly, frame, swingarm_assembly, rear_shock],
-    [fork_frame, d3d.OXYZ, swingarm_frame, d3d.OXYZ],
+    [fork_assembly, frame, swingarm_assembly, rear_shock, engine, transmission],
+    [fork_frame, d3d.OXYZ, swingarm_frame, d3d.OXYZ, d3d.OXYZ, d3d.OXYZ],
     name="Motorcycle",
 )
 
@@ -808,9 +972,13 @@ for hardpoint_name, hardpoint in [
     ("rear axle", rear_axle_center),
     ("shock lower mount", shock_lower_mount),
     ("shock upper mount", shock_upper_mount),
+    ("crankshaft", crankshaft_center),
+    ("front sprocket", front_sprocket_center),
 ]:
     print(f"  {hardpoint_name:<28} {1000 * hardpoint.x:7.1f} {1000 * hardpoint.z:7.1f}")
 print(f"Fork offset: {1000 * fork_offset:.1f} mm, tyre to lower crown clearance: {1000 * tyre_crown_clearance:.0f} mm")
+print(f"Engine: {1e6 * math.pi / 4 * engine_bore**2 * engine_stroke:.1f} cm3")
+print(f"Chain: {chain_links:.1f} links, {math.ceil(chain_links / 2) * 2} with an even number")
 print(
     f"Rear shock length (eye to eye): {1000 * shock_length:.0f} mm, swingarm width: {1000 * swingarm_total_width:.0f} mm"
 )
@@ -824,6 +992,21 @@ print("Overall dimensions (model / MT-125) in mm:")
 for dimension_name, axis, target_value in [("length", 0, target_length), ("width", 1, target_width)]:
     print(f"  {dimension_name:<7} {1000 * (model_max[axis] - model_min[axis]):6.0f} / {1000 * target_value:4.0f}")
 print(f"  {'height':<7} {1000 * model_max[2]:6.0f} / {1000 * target_height:4.0f}")
+# Ground clearance: lowest point of the parts that are not wheel parts
+wheel_part_names = {component.name for wheel in (front_wheel, rear_wheel) for component in wheel.components}
+ground_clearance = min(mesh.vertices[:, 2].min() for mesh in motorcycle_meshes if mesh.name not in wheel_part_names)
+print(f"Ground clearance (model / MT-125): {1000 * ground_clearance:.0f} / {1000 * target_ground_clearance:.0f} mm")
+
+
+# Sides of the chain and of the rear brake, from the rider's point of view (the rider faces -X, Z being up)
+def rider_side(part_name: str) -> str:
+    part_center = np.mean([mesh.vertices.mean(axis=0) for mesh in motorcycle_meshes if mesh.name == part_name], axis=0)
+    return "left" if d3d.Vector3D(*part_center).dot(d3d.Z3D.cross(-d3d.X3D)) > 0 else "right"
+
+
+print(f"Chain on the {rider_side('Chain')} side, rear brake disk on the {rider_side('Rear brake disk')} side")
+if (rider_side("Chain"), rider_side("Rear brake disk")) != ("left", "right"):
+    raise ValueError("The chain must be on the left side and the rear brake on the right side.")
 
 primitives = [ground, motorcycle]
 
