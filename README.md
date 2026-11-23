@@ -3,7 +3,7 @@
 </h1>
 
 <h4 align="center">
-  A computation-oriented Python 3D modeler based on B-Rep, with STEP and STL import and export
+  A Python 3D modeler ready for agentic engineering, based on B-Rep, with STEP and STL import and export
 </h4>
 
 <div align="center">
@@ -26,10 +26,23 @@
 
 ## Description
 
-design3d is a python 3d design package enabling CAD automations.
-With it, you can easily create 3D models from python code.
-Check the examples to see what you can do with this library.
-A hard fork of the discontinued volmdlr project.
+design3d is a Python 3D modeler based on Boundary Representation (B-Rep). Its goal is to be a 3D modeler ready for
+agentic engineering: AI agents, as well as engineers, can create, analyze and exchange 3D models entirely from code.
+
+To that end, design3d:
+
+- is a plain Python library with no graphical interface to drive: models are built, queried and modified by code, and
+  run headless in scripts, notebooks, CI pipelines or agent sandboxes;
+- computes what an agent needs to check its own work: distances, intersections, volumes, point belonging, boolean
+  operations;
+- serializes its objects to JSON (`to_dict` and `SerializableObject.from_json`), so models can be stored, compared and
+  passed between tools;
+- imports and exports STEP and STL files, to bring the results back into standard CAD software;
+- is developed with coding agents in mind: the repository ships instructions for them in [AGENTS.md](AGENTS.md), and a
+  test suite to check every change.
+
+Check the examples to see what you can do with this library. design3d is a hard fork of the discontinued volmdlr
+project.
 
 <p align="center"><img src="https://raw.githubusercontent.com/masfaraud/design3d/master/docs/source/images/casing.jpg" width="40%" /> <img src="https://raw.githubusercontent.com/masfaraud/design3d/master/docs/source/images/casing_contours.png" width="55%" /></p>
 <i>A casing is defined by a 2D contour formed with the primitive RoundedLineSegment2D. This contour is offset by the casing width.</i><br/><br/><br/>
