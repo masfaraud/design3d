@@ -74,7 +74,7 @@ def interpolate_surface(
     size_v: cython.int,
     degree_u: cython.int,
     degree_v: cython.int,
-    **kwargs
+    **kwargs,
 ):
     """
     Surface interpolation through the data points.
@@ -238,7 +238,7 @@ def approximate_surface(
     size_v: cython.int,
     degree_u: cython.int,
     degree_v: cython.int,
-    **kwargs
+    **kwargs,
 ):
     """
     Surface approximation using least squares method with fixed number of control points.
