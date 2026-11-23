@@ -57,4 +57,4 @@ jobs:
 
       - name: Build Docs
         run: |
-          make -C docs html
+          make -C docs html SPHINXOPTS="-W --keep-going"
