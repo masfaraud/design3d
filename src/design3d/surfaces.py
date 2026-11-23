@@ -4,7 +4,7 @@ import math
 import traceback
 import warnings
 from collections import deque
-from functools import cached_property, lru_cache
+from functools import cached_property
 from itertools import chain
 
 import matplotlib.pyplot as plt
@@ -7328,6 +7328,7 @@ class BSplineSurface3D(Surface3D):
         self._grids2d = None
         self._grids2d_deformed = None
         self._bbox = None
+        self._decompose_cache = {}
         self._surface_curves = None
         self._knotvector = None
         self.ctrlptsw = None
@@ -8142,7 +8143,6 @@ class BSplineSurface3D(Surface3D):
                 blending_mat[i][j] = self.basis_functions_v(v_i, self.degree_v, j)
         return blending_mat
 
-    @lru_cache(maxsize=6)
     def decompose(self, return_params: bool = False, decompose_dir="uv"):
         """
         Decomposes the surface into Bezier surface patches of the same degree.
@@ -8153,7 +8153,10 @@ class BSplineSurface3D(Surface3D):
         :param decompose_dir: Direction of decomposition. 'uv', 'u' or 'v'.
         :type decompose_dir: str
         """
-        return decompose_surface(self, return_params, decompose_dir=decompose_dir)
+        key = (return_params, decompose_dir)
+        if key not in self._decompose_cache:
+            self._decompose_cache[key] = decompose_surface(self, return_params, decompose_dir=decompose_dir)
+        return self._decompose_cache[key]
 
     def point2d_to_3d(self, point2d: design3d.Point2D):
         """

@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Vector3D.plot: the arrow is drawn with recent Matplotlib versions, which require `do_3d_projection` on 3D artists
 - Package metadata: the license is the LGPL 2.1 of the LICENSE file, not a Creative Commons license
 - Measure2D.plot: `ax` and `edge_style` are optional, as for other edges, and the axes are returned
+- BoundingBox.center and BSplineSurface3D.decompose no longer keep the objects alive in a global cache
 
 ### Changed
 

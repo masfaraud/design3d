@@ -9,7 +9,6 @@ import warnings
 import webbrowser
 from dataclasses import dataclass
 from datetime import datetime
-from functools import lru_cache
 
 try:
     import gmsh
@@ -591,12 +590,11 @@ class BoundingBox(DataEqualityObject):
         self.name = name
 
     @property
-    @lru_cache
     def center(self):
         """
         Computes the center of the bounding box.
 
-        TODO: change lru_cache to cached property when support for py3.7 is dropped.
+        It is not cached: bounds can be updated after creation and the computation is cheap.
         """
         return design3d.Point3D(
             0.5 * (self.xmin + self.xmax), 0.5 * (self.ymin + self.ymax), 0.5 * (self.zmin + self.zmax)
