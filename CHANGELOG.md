@@ -28,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - design3d requires Python 3.12 or later
+- Library messages go through `warnings` or `logging` instead of `print`, and warnings point to the calling code
+- FlatElementError gives the element area in its message instead of printing it and plotting the element
 
 ### Removed
 

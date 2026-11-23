@@ -5,6 +5,7 @@ design3d utils for calculating 3D to surface parametric domain operation.
 
 import bisect
 import math
+import warnings
 
 import numpy as np
 
@@ -403,7 +404,10 @@ def verify_repeated_parametric_points(points):
     set_points = set(points)
     if len(set_points) < len(points):
         if points[0].is_close(points[-1]):
-            print("Periodic brep? NotImplemented in utils.parametric.py verify_repeated_parametric_points.")
+            warnings.warn(
+                "Periodic brep? NotImplemented in utils.parametric.py verify_repeated_parametric_points.",
+                stacklevel=2,
+            )
         new_points = []
         verification_set = set()
         for point in points:

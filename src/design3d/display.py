@@ -3,6 +3,7 @@
 Classes to define mesh for display use. Display mesh do not require good aspect ratios on elements.
 """
 
+import logging
 import warnings
 from typing import TypeVar, Union
 
@@ -16,6 +17,8 @@ from trimesh import Trimesh
 import design3d.edges
 from design3d.core import Primitive3D
 from design3d.geometry import numpy_cross2d
+
+logger = logging.getLogger(__name__)
 
 # TODO: make this module "mesh" as it is not useful only for display
 
@@ -932,7 +935,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         """
         if not filepath.lower().endswith(".stl"):
             filepath += ".stl"
-            print(f"Changing name to {filepath}")
+            logger.info("Changing name to %s", filepath)
 
         with open(filepath, "wb") as file:
             self.save_to_stl_stream(file, scale_factor=scale_factor)
@@ -961,7 +964,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         """
         if not filepath.lower().endswith(".obj"):
             filepath += ".obj"
-            print(f"Changing name to {filepath}")
+            logger.info("Changing name to %s", filepath)
 
         with open(filepath, "wb") as file:
             self.save_to_obj_stream(file, scale_factor=scale_factor)
@@ -990,7 +993,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         """
         if not filepath.lower().endswith(".ply"):
             filepath += ".ply"
-            print(f"Changing name to {filepath}")
+            logger.info("Changing name to %s", filepath)
 
         with open(filepath, "wb") as file:
             self.save_to_ply_stream(file, scale_factor=scale_factor)
@@ -1019,7 +1022,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         """
         if not filepath.lower().endswith(".off"):
             filepath += ".off"
-            print(f"Changing name to {filepath}")
+            logger.info("Changing name to %s", filepath)
 
         with open(filepath, "wb") as file:
             self.save_to_off_stream(file, scale_factor=scale_factor)
@@ -1048,7 +1051,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         """
         if not filepath.lower().endswith(".3mf"):
             filepath += ".3mf"
-            print(f"Changing name to {filepath}")
+            logger.info("Changing name to %s", filepath)
 
         with open(filepath, "wb") as file:
             self.save_to_3mf_stream(file, scale_factor=scale_factor)

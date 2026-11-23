@@ -1170,7 +1170,7 @@ class Wire2D(WireMixin):
             try:
                 primitives_symmetry.append(primitive.axial_symmetry(line))
             except NotImplementedError:
-                print(f"Class {self.__class__.__name__} does not implement symmetry method")
+                warnings.warn(f"Class {primitive.__class__.__name__} does not implement symmetry method", stacklevel=2)
 
         return self.__class__(primitives=primitives_symmetry)
 
@@ -3139,8 +3139,9 @@ class ClosedPolygon2D(ClosedPolygonMixin, Contour2D):
             / 2
         )
         if offset <= -max_offset_len:
-            print("Inadapted offset, polygon might turn over. Offset must be greater than", -max_offset_len)
-            raise ValueError("inadapted offset")
+            raise ValueError(
+                f"Inadapted offset, polygon might turn over. Offset must be greater than {-max_offset_len}"
+            )
         nb_points = len(self.points)
         vectors = []
         for i in range(nb_points - 1):

@@ -1018,10 +1018,10 @@ class Surface3D(DataEqualityObject):
                     primitives3d.extend(primitives)
                     primitives_mapping[primitive2d] = primitives[0]
                 except AttributeError:
-                    print(traceback.format_exc())
-                    print(
-                        f"Class {self.__class__.__name__} does not implement {method_name}"
-                        f"with {primitive2d.__class__.__name__}"
+                    warnings.warn(
+                        f"Class {self.__class__.__name__} does not implement {method_name} "
+                        f"with {primitive2d.__class__.__name__}:\n{traceback.format_exc()}",
+                        stacklevel=2,
                     )
             else:
                 raise AttributeError(f"Class {self.__class__.__name__} does not implement {method_name}")
@@ -5245,9 +5245,10 @@ class SphericalSurface3D(UVPeriodicalSurface):
                         continue
                     primitives_mapping[primitive2d] = primitives_list[0]
                 except AttributeError:
-                    print(
-                        f"Class {self.__class__.__name__} does not implement {method_name}"
-                        f"with {primitive2d.__class__.__name__}"
+                    warnings.warn(
+                        f"Class {self.__class__.__name__} does not implement {method_name} "
+                        f"with {primitive2d.__class__.__name__}",
+                        stacklevel=2,
                     )
             else:
                 raise AttributeError(f"Class {self.__class__.__name__} does not implement {method_name}")
@@ -8863,7 +8864,7 @@ class BSplineSurface3D(Surface3D):
         lth = bspline_curve3d.length()
 
         if lth <= 1e-6:
-            print("BSplineCurve3D skipped because it is too small")
+            warnings.warn("BSplineCurve3D skipped because it is too small", stacklevel=2)
             return None
 
         n = min(bspline_curve3d.ctrlpts.shape[0], 20)

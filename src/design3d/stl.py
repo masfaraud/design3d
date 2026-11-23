@@ -5,6 +5,7 @@ STL reader & writer.
 https://en.wikipedia.org/wiki/STL_(file_format)
 """
 
+import logging
 import os
 import struct
 import warnings
@@ -15,6 +16,8 @@ import design3d as d3d
 import design3d.core as d3dc
 import design3d.faces as d3df
 from design3d import shells
+
+logger = logging.getLogger(__name__)
 
 
 def is_binary(filepath: str) -> bool:
@@ -87,7 +90,7 @@ class Stl:
                 all_points = []
                 for i in range(num_triangles):
                     if i % 5000 == 0:
-                        print("reading stl", round(i / num_triangles * 100, 2), "%")
+                        logger.debug("reading stl %s %%", round(i / num_triangles * 100, 2))
                     # First is normal, unused
                     _ = d3d.Vector3D(stream.read_f4le(), stream.read_f4le(), stream.read_f4le())
                     p1 = d3d.Point3D(
@@ -138,7 +141,7 @@ class Stl:
         invalid_triangles = []
         for i in range(num_triangles):
             if i % 5000 == 0:
-                print("reading stl", round(i / num_triangles * 100, 2), "%")
+                logger.debug("reading stl %s %%", round(i / num_triangles * 100, 2))
             _ = d3d.Vector3D(stream.read_f4le(), stream.read_f4le(), stream.read_f4le())
             p1 = d3d.Point3D(
                 distance_multiplier * stream.read_f4le(),
@@ -245,7 +248,7 @@ class Stl:
         """
         if not filepath.endswith(".stl"):
             filepath += ".stl"
-            print("Adding .stl extension: ", filepath)
+            logger.info("Adding .stl extension: %s", filepath)
 
         with open(filepath, "wb") as file:
             self.save_to_stream(file, distance_multiplier=distance_multiplier)

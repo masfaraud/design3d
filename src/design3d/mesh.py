@@ -200,9 +200,7 @@ class TriangularElement(d3dw.Triangle):
         try:
             inv_a = a_matrix.inverse()
         except ValueError as expt:
-            # self.plot()
-            print("buggy element area", self._area())
-            raise FlatElementError("form function bug") from expt
+            raise FlatElementError(f"form function bug, element area: {self._area()}") from expt
         x_1 = inv_a.vector_multiplication(d3d.X3D)
         x_2 = inv_a.vector_multiplication(d3d.Y3D)
         x_3 = inv_a.vector_multiplication(d3d.Z3D)
@@ -296,9 +294,7 @@ class TriangularElement2D(TriangularElement, d3dw.ClosedPolygon2D):
         try:
             inv_a = a_matrix.inverse()
         except ValueError as expt:
-            self.plot()
-            print("buggy element area", self.area)
-            raise FlatElementError("form function bug") from expt
+            raise FlatElementError(f"form function bug, element area: {self.area}") from expt
         x_1 = inv_a.vector_multiplication(d3d.X3D)
         x_2 = inv_a.vector_multiplication(d3d.Y3D)
         x_3 = inv_a.vector_multiplication(d3d.Z3D)
