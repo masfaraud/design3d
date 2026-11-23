@@ -5872,18 +5872,28 @@ class Arc3D(ArcMixin, Edge):
         """
         Calculates the bounding box of the Arc3D.
 
+        On the circle, the coordinate along a unit vector e is extremal at the points center +/- radius * d, d being
+        the normalized projection of e on the plane of the circle. These points are added to the arc end points when
+        they are on the arc.
+
         :return: Bounding Box object.
         """
-        # TODO: implement exact calculation
-
-        points = self.discretization_points(angle_resolution=5)
-        xmin = min(point.x for point in points)
-        xmax = max(point.x for point in points)
-        ymin = min(point.y for point in points)
-        ymax = max(point.y for point in points)
-        zmin = min(point.z for point in points)
-        zmax = max(point.z for point in points)
-        return design3d.core.BoundingBox(xmin, xmax, ymin, ymax, zmin, zmax)
+        frame = self.circle.frame
+        points = [self.start, self.end]
+        angle_tolerance = 1e-9 / self.circle.radius
+        for axis in (design3d.X3D, design3d.Y3D, design3d.Z3D):
+            u_component, v_component = frame.u.dot(axis), frame.v.dot(axis)
+            if math.hypot(u_component, v_component) < 1e-12:
+                # Axis normal to the plane of the circle: the coordinate is constant on the arc
+                continue
+            for angle in (math.atan2(v_component, u_component), math.atan2(v_component, u_component) + math.pi):
+                # Angle of the extremum in [angle_start, angle_start + 2 pi), as the arc angles
+                angle = self.angle_start + (angle - self.angle_start) % design3d.TWO_PI
+                if angle <= self.angle_end + angle_tolerance:
+                    points.append(
+                        frame.origin + self.circle.radius * (math.cos(angle) * frame.u + math.sin(angle) * frame.v)
+                    )
+        return design3d.core.BoundingBox.from_points(points)
 
     @classmethod
     def from_angle(
