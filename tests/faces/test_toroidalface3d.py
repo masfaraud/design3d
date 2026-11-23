@@ -159,6 +159,47 @@ class TestToroidalFace3D(unittest.TestCase):
         normal = toroidaface.normal_at_point(point)
         self.assertTrue(normal.is_close(design3d.Vector3D(0.1568952782807088, 0.27351794069082946, 0.9489846193555862)))
 
+    def test_bounding_box_full_revolution_band(self):
+        # Band around the outer equator of the torus, as the outside of a tyre: the farthest points from the axis are
+        # inside the face, not on its boundary contours.
+        surface = surfaces.ToroidalSurface3D(design3d.OXYZ, 0.3, 0.08)
+        face = faces.ToroidalFace3D.from_surface_rectangular_cut(surface, 0.0, design3d.TWO_PI, -0.5, 0.5)
+        bounding_box = face.bounding_box
+        for value, expected_value in [
+            (bounding_box.xmin, -0.38),
+            (bounding_box.xmax, 0.38),
+            (bounding_box.ymin, -0.38),
+            (bounding_box.ymax, 0.38),
+            (bounding_box.zmin, -0.08 * math.sin(0.5)),
+            (bounding_box.zmax, 0.08 * math.sin(0.5)),
+        ]:
+            self.assertAlmostEqual(value, expected_value, places=6)
+
+    def test_bounding_box_partial_face_of_tilted_torus(self):
+        frame = design3d.Frame3D(design3d.Point3D(0.1, -0.2, 0.3), design3d.X3D, design3d.Y3D, design3d.Z3D).rotation(
+            design3d.Point3D(0.1, -0.2, 0.3), design3d.Vector3D(1.0, 1.0, 0.0).unit_vector(), 0.7
+        )
+        surface = surfaces.ToroidalSurface3D(frame, 0.5, 0.2)
+        for theta1, theta2, phi1, phi2 in [(-1.0, 2.5, -2.0, 1.0), (0.5, 4.0, 1.0, 2.0), (2.0, 7.0, 3.0, 5.5)]:
+            face = faces.ToroidalFace3D.from_surface_rectangular_cut(surface, theta1, theta2, phi1, phi2)
+            # Reference: dense sampling of the face
+            points = npy.array(
+                [
+                    [*surface.point2d_to_3d(design3d.Point2D(theta, phi))]
+                    for theta in npy.linspace(theta1, theta2, 300)
+                    for phi in npy.linspace(phi1, phi2, 300)
+                ]
+            )
+            bounding_box = face.bounding_box
+            for value, expected_value in zip(
+                (bounding_box.xmin, bounding_box.ymin, bounding_box.zmin), points.min(axis=0)
+            ):
+                self.assertAlmostEqual(value, expected_value, delta=1e-4)
+            for value, expected_value in zip(
+                (bounding_box.xmax, bounding_box.ymax, bounding_box.zmax), points.max(axis=0)
+            ):
+                self.assertAlmostEqual(value, expected_value, delta=1e-4)
+
 
 if __name__ == "__main__":
     unittest.main()
