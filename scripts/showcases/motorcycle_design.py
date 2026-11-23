@@ -29,6 +29,7 @@ from design3d.primitives3d import (
     Cylinder,
     ExtrudedProfile,
     HollowCylinder,
+    Loft,
     OpenRoundedLineSegments3D,
     RevolvedProfile,
     Sweep,
@@ -71,6 +72,12 @@ fork_length = 0.700
 swingarm_length = 0.560
 swingarm_angle = math.radians(10)  # positive when the pivot is higher than the rear axle
 
+# Rear shock (estimated values): its lower mount is on the swingarm, at a distance from the pivot along the arm and
+# above its axis; its upper mount is on the frame, given relatively to the swingarm pivot
+shock_lower_mount_distance = 0.150
+shock_lower_mount_height = 0.050
+shock_upper_mount_offset = d3d.Vector3D(0.0, 0, 0.300)
+
 # Overall dimensions of the MT-125, used to check the model (they do not drive it)
 target_length = 1.955
 target_width = 0.740
@@ -101,6 +108,17 @@ rear_contact_point = d3d.Point3D(wheelbase, 0, 0)
 swingarm_pivot = rear_axle_center + swingarm_length * d3d.Vector3D(
     -math.cos(swingarm_angle), 0, math.sin(swingarm_angle)
 )
+# Swingarm frame: origin at the pivot, u along the arm toward the rear axle, v to the right, w up
+swingarm_frame = d3d.Frame3D(
+    swingarm_pivot,
+    d3d.Vector3D(math.cos(swingarm_angle), 0, -math.sin(swingarm_angle)),
+    d3d.Y3D,
+    d3d.Vector3D(math.sin(swingarm_angle), 0, math.cos(swingarm_angle)),
+)
+shock_lower_mount = swingarm_frame.local_to_global_coordinates(
+    d3d.Point3D(shock_lower_mount_distance, 0, shock_lower_mount_height)
+)
+shock_upper_mount = swingarm_pivot + shock_upper_mount_offset
 
 # ======================================================================================================================
 # Detail parameters: they shape the parts without changing the architecture
@@ -155,6 +173,29 @@ rear_bearing_D = 0.042
 rear_bearing_B = 0.013
 rear_bearing_spacing = 0.110
 
+# Chain line: the chain is on the left side (Y < 0), between the rear tyre and the swingarm arm
+chain_side = -1
+chain_width = 0.012
+chain_tyre_clearance = 0.020
+chain_arm_clearance = 0.012
+chain_line = chain_side * (0.5 * rear_tyre_width + chain_tyre_clearance + 0.5 * chain_width)
+
+# Swingarm
+swingarm_arm_width = 0.028
+swingarm_arm_heights = (0.075, 0.060, 0.045)  # at the pivot, in the middle and at the rear axle
+swingarm_arm_spacing = 2 * (abs(chain_line) + 0.5 * chain_width + chain_arm_clearance) + swingarm_arm_width
+swingarm_pivot_tube_diameter = 0.045
+swingarm_cross_member_distance = 0.120  # from the pivot, along the arm
+swingarm_cross_member_size = 0.050
+
+# Rear shock
+shock_eye_diameter = 0.030
+shock_eye_width = 0.025
+shock_rod_diameter = 0.014
+shock_body_diameter = 0.046
+shock_spring_outer_diameter = 0.066
+shock_spring_inner_diameter = 0.052
+
 # Handlebar
 crown_handlebar_offset = 0.050
 handlebar_diameter = 0.028
@@ -166,6 +207,8 @@ handlebar_base_width = 0.150
 # Colors
 tyre_black = (0.15, 0.15, 0.15)
 asphalt = (112 / 256, 110 / 256, 106 / 256)
+frame_grey = (0.27, 0.28, 0.29)  # dark painted steel
+spring_red = (0.55, 0.16, 0.13)
 
 # Steering head: middle of the frame pivot, between the fork crowns, on the steering axis
 steering_head_center = (
@@ -447,6 +490,115 @@ rear_wheel = wheel_assembly(
     "Rear",
 )
 
+
+def rounded_rectangle(width: float, height: float, radius: float) -> ClosedRoundedLineSegments2D:
+    """Rounded rectangle centered on the origin. Its primitives do not depend on its dimensions, for lofts."""
+    return ClosedRoundedLineSegments2D(
+        [
+            d3d.Point2D(-0.5 * width, -0.5 * height),
+            d3d.Point2D(0.5 * width, -0.5 * height),
+            d3d.Point2D(0.5 * width, 0.5 * height),
+            d3d.Point2D(-0.5 * width, 0.5 * height),
+        ],
+        {0: radius, 1: radius, 2: radius, 3: radius},
+    )
+
+
+def tube_between(start: d3d.Point3D, end: d3d.Point3D, diameter: float, name: str, color=None) -> Cylinder:
+    """Cylinder whose axis goes from start to end."""
+    axis = end - start
+    w = axis.unit_vector()
+    u = w.deterministic_unit_normal_vector()
+    frame = d3d.Frame3D(0.5 * (start + end), u, w.cross(u), w)
+    return Cylinder(frame, 0.5 * diameter, axis.norm(), color=color, name=name)
+
+
+def y_axis_tube(center: d3d.Point3D, outer_diameter: float, length: float, name: str, inner_diameter: float = 0.0):
+    """Tube or cylinder along the Y axis, centered on a point."""
+    frame = d3d.Frame3D(center, d3d.Z3D, d3d.X3D, d3d.Y3D)
+    if inner_diameter:
+        return HollowCylinder(frame, 0.5 * inner_diameter, 0.5 * outer_diameter, length, color=frame_grey, name=name)
+    return Cylinder(frame, 0.5 * outer_diameter, length, color=frame_grey, name=name)
+
+
+## Swingarm, built in the swingarm frame: origin at the pivot, X along the arm toward the rear axle, Z up
+def swingarm_arm(side: float, name: str) -> Loft:
+    """Arm of the swingarm, its section getting smaller from the pivot to the rear axle. side is 1 (right) or -1."""
+    y = 0.5 * side * swingarm_arm_spacing
+    abscissas = (0.5 * swingarm_pivot_tube_diameter, 0.5 * swingarm_length, swingarm_length + 0.025)
+    return Loft(
+        [rounded_rectangle(swingarm_arm_width, height, 0.008) for height in swingarm_arm_heights],
+        [d3d.Frame3D(d3d.Point3D(x, y, 0), d3d.Y3D, d3d.Z3D, d3d.X3D) for x in abscissas],
+        color=frame_grey,
+        name=name,
+    )
+
+
+swingarm_cross_member = ExtrudedProfile(
+    d3d.Frame3D(d3d.Point3D(swingarm_cross_member_distance, 0.5 * swingarm_arm_spacing, 0), d3d.X3D, d3d.Z3D, -d3d.Y3D),
+    rounded_rectangle(swingarm_cross_member_size, swingarm_cross_member_size, 0.010),
+    [],
+    swingarm_arm_spacing,
+    color=frame_grey,
+    name="Swingarm cross member",
+)
+swingarm_total_width = swingarm_arm_spacing + swingarm_arm_width
+swingarm_assembly = Assembly(
+    [
+        swingarm_arm(1, "Swingarm right arm"),
+        swingarm_arm(-1, "Swingarm left arm"),
+        y_axis_tube(d3d.O3D, swingarm_pivot_tube_diameter, swingarm_total_width, "Swingarm pivot tube"),
+        swingarm_cross_member,
+        y_axis_tube(
+            d3d.Point3D(shock_lower_mount_distance, 0, shock_lower_mount_height),
+            shock_eye_diameter,
+            2 * shock_eye_width,
+            "Shock lower mount",
+        ),
+        y_axis_tube(d3d.Point3D(swingarm_length, 0, 0), rear_axle_diameter, swingarm_total_width + 0.02, "Rear axle"),
+        rear_wheel,
+    ],
+    [d3d.OXYZ] * 6 + [d3d.Frame3D(d3d.Point3D(swingarm_length, 0, 0), d3d.X3D, d3d.Y3D, d3d.Z3D)],
+    name="Swingarm",
+)
+# The rear wheel must fit between the arms, with the chain on the left
+if 0.5 * swingarm_arm_spacing - 0.5 * swingarm_arm_width < abs(chain_line) + 0.5 * chain_width:
+    raise ValueError("The swingarm arms are too close to each other for the rear tyre and the chain.")
+
+## Rear shock, between its mounts on the swingarm and on the frame
+shock_axis = (shock_upper_mount - shock_lower_mount).unit_vector()
+shock_length = shock_lower_mount.point_distance(shock_upper_mount)
+
+
+def shock_point(ratio: float) -> d3d.Point3D:
+    """Point on the shock axis, from its lower mount (0) to its upper mount (1)."""
+    return shock_lower_mount + ratio * shock_length * shock_axis
+
+
+rear_shock_parts = [
+    y_axis_tube(shock_lower_mount, shock_eye_diameter, shock_eye_width, "Shock lower eye", 0.010),
+    tube_between(shock_point(0.05), shock_point(0.55), shock_rod_diameter, "Shock rod", color=frame_grey),
+    tube_between(shock_point(0.45), shock_point(0.95), shock_body_diameter, "Shock body", color=frame_grey),
+    y_axis_tube(shock_upper_mount, shock_eye_diameter, shock_eye_width, "Shock upper eye", 0.010),
+]
+spring_axis_frame = d3d.Frame3D(
+    shock_point(0.5),
+    shock_axis.deterministic_unit_normal_vector(),
+    shock_axis.cross(shock_axis.deterministic_unit_normal_vector()),
+    shock_axis,
+)
+rear_shock_parts.append(
+    HollowCylinder(
+        spring_axis_frame,
+        0.5 * shock_spring_inner_diameter,
+        0.5 * shock_spring_outer_diameter,
+        0.6 * shock_length,
+        color=spring_red,
+        name="Shock spring",
+    )
+)
+rear_shock = Assembly(rear_shock_parts, [d3d.OXYZ] * len(rear_shock_parts), name="Rear shock")
+
 ## Fork
 # Tubes
 left_fork_tube = Cylinder(d3d.OXYZ, 0.5 * tube_diameter, tube_height, name="Left tube").translation(
@@ -570,8 +722,8 @@ frame = frame_pivot
 frame_frame = d3d.Frame3D(steering_head_center, d3d.X3D, d3d.Y3D, d3d.Z3D)
 
 motorcycle = Assembly(
-    [fork_assembly, frame, rear_wheel],
-    [fork_frame, frame_frame, d3d.Frame3D(rear_axle_center, d3d.X3D, d3d.Y3D, d3d.Z3D)],
+    [fork_assembly, frame, swingarm_assembly, rear_shock],
+    [fork_frame, frame_frame, swingarm_frame, d3d.OXYZ],
     name="Motorcycle",
 )
 
@@ -586,9 +738,14 @@ for hardpoint_name, hardpoint in [
     ("steering head", steering_head_center),
     ("swingarm pivot", swingarm_pivot),
     ("rear axle", rear_axle_center),
+    ("shock lower mount", shock_lower_mount),
+    ("shock upper mount", shock_upper_mount),
 ]:
     print(f"  {hardpoint_name:<28} {1000 * hardpoint.x:7.1f} {1000 * hardpoint.z:7.1f}")
 print(f"Fork offset: {1000 * fork_offset:.1f} mm, tyre to lower crown clearance: {1000 * tyre_crown_clearance:.0f} mm")
+print(
+    f"Rear shock length (eye to eye): {1000 * shock_length:.0f} mm, swingarm width: {1000 * swingarm_total_width:.0f} mm"
+)
 
 # Overall dimensions of the model, compared to the MT-125 ones. They are computed on the meshes of the parts, as the
 # bounding boxes of some faces (toroidal faces of the tyres) are underestimated.
