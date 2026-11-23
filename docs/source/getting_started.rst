@@ -5,7 +5,7 @@ Welcome to the absolute beginner’s guide to design3d! If you have comments or 
 Welcome to design3d!
 ^^^^^^^^^^^^^^^^^^^^
 
-The design3d library is an open-source Python library primarily developed by Dessia Technologies,
+The design3d library is an open-source Python library, a hard fork of the discontinued volmdlr project,
 aimed at providing 3D modeling capabilities based on Boundary Representation (B-Rep) purely in Python.
 The library is designed to be easy to use, efficient, and customizable.
 
@@ -17,7 +17,7 @@ shapes and to provide a rich set of operations for manipulating and analyzing th
 Installing design3d through pip (Windows and Linux users)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This package requires Python 3.9 or above. Please follow the instructions
+This package requires Python 3.12 or above. Please follow the instructions
 below to install the package. Depending on your needs, you can choose between
 two types of installation.
 
@@ -38,43 +38,27 @@ command::
 Developer installation
 ^^^^^^^^^^^^^^^^^^^^^^
 
-First, clone the package. Then, enter the newly created design3d repository. Finally, develop the setup.py file, and you are good to go ! ::
+Building design3d compiles Cython extensions, so you need a C/C++ compiler (usually already available on Linux
+and macOS; on Windows, install the Microsoft C++ Build Tools). Clone the package, then install it in editable mode
+with the test and documentation dependencies::
 
-  git clone https://github.com/Dessia-tech/design3d.git
+  git clone https://github.com/masfaraud/design3d.git
 
   cd design3d
 
-  python3 setup.py develop --user
-  # or whatever version you are using :
-  python3.x setup.py develop --user
+  pip install -e '.[test,doc]'
+  pre-commit install
 
 Requirements
 ^^^^^^^^^^^^
 
-The installation of design3d requires the installation of other packages listed
-in the file setup.py and in the table below. These libraries will be
-automatically installed when you install design3d.
+The installation of design3d requires the installation of other packages, listed in the
+``pyproject.toml`` file. They are automatically installed when you install design3d. The main ones are:
 
-=============  ===============  ===========
-Dependency     Minimum Version  Usage
-=============  ===============  ===========
-packaging          latest       computation
-dessia_common      >=0.10.0     computation      
-Cython             latest       computation
-numpy              latest       computation
-matplotlib         latest       display
-scipy              latest       computation
-geomdl             latest       computation
-networkx           latest       computation
-triangle           latest       computation
-plot_data          >=0.10.9     display
-kaitaistruct       latest       computation
-binaryornot        latest       computation
-sympy              latest       computation
-trimesh            latest       computation
-rtree              latest       computation
-gmsh               latest       computation
-=============  ===============  ===========
+- numpy, scipy and Cython for computations;
+- geomdl for NURBS, triangle and CGAL for meshing, gmsh for volume meshing;
+- networkx, trimesh, rtree and scikit-learn for geometric algorithms;
+- matplotlib for display, and babylon.js (shipped with the package) for 3D display in the browser.
 
 Troubleshooting
 ^^^^^^^^^^^^^^^
@@ -91,5 +75,5 @@ executing this command::
   python -m pip install design3d
 
 You have to specify the Python version you are working with by replacing
-`python` by the Python of your choice. For example, `python3`, `python3.8`,
-`python3.9`, etc.
+`python` by the Python of your choice. For example, `python3`, `python3.12`,
+`python3.13`, etc.

@@ -26,7 +26,7 @@ improving the existing code, adding new features or changing the documentation.
 Documentation improvements are crucial to us to make this package as user
 friendly as possible. If you find a typo in the documentation, or have made
 improvements, please consider sending us an email or preferably submit a
-GitHub pull request. Full documentation can be found under the doc/ directory.
+GitHub pull request. Full documentation can be found under the docs/ directory.
 
 Ask before coding
 ~~~~~~~~~~~~~~~~~
@@ -48,21 +48,9 @@ recommend the following:
 Process
 ~~~~~~~
 
-We have a process based on three branches and the process goes as follows:
-
-- dev that receive the features and impacting changes pull requests
-- testing that is regularly a freeze of testing. Release candidate (RC)
-  can be made on testing
-- master that receive the code from testing before the release. Release are
-  made on master
-
-Before coding, think of where to start from. You should start your branch
-for pull request where the pull request will point at:
-
-
-- if your contribution is trivial or has low risk of negative impact, start
-  from master branch: simple and urgent bug fixes, docs, build...
-- in most other case, start from dev and submit your pull request to dev
+Start your branch from ``master`` and open your pull request against ``master``.
+Releases are tagged on ``master``. See the ``CONTRIBUTING.md`` file of the
+repository for the conventions and the checks to run locally.
 
 Continuous integration
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -70,16 +58,15 @@ Continuous integration
 About continuous integration, your contribution may be refused by our CI. In
 this case:
 
-- lowering the coverage: add some tests
-- introducing pylint errors
-- triggering pydocstyle errors
-- non-respect of PEP8
-- no CHANGELOG.md edit
+- pre-commit hooks fail (black, codespell, cython-lint)
+- a test or a CI script fails
+- the coverage of the project or of a file drops below its threshold
+- the documentation build emits a Sphinx warning
 
 Correct the CI errors to get approval from our team!
 
 License
 -------
 
-100% open source on LGPL license. See the package's LICENSE.md file for more
-details.
+100% open source under the LGPL 2.1 license. See the package's LICENSE file for
+more details.

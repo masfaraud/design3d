@@ -34,7 +34,7 @@ expected value was produced by a buggy behavior, explain it in the commented dif
 
 ## Coverage
 
-- Never lower the coverage thresholds (`MIN_PROJECT_COVERAGE` and `MIN_FILE_COVERAGE` in `coverage.py`).
+- Never lower the coverage thresholds (`MIN_PROJECT_COVERAGE` and `MIN_FILE_COVERAGE` in `check_coverage.py`).
 - Each change should keep or improve coverage: add tests for new and modified code.
 - When coverage has increased above a threshold, raise that threshold accordingly.
 
@@ -45,6 +45,8 @@ pre-commit run --all-files
 coverage run --rcfile=.coveragerc --data-file=.coverage --source=design3d -m unittest discover -v tests
 coverage run --rcfile=.coveragerc --data-file=.coverage --source=design3d -a scripts/ci_scripts.py
 coverage report
+coverage json --data-file=.coverage -o coverage.json
+python check_coverage.py coverage.json
 ```
 
 `scripts/ci_scripts.py` runs scripts that call `babylonjs()`, which opens a browser. Set `BROWSER=true` to

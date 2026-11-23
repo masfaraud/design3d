@@ -1,4 +1,4 @@
 [run]
 plugins =
     Cython.Coverage
-source=volmdlr
+source=design3d
