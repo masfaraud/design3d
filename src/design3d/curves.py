@@ -77,7 +77,7 @@ class Curve(DataEqualityObject):
 
         :param linesegment: the Line Segment.
         :param abs_tol: tolerance.
-        :return:a list containing all intersections between the two objects, if any exists.
+        :return: a list containing all intersections between the two objects, if any exists.
         """
         line_intersections = self.line_intersections(linesegment.line)
         intersections = []
@@ -870,7 +870,7 @@ class Line3D(Line):
         :param line2: other Line3D
         :param tol: maximum tolerance.
         :return: None if there is no intersection between Lines.
-        A design3d.Point3D if there exists an intersection.
+            A design3d.Point3D if there exists an intersection.
         """
         direction_vector1 = self.direction_vector()
         direction_vector2 = line2.direction_vector()
@@ -902,7 +902,7 @@ class Line3D(Line):
         :param line: other Line3D.
         :param abs_tol: tolerance.
         :return: None if there is no intersection between Lines.
-        A design3d.Point3D if there exists an intersection.
+            A design3d.Point3D if there exists an intersection.
         """
         return [self.intersection(line, abs_tol)]
 
@@ -1703,7 +1703,7 @@ class Circle3D(CircleMixin, ClosedCurve):
 
         :raise ZeroDivisionError: If the three input points are not distinct, a ZeroDivisionError is raised.
         :raise ZeroDivisionError: If the start, end, and interior points of the arc are not distinct,
-        a ZeroDivisionError is raised.
+            a ZeroDivisionError is raised.
         """
         # The implementation details are not described in the docstring as they are quite involved.
         # The method calculates the center, radius, and frame of the circle from the three input points in 3D space.
@@ -2170,7 +2170,7 @@ class Ellipse2D(EllipseMixin, ClosedCurve):
     :type frame: design3d.Frame2D.
 
     :Example:
-    >>> ellipse2d = Ellipse2D(4, 2, design3d.OXY)
+        >>> ellipse2d = Ellipse2D(4, 2, design3d.OXY)
     """
 
     def __init__(self, major_axis, minor_axis, frame, name=""):
@@ -2730,7 +2730,7 @@ class Ellipse3D(ConicMixin, EllipseMixin, ClosedCurve):
 
         :param abscissa: The fraction of the curve's length at which to calculate the point.
         :type abscissa: (float)
-        Returns: The calculated 3D point on the curve.
+        :return: The calculated 3D point on the curve.
         :rtype: Point3D.
         """
         point2d = self.self_2d.point_at_abscissa(abscissa)
@@ -2955,7 +2955,7 @@ class HyperbolaMixin(Curve):
 
         :param linesegment: the Line Segment.
         :param abs_tol: tolerance.
-        :return:a list containing all intersections between the two objects, if any exists.
+        :return: a list containing all intersections between the two objects, if any exists.
         """
         line_intersections = self.line_intersections(linesegment.line)
         intersections = []
@@ -3048,7 +3048,7 @@ class Hyperbola2D(HyperbolaMixin):
 
         :param line: the infinite 2d line.
         :param abs_tol: tolerance.
-        :return:a list containing all intersections between the two objects, if any exists.
+        :return: a list containing all intersections between the two objects, if any exists.
         """
         line_to_local_coodinates = line.frame_mapping(self.frame, "new")
         m = line_to_local_coodinates.get_slope()

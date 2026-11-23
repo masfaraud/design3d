@@ -45,7 +45,7 @@ def octree_face_decomposition(face):
 
     :param face: given face.
     :return: returns a dictionary containing bounding boxes as keys and as values, a list of faces
-    inside that bounding box.
+        inside that bounding box.
     """
     triangulation = face.triangulation()
     triangulation_faces = triangulation.faces
@@ -1116,8 +1116,8 @@ class Face3D(design3d.core.Primitive3D):
         Get all contours cutting the face, resulting from multiple faces intersections.
 
         :param dict_intersecting_combinations: dictionary containing as keys the combination of intersecting faces
-        and as the values the resulting primitive from the intersection of these two faces
-        return a list all contours cutting one particular face.
+            and as the values the resulting primitive from the intersection of these two faces
+        :return: A list of all the contours cutting one particular face.
         """
         face_intersecting_primitives2d = self.select_face_intersecting_primitives(dict_intersecting_combinations)
         if not face_intersecting_primitives2d:

@@ -286,13 +286,6 @@ class Shell3D(design3d.core.CompositePrimitive3D):
 
         :return: A serialized version of the OpenShell3D
         :rtype: dict
-
-        . see also::
-            How `serialization and de-serialization`_ works in dessia_common
-
-        . _serialization and deserialization:
-        https://documentation.dessia.tech/dessia_common/customizing.html#overloading-the-dict-to-object-method
-
         """
         dict_ = self.base_dict()
         dict_.update(
@@ -670,7 +663,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
 
         :param other_shell: other shell.
         :return: A list faces of self, with the closest faces to shell2, and another faces list of shell2,
-        with those closest to self.
+            with those closest to self.
         """
         shell_decomposition1 = self.shell_decomposition()
         shell_decomposition2 = other_shell.shell_decomposition()
@@ -1273,8 +1266,8 @@ class ClosedShell3D(Shell3D):
         :param tol: Corresponds to the tolerance to consider two faces as intersecting faces
 
         :return: returns a dictionary containing as keys the combination of intersecting faces
-        and as the values the resulting primitive from the two intersecting faces.
-        It is done, so it is not needed to calculate the same intersecting primitive twice.
+            and as the values the resulting primitive from the two intersecting faces.
+            It is done, so it is not needed to calculate the same intersecting primitive twice.
         """
         face_combinations1 = {face: [] for face in self.faces}
         face_combinations2 = {face: [] for face in shell2.faces}
@@ -1300,8 +1293,8 @@ class ClosedShell3D(Shell3D):
         :param shell2: ClosedShell3D.
         :param non_intersecting_faces:
         :param intersection_method: determines if running for intersection operation.
-        returns a list of all the faces that never intersect any
-        face of the other shell.
+            returns a list of all the faces that never intersect any
+            face of the other shell.
         """
         valid_non_intercting_faces = []
         for face in non_intersecting_faces:

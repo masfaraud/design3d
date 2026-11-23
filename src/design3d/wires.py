@@ -472,10 +472,10 @@ class WireMixin(DataEqualityObject):
         Extract primitives between two given points.
 
         :param point1: extraction point 1.
-        :param point2:extraction point2.
+        :param point2: extraction point2.
         :param inside: If True it'll Extract primitives from smaller point abscissa value
-        to greater point abscissa value. If False, it'll return the contour primitives going from
-        the greater point abscissa value to the smaller one.
+            to greater point abscissa value. If False, it'll return the contour primitives going from
+            the greater point abscissa value to the smaller one.
         """
         inside_primitives, outside_primitives = self.split_with_two_points(point1, point2)
         if inside:
@@ -949,7 +949,7 @@ class Wire2D(WireMixin):
          for primitive line intersections
         :param primitive: intersecting primitive
         :return: None if intersection not a start or
-        end point of a contours primitives, or a design3d.Point2D if it is.
+            end point of a contours primitives, or a design3d.Point2D if it is.
         """
         primitive_index = self.primitives.index(primitive)
         point1, point2 = None, None
@@ -980,7 +980,7 @@ class Wire2D(WireMixin):
          for primitive line intersections
         :param primitive: intersecting primitive
         :return: False if intersection not a start or
-        end point of a contours primitives, or True if it is.
+            end point of a contours primitives, or True if it is.
         """
         if intersections[0].is_close(primitive.start) or intersections[0].is_close(primitive.end):
             return True
@@ -992,8 +992,8 @@ class Wire2D(WireMixin):
 
         :param line: line crossing the wire
         :type line: curves.Line2D
-        returns a list of Tuples (point, primitive)
-        of the wire primitives intersecting with the line
+            returns a list of Tuples (point, primitive)
+            of the wire primitives intersecting with the line
         """
         intersection_points = []
         intersection_points_primitives = []
@@ -2285,9 +2285,9 @@ class Contour2D(ContourMixin, Wire2D):
         Repair contour.
 
         Choose:
-        n=0 for Side 1: opposite side of beginning of contour
-        n=1 for Side 2: start of contour to first intersect (i=0) and
-         i odd to i+1 even
+
+        - n=0 for Side 1: opposite side of beginning of contour
+        - n=1 for Side 2: start of contour to first intersect (i=0) and i odd to i+1 even
         """
         if n not in [0, 1]:
             raise ValueError

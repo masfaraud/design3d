@@ -426,7 +426,7 @@ class Surface2D(DataEqualityObject):
         Returns bounding rectangle.
 
         :return: Returns a python object with useful methods
-        :rtype: :class:`design3d.core.BoundingRectangle
+        :rtype: :class:`design3d.core.BoundingRectangle`
         """
 
         return self.outer_contour.bounding_rectangle
@@ -439,7 +439,7 @@ class Surface2D(DataEqualityObject):
         :param outer_contour: The outer contour that bounds the surface.
         :type outer_contour: wires.Contour2D
         :param inner_contours: The list of inner contours that define the holes of the surface.
-        :type inner_contours : List[wires.Contour2D]
+        :type inner_contours: List[wires.Contour2D]
         :return: Surface2D defined by the given contours.
         """
         surface2d_inner_contours = []
@@ -614,13 +614,13 @@ class Surface2D(DataEqualityObject):
         Gets the lines that define mesh parameters for a Surface2D, to be added to a .geo file.
 
         :param factor: A float, between 0 and 1, that describes the mesh quality
-        (1 for coarse mesh - 0 for fine mesh)
+            (1 for coarse mesh - 0 for fine mesh)
         :type factor: float
         :param curvature_mesh_size: Activate the calculation of mesh element sizes based on curvature
-        (with curvature_mesh_size elements per 2*Pi radians), defaults to 0
+            (with curvature_mesh_size elements per 2*Pi radians), defaults to 0
         :type curvature_mesh_size: int, optional
         :param min_points: Check if there are enough points on small edges (if it is not, we force to have min_points
-        on that edge), defaults to None
+            on that edge), defaults to None
         :type min_points: int, optional
         :param initial_mesh_size: If factor=1, it will be initial_mesh_size elements per dimension, defaults to 5
         :type initial_mesh_size: float, optional
@@ -707,13 +707,13 @@ class Surface2D(DataEqualityObject):
         :param mesh_dimension: The mesh dimension (1: 1D-Edge, 2: 2D-Triangle, 3D-Tetrahedra)
         :type mesh_dimension: int
         :param factor: A float, between 0 and 1, that describes the mesh quality
-        (1 for coarse mesh - 0 for fine mesh)
+            (1 for coarse mesh - 0 for fine mesh)
         :type factor: float
         :param curvature_mesh_size: Activate the calculation of mesh element sizes based on curvature
-        (with curvature_mesh_size elements per 2*Pi radians), defaults to 0
+            (with curvature_mesh_size elements per 2*Pi radians), defaults to 0
         :type curvature_mesh_size: int, optional
         :param min_points: Check if there are enough points on small edges (if it is not, we force to have min_points
-        on that edge), defaults to None
+            on that edge), defaults to None
         :type min_points: int, optional
         :param initial_mesh_size: If factor=1, it will be initial_mesh_size elements per dimension, defaults to 5
         :type initial_mesh_size: float, optional
@@ -1219,7 +1219,7 @@ class Surface3D(DataEqualityObject):
         :param abs_tol: tolerance.
         :type abs_tol: float.
         :return: A list of intersection points between the line segment and the Surface.
-        The list may be empty if there are no intersections.
+            The list may be empty if there are no intersections.
         :rtype: List[design3d.Point3D]:
         """
         line_intersections = self.line_intersections(linesegment3d.line)
@@ -3438,7 +3438,7 @@ class ToroidalSurface3D(UVPeriodicalSurface):
         Changes frame_mapping and return a new ToroidalSurface3D.
 
         :param frame: The new frame to map to.
-        :type frame: `design3d.Frame3D
+        :type frame: design3d.Frame3D
         :param side: Indicates whether the frame should be mapped to the 'old' or 'new' frame.
             Acceptable values are 'old' or 'new'.
         :type side: str
@@ -4377,20 +4377,25 @@ class ConicalSurface3D(UPeriodicalSurface):
     The apex of the cone is on the negative side of the main axis of the frame if the half-angle
     is positive, and on the positive side if the half-angle is negative. This frame is the
     "local coordinate system" of the cone. The following apply:
-        Rotation around its main axis, in the trigonometric sense given by the x direction and the y direction,
-        defines the u parametric direction and the x-axis gives the origin for the u parameter.
-        The z axis defines the v parametric direction of the cone and the origin of the frame is the origin
-        of the v parameter.
-        The parametric range of the two parameters is:
-            - [ 0, 2.*Pi ] for u, and
-            - ] -infinity, +infinity [ for v
 
-    The parametric equation of the cone is:
-    P(u, v) = O + (R + v*tan(ang)) * (cos(u)*x + sin(u)*y) + v*z
+    - Rotation around its main axis, in the trigonometric sense given by the x direction and the y direction,
+      defines the u parametric direction and the x-axis gives the origin for the u parameter.
+    - The z axis defines the v parametric direction of the cone and the origin of the frame is the origin
+      of the v parameter.
+    - The parametric range of the two parameters is:
+
+      - [ 0, 2.*Pi ] for u, and
+      - ] -infinity, +infinity [ for v
+
+    The parametric equation of the cone is::
+
+        P(u, v) = O + (R + v*tan(ang)) * (cos(u)*x + sin(u)*y) + v*z
+
     where:
-        - O, x, y and z are respectively the origin, the x, y and z direction of the cone's local coordinate system
-        - ang is the half-angle at the apex of the cone
-        - R is the reference radius.
+
+    - O, x, y and z are respectively the origin, the x, y and z direction of the cone's local coordinate system
+    - ang is the half-angle at the apex of the cone
+    - R is the reference radius.
 
     :param frame: Cone's local coordinate system.
     :param semi_angle: half-angle at the apex of the cone.
@@ -6035,16 +6040,16 @@ class SphericalSurface3D(UVPeriodicalSurface):
         represented as 3D points using the `design3d.Point3D` class.
 
         :param line: The 3D line object to intersect with the sphere.
-        :type line:curves.Line3D
+        :type line: curves.Line3D
         :return: A list of intersection points between the line and the sphere. The list may be empty if there
-        are no intersections.
+            are no intersections.
         :rtype: List[design3d.Point3D]
 
         :Example:
-        >>> from design3d import Point3D, edges, surfaces, OXYZ
-        >>> spherical_surface3d = SphericalSurface3D(OXYZ, 1)
-        >>> line2 = curves.Line3D(Point3D(0, 1, -0.5), Point3D(0, 1, 0.5))
-        >>> line_intersections2 = spherical_surface3d.line_intersections(line2) #returns [Point3D(0.0, 1.0, 0.0)]
+            >>> from design3d import Point3D, edges, surfaces, OXYZ
+            >>> spherical_surface3d = SphericalSurface3D(OXYZ, 1)
+            >>> line2 = curves.Line3D(Point3D(0, 1, -0.5), Point3D(0, 1, 0.5))
+            >>> line_intersections2 = spherical_surface3d.line_intersections(line2) #returns [Point3D(0.0, 1.0, 0.0)]
         """
         line_direction_vector = line.direction_vector()
         vector_linept1_center = self.frame.origin - line.point1
@@ -8075,7 +8080,7 @@ class BSplineSurface3D(Surface3D):
         :param order: Order of the derivatives.
         :type order: int
         :return: A list SKL, where SKL[k][l] is the derivative of the surface S(u,v) with respect
-        to u k times and v l times
+            to u k times and v l times
         :rtype: List[`design3d.Vector3D`]
         """
         if self.weights is not None:

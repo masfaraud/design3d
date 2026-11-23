@@ -290,7 +290,7 @@ def get_bsplinecurve_intersections(primitive, bsplinecurve, abs_tol: float = 1e-
     to process. The resulting intersections are returned as a list.
 
     :param primitive: The primitive object to verify intersection with the BSpline Curve.
-    It can be any edge type or a plane3D.
+        It can be any edge type or a plane3D.
     :param bsplinecurve: The BSpline Curve object to search for intersections.
     :param abs_tol: The tolerance to be considered while validating an intersection.
 
@@ -459,7 +459,7 @@ def get_two_planes_intersections(plane1_frame, plane2_frame, abs_tol=1e-8):
     :param plane2_frame: Plane's 2 frame.
     :param abs_tol: tolerance.
     :return: A list containing two points that define an infinite line if there is any intersections,
-    or an empty list if the planes are parallel.
+        or an empty list if the planes are parallel.
     """
     if plane1_frame.w.is_colinear_to(plane2_frame.w, abs_tol):
         return []

@@ -13,6 +13,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.abspath("../../design3d"))
@@ -192,3 +193,18 @@ texinfo_documents = [
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+
+def simplify_cython_signature(app, what, name, obj, options, signature, return_annotation):
+    """
+    Simplifies the typed numpy buffers of Cython signatures, such as ``np.ndarray[np.double_t, ndim == 2]``.
+
+    Cython pure Python mode needs this syntax, which is not a valid Python expression that Sphinx can parse.
+    """
+    if signature:
+        signature = re.sub(r"np\.ndarray\[[^\]]*\]", "np.ndarray", signature)
+    return signature, return_annotation
+
+
+def setup(app):
+    app.connect("autodoc-process-signature", simplify_cython_signature)

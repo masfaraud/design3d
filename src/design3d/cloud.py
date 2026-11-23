@@ -279,7 +279,7 @@ class PointCloud3D:
         Computes distance of point to shell for each point in self.points.
 
         :return: The point cloud of points projection on nearest triangle, their distances and the corresponding
-        triangles index
+            triangles index
         :rtype: Tuple[PointCloud3D, List[float], List[int]]
         """
         nearest_coords, distances, triangles_idx = self.shell_distances_ndarray(shells)
@@ -294,7 +294,7 @@ class PointCloud3D:
         Computes distance of point to shell for each point in self.points in a numpy formatted data.
 
         :return: The point cloud of points projection on nearest triangle, their distances and the corresponding
-        triangles index
+            triangles index
         :rtype: Tuple[numpy.ndarray(float), numpy.ndarray(float), numpy.ndarray(int)]
         """
         shells_trimesh = shells.to_trimesh()

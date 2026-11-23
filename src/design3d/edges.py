@@ -735,7 +735,7 @@ class LineSegment(Edge):
         Returns a normal vector at a given abscissa, it is not normalized.
 
         :param abscissa: defines where in the line_segment
-        normal vector is to be calculated.
+            normal vector is to be calculated.
         :return: The normal vector of the LineSegment.
         """
         return self.direction_vector(abscissa).normal_vector()
@@ -1721,7 +1721,7 @@ class BSplineCurve(Edge):
         :param degree: The degree of the output parametric curve
         :type degree: int
         :param centripetal: Please refer to Algorithm A9.1 on The NURBS Book (2nd Edition),
-        pp.369-370 for details.
+            pp.369-370 for details.
         :type centripetal: bool
         :param name: curve name.
         :return: A B-spline curve from points interpolation
@@ -1754,7 +1754,7 @@ class BSplineCurve(Edge):
         :param angle_resolution: The resolution of the angle to use when calculating the number of points.
         :type angle_resolution: int
         :return: A list of discretized points on the B-spline curve.
-        :rtype: List[`design3d.Point2D] or List[`design3d.Point3D]
+        :rtype: List[design3d.Point2D] or List[design3d.Point3D]
         """
 
         if angle_resolution:
@@ -2864,12 +2864,6 @@ class ArcMixin:
 
     :param circle: arc related circle curve.
     :type circle: Union['design3d.curves.Circle2D', 'design3d.curves.Circle2D'].
-    # :param start: The starting point
-    # :type start: Union[:class:`design3d.Point2D`, :class:`design3d.Point3D`]
-    # :param end: The finish point
-    # :type end: Union[:class:`design3d.Point2D`, :class:`design3d.Point3D`]
-    # :param name: The name of the arc. Default value is an empty string
-    # :type name: str, optional
     """
 
     def __init__(self, circle, start, end, name: str = ""):
@@ -2955,7 +2949,7 @@ class ArcMixin:
         Get the normal vector of the Arc2D.
 
         :param abscissa: defines where in the Arc2D the
-        normal vector is to be calculated
+            normal vector is to be calculated
         :return: The normal vector of the Arc2D
         """
         point = self.point_at_abscissa(abscissa)
@@ -2968,7 +2962,7 @@ class ArcMixin:
         Get direction vector of the Arc2D.
 
         :param abscissa: defines where in the Arc2D the
-        direction vector is to be calculated
+            direction vector is to be calculated
         :return: The direction vector of the Arc2D
         """
         return -self.normal_vector(abscissa=abscissa).normal_vector()
@@ -3687,8 +3681,8 @@ class Arc2D(ArcMixin, Edge):
         """
         Creates and returns a deep copy of the Arc2D object.
 
-        :param *args: Variable-length argument list.
-        :param **kwargs: Arbitrary keyword arguments.
+        :param args: Variable-length argument list.
+        :param kwargs: Arbitrary keyword arguments.
         :return: A new Arc2D object that is a deep copy of the original.
 
         """

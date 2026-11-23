@@ -1534,10 +1534,9 @@ cdef class Vector3D(Vector):
 
     def rotation(self, center: Point3D, axis: Vector3D, angle: float):
         """
-        Rotates of angle around axis the 2-dimensional vector and returns
+        Rotates of angle around axis the 3-dimensional vector and returns
         a new rotated vector.
-        Using Rodrigues Formula:
-            https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula.
+        Using Rodrigues Formula: https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula.
 
         :param center: The center of rotation
         :type center: :class:`design3d.Point3D`

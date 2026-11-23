@@ -335,13 +335,11 @@ class CompositePrimitive3D(Primitive3D):
         """
         Plot the 3D primitives onto the given Axes3D object.
 
-        :param ax: optional
-            The Axes3D object onto which to plot the primitives. If None, a new
+        :param ax: The Axes3D object onto which to plot the primitives. If None, a new
             figure and Axes3D object will be created.
-        :type ax: Matplotlib plot
-        edge_style : optional
-            The EdgeStyle to use when plotting the primitives.
-        :type edge_style: d3de.EdgeStyle
+        :type ax: Matplotlib plot, optional
+        :param edge_style: The EdgeStyle to use when plotting the primitives.
+        :type edge_style: d3de.EdgeStyle, optional
         :return: The Axes3D object onto which the primitives were plotted.
         :rtype: Matplotlib plot
         """
@@ -1690,13 +1688,13 @@ class VolumeModel(DataEqualityObject):
         Gets the lines that define mesh parameters for a VolumeModel, to be added to a .geo file.
 
         :param factor: A float, between 0 and 1, that describes the mesh quality
-        (1 for coarse mesh - 0 for fine mesh)
+            (1 for coarse mesh - 0 for fine mesh)
         :type factor: float
         :param curvature_mesh_size: Activate the calculation of mesh element sizes based on curvature
-        (with curvature_mesh_size elements per 2*Pi radians), defaults to 0
+            (with curvature_mesh_size elements per 2*Pi radians), defaults to 0
         :type curvature_mesh_size: int, optional
         :param min_points: Check if there are enough points on small edges (if it is not, we force to have min_points
-        on that edge), defaults to None
+            on that edge), defaults to None
         :type min_points: int, optional
         :param initial_mesh_size: If factor=1, it will be initial_mesh_size elements per dimension, defaults to 5
         :type initial_mesh_size: float, optional
@@ -1764,13 +1762,13 @@ class VolumeModel(DataEqualityObject):
         :param file_name: The geo. file name
         :type file_name: str
         :param factor: A float, between 0 and 1, that describes the mesh quality
-        (1 for coarse mesh - 0 for fine mesh)
+            (1 for coarse mesh - 0 for fine mesh)
         :type factor: float
         :param curvature_mesh_size: Activate the calculation of mesh element sizes based on curvature
-        (with curvature_mesh_size elements per 2*Pi radians), defaults to 0
+            (with curvature_mesh_size elements per 2*Pi radians), defaults to 0
         :type curvature_mesh_size: int, optional
         :param min_points: Check if there are enough points on small edges (if it is not, we force to have min_points
-        on that edge), defaults to None
+            on that edge), defaults to None
         :type min_points: int, optional
         :param initial_mesh_size: If factor=1, it will be initial_mesh_size elements per dimension, defaults to 5
         :type initial_mesh_size: float, optional
@@ -1809,13 +1807,13 @@ class VolumeModel(DataEqualityObject):
         :param file_name: The geo. file name
         :type file_name: str
         :param factor: A float, between 0 and 1, that describes the mesh quality
-        (1 for coarse mesh - 0 for fine mesh)
+            (1 for coarse mesh - 0 for fine mesh)
         :type factor: float
         :param curvature_mesh_size: Activate the calculation of mesh element sizes based on curvature
-        (with curvature_mesh_size elements per 2*Pi radians), defaults to 0
+            (with curvature_mesh_size elements per 2*Pi radians), defaults to 0
         :type curvature_mesh_size: int, optional
         :param min_points: Check if there are enough points on small edges (if it is not, we force to have min_points
-        on that edge), defaults to None
+            on that edge), defaults to None
         :type min_points: int, optional
         :param initial_mesh_size: If factor=1, it will be initial_mesh_size elements per dimension, defaults to 5
         :type initial_mesh_size: float, optional
@@ -1879,13 +1877,13 @@ class VolumeModel(DataEqualityObject):
         :param file_name: The geo. file name
         :type file_name: str
         :param factor: A float, between 0 and 1, that describes the mesh quality
-        (1 for coarse mesh - 0 for fine mesh)
+            (1 for coarse mesh - 0 for fine mesh)
         :type factor: float
         :param curvature_mesh_size: Activate the calculation of mesh element sizes based on curvature
-        (with curvature_mesh_size elements per 2*Pi radians), defaults to 0
+            (with curvature_mesh_size elements per 2*Pi radians), defaults to 0
         :type curvature_mesh_size: int, optional
         :param min_points: Check if there are enough points on small edges (if it is not, we force to have min_points
-        on that edge), defaults to None
+            on that edge), defaults to None
         :type min_points: int, optional
         :param initial_mesh_size: If factor=1, it will be initial_mesh_size elements per dimension, defaults to 5
         :type initial_mesh_size: float, optional
@@ -1975,13 +1973,13 @@ class VolumeModel(DataEqualityObject):
         :param mesh_order: The msh order (1: linear, 2: 2nd order)
         :type mesh_order: int
         :param factor: A float, between 0 and 1, that describes the mesh quality
-        (1 for coarse mesh - 0 for fine mesh)
+            (1 for coarse mesh - 0 for fine mesh)
         :type factor: float
         :param curvature_mesh_size: Activate the calculation of mesh element sizes based on curvature
-        (with curvature_mesh_size elements per 2*Pi radians), defaults to 0
+            (with curvature_mesh_size elements per 2*Pi radians), defaults to 0
         :type curvature_mesh_size: int, optional
         :param min_points: Check if there are enough points on small edges (if it is not, we force to have min_points
-        on that edge), defaults to None
+            on that edge), defaults to None
         :type min_points: int, optional
         :param initial_mesh_size: If factor=1, it will be initial_mesh_size elements per dimension, defaults to 5
         :type initial_mesh_size: float, optional
@@ -2073,13 +2071,13 @@ class VolumeModel(DataEqualityObject):
         :type mesh_order: int
 
         :param factor: A float, between 0 and 1, that describes the mesh quality
-        (1 for coarse mesh - 0 for fine mesh)
+            (1 for coarse mesh - 0 for fine mesh)
         :type factor: float
         :param curvature_mesh_size: Activate the calculation of mesh element sizes based on curvature
-        (with curvature_mesh_size elements per 2*Pi radians), defaults to 0
+            (with curvature_mesh_size elements per 2*Pi radians), defaults to 0
         :type curvature_mesh_size: int, optional
         :param min_points: Check if there are enough points on small edges (if it is not, we force to have min_points
-        on that edge), defaults to None
+            on that edge), defaults to None
         :type min_points: int, optional
         :param initial_mesh_size: If factor=1, it will be initial_mesh_size elements per dimension, defaults to 5
         :type initial_mesh_size: float, optional

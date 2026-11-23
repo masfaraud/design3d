@@ -35,9 +35,9 @@ class RoundedLineSegments3D(design3d.primitives.RoundedLineSegments):
     :param points: The list of points defining the line segments.
     :type points: List[design3d.Point3D]
     :param radius: The dictionary mapping segment indices to their respective radii.
-    :type radius:Dict[int, float]
+    :type radius: Dict[int, float]
     :param adapt_radius: Flag indicating whether to adapt the radius based on segment length.
-    Defaults to False.
+        Defaults to False.
     :type adapt_radius: bool, optional
     :param name: The name of the rounded line segments. Defaults to ''.
     :type name: str, optional
@@ -112,7 +112,7 @@ class OpenRoundedLineSegments3D(design3d.wires.Wire3D, RoundedLineSegments3D):
     :type points: List of Point3D.
     :param radius: Radius used to connect different parts of the wire.
     :type radius: {position1(n): float which is the radius linked the n-1 and.
-    n+1 points, position2(n+1):...}
+        n+1 points, position2(n+1):...}
     """
 
     _non_data_eq_attributes = ["name"]
@@ -135,7 +135,7 @@ class ClosedRoundedLineSegments3D(RoundedLineSegments3D, design3d.wires.Contour3
     :type points: List of Point3D
     :param radius: Radius used to connect different parts of the wire
     :type radius: {position1(n): float which is the radius linked the n-1 and
-    n+1 points, position2(n+1):...}
+        n+1 points, position2(n+1):...}
     """
 
     _non_serializable_attributes = []

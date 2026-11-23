@@ -632,7 +632,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         Get the mesh faces as Triangle3D objects.
 
         :return: The triangles comosing the mesh.
-        :rtype: list[Triangle3D]
+        :rtype: list[design3d.faces.Triangle3D]
         """
         if not self._faces:
             self._faces = self.to_triangles3d()
@@ -860,7 +860,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         Export the mesh faces as Triangle3D objects.
 
         :return: The triangles comosing the mesh.
-        :rtype: list[Triangle3D]
+        :rtype: list[design3d.faces.Triangle3D]
         """
         warnings.warn("Deprecated: use to_triangles3d instead.", DeprecationWarning)
         return self.to_triangles3d()
@@ -870,7 +870,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         Export the mesh faces as Triangle3D objects.
 
         :return: The triangles comosing the mesh.
-        :rtype: list[Triangle3D]
+        :rtype: list[design3d.faces.Triangle3D]
         """
         # pylint: disable=import-outside-toplevel, cyclic-import
         from design3d.faces import Triangle3D

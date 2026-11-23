@@ -77,17 +77,17 @@ def split_wire_by_plane(wire, plane3d):
     :raises: NotImplementedError: If the wire intersects the plane at more than one point.
 
     :Example:
-    >>> from design3d import Point3D, Vector3D
-    >>> from design3d.surfaces import Plane3D
-    >>> from design3d.core import EdgeStyle
-    >>> from design3d.utils.common_operations import random_color
-    >>> from design3d.models.open_rounded_line_segments import open_rounded_line_segements
-    >>> plane = Plane3D.from_plane_vectors(Point3D(0.4, 0.4, 0.2), Vector3D(1, 0, 0), Vector3D(0, 1, 0))
-    >>> split_wire1,split_wire2 = split_wire_by_plane(open_rounded_line_segements, plane)
-    >>> ax = open_rounded_line_segements.plot()
-    >>> plane.plot(ax)
-    >>> split_wire1.plot(ax, EdgeStyle(random_color()))
-    >>> split_wire2.plot(ax, EdgeStyle(random_color()))
+        >>> from design3d import Point3D, Vector3D
+        >>> from design3d.surfaces import Plane3D
+        >>> from design3d.core import EdgeStyle
+        >>> from design3d.utils.common_operations import random_color
+        >>> from design3d.models.open_rounded_line_segments import open_rounded_line_segements
+        >>> plane = Plane3D.from_plane_vectors(Point3D(0.4, 0.4, 0.2), Vector3D(1, 0, 0), Vector3D(0, 1, 0))
+        >>> split_wire1,split_wire2 = split_wire_by_plane(open_rounded_line_segements, plane)
+        >>> ax = open_rounded_line_segements.plot()
+        >>> plane.plot(ax)
+        >>> split_wire1.plot(ax, EdgeStyle(random_color()))
+        >>> split_wire2.plot(ax, EdgeStyle(random_color()))
     """
     wire_plane_intersections = []
     for primitive in wire.primitives:
@@ -412,8 +412,8 @@ def separate_points_by_closeness(points):
     :param points: A list of 3D Cartesian points, where each point is represented as a list of three coordinates.
 
     :return:
-    - group1 (list of lists): The first group of points based on their closeness.
-    - group2 (list of lists): The second group of points based on their closeness.
+        - group1 (list of lists): The first group of points based on their closeness.
+        - group2 (list of lists): The second group of points based on their closeness.
     """
     if not points:
         return []
