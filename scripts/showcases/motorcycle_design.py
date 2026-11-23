@@ -1,3 +1,20 @@
+"""
+Motorcycle design showcase.
+
+The goal of this script is to model a motorcycle whose dimensions are close to the ones of a 2015 Yamaha MT-125.
+The model stays high level: it is driven by a few architecture parameters (tyre sizes, wheelbase, steering geometry,
+swingarm...), from which the hardpoints of the motorcycle are computed. The parts are then built and placed from
+these hardpoints, with detail parameters that do not change the architecture.
+
+Reference data of the MT-125 (2014-2015): wheelbase 1355 mm, caster 25°, trail 89 mm, tyres 100/80-17 and
+130/70-17, brake disks 292 mm (front) and 230 mm (rear), seat height 810 mm, overall length x width x height
+1955 x 740 x 1040 mm, ground clearance 140 mm, fuel tank 11.5 L. Sources: Yamaha MT125 factsheets,
+moto-data.net, bikez.net.
+
+Frame of reference: the origin is the contact point of the front tyre on the ground, X points backward (from the
+front wheel to the rear wheel), Y points to the right of the rider (who faces -X) and Z points up.
+"""
+
 import math
 
 import design3d as d3d
@@ -17,19 +34,79 @@ from design3d.primitives3d import (
 from design3d.surfaces import Plane3D
 from design3d.wires import ClosedPolygon2D, Contour2D
 
-wheelbase = 1.5
 
-# Tyres
-tyre_diameter = 0.5918
+def tyre_dimensions(tyre_size: str) -> tuple[float, float, float]:
+    """
+    Dimensions of a tyre from its size marking, for instance "100/80-17".
+
+    :param tyre_size: width in mm, sidewall height as a percentage of the width, and rim diameter in inches.
+    :return: the width, outer diameter and rim diameter of the tyre, in meters.
+    """
+    width_and_ratio, rim_inches = tyre_size.split("-")
+    width_mm, aspect_ratio = width_and_ratio.split("/")
+    width = float(width_mm) / 1000
+    rim_diameter = float(rim_inches) * 0.0254
+    return width, rim_diameter + 2 * width * float(aspect_ratio) / 100, rim_diameter
+
+
+# ======================================================================================================================
+# Architecture parameters: they drive the overall geometry of the motorcycle
+# ======================================================================================================================
+
+# Tyres, as marked on their sidewall
+front_tyre_size = "100/80-17"
+rear_tyre_size = "130/70-17"
+
+# Steering geometry
+wheelbase = 1.355  # horizontal distance between the wheel axles
+caster_angle = math.radians(25)  # angle between the steering axis and the vertical
+trail = 0.089  # ground distance between the front tyre contact point and the steering axis
+
+# Fork length, from the front axle to the top of the upper crown, along the fork tubes (estimated value)
+fork_length = 0.700
+
+# Swingarm, from the rear axle to its pivot on the frame (these values are estimated)
+swingarm_length = 0.560
+swingarm_angle = math.radians(10)  # positive when the pivot is higher than the rear axle
+
+# Overall dimensions of the MT-125, used to check the model (they do not drive it)
+target_length = 1.955
+target_width = 0.740
+target_height = 1.040
+
+# ======================================================================================================================
+# Derived architecture values and hardpoints, in the motorcycle frame of reference
+# ======================================================================================================================
+
+front_tyre_width, front_tyre_diameter, front_rim_diameter = tyre_dimensions(front_tyre_size)
+rear_tyre_width, rear_tyre_diameter, rear_rim_diameter = tyre_dimensions(rear_tyre_size)
+front_wheel_radius = 0.5 * front_tyre_diameter
+rear_wheel_radius = 0.5 * rear_tyre_diameter
+
+# The fork offset is the distance between the front axle and the steering axis, that gives the trail
+fork_offset = front_wheel_radius * math.sin(caster_angle) - trail * math.cos(caster_angle)
+if fork_offset <= 0:
+    raise ValueError("The trail is too long for this caster angle and front wheel: the fork offset is negative.")
+
+# Unit vector of the steering axis, pointing up and backward
+steering_axis = d3d.Vector3D(math.sin(caster_angle), 0, math.cos(caster_angle))
+
+front_contact_point = d3d.Point3D(0, 0, 0)
+front_axle_center = d3d.Point3D(0, 0, front_wheel_radius)
+steering_axis_ground_point = d3d.Point3D(-trail, 0, 0)
+rear_axle_center = d3d.Point3D(wheelbase, 0, rear_wheel_radius)
+rear_contact_point = d3d.Point3D(wheelbase, 0, 0)
+swingarm_pivot = rear_axle_center + swingarm_length * d3d.Vector3D(
+    -math.cos(swingarm_angle), 0, math.sin(swingarm_angle)
+)
+
+# ======================================================================================================================
+# Detail parameters: they shape the parts without changing the architecture
+# ======================================================================================================================
+
+# Tyres and rims
 tyre_thickness = 0.008
-front_tyre_width = 0.100
-front_rim_width = 0.06858
-rim_diameter = 17 * 0.0254
-
-# rear_tyre_width =
-
-
-# Wheels
+front_rim_width = 0.06858  # 2.70 inches
 
 # Brake disks
 front_brake_disk_outer_diameter = 0.292
@@ -37,13 +114,11 @@ front_brake_disk_inner_diameter = 0.250
 front_brake_screw_diameter = 0.220
 front_disk_number_screws = 6
 front_disk_screwholes_diameter = 0.012
-front_brake_disk_offset = -0.050
+front_brake_disk_offset = -0.050  # on the left side
 front_brake_width = 0.0045
-
 
 # Fork
 tube_diameter = 0.041
-fork_offset = 0.035
 front_axle_diameter = 0.015
 crown_width = 0.020
 crown_tube_outer_diameter = tube_diameter + 0.012
@@ -53,9 +128,12 @@ tubes_spacing = tube_diameter + front_tyre_width + 2 * tyre_width_margin
 fork_pivot_diameter = 0.030
 fork_pivot_inner_diameter = 0.026
 crown_pivot_outer_diameter = fork_pivot_diameter + 0.012
-tyre_crown_clearance = 0.035
+tube_height = fork_length
+tyre_crown_clearance = fork_length - front_wheel_radius - crowns_distance - 2 * crown_width
+if tyre_crown_clearance < 0.035:
+    raise ValueError(f"The fork is too short: {1000 * tyre_crown_clearance:.0f} mm between the tyre and the crown.")
 
-# Wheel bearings
+# Front wheel bearings
 front_bearing_d = front_axle_diameter
 front_bearing_D = 0.042
 front_bearing_B = 0.013
@@ -69,23 +147,24 @@ handlebar_angle = math.radians(15)
 handlebar_offset = 0.045
 handlebar_base_width = 0.150
 
-# Computed
-tube_height = 0.5 * tyre_diameter + crowns_distance + tyre_crown_clearance + 2 * crown_width
-
-
-# Arm
-arm_length = 0.7
-caster_angle = math.radians(26.5)
-
 # Colors
 tyre_black = (0.15, 0.15, 0.15)
 asphalt = (112 / 256, 110 / 256, 106 / 256)
 
-## End of data
+# Steering head: middle of the frame pivot, between the fork crowns, on the steering axis
+steering_head_center = (
+    front_axle_center
+    + fork_offset * d3d.Vector3D(math.cos(caster_angle), 0, -math.sin(caster_angle))
+    + (tube_height - 0.5 * crowns_distance - crown_width) * steering_axis
+)
+
+# ======================================================================================================================
+# Parts
+# ======================================================================================================================
 
 # Ground
 ground_plane = Plane3D(d3d.OXYZ)
-ground = PlaneFace3D.from_surface_rectangular_cut(ground_plane, -0.5, 1.5, -0.5, 0.5)
+ground = PlaneFace3D.from_surface_rectangular_cut(ground_plane, -0.5, wheelbase + 0.5, -0.5, 0.5)
 ground.name = "Ground"
 ground.color = asphalt
 
@@ -203,9 +282,11 @@ def rim(rim_diameter: float, rim_width: float, hook_height=0.007, thickness=0.00
 
 
 # Wheels
-front_tyre = tyre(rim_diameter, front_rim_width, tyre_diameter, front_tyre_width, tyre_thickness, "front_tyre")
+front_tyre = tyre(
+    front_rim_diameter, front_rim_width, front_tyre_diameter, front_tyre_width, tyre_thickness, "Front tyre"
+)
 front_axle = Cylinder(d3d.OZXY, 0.5 * front_axle_diameter, tubes_spacing, name="Front wheel axle")
-front_rim = rim(rim_diameter, front_rim_width, name="Front rim")
+front_rim = rim(front_rim_diameter, front_rim_width, name="Front rim")
 
 
 # Brake disk
@@ -216,6 +297,7 @@ def brake_disk(
     number_screws: float,
     screw_diameter: float,
     screwholes_diameter: float,
+    name: str = "Brake disk",
 ):
     bottom_diameter = screw_diameter - 2 * screwholes_diameter
     screw_angle = 2 * math.pi / number_screws
@@ -268,7 +350,7 @@ def brake_disk(
         Contour2D.from_circle(Circle2D.from_center_and_radius(d3d.Point2D(0, 0), 0.5 * outer_diameter)),
         brake_disk_inner_contours,
         brake_width,
-        name="Front brake disk",
+        name=name,
     )
 
 
@@ -279,6 +361,7 @@ front_brake_disk = brake_disk(
     front_disk_number_screws,
     front_brake_screw_diameter,
     front_disk_screwholes_diameter,
+    name="Front brake disk",
 )
 
 ## Fork
@@ -411,7 +494,8 @@ fork_assembly = Assembly(
 )
 
 
-fork_frame = d3d.XYZ.rotation(d3d.Y3D, caster_angle).to_frame(d3d.Point3D(0, 0, 0.5 * tyre_diameter))
+# The fork assembly is built with the front axle at its origin and the fork tubes along its Z axis
+fork_frame = d3d.XYZ.rotation(d3d.Y3D, caster_angle).to_frame(front_axle_center)
 
 # Frame
 frame_pivot_frame = d3d.XYZ.rotation(d3d.Y3D, caster_angle).to_frame(d3d.Point3D(0, 0, 0))
@@ -424,19 +508,34 @@ frame_pivot = HollowCylinder(
 )
 
 frame = frame_pivot
-frame_frame = d3d.Frame3D(
-    (
-        d3d.Point3D(fork_offset, 0, tube_height - 0.5 * crowns_distance - crown_width).rotation(
-            d3d.O3D, d3d.Y3D, caster_angle
-        )
-        + 0.5 * tyre_diameter * d3d.Z3D
-    ).to_point(),
-    d3d.X3D,
-    d3d.Y3D,
-    d3d.Z3D,
-)
+frame_frame = d3d.Frame3D(steering_head_center, d3d.X3D, d3d.Y3D, d3d.Z3D)
 
 motorcycle = Assembly([fork_assembly, frame], [fork_frame, frame_frame])
+
+# ======================================================================================================================
+# Checks
+# ======================================================================================================================
+
+print("Hardpoints (x, z) in mm:")
+for hardpoint_name, hardpoint in [
+    ("front axle", front_axle_center),
+    ("steering axis on the ground", steering_axis_ground_point),
+    ("steering head", steering_head_center),
+    ("swingarm pivot", swingarm_pivot),
+    ("rear axle", rear_axle_center),
+]:
+    print(f"  {hardpoint_name:<28} {1000 * hardpoint.x:7.1f} {1000 * hardpoint.z:7.1f}")
+print(f"Fork offset: {1000 * fork_offset:.1f} mm, tyre to lower crown clearance: {1000 * tyre_crown_clearance:.0f} mm")
+
+# Overall dimensions of the model, compared to the MT-125 ones. They are meaningful once all the parts are modeled.
+bounding_box = motorcycle.bounding_box
+print("Overall dimensions (model / MT-125) in mm:")
+for dimension_name, model_value, target_value in [
+    ("length", bounding_box.xmax - bounding_box.xmin, target_length),
+    ("width", bounding_box.ymax - bounding_box.ymin, target_width),
+    ("height", bounding_box.zmax - bounding_box.zmin, target_height),
+]:
+    print(f"  {dimension_name:<7} {1000 * model_value:6.0f} / {1000 * target_value:4.0f}")
 
 primitives = [ground, motorcycle]
 
