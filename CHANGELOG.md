@@ -8,10 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v0.1.0 [Future]
 
-### New Features
-
-- primitives3D: Loft
-
 ### Fixed
 
 - BSplineSurface3D: point inversion no longer gets stuck when it starts on the seam of a periodic surface
