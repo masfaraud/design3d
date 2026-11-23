@@ -859,7 +859,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         :return: The triangles comosing the mesh.
         :rtype: list[design3d.faces.Triangle3D]
         """
-        warnings.warn("Deprecated: use to_triangles3d instead.", DeprecationWarning)
+        warnings.warn("Deprecated: use to_triangles3d instead.", DeprecationWarning, stacklevel=2)
         return self.to_triangles3d()
 
     def to_triangles3d(self):
@@ -888,10 +888,13 @@ class Mesh3D(MeshMixin, Primitive3D):
         :return: A closed triangle shell representation of the Mesh3D object.
         :rtype: ClosedTriangleShell3D
         """
-        warnings.warn("""
+        warnings.warn(
+            """
             ClosedTriangleShell3D is not an efficient object to deal with mesh data.
             Try to stick to Mesh3D or Trimesh object if possible.
-            """)
+            """,
+            stacklevel=2,
+        )
 
         from design3d.shells import ClosedTriangleShell3D
 
@@ -904,10 +907,13 @@ class Mesh3D(MeshMixin, Primitive3D):
         :return: An open triangle shell representation of the Mesh3D object.
         :rtype: OpenTriangleShell3D
         """
-        warnings.warn("""
+        warnings.warn(
+            """
             OpenTriangleShell3D is not an efficient object to deal with mesh data.
             Try to stick to Mesh3D or Trimesh object if possible.
-            """)
+            """,
+            stacklevel=2,
+        )
 
         from design3d.shells import OpenTriangleShell3D
 

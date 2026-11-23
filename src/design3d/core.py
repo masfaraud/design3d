@@ -433,7 +433,7 @@ class BoundingRectangle:
         :param b_rectangle2: bounding rectangle to verify intersection
         :type b_rectangle2: :class:`BoundingRectangle`
         """
-        warnings.warn("b_rectangle_intersection is deprecated, please use is_intersecting instead")
+        warnings.warn("b_rectangle_intersection is deprecated, please use is_intersecting instead", stacklevel=2)
         return self.is_intersecting(b_rectangle2)
 
     def is_inside_b_rectangle(self, b_rectangle2, tol: float = 1e-6):
@@ -1581,6 +1581,7 @@ class VolumeModel(DataEqualityObject):
         warnings.warn(
             "design3d.stl module is deprecated. Use design3d.display module and 'Mesh3D' class instead for STL export.",
             DeprecationWarning,
+            stacklevel=2,
         )
 
         mesh = self.to_mesh()

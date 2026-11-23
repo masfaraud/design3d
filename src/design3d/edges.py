@@ -148,6 +148,7 @@ class Edge(DataEqualityObject):
             "polygon_points is deprecated,\
         please use discretization_points instead",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.discretization_points(number_points=discretization_resolution)
 
@@ -1728,7 +1729,8 @@ class BSplineCurve(Edge):
         set_points = set(points)
         if len(set_points) < len(points) - 1:
             warnings.warn(
-                "Not able to perform point interpolation.There are repeated points not in the edges of the point list."
+                "Not able to perform point interpolation.There are repeated points not in the edges of the point list.",
+                stacklevel=2,
             )
             return None
         point_name = "Point" + points[0].__class__.__name__[-2:]
@@ -5533,7 +5535,7 @@ class BSplineCurve3D(BSplineCurve):
         :param parameter1: evaluation parameter 1, bigger than 0 and smaller than its length.
         :param parameter2: evaluation parameter 2, bigger than 0 and smaller than its length.
         """
-        warnings.warn("Use BSplineCurve3D.trim instead of trim_between_evaluation")
+        warnings.warn("Use BSplineCurve3D.trim instead of trim_between_evaluation", stacklevel=2)
         parameter1, parameter2 = min([parameter1, parameter2]), max([parameter1, parameter2])
 
         if math.isclose(parameter1, 0, abs_tol=1e-7) and math.isclose(parameter2, 1, abs_tol=1e-7):

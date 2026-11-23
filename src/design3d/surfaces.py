@@ -9868,7 +9868,9 @@ class BSplineSurface3D(Surface3D):
         """
         Bspline Surface interpolation through 3d points.
         """
-        warnings.warn("points_fitting_into_bspline_surface is deprecated. Use from_points_interpolation instead")
+        warnings.warn(
+            "points_fitting_into_bspline_surface is deprecated. Use from_points_interpolation instead", stacklevel=2
+        )
         return cls.from_points_interpolation(points_3d, size_u, size_v, degree_u, degree_v, name)
 
     @classmethod
@@ -9919,7 +9921,9 @@ class BSplineSurface3D(Surface3D):
         """
         Bspline Surface approximate through 3d points.
         """
-        warnings.warn("points_approximate_into_bspline_surface is deprecated. Use from_points_approximation instead")
+        warnings.warn(
+            "points_approximate_into_bspline_surface is deprecated. Use from_points_approximation instead", stacklevel=2
+        )
         return cls.from_points_approximation(points_3d, size_u, size_v, degree_u, degree_v, name, **kwargs)
 
     @classmethod

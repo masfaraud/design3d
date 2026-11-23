@@ -233,7 +233,8 @@ class Face3D(design3d.core.Primitive3D):
             warnings.warn(
                 f"Could not instantiate #{step_id} = {step_name}({arguments})"
                 f" because some of the contours are NoneType."
-                "See Face3D.from_step method"
+                "See Face3D.from_step method",
+                stacklevel=2,
             )
             return None
         surface = object_dict[int(arguments[2])]
@@ -1713,7 +1714,9 @@ class PlaneFace3D(Face3D):
 
         distance_to_point is deprecated, please use point_distance.
         """
-        warnings.warn("distance_to_point is deprecated, please use point_distance", category=DeprecationWarning)
+        warnings.warn(
+            "distance_to_point is deprecated, please use point_distance", stacklevel=2, category=DeprecationWarning
+        )
         return self.point_distance(point, return_other_point)
 
     def minimum_distance_points_plane(self, other_plane_face, return_points=False):

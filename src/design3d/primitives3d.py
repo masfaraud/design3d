@@ -1032,7 +1032,7 @@ class Cylinder(shells.ClosedShell3D):
         name: str = "",
     ):
         """Deprecated class method. Use 'from_end_points' instead."""
-        warnings.warn("Deprecated classmethod. Use 'from_end_points' instead.", DeprecationWarning)
+        warnings.warn("Deprecated classmethod. Use 'from_end_points' instead.", DeprecationWarning, stacklevel=2)
 
         return cls.from_end_points(point1, point2, radius, color, alpha, reference_path, name)
 
@@ -1845,7 +1845,7 @@ class HollowCylinder(shells.ClosedShell3D):
         name: str = "",
     ):
         """Deprecated class method. Use 'from_end_points' instead."""
-        warnings.warn("Deprecated classmethod. Use 'from_end_points' instead.", DeprecationWarning)
+        warnings.warn("Deprecated classmethod. Use 'from_end_points' instead.", DeprecationWarning, stacklevel=2)
 
         return cls.from_end_points(point1, point2, inner_radius, outer_radius, color, alpha, reference_path, name)
 

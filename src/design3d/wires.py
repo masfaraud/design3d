@@ -115,7 +115,8 @@ def reorder_contour3d_edges_from_step(raw_edges, step_data):
             f" {abs(raw_edges[0].end.y - raw_edges[1].end.y)}.\n"
             f"delta_z = {abs(raw_edges[0].start.z - raw_edges[1].end.z)}, "
             f" {abs(raw_edges[0].end.z - raw_edges[1].end.z)}.\n"
-            f"distance = {min(distances)}"
+            f"distance = {min(distances)}",
+            stacklevel=2,
         )
         return None
 
@@ -165,7 +166,8 @@ def reorder_contour3d_edges_from_step(raw_edges, step_data):
                 f" {abs(raw_edge.end.y - last_edge.end.y)}.\n"
                 f"delta_z = {abs(raw_edge.start.z - last_edge.end.z)}, "
                 f" {abs(raw_edge.end.z - last_edge.end.z)}.\n"
-                f"distance = {min(distances)}"
+                f"distance = {min(distances)}",
+                stacklevel=2,
             )
             return None
         if index == 0:
@@ -1730,7 +1732,7 @@ class ContourMixin(WireMixin):
         """
 
         if self.is_superposing(contour):
-            warnings.warn("The contours are superposing")
+            warnings.warn("The contours are superposing", stacklevel=2)
             return []
 
         list_p, edges1 = [], set()
@@ -1750,7 +1752,7 @@ class ContourMixin(WireMixin):
                             edges1.add(edge2)
 
         if len(list_p) < 2:
-            warnings.warn("The contours are not adjacent")
+            warnings.warn("The contours are not adjacent", stacklevel=2)
             return []
 
         if len(list_p) == 2:

@@ -60,7 +60,9 @@ class Stl:
 
     def __init__(self, triangles: list[d3df.Triangle3D], name: str = ""):
         warnings.warn(
-            "'design3d.stl.Stl' class is deprecated. Use 'design3d.display.Mesh3D' instead", DeprecationWarning
+            "'design3d.stl.Stl' class is deprecated. Use 'design3d.display.Mesh3D' instead",
+            DeprecationWarning,
+            stacklevel=2,
         )
 
         self.triangles = triangles
@@ -213,7 +215,7 @@ class Stl:
     @classmethod
     def from_file(cls, filename: str = None, distance_multiplier: float = 0.001):
         """Import stl from file."""
-        warnings.warn("Use load_from_file instead of from_file", DeprecationWarning)
+        warnings.warn("Use load_from_file instead of from_file", DeprecationWarning, stacklevel=2)
         return cls.load_from_file(filename, distance_multiplier)
 
     @classmethod

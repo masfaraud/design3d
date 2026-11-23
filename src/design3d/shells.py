@@ -798,7 +798,8 @@ class Shell3D(design3d.core.CompositePrimitive3D):
             except Exception as exception:
                 warnings.warn(
                     f"Could not triangulate face {i} ({face.__class__.__name__}) in '{self.name}' "
-                    f"due to: {exception}. This may be due to a topology error in contour2d."
+                    f"due to: {exception}. This may be due to a topology error in contour2d.",
+                    stacklevel=2,
                 )
 
         return display.Mesh3D.from_meshes(meshes)
@@ -2105,6 +2106,7 @@ class DisplayTriangleShell3D(Shell3D):
         warnings.warn(
             "'design3d.shells.DisplayTriangleShell3D' class is deprecated. Use 'design3d.display.Mesh3D' instead",
             DeprecationWarning,
+            stacklevel=2,
         )
 
         self.positions = positions

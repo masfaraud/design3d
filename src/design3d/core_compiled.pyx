@@ -2504,6 +2504,7 @@ class Basis2D(Basis):
         warnings.warn(
             "new_coordinates is deprecated. Use global_to_local_coordinates instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.global_to_local_coordinates(vector)
 
@@ -2521,6 +2522,7 @@ class Basis2D(Basis):
         warnings.warn(
             "old_coordinates is deprecated. Use local_to_global_coordinates instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.local_to_global_coordinates(vector)
 
@@ -2840,6 +2842,7 @@ class Basis3D(Basis):
         warnings.warn(
             "new_coordinates is deprecated. Use global_to_local_coordinates instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.global_to_local_coordinates(vector)
 
@@ -2857,6 +2860,7 @@ class Basis3D(Basis):
         warnings.warn(
             "old_coordinates is deprecated. Use local_to_global_coordinates instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.local_to_global_coordinates(vector)
 
@@ -3064,6 +3068,7 @@ class Frame2D(Basis2D):
         warnings.warn(
             "new_coordinates is deprecated. Use global_to_local_coordinates instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.global_to_local_coordinates(vector)
 
@@ -3081,6 +3086,7 @@ class Frame2D(Basis2D):
         warnings.warn(
             "old_coordinates is deprecated. Use local_to_global_coordinates instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.local_to_global_coordinates(vector)
 
@@ -3335,6 +3341,7 @@ class Frame3D(Basis3D):
         warnings.warn(
             "new_coordinates is deprecated. Use global_to_local_coordinates instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.global_to_local_coordinates(vector)
 
@@ -3352,6 +3359,7 @@ class Frame3D(Basis3D):
         warnings.warn(
             "old_coordinates is deprecated. Use local_to_global_coordinates instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.local_to_global_coordinates(vector)
 
