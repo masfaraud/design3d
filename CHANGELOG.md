@@ -23,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Vector3D.plot: the arrow is drawn with recent Matplotlib versions, which require `do_3d_projection` on 3D artists
 - Package metadata: the license is the LGPL 2.1 of the LICENSE file, not a Creative Commons license
 
+### Changed
+
+- design3d requires Python 3.12 or later
+
 ### Build
 
 - moved source to src folder
+- package metadata moved from setup.py to pyproject.toml, version computed from git tags by setuptools-scm

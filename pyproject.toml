@@ -1,8 +1,75 @@
 [build-system]
 requires = [
-    "setuptools>=75",
+    "setuptools>=77",
+    "setuptools-scm>=8",
     "wheel",
     "Cython>=3.0",
     "numpy"
 ]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "design3d"
+dynamic = ["version"]
+description = "A computation-oriented Python 3D modeler based on B-Rep, with STEP and STL import and export."
+readme = "README.md"
+license = "LGPL-2.1-only"
+license-files = ["LICENSE"]
+authors = [{ name = "Steven Masfaraud", email = "design3d@masfaraud.fr" }]
+keywords = ["volume", "modeler", "CAD", "B-Rep", "STEP"]
+requires-python = ">=3.12"
+dependencies = [
+    "packaging",
+    "Cython>=3.0.0",
+    "numpy",
+    "orjson",
+    "matplotlib",
+    "scipy",
+    "geomdl",
+    "networkx",
+    "triangle",
+    "kaitaistruct",
+    "sympy",
+    "trimesh",
+    "rtree",
+    "gmsh",
+    "pyfqmr",
+    "CGAL",
+    "scikit-learn",
+    "lxml",
+]
+classifiers = [
+    "Topic :: Scientific/Engineering",
+    "Topic :: Multimedia :: Graphics :: 3D Modeling",
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Cython",
+]
+
+[project.optional-dependencies]
+test = ["coverage"]
+doc = [
+    "sphinx",
+    "nbsphinx",
+    "sphinx_book_theme",
+    "nbformat",
+    "nbconvert",
+    "sphinx_copybutton",
+    "sphinx_design",
+]
+
+[project.urls]
+Homepage = "https://github.com/masfaraud/design3d"
+Source = "https://github.com/masfaraud/design3d"
+Issues = "https://github.com/masfaraud/design3d/issues"
+Changelog = "https://github.com/masfaraud/design3d/blob/master/CHANGELOG.md"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools_scm]
