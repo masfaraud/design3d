@@ -111,9 +111,9 @@ class TestCircle2D(unittest.TestCase):
 
     def test_line_intersections(self):
         line_ = curves.Line2D(design3d.Point2D(-1.0, -1.0), design3d.Point2D(1.0, 1.0))
-        line_intersections = self.circle2d.line_intersections(line)
-        line_intersections[0].is_close(design3d.Point2D(0.7071067811865475, 0.7071067811865475))
-        line_intersections[1].is_close(design3d.Point2D(-0.7071067811865476, -0.7071067811865476))
+        line_intersections = self.circle2d.line_intersections(line_)
+        self.assertTrue(line_intersections[0].is_close(design3d.Point2D(0.7071067811865475, 0.7071067811865475)))
+        self.assertTrue(line_intersections[1].is_close(design3d.Point2D(-0.7071067811865476, -0.7071067811865476)))
         circle_ = curves.Circle2D(design3d.OXY.translation(design3d.Vector2D(0.8, -0.3)), 0.3)
         line_2 = curves.Line2D(
             design3d.Point2D(0.5599870479815988, -0.12053417263965237),
