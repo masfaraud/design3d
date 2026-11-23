@@ -1,7 +1,11 @@
 import os
 import time
 
+import matplotlib
 import matplotlib.pyplot as _plt
+
+# Non-interactive backend: plt.show() in the scripts must not open windows that block the run
+matplotlib.use("Agg")
 
 scripts = [
     # Core.py
