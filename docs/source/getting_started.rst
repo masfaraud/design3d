@@ -1,9 +1,9 @@
-Volmdlr: the absolute basics for beginners
-------------------------------------------
+design3d: the absolute basics for beginners
+-------------------------------------------
 Welcome to the absolute beginner’s guide to design3d! If you have comments or suggestions, please don’t hesitate to reach out!
 
 Welcome to design3d!
-^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
 
 The design3d library is an open-source Python library primarily developed by Dessia Technologies,
 aimed at providing 3D modeling capabilities based on Boundary Representation (B-Rep) purely in Python.
@@ -15,7 +15,7 @@ and curves. B-Rep is widely used in CAD and CAM due to its ability to accurately
 shapes and to provide a rich set of operations for manipulating and analyzing these shapes.
 
 Installing design3d through pip (Windows and Linux users)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This package requires Python 3.9 or above. Please follow the instructions
 below to install the package. Depending on your needs, you can choose between

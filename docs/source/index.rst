@@ -1,11 +1,12 @@
-#####################
+######################
 Design3d Documentation
-#####################
+######################
 
 .. toctree::
    :maxdepth: 1
    :hidden:
 
+   Getting Started <getting_started>
    User Guide <user_guide>
    Authors <authors>
    About the Package <about_the_package>
@@ -28,35 +29,39 @@ shapes and to provide a rich set of operations for manipulating and analyzing th
     .. grid-item-card::
         :img-top: ../source/_static/index-images/getting_started.svg
 
-        Getting Started
-        ^^^^^^^^^^^^^^^
+        .. card-header::
+
+            Getting Started
 
         New to design3d? Check out the Absolute Beginner’s Guide. It contains an
         introduction to design3d’s main concepts and links to additional tutorials.
 
-        +++
+        .. card-footer::
 
-        .. button-ref:: getting_started
-            :expand:
-            :color: primary
-            :click-parent:
+            .. button-ref:: getting_started
+                :ref-type: doc
+                :expand:
+                :color: primary
+                :click-parent:
 
-            To absolute beginner’s guide
+                To absolute beginner’s guide
 
     .. grid-item-card::
         :img-top: ../source/_static/index-images/user_guide.svg
 
-        User Guide
-        ^^^^^^^^^^
+        .. card-header::
+
+            User Guide
 
         The user guide provides in-depth information on the
         key concepts of design3d with useful background information and explanation.
 
-        +++
+        .. card-footer::
 
-        .. button-ref:: user_guide
-            :expand:
-            :color: primary
-            :click-parent:
+            .. button-ref:: user_guide
+                :ref-type: doc
+                :expand:
+                :color: primary
+                :click-parent:
 
-            To user guide
+                To user guide

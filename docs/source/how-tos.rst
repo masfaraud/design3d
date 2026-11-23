@@ -1,6 +1,6 @@
-==============================================
+===============================================
 Section on how to create Basic design3d objects
-==============================================
+===============================================
 
 Basic Objects
 *************
@@ -143,7 +143,7 @@ Circle2D
 The circle2d  is defined by its center point (Point2D) and a radius (float),
 and it also accepts an optional name for identification.
 
-.. grid-item-card::
+.. card::
 
     .. plot::
        :include-source:
@@ -164,7 +164,7 @@ The circle is defined by a Frame3D object that includes information about the ce
 circle in 3D space, along with a radius (float). The frame's u and v vectors define the plane in which the
 circle lies, and w represents the normal vector to the plane.
 
-.. grid-item-card::
+.. card::
 
     .. plot::
        :include-source:
@@ -302,6 +302,7 @@ Additionally you will have two optional arguments: an infinite line which the li
 
 LineSegment2D
 -------------
+
 .. grid:: 1
 
     .. grid-item-card::
@@ -884,7 +885,7 @@ RevolutionSurface3D
 
 `RevolutionSurface3D` represents a three-dimensional surface of revolution. To instantiate it, it is needed to provide:
 
-`edge: This is a parameter passed to the constructor, representing the edge that defines the profile curve of the surface of revolution. It is of type edges.Edge, indicating that it is expected to be an edge.
+`edge`: This is a parameter passed to the constructor, representing the edge that defines the profile curve of the surface of revolution. It is of type edges.Edge, indicating that it is expected to be an edge.
 
 `axis_point`: This is a parameter passed to the constructor, representing the placement of the axis of revolution. It is of type design3d.Point3D.
 
@@ -1412,7 +1413,7 @@ ClosedShell3D
            shell1 = shells.ClosedShell3D(faces_)
            shell1.babylonjs()
 
-    .. figure:: ../source/_static/index-images/closedshell3d.png
+        .. figure:: ../source/_static/index-images/closedshell3d.png
 
 
 Primitives3D

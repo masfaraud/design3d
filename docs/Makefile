@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = Volmdlr
+SPHINXPROJ    = design3d
 SOURCEDIR     = source
 BUILDDIR      = build
 

@@ -54,7 +54,7 @@ We have a process based on three branches and the process goes as follows:
 - testing that is regularly a freeze of testing. Release candidate (RC)
   can be made on testing
 - master that receive the code from testing before the release. Release are
-made on master
+  made on master
 
 Before coding, think of where to start from. You should start your branch
 for pull request where the pull request will point at:

@@ -1,4 +1,5 @@
 .. _curves:
+
 Curves
 ------
 

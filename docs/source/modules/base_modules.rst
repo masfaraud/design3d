@@ -2,6 +2,7 @@ Base Modules
 ============
 
 .. _core_compiled:
+
 Core Compiled
 -------------
 
@@ -9,8 +10,10 @@ Core Compiled
    :members:
    :undoc-members:
    :show-inheritance:
+   :exclude-members: set
 
 .. _core:
+
 Core
 ----
 

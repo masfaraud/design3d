@@ -3,7 +3,7 @@ Subpackage utils
 
 
 design3d.utils.common\_operations module
----------------------------------------
+----------------------------------------
 
 .. automodule:: design3d.utils.common_operations
    :members:
@@ -11,7 +11,7 @@ design3d.utils.common\_operations module
    :show-inheritance:
 
 design3d.utils.intersections module
-----------------------------------
+-----------------------------------
 
 .. automodule:: design3d.utils.intersections
    :members:
@@ -19,7 +19,7 @@ design3d.utils.intersections module
    :show-inheritance:
 
 design3d.utils.parametric module
--------------------------------
+--------------------------------
 
 .. automodule:: design3d.utils.parametric
    :members:
@@ -27,7 +27,7 @@ design3d.utils.parametric module
    :show-inheritance:
 
 design3d.utils.step\_writer module
----------------------------------
+----------------------------------
 
 .. automodule:: design3d.utils.step_writer
    :members:

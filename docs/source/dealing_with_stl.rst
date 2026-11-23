@@ -11,10 +11,10 @@ Each triangle in the mesh is defined by three vertices (corner points) in 3D spa
 Additionally, each triangle has a normal vector that indicates the direction of its surface, which helps determine the orientation of the triangle.
 
 
-Users can also import STL files using Volmdlr and then use our features to perform powerful studies.
+Users can also import STL files using design3d and then use our features to perform powerful studies.
 
 import STL files
-***************
+****************
 
 .. code-block:: python
 
