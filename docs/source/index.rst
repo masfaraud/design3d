@@ -1,5 +1,5 @@
 ######################
-Design3d Documentation
+design3d documentation
 ######################
 
 .. toctree::

@@ -5,31 +5,34 @@ Useful operations
 Export to json file
 *******************
 
-You can export any design3d objects to a json file. To do so, you can just call the method ``save_to_file``.
+You can export any design3d object to a json file: its ``to_dict`` method returns a json-serializable dictionary.
 
 Here is an example how you can save a plan face 3d to a .json file:
 
 .. code-block:: python
 
+    import json
+
     import design3d
     from design3d import surfaces, faces
 
     face = faces.PlaneFace3D.from_surface_rectangular_cut(surfaces.Plane3D(design3d.OXYZ), -1, 1, -1, 1)
-    face.save_to_file('path/to/where/to/save/your/file.json')
+    with open('path/to/where/to/save/your/file.json', 'w') as file:
+        json.dump(face.to_dict(), file)
 
 
 Import from json file
 *********************
 
-If you have a json file containing design3d objects, you can use the method ``dessia_common.core.DessiaObect.from_json`` to import it.
+If you have a json file containing design3d objects, you can use the method ``design3d.base.SerializableObject.from_json`` to import it.
 
 Example:
 
 .. code-block:: python
 
-    import dessia_common
+    from design3d.base import SerializableObject
 
-    design3d_object = dessia_common.core.DessiaObject.from_json('path/to/your/file.json')
+    design3d_object = SerializableObject.from_json('path/to/your/file.json')
 
 Matplotlib plots
 ****************

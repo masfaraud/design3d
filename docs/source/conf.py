@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.abspath("../../design3d"))
 # -- Project information -----------------------------------------------------
 import datetime
 
-project = "Design3d"
+project = "design3d"
 author = "The design3d team"
 
 import design3d
@@ -158,7 +158,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "Design3d.tex", "Design3d Documentation", "design3d team", "manual"),
+    (master_doc, "design3d.tex", "design3d documentation", "design3d team", "manual"),
 ]
 
 
@@ -166,7 +166,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "design3d", "Design3d Documentation", [author], 1)]
+man_pages = [(master_doc, "design3d", "design3d documentation", [author], 1)]
 
 
 # -- Options for Texinfo output ----------------------------------------------
@@ -177,10 +177,10 @@ man_pages = [(master_doc, "design3d", "Design3d Documentation", [author], 1)]
 texinfo_documents = [
     (
         master_doc,
-        "Design3d",
-        "Design3d Documentation",
+        "design3d",
+        "design3d documentation",
         author,
-        "Design3d",
+        "design3d",
         "One line description of project.",
         "Miscellaneous",
     ),

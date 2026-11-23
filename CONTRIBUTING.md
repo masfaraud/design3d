@@ -20,25 +20,36 @@ If you are not sure about your contribution you can ask the question on the issu
 
 ### Process
 
-We have a process based on three branches:
+Start your branch from `master` and open your pull request against `master`. Releases are tagged on `master`.
 
-- dev that receive the features and impacting changes pull requests
-- testing that is regularly a freeze of testing. Release candidate (RC) can be made on testing
-- master that receive the code from testing before the release. Release are made on master
+- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+- Add user-facing changes to `CHANGELOG.md`, following [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+- When fixing a bug, first add a test that reproduces it.
 
-Before coding, think of where to start from. You should start your branch for pull request where the pull request will point at:
+### Running checks locally
 
-- if your contribution is trivial or has low risk of negative impact, start from master branch: simple and urgent bug fixes, docs, build...
-- in most other case, start from dev and submit your pull request to dev
+```bash
+pip install -e '.[test,doc]'
+pre-commit run --all-files
+coverage run --rcfile=.coveragerc --data-file=.coverage --source=design3d -m unittest discover -v tests
+coverage run --rcfile=.coveragerc --data-file=.coverage --source=design3d -a scripts/ci_scripts.py
+coverage report
+coverage json --data-file=.coverage -o coverage.json
+python check_coverage.py coverage.json
+make -C docs html SPHINXOPTS="-W --keep-going"
+```
+
+`scripts/ci_scripts.py` runs scripts that call `babylonjs()`, which opens a browser. Set `BROWSER=true` to avoid opening
+browser tabs when running them locally.
 
 ### CI
 
 Your contribution may be refused by our CI. In this case:
-- lowering the coverage: add some tests
-- introducing pylint errors
-- triggering pydocstyle errors
-- non-respect of PEP8
-- no CHANGELOG.md edit
+
+- pre-commit hooks fail (black, codespell, cython-lint): run `pre-commit run --all-files`
+- a test or a CI script fails: fix it, or add a test for the new behavior
+- the coverage of the project or of a file drops below its threshold in `check_coverage.py`: add some tests
+- the documentation build emits a Sphinx warning: fix the docstring or page
 
 Correct the CI errors to get approval from design3d team!
 
