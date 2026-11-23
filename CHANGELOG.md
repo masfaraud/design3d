@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- BSplineFace3D: triangulation of faces with few control points has interior vertices, instead of triangles joining
+  distant boundary points away from the surface
 - BSplineSurface3D: point inversion no longer gets stuck when it starts on the seam of a periodic surface
 - BSplineSurface3D: parametric coordinate of an edge start/end lying on a singularity is taken from its neighbour
   parametric point, instead of an ill-conditioned point inversion

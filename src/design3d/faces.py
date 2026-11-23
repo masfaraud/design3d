@@ -3445,6 +3445,7 @@ class BSplineFace3D(Face3D):
     """
 
     face_tolerance = 1e-5
+    min_grid_size = 5
 
     def __init__(self, surface3d: surfaces.BSplineSurface3D, surface2d: surfaces.Surface2D, name: str = ""):
         Face3D.__init__(self, surface3d=surface3d, surface2d=surface2d, name=name)
@@ -3506,7 +3507,9 @@ class BSplineFace3D(Face3D):
             number_points_y = int(delta_v * resolution_v)
             number_points_x = max(int(delta_u * resolution_u), int(number_points_y / 5))
 
-        return number_points_x, number_points_y
+        # With few control points, the grid points would all be on the boundary of the face: without interior
+        # points, the triangles of the mesh can join distant boundary points, away from a curved surface.
+        return max(number_points_x, self.min_grid_size), max(number_points_y, self.min_grid_size)
 
     @staticmethod
     def _update_grid_points_with_outer_polygon(outer_polygon, grid_points):
