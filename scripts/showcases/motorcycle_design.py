@@ -17,6 +17,8 @@ front wheel to the rear wheel), Y points to the right of the rider (who faces -X
 
 import math
 
+import numpy as np
+
 import design3d as d3d
 from design3d.core import Assembly
 from design3d.curves import Circle2D
@@ -106,7 +108,8 @@ swingarm_pivot = rear_axle_center + swingarm_length * d3d.Vector3D(
 
 # Tyres and rims
 tyre_thickness = 0.008
-front_rim_width = 0.06858  # 2.70 inches
+front_rim_width = 2.70 * 0.0254
+rear_rim_width = 3.50 * 0.0254
 
 # Brake disks
 front_brake_disk_outer_diameter = 0.292
@@ -116,6 +119,13 @@ front_disk_number_screws = 6
 front_disk_screwholes_diameter = 0.012
 front_brake_disk_offset = -0.050  # on the left side
 front_brake_width = 0.0045
+rear_brake_disk_outer_diameter = 0.230
+rear_brake_disk_inner_diameter = 0.185
+rear_brake_screw_diameter = 0.150
+rear_disk_number_screws = 5
+rear_disk_screwholes_diameter = 0.010
+rear_brake_disk_offset = 0.055  # on the right side, the chain being on the left side
+rear_brake_width = 0.005
 
 # Fork
 tube_diameter = 0.041
@@ -138,6 +148,12 @@ front_bearing_d = front_axle_diameter
 front_bearing_D = 0.042
 front_bearing_B = 0.013
 front_bearing_spacing = 0.090
+
+# Rear wheel bearings and axle
+rear_axle_diameter = 0.015
+rear_bearing_D = 0.042
+rear_bearing_B = 0.013
+rear_bearing_spacing = 0.110
 
 # Handlebar
 crown_handlebar_offset = 0.050
@@ -281,14 +297,6 @@ def rim(rim_diameter: float, rim_width: float, hook_height=0.007, thickness=0.00
     return RevolvedProfile(d3d.OYZX, contour, axis_point=d3d.O3D, axis=d3d.Y3D, name=name)
 
 
-# Wheels
-front_tyre = tyre(
-    front_rim_diameter, front_rim_width, front_tyre_diameter, front_tyre_width, tyre_thickness, "Front tyre"
-)
-front_axle = Cylinder(d3d.OZXY, 0.5 * front_axle_diameter, tubes_spacing, name="Front wheel axle")
-front_rim = rim(front_rim_diameter, front_rim_width, name="Front rim")
-
-
 # Brake disk
 def brake_disk(
     inner_diameter: float,
@@ -354,6 +362,48 @@ def brake_disk(
     )
 
 
+def wheel_assembly(
+    tyre_size: str,
+    rim_width: float,
+    bearing_d: float,
+    bearing_D: float,
+    bearing_B: float,
+    bearing_spacing: float,
+    disk: ExtrudedProfile,
+    disk_offset: float,
+    name: str,
+):
+    """
+    Assembly of a wheel: tyre, rim, bearings with their spacer and brake disk.
+
+    The wheel is centered on the origin, its axis being the Y axis. The axle is not part of the wheel.
+    """
+    width, diameter, rim_diameter = tyre_dimensions(tyre_size)
+    wheel_tyre = tyre(rim_diameter, rim_width, diameter, width, tyre_thickness, f"{name} tyre")
+    wheel_rim = rim(rim_diameter, rim_width, name=f"{name} rim")
+    right_bearing = radial_bearing(bearing_d, bearing_D, bearing_B, name=f"{name} right bearing")
+    left_bearing = radial_bearing(bearing_d, bearing_D, bearing_B, name=f"{name} left bearing")
+    bearing_spacer = HollowCylinder(
+        d3d.OZXY,
+        inner_radius=0.5 * bearing_d,
+        outer_radius=0.5 * bearing_d + 0.004,
+        length=bearing_spacing - bearing_B,
+        name=f"{name} bearing spacer",
+    )
+    return Assembly(
+        [wheel_tyre, wheel_rim, right_bearing, bearing_spacer, left_bearing, disk],
+        [
+            d3d.OXYZ,
+            d3d.OXYZ,
+            d3d.Frame3D(d3d.Point3D(0, 0.5 * bearing_spacing, 0), d3d.Z3D, d3d.X3D, d3d.Y3D),
+            d3d.OXYZ,
+            d3d.Frame3D(d3d.Point3D(0, -0.5 * bearing_spacing, 0), d3d.Z3D, d3d.X3D, d3d.Y3D),
+            d3d.Frame3D(d3d.Point3D(0, disk_offset, 0), d3d.X3D, d3d.Y3D, d3d.Z3D),
+        ],
+        name=f"{name} wheel",
+    )
+
+
 front_brake_disk = brake_disk(
     front_brake_disk_inner_diameter,
     front_brake_disk_outer_diameter,
@@ -362,6 +412,39 @@ front_brake_disk = brake_disk(
     front_brake_screw_diameter,
     front_disk_screwholes_diameter,
     name="Front brake disk",
+)
+front_wheel = wheel_assembly(
+    front_tyre_size,
+    front_rim_width,
+    front_bearing_d,
+    front_bearing_D,
+    front_bearing_B,
+    front_bearing_spacing,
+    front_brake_disk,
+    front_brake_disk_offset,
+    "Front",
+)
+front_axle = Cylinder(d3d.OZXY, 0.5 * front_axle_diameter, tubes_spacing, name="Front wheel axle")
+
+rear_brake_disk = brake_disk(
+    rear_brake_disk_inner_diameter,
+    rear_brake_disk_outer_diameter,
+    rear_brake_width,
+    rear_disk_number_screws,
+    rear_brake_screw_diameter,
+    rear_disk_screwholes_diameter,
+    name="Rear brake disk",
+)
+rear_wheel = wheel_assembly(
+    rear_tyre_size,
+    rear_rim_width,
+    rear_axle_diameter,
+    rear_bearing_D,
+    rear_bearing_B,
+    rear_bearing_spacing,
+    rear_brake_disk,
+    rear_brake_disk_offset,
+    "Rear",
 )
 
 ## Fork
@@ -442,31 +525,12 @@ fork_frame_axle = RevolvedProfile(
 )
 fork_frame_nut = hexnut(fork_pivot_diameter, 0.012)
 
-left_front_bearing = radial_bearing(
-    front_bearing_d,
-    front_bearing_D,
-    front_bearing_B,
-)
-right_front_bearing = radial_bearing(front_bearing_d, front_bearing_D, front_bearing_B)
-front_bearing_spacer = HollowCylinder(
-    d3d.OZXY,
-    inner_radius=0.5 * front_bearing_d,
-    outer_radius=0.5 * front_bearing_d + 0.004,
-    length=front_bearing_spacing - front_bearing_B,
-    name="Front bearing spacer",
-)
-
 fork_assembly = Assembly(
     [
         left_fork_tube,
         right_fork_tube,
         front_axle,
-        left_front_bearing,
-        front_bearing_spacer,
-        right_front_bearing,
-        front_tyre,
-        front_rim,
-        front_brake_disk,
+        front_wheel,
         upper_fork_crown,
         lower_fork_crown,
         handlebar,
@@ -477,12 +541,7 @@ fork_assembly = Assembly(
         d3d.OXYZ,
         d3d.OXYZ,
         d3d.OXYZ,
-        d3d.Frame3D(d3d.Point3D(0, -0.5 * front_bearing_spacing, 0), d3d.Z3D, d3d.X3D, d3d.Y3D),
         d3d.OXYZ,
-        d3d.Frame3D(d3d.Point3D(0, 0.5 * front_bearing_spacing, 0), d3d.Z3D, d3d.X3D, d3d.Y3D),
-        d3d.OXYZ,
-        d3d.OXYZ,
-        d3d.Frame3D(d3d.Point3D(0, front_brake_disk_offset, 0), d3d.X3D, d3d.Y3D, d3d.Z3D),
         d3d.Frame3D(d3d.Point3D(0, 0, tube_height - crown_width), d3d.Y3D, -d3d.X3D, d3d.Z3D),
         d3d.Frame3D(d3d.Point3D(0, 0, tube_height - crowns_distance - 2 * crown_width), d3d.Y3D, -d3d.X3D, d3d.Z3D),
         d3d.Frame3D(d3d.Point3D(0, 0, tube_height + crown_handlebar_offset), d3d.Y3D, -d3d.X3D, d3d.Z3D),
@@ -510,7 +569,11 @@ frame_pivot = HollowCylinder(
 frame = frame_pivot
 frame_frame = d3d.Frame3D(steering_head_center, d3d.X3D, d3d.Y3D, d3d.Z3D)
 
-motorcycle = Assembly([fork_assembly, frame], [fork_frame, frame_frame])
+motorcycle = Assembly(
+    [fork_assembly, frame, rear_wheel],
+    [fork_frame, frame_frame, d3d.Frame3D(rear_axle_center, d3d.X3D, d3d.Y3D, d3d.Z3D)],
+    name="Motorcycle",
+)
 
 # ======================================================================================================================
 # Checks
@@ -527,15 +590,15 @@ for hardpoint_name, hardpoint in [
     print(f"  {hardpoint_name:<28} {1000 * hardpoint.x:7.1f} {1000 * hardpoint.z:7.1f}")
 print(f"Fork offset: {1000 * fork_offset:.1f} mm, tyre to lower crown clearance: {1000 * tyre_crown_clearance:.0f} mm")
 
-# Overall dimensions of the model, compared to the MT-125 ones. They are meaningful once all the parts are modeled.
-bounding_box = motorcycle.bounding_box
+# Overall dimensions of the model, compared to the MT-125 ones. They are computed on the meshes of the parts, as the
+# bounding boxes of some faces (toroidal faces of the tyres) are underestimated.
+motorcycle_meshes = d3d.core.VolumeModel([motorcycle]).to_mesh_list()
+motorcycle_vertices = np.concatenate([mesh.vertices for mesh in motorcycle_meshes])
+model_min, model_max = motorcycle_vertices.min(axis=0), motorcycle_vertices.max(axis=0)
 print("Overall dimensions (model / MT-125) in mm:")
-for dimension_name, model_value, target_value in [
-    ("length", bounding_box.xmax - bounding_box.xmin, target_length),
-    ("width", bounding_box.ymax - bounding_box.ymin, target_width),
-    ("height", bounding_box.zmax - bounding_box.zmin, target_height),
-]:
-    print(f"  {dimension_name:<7} {1000 * model_value:6.0f} / {1000 * target_value:4.0f}")
+for dimension_name, axis, target_value in [("length", 0, target_length), ("width", 1, target_width)]:
+    print(f"  {dimension_name:<7} {1000 * (model_max[axis] - model_min[axis]):6.0f} / {1000 * target_value:4.0f}")
+print(f"  {'height':<7} {1000 * model_max[2]:6.0f} / {1000 * target_height:4.0f}")
 
 primitives = [ground, motorcycle]
 
