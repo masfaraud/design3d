@@ -188,6 +188,17 @@ swingarm_pivot_tube_diameter = 0.045
 swingarm_cross_member_distance = 0.120  # from the pivot, along the arm
 swingarm_cross_member_size = 0.050
 
+# Frame: steel twin-spar frame, from the steering head to the swingarm pivot plates, and rear subframe. Points are
+# given as (x, z) in the motorcycle frame of reference, the spars and rails being symmetric with respect to the XZ plane
+frame_head_tube_outer_diameter = fork_pivot_diameter + 0.016
+spar_points = [(0.325, 0.800), (0.560, 0.715), (0.720, 0.620), (0.785, 0.500), (0.800, 0.340)]
+spar_half_spacings = [0.040, 0.110, 0.150, 0.155, 0.155]  # distance from the XZ plane to the spar section centers
+spar_sections = [(0.035, 0.100), (0.030, 0.065), (0.030, 0.070), (0.030, 0.110), (0.030, 0.110)]  # width, height
+subframe_rail_points = [(0.600, 0.700), (1.000, 0.735), (1.480, 0.815)]
+subframe_rail_half_spacing = 0.095
+subframe_stay_points = [(0.790, 0.470), (1.150, 0.745)]
+subframe_tube_diameter = 0.025
+
 # Rear shock
 shock_eye_diameter = 0.030
 shock_eye_width = 0.025
@@ -713,17 +724,74 @@ frame_pivot_frame = d3d.XYZ.rotation(d3d.Y3D, caster_angle).to_frame(d3d.Point3D
 frame_pivot = HollowCylinder(
     frame_pivot_frame,
     inner_radius=0.5 * fork_pivot_diameter,
-    outer_radius=0.5 * fork_pivot_diameter + 0.008,
+    outer_radius=0.5 * frame_head_tube_outer_diameter,
     length=crowns_distance,
-    name="Frame pivot",
+    color=frame_grey,
+    name="Steering head tube",
 )
 
-frame = frame_pivot
-frame_frame = d3d.Frame3D(steering_head_center, d3d.X3D, d3d.Y3D, d3d.Z3D)
+
+def spar_frames(points: list[tuple[float, float]], half_spacings: list[float], side: float) -> list[d3d.Frame3D]:
+    """
+    Frames of the spar sections: their w vector is tangent to the spar, their u vector is close to the Y axis.
+
+    :param side: 1 for the right spar, -1 for the left one.
+    """
+    centers = [d3d.Point3D(x, side * y, z) for (x, z), y in zip(points, half_spacings)]
+    frames = []
+    for i, center in enumerate(centers):
+        w = (centers[min(i + 1, len(centers) - 1)] - centers[max(i - 1, 0)]).unit_vector()
+        u = (d3d.Y3D - d3d.Y3D.dot(w) * w).unit_vector()
+        frames.append(d3d.Frame3D(center, u, w.cross(u), w))
+    return frames
+
+
+def frame_spar(side: float, name: str) -> Loft:
+    return Loft(
+        [rounded_rectangle(width, height, 0.008) for width, height in spar_sections],
+        spar_frames(spar_points, spar_half_spacings, side),
+        color=frame_grey,
+        name=name,
+    )
+
+
+def subframe_tube(points: list[tuple[float, float]], y: float, name: str):
+    points3d = [d3d.Point3D(x, y, z) for x, z in points]
+    tube_section = Contour2D.from_circle(Circle2D.from_center_and_radius(d3d.O2D, 0.5 * subframe_tube_diameter))
+    if len(points3d) == 2:
+        return tube_between(points3d[0], points3d[1], subframe_tube_diameter, name, color=frame_grey)
+    wire = OpenRoundedLineSegments3D(points3d, {i: 0.15 for i in range(1, len(points3d) - 1)})
+    return Sweep(tube_section, wire, color=frame_grey, name=name)
+
+
+rail_end = d3d.Point3D(subframe_rail_points[-1][0], 0, subframe_rail_points[-1][1])
+frame_parts = [
+    frame_spar(1, "Right spar"),
+    frame_spar(-1, "Left spar"),
+    subframe_tube(subframe_rail_points, subframe_rail_half_spacing, "Right subframe rail"),
+    subframe_tube(subframe_rail_points, -subframe_rail_half_spacing, "Left subframe rail"),
+    subframe_tube(subframe_stay_points, subframe_rail_half_spacing, "Right subframe stay"),
+    subframe_tube(subframe_stay_points, -subframe_rail_half_spacing, "Left subframe stay"),
+    y_axis_tube(rail_end, subframe_tube_diameter, 2 * subframe_rail_half_spacing, "Subframe rear cross tube"),
+    y_axis_tube(
+        shock_upper_mount, subframe_tube_diameter, 2 * subframe_rail_half_spacing, "Shock upper mount cross tube"
+    ),
+    y_axis_tube(
+        swingarm_pivot,
+        0.5 * swingarm_pivot_tube_diameter,
+        2 * spar_half_spacings[-1] + spar_sections[-1][0] + 0.02,
+        "Swingarm pivot shaft",
+    ),
+]
+frame = Assembly(
+    [frame_pivot, *frame_parts],
+    [d3d.Frame3D(steering_head_center, d3d.X3D, d3d.Y3D, d3d.Z3D)] + [d3d.OXYZ] * len(frame_parts),
+    name="Frame",
+)
 
 motorcycle = Assembly(
     [fork_assembly, frame, swingarm_assembly, rear_shock],
-    [fork_frame, frame_frame, swingarm_frame, d3d.OXYZ],
+    [fork_frame, d3d.OXYZ, swingarm_frame, d3d.OXYZ],
     name="Motorcycle",
 )
 
