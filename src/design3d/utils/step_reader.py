@@ -619,7 +619,7 @@ def shape_representation(arguments, object_dict, *args, **kwargs):
         elif int(arg[1:]) in object_dict and isinstance(object_dict[int(arg[1:])], design3d.Frame3D):
             # TODO: Is there something to read here ?
             frame = object_dict[int(arg[1:])]
-            if not all(component is None for component in [frame.u, frame.u, frame.w]):
+            if not all(component is None for component in [frame.u, frame.v, frame.w]):
                 frames.append(frame)
         elif int(arg[1:]) in object_dict and isinstance(object_dict[int(arg[1:])], design3d.edges.Arc3D):
             shells.append(object_dict[int(arg[1:])])
