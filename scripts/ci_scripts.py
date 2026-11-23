@@ -1,6 +1,5 @@
 import os
 import time
-import re
 
 import matplotlib.pyplot as _plt
 
@@ -119,7 +118,7 @@ for script_name in scripts:
     file_name = script_name.split("/")[-1]
     time_start_script = time.time()
 
-    with open(file_name, "r", encoding="utf-8") as script:
+    with open(file_name, encoding="utf-8") as script:
         # # Call babylon_data instead of babylonjs to avoid opening browser windows
         # pattern = r'\.babylonjs\(.*?\)'
         # replacement = r'.volmdlr_volume_model().babylon_data()'

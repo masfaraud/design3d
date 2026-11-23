@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Tue Feb 12 19:23:27 2019
 
@@ -7,7 +6,6 @@ Created on Tue Feb 12 19:23:27 2019
 """
 
 import math
-
 
 import design3d as d3d
 import design3d.edges as edges

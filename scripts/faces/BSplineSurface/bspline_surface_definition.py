@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 
 @author: s.bendjebla
@@ -9,12 +8,12 @@
 
 import json
 
-from design3d.base import SerializableObject
 import geomdl
 
 import design3d as d3d
 import design3d.faces as d3df
 from design3d import surfaces
+from design3d.base import SerializableObject
 
 # %% Control points
 

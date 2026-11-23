@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Fri Sep 18 12:40:31 2020
 
 @author: masfaraud
 """
 
-from design3d.core import EdgeStyle
 import design3d.faces
 from design3d import faces, surfaces
+from design3d.core import EdgeStyle
 
 R = 0.32
 

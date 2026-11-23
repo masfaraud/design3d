@@ -1,10 +1,12 @@
 import math
 import os
 import unittest
+
 import numpy as np
-from design3d.base import SerializableObject
+
 import design3d
-from design3d import edges, surfaces, wires, curves
+from design3d import curves, edges, surfaces, wires
+from design3d.base import SerializableObject
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_toroidal_tests")
 

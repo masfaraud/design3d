@@ -128,7 +128,7 @@ def _get_ellipse2d_vertical_line_intersectioons(ellipse2d, line2d):
     """
     x1 = line2d.point1.x
     x2 = x1
-    y1 = ellipse2d.minor_axis * math.sqrt((1 - x1**2 / ellipse2d.major_axis**2))
+    y1 = ellipse2d.minor_axis * math.sqrt(1 - x1**2 / ellipse2d.major_axis**2)
     y2 = -y1
     point1 = design3d.Point2D(x1, y1)
     point2 = design3d.Point2D(x2, y2)

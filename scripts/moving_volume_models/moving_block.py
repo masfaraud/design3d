@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Mon Jan 27 10:54:45 2020
 
@@ -43,6 +42,6 @@ model.babylonjs()
 babylon_data = model.babylon_data()
 
 for i, d in enumerate(babylon_data["steps"]):
-    d["label"] = "custom label {}".format(i + 1)
+    d["label"] = f"custom label {i + 1}"
 
 model.babylonjs_from_babylon_data(babylon_data)

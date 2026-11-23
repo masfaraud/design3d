@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """ """
 
 import design3d as d3d
@@ -61,14 +60,14 @@ print(box_green.intersection_external_aabb_volume(box_blue, resolution))
 model = d3d.core.VolumeModel([box, box_red, box_green, box_blue])
 model.babylonjs(debug=True)
 
-assert box.is_inside_shell(box_red) == True
-assert box_red.is_inside_shell(box) == False
+assert box.is_inside_shell(box_red)
+assert not box_red.is_inside_shell(box)
 
-assert box.is_inside_shell(box_green) == False
-assert box_green.is_inside_shell(box) == False
+assert not box.is_inside_shell(box_green)
+assert not box_green.is_inside_shell(box)
 
-assert box.is_inside_shell(box_blue) == False
-assert box_blue.is_inside_shell(box) == False
+assert not box.is_inside_shell(box_blue)
+assert not box_blue.is_inside_shell(box)
 
 model = d3d.core.VolumeModel([box_red])
 model.to_step("block.step")

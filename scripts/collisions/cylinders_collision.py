@@ -47,23 +47,23 @@ print("Collision detection methods")
 start = perf_counter()
 
 print(f"""\nRed & green:
-min distance computed is {cylinders[0].min_distance_to_other_cylinder(cylinders[1])}m, 
+min distance computed is {cylinders[0].min_distance_to_other_cylinder(cylinders[1])}m,
 collision: {cylinders[0].is_intersecting_other_cylinder(cylinders[1])}""")
 
 print(f"""\nRed & blue:
-min distance computed is {cylinders[0].min_distance_to_other_cylinder(cylinders[2])}m, 
+min distance computed is {cylinders[0].min_distance_to_other_cylinder(cylinders[2])}m,
 collision: {cylinders[0].is_intersecting_other_cylinder(cylinders[2])}""")
 
 print(f"""\nGreen & blue:
-min distance computed is {cylinders[1].min_distance_to_other_cylinder(cylinders[2])}m, 
+min distance computed is {cylinders[1].min_distance_to_other_cylinder(cylinders[2])}m,
 collision: {cylinders[1].is_intersecting_other_cylinder(cylinders[2])}""")
 
 print(f"""\nRed & purple:
-min distance computed is {cylinders[0].min_distance_to_other_cylinder(cylinders[3])}m, 
+min distance computed is {cylinders[0].min_distance_to_other_cylinder(cylinders[3])}m,
 collision: {cylinders[0].is_intersecting_other_cylinder(cylinders[3])}""")
 
 print(f"""\nGreen & purple:
-min distance computed is {cylinders[1].min_distance_to_other_cylinder(cylinders[3])}m, 
+min distance computed is {cylinders[1].min_distance_to_other_cylinder(cylinders[3])}m,
 collision: {cylinders[1].is_intersecting_other_cylinder(cylinders[3])}""")
 
 print(f"""\nPurple & blue:
@@ -73,4 +73,4 @@ collision: {cylinders[3].is_intersecting_other_cylinder(cylinders[2])}""")
 
 end = perf_counter()
 print(f"\nTotal collision detection computation time: {end - start}s")
-print(f"Time per collision: {((end - start)/12)*1000}ms")
+print(f"Time per collision: {((end - start) / 12) * 1000}ms")

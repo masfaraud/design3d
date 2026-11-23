@@ -1,11 +1,12 @@
 import math
-import unittest
 import os
+import unittest
+
 import numpy
 
-from design3d.base import SerializableObject
 import design3d
-from design3d import edges, faces, primitives3d, wires, surfaces, shells
+from design3d import edges, faces, primitives3d, shells, surfaces, wires
+from design3d.base import SerializableObject
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)))
 

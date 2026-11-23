@@ -1,9 +1,10 @@
 import os
 import unittest
+
 import design3d
-from design3d.wires import Contour2D, Contour3D, Wire2D
+from design3d import core, edges
 from design3d.step import Step
-from design3d import edges, core
+from design3d.wires import Contour2D, Contour3D, Wire2D
 
 # %% Contour2d_1
 
@@ -222,7 +223,6 @@ folder = os.path.dirname(os.path.realpath(__file__))
 
 
 class TestContour3D(unittest.TestCase):
-
     def test_order_contour(self):
         contour_to_order = Contour3D.from_json(os.path.join(folder, "contour_order.json"))
         self.assertFalse(contour_to_order.is_ordered())

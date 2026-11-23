@@ -1,6 +1,7 @@
 import unittest
+
 import design3d
-from design3d import wires, geometry, edges, curves
+from design3d import curves, edges, geometry
 
 
 class TestGeometry(unittest.TestCase):

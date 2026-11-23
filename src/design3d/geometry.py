@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Geometry functions.
 """
 
 import math
-from typing import Tuple
 
 from numpy import array, zeros
 from numpy.linalg import solve as np_solve
@@ -114,7 +112,7 @@ def huygens2d(Ix, Iy, Ixy, area, point1, point2):
     return Ix + area * b**2, Iy + area * a**2, Ixy - area * a * b
 
 
-def cos_image(x1: float, x2: float) -> Tuple[float, float]:
+def cos_image(x1: float, x2: float) -> tuple[float, float]:
     """
     Returns the interval image of cosinus function between two values.
 
@@ -133,7 +131,7 @@ def cos_image(x1: float, x2: float) -> Tuple[float, float]:
     return sorted((math.cos(x1), math.cos(x2)))
 
 
-def sin_image(x1: float, x2: float) -> Tuple[float, float]:
+def sin_image(x1: float, x2: float) -> tuple[float, float]:
     """
     Returns the interval image of sinus function between two values.
 

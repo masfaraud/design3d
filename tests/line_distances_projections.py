@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 
 Distance to lines and projection debug
@@ -18,7 +17,6 @@ line = d3d.Line2D(p1, p2)
 line_segment = d3d.LineSegment2D(p1, p2)
 
 for i in range(100):
-
     point = d3d.Point2D(4 * npy.random.random(2) - 2)
 
     point_projection_line = line.PointProjection(point)

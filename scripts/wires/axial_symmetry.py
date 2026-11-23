@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 
 @author: s.bendjebla
@@ -10,9 +9,9 @@
 import matplotlib.pyplot as plt
 
 import design3d as d3d
+import design3d.curves
 import design3d.edges
 import design3d.wires
-import design3d.curves
 from design3d.core import EdgeStyle
 
 # %% Initial Data

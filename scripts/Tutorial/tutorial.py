@@ -1,12 +1,8 @@
-# -*- coding: utf-8 -*-
 """
 Created on Mon Apr 27 11:22:27 2020
 
 @author: Mack Pro
 """
-
-import matplotlib.pyplot as plt
-import numpy as npy
 
 import volmdlr as d3d
 import volmdlr.primitives2d as primitives2D

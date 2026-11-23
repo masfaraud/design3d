@@ -2,8 +2,9 @@
 Tests for faces 3D
 """
 
-import unittest
 import math
+import unittest
+
 import design3d
 from design3d import faces, surfaces
 

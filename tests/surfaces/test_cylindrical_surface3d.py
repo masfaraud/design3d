@@ -2,13 +2,15 @@
 Unit tests for CylindriSurface3D
 """
 
-import unittest
 import math
-import numpy as np
 import os
+import unittest
+
+import numpy as np
+
 import design3d
+from design3d import Point2D, Point3D, curves, edges, surfaces, wires
 from design3d.base import SerializableObject
-from design3d import Point2D, Point3D, edges, wires, surfaces, curves
 
 cylindrical_surface = surfaces.CylindricalSurface3D(design3d.OXYZ, 0.32)
 cylindrical_surface2 = surfaces.CylindricalSurface3D(design3d.OXYZ, 1.0)
@@ -108,7 +110,7 @@ class TestCylindricalSurface3D(unittest.TestCase):
         point = design3d.Point3D(0.32, 0, 1)
         point2 = design3d.Point3D(1, 1, 1)
         self.assertTrue(self.cylindrical_surface.point_belongs(point))
-        self.assertFalse((self.cylindrical_surface.point_belongs(point2)))
+        self.assertFalse(self.cylindrical_surface.point_belongs(point2))
 
     def test_linesegment2d_to_3d(self):
         point1 = design3d.Point2D(0.0, 0.0)

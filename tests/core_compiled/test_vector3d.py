@@ -10,11 +10,10 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 import design3d
-from design3d import Vector3D, Point3D
+from design3d import Point3D, Vector3D
 
 
 class TestVector3D(unittest.TestCase):
-
     def setUp(self):
         self.v1 = Vector3D(1, 2, 3, "v1")
         self.v2 = Vector3D(3, 4, 5, "v2")

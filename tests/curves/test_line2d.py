@@ -5,7 +5,6 @@ from design3d import curves
 
 
 class TestLine2D(unittest.TestCase):
-
     def test_point_distance(self):
         line_2d = curves.Line2D(design3d.Point2D(0, 0), design3d.Point2D(1, 1))
         self.assertEqual(line_2d.point_distance(design3d.Point2D(2, 2)), 0.0)

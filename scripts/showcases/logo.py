@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Thu Mar 23 13:03:54 2023
 
@@ -7,11 +6,12 @@ Created on Thu Mar 23 13:03:54 2023
 """
 
 import math
+
 import design3d as d3d
 from design3d import core as d3dc
-from design3d import wires as d3dw
 from design3d import primitives2d as p2d
 from design3d import primitives3d as p3d
+from design3d import wires as d3dw
 
 GAP = 8
 SNAKE_WIDTH = 61

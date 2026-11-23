@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Mon Apr 14 22:36:57 2025
 
@@ -7,8 +6,9 @@ Created on Mon Apr 14 22:36:57 2025
 """
 
 from geomdl import utilities
+
 import design3d
-from design3d import edges, curves
+from design3d import curves, edges
 
 DEGREE = 3
 points = [design3d.Point2D(0, 0), design3d.Point2D(1, 1), design3d.Point2D(2, -1), design3d.Point2D(3, 0)]

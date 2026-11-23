@@ -1,20 +1,16 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Tue Oct  9 10:50:18 2018
 
 @author: steven
 """
 
-import math
-
 import numpy as np
 
 import design3d as d3d
-from design3d.core import EdgeStyle
 import design3d.primitives2d as primitives2d
-import design3d.primitives3d as primitives3d
 from design3d import curves
+from design3d.core import EdgeStyle
 
 # Ajout commentaire juste pour tester
 # =============================================================================

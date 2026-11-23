@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Classes to define mesh for display use. Display mesh do not require good aspect ratios on elements.
 """
 
 import warnings
-from typing import List, Tuple, TypeVar, Union
-
+from typing import TypeVar, Union
 
 import numpy as np
 import pyfqmr
@@ -216,7 +214,7 @@ class MeshMixin:
 
     @classmethod
     def from_meshes(
-        cls, meshes: List[MeshType], merge_vertices: bool = False, merge_triangles: bool = False
+        cls, meshes: list[MeshType], merge_vertices: bool = False, merge_triangles: bool = False
     ) -> MeshType:
         """
         Merge two meshes.
@@ -367,7 +365,7 @@ class Mesh2D(MeshMixin):
         :return: The total area of the mesh.
         :rtype: float
         """
-        areas = np.sqrt((self.triangles_cross_products() ** 2)) / 2.0
+        areas = np.sqrt(self.triangles_cross_products() ** 2) / 2.0
         return areas.sum()
 
 
@@ -376,8 +374,6 @@ class Mesh3D(MeshMixin, Primitive3D):
     3D triangle mesh.
     """
 
-    # pylint: disable=too-many-public-methods
-
     _linesegment_class = design3d.edges.LineSegment3D
     _point_class = design3d.Point3D
 
@@ -385,7 +381,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         self,
         vertices: NDArray[float],
         triangles: NDArray[int],
-        color: Tuple[float, float, float] = None,
+        color: tuple[float, float, float] = None,
         alpha: float = 1.0,
         name: str = "",
     ):
@@ -488,7 +484,6 @@ class Mesh3D(MeshMixin, Primitive3D):
             closest_point_other = other_mesh.vertices[min_distance_index]
 
         if return_points:
-
             closest_point_self = design3d.Point3D(closest_point_self[0], closest_point_self[1], closest_point_self[2])
             closest_point_other = design3d.Point3D(
                 closest_point_other[0], closest_point_other[1], closest_point_other[2]
@@ -605,7 +600,6 @@ class Mesh3D(MeshMixin, Primitive3D):
         :return: The decimated mesh.
         :rtype: Mesh3D
         """
-        # pylint: disable=too-many-arguments
 
         simplifier = pyfqmr.Simplify()
         simplifier.setMesh(self.vertices, self.triangles)
@@ -668,7 +662,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         return cls.from_meshes(cls.trimesh_scene_to_meshes(trimesh_scene, scale_factor))
 
     @classmethod
-    def trimesh_scene_to_meshes(cls, trimesh_scene: trimesh.Scene, scale_factor: float = 0.001) -> List["Mesh3D"]:
+    def trimesh_scene_to_meshes(cls, trimesh_scene: trimesh.Scene, scale_factor: float = 0.001) -> list["Mesh3D"]:
         """
         Create a 3D mesh from a Trimesh Scene.
 
@@ -813,7 +807,7 @@ class Mesh3D(MeshMixin, Primitive3D):
     @classmethod
     def from_3mf_file(
         cls, filepath: str, scale_factor: float = 0.001, merge_meshes: bool = True
-    ) -> Union["Mesh3D", List["Mesh3D"]]:
+    ) -> Union["Mesh3D", list["Mesh3D"]]:
         """
         Create a 3D mesh from an 3MF file.
 
@@ -834,7 +828,7 @@ class Mesh3D(MeshMixin, Primitive3D):
     @classmethod
     def from_3mf_stream(
         cls, stream, scale_factor: float = 0.001, merge_meshes: bool = True
-    ) -> Union["Mesh3D", List["Mesh3D"]]:
+    ) -> Union["Mesh3D", list["Mesh3D"]]:
         """
         Create a 3D mesh from an 3MF stream.
 
@@ -872,7 +866,6 @@ class Mesh3D(MeshMixin, Primitive3D):
         :return: The triangles comosing the mesh.
         :rtype: list[design3d.faces.Triangle3D]
         """
-        # pylint: disable=import-outside-toplevel, cyclic-import
         from design3d.faces import Triangle3D
 
         triangles3d = []
@@ -897,7 +890,6 @@ class Mesh3D(MeshMixin, Primitive3D):
             Try to stick to Mesh3D or Trimesh object if possible.
             """)
 
-        # pylint: disable=import-outside-toplevel, cyclic-import
         from design3d.shells import ClosedTriangleShell3D
 
         return ClosedTriangleShell3D(faces=self.to_triangles3d(), name=self.name)
@@ -914,7 +906,6 @@ class Mesh3D(MeshMixin, Primitive3D):
             Try to stick to Mesh3D or Trimesh object if possible.
             """)
 
-        # pylint: disable=import-outside-toplevel, cyclic-import
         from design3d.shells import OpenTriangleShell3D
 
         return OpenTriangleShell3D(faces=self.to_triangles3d(), name=self.name)

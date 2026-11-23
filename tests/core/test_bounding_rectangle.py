@@ -1,4 +1,5 @@
 import unittest
+
 import design3d
 from design3d.core import BoundingRectangle
 

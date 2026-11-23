@@ -1,11 +1,11 @@
-import unittest
 import math
 import os
+import unittest
 
 import design3d
-from design3d.faces import SphericalFace3D
 from design3d import surfaces, wires
 from design3d.base import SerializableObject
+from design3d.faces import SphericalFace3D
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_spherical_test")
 

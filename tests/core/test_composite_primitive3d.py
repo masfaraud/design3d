@@ -1,4 +1,5 @@
 import unittest
+
 import design3d
 import design3d.edges
 from design3d.core import CompositePrimitive3D

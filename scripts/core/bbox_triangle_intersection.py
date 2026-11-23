@@ -2,9 +2,9 @@
 Showcase of BoundingBox / Triangle3D intersection
 """
 
+import design3d
 from design3d.core import BoundingBox
 from design3d.faces import Triangle3D
-import design3d
 
 bounding_box = BoundingBox(0.0, 2.0, 0.0, 2.0, 0.0, 2.0)
 

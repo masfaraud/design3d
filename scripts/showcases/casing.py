@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Test case representing a casing. Use extrusion features.
 """
 
 import design3d as d3d
 import design3d.wires
-from design3d import primitives2d, primitives3d, curves, edges
+from design3d import curves, edges, primitives2d, primitives3d
 
 THICKNESS = 0.005
 HEIGHT = 0.080

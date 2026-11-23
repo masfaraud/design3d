@@ -4,11 +4,10 @@ from itertools import product
 from geomdl import utilities
 
 import design3d
-from design3d import edges, curves
+from design3d import curves, edges
 
 
 class TestEdge2DIntersections(unittest.TestCase):
-
     arc = edges.Arc2D.from_3_points(design3d.Point2D(0, 0.3), design3d.Point2D(1, -0.3), design3d.Point2D(2, 2))
     u_vector = design3d.Vector2D(0.7071067811865475, 0.7071067811865475)
     v_vector = design3d.Vector2D(-0.7071067811865475, 0.7071067811865475)

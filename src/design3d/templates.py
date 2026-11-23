@@ -62,7 +62,7 @@ base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "assets/js/"
 for filename in ["babylon.js", "babylonjs.loaders.min.js", "earcut.min.js", "pep.js"]:
     file_path = os.path.join(base_path, filename)
 
-    with open(file_path, "r", encoding="utf-8") as fjs:
+    with open(file_path, encoding="utf-8") as fjs:
         BABYLON_UNPACKER_EMBEDDED_HEADER += fjs.read()
 
 

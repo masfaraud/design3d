@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """ """
 
 import math
 
 import design3d as d3d
-import design3d.wires as d3dw
 import design3d.step as d3d_step
+import design3d.wires as d3dw
 from design3d.primitives2d import ClosedRoundedLineSegments2D, OpenedRoundedLineSegments2D
 from design3d.primitives3d import RevolvedProfile
 

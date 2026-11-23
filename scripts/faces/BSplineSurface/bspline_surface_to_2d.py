@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 
 @author: s.bendjebla
@@ -7,12 +6,11 @@
 
 # %% Libraries
 
-
 import matplotlib.pyplot as plt
 
 import design3d.grid
-from design3d.models import bspline_surfaces
 from design3d import faces
+from design3d.models import bspline_surfaces
 
 # %% Read Step file
 

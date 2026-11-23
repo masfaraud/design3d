@@ -1,20 +1,6 @@
 import math
-import time
-from itertools import combinations, product
-from typing import List, Tuple, TypeVar
 
-import finite_elements.core as corefe
-import finite_elements.elasticity as els
-import matplotlib as mpl
 import matplotlib.pyplot as plt
-import matplotlib.tri as tri
-import numpy as npy
-from dessia_common.core import DessiaObject
-from finite_elements.core import aluminium, steel
-from matplotlib.colors import LinearSegmentedColormap
-from scipy import linalg, sparse
-from scipy.spatial import Delaunay
-
 import volmdlr as d3d
 import volmdlr.mesh as d3dmesh
 

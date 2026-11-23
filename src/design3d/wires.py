@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Module containing wires & contours.
 """
@@ -11,7 +10,6 @@ import warnings
 from collections import deque
 from functools import cached_property
 from statistics import mean
-from typing import List
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -20,12 +18,12 @@ from triangle import triangulate
 
 import design3d
 import design3d.core
-from design3d.base import DataEqualityObject
 import design3d.display as d3dd
 import design3d.geometry
-from design3d import curves, edges, PATH_ROOT
-from design3d.core_compiled import polygon_point_belongs, points_in_polygon
+from design3d import PATH_ROOT, curves, edges
+from design3d.base import DataEqualityObject
 from design3d.core import EdgeStyle
+from design3d.core_compiled import points_in_polygon, polygon_point_belongs
 
 
 def argmax(list_of_numbers):
@@ -58,7 +56,7 @@ def argmin(list_of_numbers):
     return min_value, pos_min
 
 
-def bounding_rectangle_adjacent_contours(contours: List):
+def bounding_rectangle_adjacent_contours(contours: list):
     """
     Compute the bounding box of a list of adjacent contours 2d.
 
@@ -561,7 +559,6 @@ class WireMixin(DataEqualityObject):
             while to_continue:
                 broke = False
                 for index_primitive, primitive in enumerate(list_edges):
-
                     if primitive.is_point_edge_extremity(new_primitives[i][-1].end, tol):
                         if new_primitives[i][-1].end.is_close(primitive.start, tol):
                             new_primitives[i].append(primitive)
@@ -727,7 +724,7 @@ class EdgeCollection3D(WireMixin):
     _non_data_eq_attributes = ["name", "basis_primitives"]
     _non_data_hash_attributes = []
 
-    def __init__(self, primitives: List[design3d.edges.Edge], color=None, alpha=1, name: str = ""):
+    def __init__(self, primitives: list[design3d.edges.Edge], color=None, alpha=1, name: str = ""):
         self.primitives = primitives
         self.color = color
         self.alpha = alpha
@@ -845,7 +842,6 @@ class Wire2D(WireMixin):
         offset_intersections = []
 
         for primitive_1, primitive_2 in zip(infinite_primitives, infinite_primitives[1:] + [infinite_primitives[0]]):
-
             i = infinite_primitives.index(primitive_1)
             # k = infinite_primitives.index(primitive_2)
 
@@ -1332,7 +1328,7 @@ class Wire3D(WireMixin):
 
     def __init__(
         self,
-        primitives: List[design3d.core.Primitive3D],
+        primitives: list[design3d.core.Primitive3D],
         color=None,
         alpha: float = 1.0,
         reference_path: str = PATH_ROOT,
@@ -1909,7 +1905,7 @@ class ContourMixin(WireMixin):
                 return True
         return False
 
-    def get_geo_lines(self, tag: int, primitives_tags: List[int]):
+    def get_geo_lines(self, tag: int, primitives_tags: list[int]):
         """
         Gets the lines that define a Contour in a .geo file.
 
@@ -2058,7 +2054,7 @@ class Contour2D(ContourMixin, Wire2D):
         "_utd_analysis",
     ]
 
-    def __init__(self, primitives: List[design3d.edges.Edge], reference_path: str = PATH_ROOT, name: str = ""):
+    def __init__(self, primitives: list[design3d.edges.Edge], reference_path: str = PATH_ROOT, name: str = ""):
         Wire2D.__init__(self, primitives, reference_path=reference_path, name=name)
         self._edge_polygon = None
         self._polygon_100_points = None
@@ -2348,7 +2344,7 @@ class Contour2D(ContourMixin, Wire2D):
             contours.append(contour)
         return contours
 
-    def cut_by_line(self, line: curves.Line2D) -> List["Contour2D"]:
+    def cut_by_line(self, line: curves.Line2D) -> list["Contour2D"]:
         """
         :param line: The line used to cut the contour.
 
@@ -2381,7 +2377,7 @@ class Contour2D(ContourMixin, Wire2D):
             return [self]
         return list_contours
 
-    def split_by_line(self, line: curves.Line2D) -> List["Contour2D"]:
+    def split_by_line(self, line: curves.Line2D) -> list["Contour2D"]:
         """Split the contour with the given line."""
         intersections = self.line_crossings(line)
         intersections = [point for point, prim in intersections]
@@ -2586,7 +2582,7 @@ class Contour2D(ContourMixin, Wire2D):
         """
         Discretize each contour's primitive and return a new contour with these discretized primitives.
         """
-        contour = Contour2D((self.discretized_primitives(n)))
+        contour = Contour2D(self.discretized_primitives(n))
 
         return contour.order_contour()
 
@@ -2938,7 +2934,7 @@ class ClosedPolygon2D(ClosedPolygonMixin, Contour2D):
 
     _non_serializable_attributes = ["line_segments", "primitives", "basis_primitives"]
 
-    def __init__(self, points: List[design3d.Point2D], name: str = ""):
+    def __init__(self, points: list[design3d.Point2D], name: str = ""):
         self.points = points
         self._line_segments = None
 
@@ -3155,7 +3151,7 @@ class ClosedPolygon2D(ClosedPolygonMixin, Contour2D):
             / 2
         )
         if offset <= -max_offset_len:
-            print("Inadapted offset, " "polygon might turn over. Offset must be greater than", -max_offset_len)
+            print("Inadapted offset, polygon might turn over. Offset must be greater than", -max_offset_len)
             raise ValueError("inadapted offset")
         nb_points = len(self.points)
         vectors = []
@@ -3170,7 +3166,6 @@ class ClosedPolygon2D(ClosedPolygonMixin, Contour2D):
         offset_points = []
 
         for i in range(nb_points):
-
             # check = False
             vector_i = vectors[2 * i - 1] + vectors[2 * i].unit_vector()
             if vector_i == design3d.Vector2D(0, 0):
@@ -3679,7 +3674,6 @@ class ClosedPolygon2D(ClosedPolygonMixin, Contour2D):
 
             if not intersect:
                 if self.point_inside(line_segment.middle_point()):
-
                     triangles.append(
                         (initial_point_to_index[point1], initial_point_to_index[point3], initial_point_to_index[point2])
                     )
@@ -4016,7 +4010,7 @@ class ClosedPolygon2D(ClosedPolygonMixin, Contour2D):
             if not closing_point.is_close(design3d.O2D):
                 return primitive1
 
-        raise NotImplementedError("make sure the two polygons " "you are trying to sew are valid ones")
+        raise NotImplementedError("make sure the two polygons you are trying to sew are valid ones")
 
     def is_convex(self):
         """
@@ -4169,7 +4163,7 @@ class Contour3D(ContourMixin, Wire3D):
     _non_data_hash_attributes = ["points", "name"]
     _generic_eq = True
 
-    def __init__(self, primitives: List[design3d.core.Primitive3D], reference_path: str = PATH_ROOT, name: str = ""):
+    def __init__(self, primitives: list[design3d.core.Primitive3D], reference_path: str = PATH_ROOT, name: str = ""):
         """
         Defines a contour3D from a collection of edges following each other stored in primitives list.
         """
@@ -4473,7 +4467,7 @@ class ClosedPolygon3D(Contour3D, ClosedPolygonMixin):
     _non_serializable_attributes = ["line_segments", "primitives"]
     _non_data_eq_attributes = ["line_segments", "primitives"]
 
-    def __init__(self, points: List[design3d.Point3D], name: str = ""):
+    def __init__(self, points: list[design3d.Point3D], name: str = ""):
         self.points = points
         self._line_segments = None
 
@@ -4882,7 +4876,7 @@ class ClosedPolygon3D(Contour3D, ClosedPolygonMixin):
                     closing_point_index = previous_closing_point_index
                 else:
                     raise NotImplementedError(
-                        "None of the normal lines intersect polygon2, " "certify projection plane given is correct"
+                        "None of the normal lines intersect polygon2, certify projection plane given is correct"
                     )
             else:
                 closing_point_index = polygon2_2d.points.index(closing_point)

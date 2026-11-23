@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 A sweep example.
 """
 
 import random
-import matplotlib.pyplot as plt
-import design3d
 
+import matplotlib.pyplot as plt
+
+import design3d
 import design3d as d3d
 import design3d.primitives3d as primitives3d
 import design3d.wires as wires
-from design3d import curves
 
 random.seed(2)
 

@@ -3,7 +3,6 @@ design3d cad simplification module.
 """
 
 import math
-from typing import Union
 
 import numpy as np
 from CGAL.CGAL_Alpha_wrap_3 import alpha_wrap_3
@@ -12,8 +11,8 @@ from CGAL.CGAL_Polyhedron_3 import Polyhedron_3
 
 import design3d
 from design3d import Point3D
-from design3d.cloud import PointCloud3D
 from design3d.base import DataEqualityObject
+from design3d.cloud import PointCloud3D
 from design3d.core import VolumeModel
 from design3d.display import Mesh3D
 from design3d.faces import Triangle3D
@@ -150,7 +149,6 @@ class TriangleDecimationSimplify(Simplify):
         :return: The decimated VolumeModel.
         :rtype: VolumeModel
         """
-        # pylint: disable=too-many-arguments
 
         decimated_meshes = []
 
@@ -255,7 +253,7 @@ class AlphaWrapSimplify(Simplify):
         return VolumeModel(wrapped_shells)
 
     @staticmethod
-    def _polyhedron_to_shell(polyhedron: Polyhedron_3) -> Union[ClosedTriangleShell3D, OpenTriangleShell3D]:
+    def _polyhedron_to_shell(polyhedron: Polyhedron_3) -> ClosedTriangleShell3D | OpenTriangleShell3D:
         """Convert a CGAL Polyhedron_3 to a design3d shell."""
         triangles = []
 

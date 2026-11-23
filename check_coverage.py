@@ -21,7 +21,7 @@ UNTRACKED_MODULES = [
 
 def main(report_path: str = "coverage.json") -> int:
     """Checks the coverage report against the thresholds, and returns the exit code."""
-    with open(report_path, "r", encoding="utf-8") as file:
+    with open(report_path, encoding="utf-8") as file:
         report = json.load(file)
 
     errors = []

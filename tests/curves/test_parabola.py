@@ -1,6 +1,7 @@
 import unittest
+
 import design3d
-from design3d import curves, edges
+from design3d import curves
 
 
 class TestParabola2D(unittest.TestCase):

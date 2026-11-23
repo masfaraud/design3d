@@ -1,16 +1,9 @@
-# -*- coding: utf-8 -*-
 """ """
 
 import os
 
-import matplotlib.pyplot as plt
-
-import design3d as d3d
 import design3d.cloud
 import design3d.core
-import design3d.edges as d3de
-import design3d.faces as d3df
-import design3d.wires as d3dw
 
 faces = []
 for file in os.listdir("E:/path/to/folder"):

@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """ """
 
 import math
 import time
 
 import design3d as d3d
-from design3d import faces, edges, wires, surfaces, shells
+from design3d import faces, shells, surfaces, wires
 
 time_before = time.time()
 

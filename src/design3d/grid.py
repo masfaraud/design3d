@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 """
 Module containing grid and relative objects.
 
 """
 
-from typing import List
-
 import numpy as np
-
 
 import design3d
 import design3d.wires
@@ -25,7 +21,7 @@ class Grid2D:
     :type direction: List[str]
     """
 
-    def __init__(self, lists_points: List[List[design3d.Point2D]], direction: List[str], name: str = ""):
+    def __init__(self, lists_points: list[list[design3d.Point2D]], direction: list[str], name: str = ""):
 
         self.lists_points = lists_points
         self.direction = direction

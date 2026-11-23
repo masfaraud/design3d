@@ -16,16 +16,16 @@ def product_writer(current_id, product_name):
     product_context_id = product_definition_context_id + 1
     step_content += f"#{product_context_id} = PRODUCT_CONTEXT('',#2,'mechanical');\n"
     product_id = product_context_id + 1
-    step_content += f"#{product_id} = PRODUCT('{product_name}'," f"'{product_name}','',(#{product_context_id}));\n"
+    step_content += f"#{product_id} = PRODUCT('{product_name}','{product_name}','',(#{product_context_id}));\n"
     product_definition_formation_id = product_id + 1
-    step_content += f"#{product_definition_formation_id} = " f"PRODUCT_DEFINITION_FORMATION('','',#{product_id});\n"
+    step_content += f"#{product_definition_formation_id} = PRODUCT_DEFINITION_FORMATION('','',#{product_id});\n"
     product_definition_id = product_definition_formation_id + 1
     step_content += (
         f"#{product_definition_id} = PRODUCT_DEFINITION('design',"
         f"'',#{product_definition_formation_id},#{product_definition_context_id});\n"
     )
     product_definition_shape_id = product_definition_id + 1
-    step_content += f"#{product_definition_shape_id} = PRODUCT_DEFINITION_SHAPE(''," f"'',#{product_definition_id});\n"
+    step_content += f"#{product_definition_shape_id} = PRODUCT_DEFINITION_SHAPE('','',#{product_definition_id});\n"
     shape_definition_repr_id = product_definition_shape_id + 1
     shape_representation_id = shape_definition_repr_id + 1
     step_content += (
@@ -87,8 +87,7 @@ def assembly_definition_writer(current_id, assembly_data, component_data, assemb
         f"SHAPE_REPRESENTATION_RELATIONSHIP() );\n"
     )
     step_content += (
-        f"#{item_defined_transfo_id} = ITEM_DEFINED_TRANSFORMATION('','',#{assembly_frame_id},"
-        f"#{component_frame_id});\n"
+        f"#{item_defined_transfo_id} = ITEM_DEFINED_TRANSFORMATION('','',#{assembly_frame_id},#{component_frame_id});\n"
     )
     step_content += (
         f"#{product_definition_shape_id} = PRODUCT_DEFINITION_SHAPE('Placement',"

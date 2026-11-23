@@ -1,8 +1,8 @@
 import unittest
 
 import design3d
-from design3d.primitives3d import Block
 from design3d.core import BoundingBox
+from design3d.primitives3d import Block
 
 
 class TestBlock(unittest.TestCase):

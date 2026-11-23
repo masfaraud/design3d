@@ -1,8 +1,7 @@
-import unittest
 import os
+import unittest
 
 import design3d
-import design3d.wires as d3dw
 import design3d.edges as d3de
 from design3d import surfaces
 
@@ -10,7 +9,6 @@ folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_peri
 
 
 class TestPeriodicalSurface(unittest.TestCase):
-
     def test_bsplinecurve3d_to_2d(self):
         surface = surfaces.CylindricalSurface3D.from_json(
             os.path.join(folder, "periodicalsurface_with_theta_discontinuity.json")

@@ -23,4 +23,4 @@ start = time.perf_counter()
 for _ in range(N):
     dist = cylinder2.min_distance_to_other_cylinder(cylinder1)
 
-print(f"time per operation: {((time.perf_counter() - start)/N)*1000}ms")
+print(f"time per operation: {((time.perf_counter() - start) / N) * 1000}ms")

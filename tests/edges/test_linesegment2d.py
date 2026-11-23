@@ -5,7 +5,7 @@ Unit tests for design3d.edges.LineSegment2D
 import unittest
 
 import design3d
-from design3d import edges, curves
+from design3d import curves, edges
 
 
 class TestLineSegment2D(unittest.TestCase):

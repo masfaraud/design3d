@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 """ """
 
 import design3d as d3d
 import design3d.edges as d3de
-import design3d.faces as d3df
 import design3d.primitives3d as p3d
 import design3d.wires as d3dw
 

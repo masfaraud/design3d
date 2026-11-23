@@ -1,7 +1,7 @@
 import unittest
+
 import design3d
 from design3d.core import BoundingBox
-from design3d.faces import Triangle3D
 
 
 class TestBoundingBox(unittest.TestCase):

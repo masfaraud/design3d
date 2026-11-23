@@ -1,9 +1,10 @@
-import unittest
-import os
 import math
+import os
+import unittest
+
 import design3d
+from design3d import curves, edges, faces, surfaces, wires
 from design3d.base import SerializableObject
-from design3d import edges, faces, surfaces, wires, curves
 
 conical_surface1 = surfaces.ConicalSurface3D(design3d.OXYZ, math.pi / 3)
 

@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Common abstract primitives.
 
 """
 
 import math
-from typing import Dict, List
 
 from numpy import zeros
 from scipy.optimize import linprog
@@ -28,8 +26,8 @@ class RoundedLineSegments:
 
     def __init__(
         self,
-        points: List[design3d.Point3D],
-        radius: Dict[str, float],
+        points: list[design3d.Point3D],
+        radius: dict[str, float],
         closed: bool = False,
         adapt_radius: bool = False,
         reference_path: str = PATH_ROOT,

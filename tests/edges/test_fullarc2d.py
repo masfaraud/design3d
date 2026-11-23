@@ -4,8 +4,9 @@ Unittets for edges.Fullarc2D.
 """
 
 import unittest
+
 import design3d
-from design3d import edges, curves
+from design3d import curves, edges
 
 
 class TestFullArc2D(unittest.TestCase):

@@ -1,7 +1,6 @@
 import unittest
 
 import design3d
-
 from design3d import surfaces, wires
 
 

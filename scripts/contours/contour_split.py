@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 
 import design3d as d3d
-from design3d.core import EdgeStyle
 import design3d.primitives2d as p2d
-from design3d import edges, curves
+from design3d import curves
+from design3d.core import EdgeStyle
 from design3d.utils.common_operations import random_color
 
 plt, (ax1, ax2, ax3) = plt.subplots(1, 3)
@@ -38,9 +38,9 @@ line2.plot(ax=ax1, edge_style=EdgeStyle(color="g"))
 split_contours1 = contour.cut_by_line(line)
 for c in split_contours1:
     c.plot(ax=ax2, edge_style=EdgeStyle(color=random_color()))
-ax2.set_title("{} split contours".format(len(split_contours1)))
+ax2.set_title(f"{len(split_contours1)} split contours")
 
 split_contours2 = contour.cut_by_line(line2)
 for c in split_contours2:
     c.plot(ax=ax3, edge_style=EdgeStyle(color="g"))
-ax3.set_title("{} split contours".format(len(split_contours2)))
+ax3.set_title(f"{len(split_contours2)} split contours")

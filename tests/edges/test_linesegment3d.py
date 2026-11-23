@@ -2,7 +2,7 @@ import math
 import unittest
 
 import design3d
-from design3d import edges, surfaces, faces
+from design3d import edges
 
 
 class TestLineSegment3D(unittest.TestCase):

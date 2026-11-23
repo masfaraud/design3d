@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Common primitives 3D.
 """
@@ -7,7 +6,6 @@ Common primitives 3D.
 import math
 import warnings
 from random import uniform
-from typing import Dict, List, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -20,7 +18,7 @@ import design3d.edges
 import design3d.faces
 import design3d.primitives
 import design3d.wires
-from design3d import shells, surfaces, curves
+from design3d import curves, shells, surfaces
 
 np.seterr(divide="raise")
 
@@ -47,7 +45,7 @@ class RoundedLineSegments3D(design3d.primitives.RoundedLineSegments):
     arc_class = design3d.edges.Arc3D
 
     def __init__(
-        self, points: List[design3d.Point3D], radius: Dict[str, float], adapt_radius: bool = False, name: str = ""
+        self, points: list[design3d.Point3D], radius: dict[str, float], adapt_radius: bool = False, name: str = ""
     ):
         design3d.primitives.RoundedLineSegments.__init__(self, points, radius, adapt_radius=adapt_radius, name=name)
 
@@ -119,7 +117,7 @@ class OpenRoundedLineSegments3D(design3d.wires.Wire3D, RoundedLineSegments3D):
     _non_data_hash_attributes = ["name"]
 
     def __init__(
-        self, points: List[design3d.Point3D], radius: Dict[str, float], adapt_radius: bool = False, name: str = ""
+        self, points: list[design3d.Point3D], radius: dict[str, float], adapt_radius: bool = False, name: str = ""
     ):
         RoundedLineSegments3D.__init__(self, points, radius, adapt_radius=adapt_radius, name="")
         self.closed = False
@@ -142,7 +140,7 @@ class ClosedRoundedLineSegments3D(RoundedLineSegments3D, design3d.wires.Contour3
     _non_data_eq_attributes = ["name"]
     _non_data_hash_attributes = ["name"]
 
-    def __init__(self, points: List[design3d.Point3D], radius: float, adapt_radius: bool = False, name: str = ""):
+    def __init__(self, points: list[design3d.Point3D], radius: float, adapt_radius: bool = False, name: str = ""):
         RoundedLineSegments3D.__init__(self, points, radius, adapt_radius, name)
         self.closed = True
         design3d.wires.Contour3D.__init__(self, primitives=self._primitives(), name=name)
@@ -160,7 +158,7 @@ class Block(shells.ClosedShell3D):
         self,
         frame: design3d.Frame3D,
         *,
-        color: Tuple[float, float, float] = None,
+        color: tuple[float, float, float] = None,
         alpha: float = 1.0,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -388,7 +386,7 @@ class Block(shells.ClosedShell3D):
             new_w = basis.local_to_global_coordinates(self.frame.w)
             new_frame = design3d.Frame3D(new_origin, new_u, new_v, new_w)
         else:
-            raise ValueError("side value not valid, please specify" "a correct value: 'old' or 'new'")
+            raise ValueError("side value not valid, please specifya correct value: 'old' or 'new'")
         return new_frame
 
     def frame_mapping(self, frame: design3d.Frame3D, side: str):
@@ -486,9 +484,9 @@ class ExtrudedProfile(shells.ClosedShell3D):
         self,
         frame: design3d.Frame3D,
         outer_contour2d: design3d.wires.Contour2D,
-        inner_contours2d: List[design3d.wires.Contour2D],
+        inner_contours2d: list[design3d.wires.Contour2D],
         extrusion_length: float,
-        color: Tuple[float, float, float] = None,
+        color: tuple[float, float, float] = None,
         alpha: float = 1.0,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -659,7 +657,7 @@ class RevolvedProfile(shells.ClosedShell3D):
         axis: design3d.Vector3D,
         angle: float = 2 * math.pi,
         *,
-        color: Tuple[float, float, float] = None,
+        color: tuple[float, float, float] = None,
         alpha: float = 1,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -859,14 +857,12 @@ class Cylinder(shells.ClosedShell3D):
     Represents a 3D cylinder defined by its frame, radius, and length.
     """
 
-    # pylint: disable=too-many-arguments
-
     def __init__(
         self,
         frame: design3d.Frame3D,
         radius: float,
         length: float,
-        color: Tuple[float, float, float] = None,
+        color: tuple[float, float, float] = None,
         alpha: float = 1.0,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -978,7 +974,7 @@ class Cylinder(shells.ClosedShell3D):
         point1: design3d.Point3D,
         point2: design3d.Point3D,
         radius: float,
-        color: Tuple[float, float, float] = None,
+        color: tuple[float, float, float] = None,
         alpha: float = 1,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -1030,7 +1026,7 @@ class Cylinder(shells.ClosedShell3D):
         point1: design3d.Point3D,
         point2: design3d.Point3D,
         radius: float,
-        color: Tuple[float, float, float] = None,
+        color: tuple[float, float, float] = None,
         alpha: float = 1,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -1047,7 +1043,7 @@ class Cylinder(shells.ClosedShell3D):
         axis: design3d.Vector3D,
         radius: float,
         length: float,
-        color: Tuple[float, float, float] = None,
+        color: tuple[float, float, float] = None,
         alpha: float = 1,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -1339,7 +1335,7 @@ class Cylinder(shells.ClosedShell3D):
 
         return local_frame.local_to_global_coordinates(design3d.Point3D(x_local, y_local, z_local)).to_point()
 
-    def lhs_points_inside(self, n_points: int) -> List[design3d.Point3D]:
+    def lhs_points_inside(self, n_points: int) -> list[design3d.Point3D]:
         """
         Returns some points inside the cylinder from a LHS samplings.
 
@@ -1434,14 +1430,12 @@ class Cone(shells.ClosedShell3D):
     Represents a 3D cone defined by its frame, radius, and length.
     """
 
-    # pylint: disable=too-many-arguments
-
     def __init__(
         self,
         frame: design3d.Frame3D,
         radius: float,
         length: float,
-        color: Tuple[float, float, float] = None,
+        color: tuple[float, float, float] = None,
         alpha: float = 1.0,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -1606,7 +1600,7 @@ class Cone(shells.ClosedShell3D):
         axis: design3d.Vector3D,
         radius: float,
         length: float,
-        color: Tuple[float, float, float] = None,
+        color: tuple[float, float, float] = None,
         alpha: float = 1,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -1654,15 +1648,13 @@ class HollowCylinder(shells.ClosedShell3D):
     Represents a 3D hollow cylinder defined by its frame, radii, and length.
     """
 
-    # pylint: disable=too-many-arguments
-
     def __init__(
         self,
         frame: design3d.Frame3D,
         inner_radius: float,
         outer_radius: float,
         length: float,
-        color: Tuple[float, float, float] = None,
+        color: tuple[float, float, float] = None,
         alpha: float = 1,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -1791,7 +1783,7 @@ class HollowCylinder(shells.ClosedShell3D):
         point2: design3d.Point3D,
         inner_radius: float,
         outer_radius: float,
-        color: Tuple[float, float, float] = None,
+        color: tuple[float, float, float] = None,
         alpha: float = 1,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -1847,7 +1839,7 @@ class HollowCylinder(shells.ClosedShell3D):
         point2: design3d.Point3D,
         inner_radius: float,
         outer_radius: float,
-        color: Tuple[float, float, float] = None,
+        color: tuple[float, float, float] = None,
         alpha: float = 1,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -1865,7 +1857,7 @@ class HollowCylinder(shells.ClosedShell3D):
         inner_radius: float,
         outer_radius: float,
         length: float,
-        color: Tuple[float, float, float] = None,
+        color: tuple[float, float, float] = None,
         alpha: float = 1,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -2024,7 +2016,7 @@ class Sweep(shells.ClosedShell3D):
         wire3d: design3d.wires.Wire3D,
         starting_frame=None,
         *,
-        color: Tuple[float, float, float] = None,
+        color: tuple[float, float, float] = None,
         alpha: float = 1,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -2132,7 +2124,7 @@ class Sphere(shells.ClosedShell3D):
         self,
         center: design3d.Point3D,
         radius: float,
-        color: Tuple[float, float, float] = None,
+        color: tuple[float, float, float] = None,
         alpha: float = 1.0,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -2237,7 +2229,7 @@ class Measure3D:
     """
 
     def __init__(
-        self, point1: design3d.Point3D, point2: design3d.Point3D, color: Tuple[float, float, float] = (1.0, 0, 0)
+        self, point1: design3d.Point3D, point2: design3d.Point3D, color: tuple[float, float, float] = (1.0, 0, 0)
     ):
         self.point1, self.point2 = point1, point2
         self.color = color

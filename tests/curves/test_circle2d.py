@@ -1,5 +1,5 @@
-import os
 import math
+import os
 import unittest
 
 from geomdl import utilities

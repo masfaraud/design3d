@@ -2,14 +2,15 @@
 Unit testing of design3d.display.Mesh3D class.
 """
 
-import math
 import io
+import math
 import os
 import tempfile
 import unittest
 
 import numpy as np
 import trimesh
+
 from design3d import Point3D
 from design3d.display import Mesh3D
 from design3d.faces import Triangle3D

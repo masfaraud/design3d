@@ -2,10 +2,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import design3d
-from design3d.core import EdgeStyle
 import design3d.edges as d3de
 import design3d.wires as d3dw
 from design3d import curves
+from design3d.core import EdgeStyle
 
 line_seg1 = d3de.LineSegment2D(design3d.Point2D(-0.5, -0.2), design3d.O2D)
 line_seg2 = d3de.LineSegment2D(design3d.O2D, design3d.Point2D(0.3, 1))

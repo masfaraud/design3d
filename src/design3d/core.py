@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Base classes.
 """
@@ -11,7 +10,6 @@ import webbrowser
 from dataclasses import dataclass
 from datetime import datetime
 from functools import lru_cache
-from typing import List, Tuple
 
 try:
     import gmsh
@@ -20,17 +18,16 @@ except (TypeError, OSError):
 import matplotlib.pyplot as plt
 import numpy as np
 
-
 import design3d
 import design3d.templates
-from design3d.core_compiled import bbox_is_intersecting
 from design3d.base import DataEqualityObject
+from design3d.core_compiled import bbox_is_intersecting
 from design3d.utils.step_writer import (
-    product_writer,
-    geometric_context_writer,
-    assembly_definition_writer,
-    STEP_HEADER,
     STEP_FOOTER,
+    STEP_HEADER,
+    assembly_definition_writer,
+    geometric_context_writer,
+    product_writer,
     step_ids_to_str,
 )
 
@@ -252,7 +249,7 @@ class Primitive3D(DataEqualityObject):
 
     def __init__(
         self,
-        color: Tuple[float, float, float] = None,
+        color: tuple[float, float, float] = None,
         alpha: float = 1.0,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -317,8 +314,8 @@ class CompositePrimitive3D(Primitive3D):
 
     def __init__(
         self,
-        primitives: List[Primitive3D],
-        color: Tuple[float, float, float] = None,
+        primitives: list[Primitive3D],
+        color: tuple[float, float, float] = None,
         alpha: float = 1,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
@@ -542,7 +539,7 @@ class BoundingRectangle:
         return (dx**2 + dy**2) ** 0.5
 
     @classmethod
-    def from_points(cls, points: List[design3d.Point2D], name: str = "") -> "BoundingRectangle":
+    def from_points(cls, points: list[design3d.Point2D], name: str = "") -> "BoundingRectangle":
         """
         Initializes a bounding rectangle from a list of points.
 
@@ -644,7 +641,7 @@ class BoundingBox(DataEqualityObject):
         }
 
     @property
-    def points(self) -> List[design3d.Point3D]:
+    def points(self) -> list[design3d.Point3D]:
         """
         Returns the eight corner points of the bounding box.
 
@@ -700,7 +697,7 @@ class BoundingBox(DataEqualityObject):
         return ax
 
     @classmethod
-    def from_bounding_boxes(cls, bounding_boxes: List["BoundingBox"], name: str = "") -> "BoundingBox":
+    def from_bounding_boxes(cls, bounding_boxes: list["BoundingBox"], name: str = "") -> "BoundingBox":
         """
         Create a bounding box that contains multiple bounding boxes.
 
@@ -726,7 +723,7 @@ class BoundingBox(DataEqualityObject):
         return cls(xmin, xmax, ymin, ymax, zmin, zmax, name=name)
 
     @classmethod
-    def from_points(cls, points: List[design3d.Point3D], name: str = "") -> "BoundingBox":
+    def from_points(cls, points: list[design3d.Point3D], name: str = "") -> "BoundingBox":
         """
         Initializes a bounding box from a list of points.
 
@@ -1039,8 +1036,8 @@ class Assembly(DataEqualityObject):
 
     def __init__(
         self,
-        components: List[Primitive3D],
-        positions: List[design3d.Frame3D],
+        components: list[Primitive3D],
+        positions: list[design3d.Frame3D],
         frame: design3d.Frame3D = design3d.OXYZ,
         name: str = "",
     ):
@@ -1343,7 +1340,7 @@ class VolumeModel(DataEqualityObject):
     :type name: str
     """
 
-    def __init__(self, primitives: List[Primitive3D], name: str = ""):
+    def __init__(self, primitives: list[Primitive3D], name: str = ""):
         self.primitives = primitives
         self.name = name
         self.shells = []
@@ -1830,7 +1827,6 @@ class VolumeModel(DataEqualityObject):
             file_name += ".geo"
 
         with open(file_name, mode="w", encoding="utf-8") as file:
-
             self.to_geo_stream(
                 file,
                 factor,
@@ -2229,7 +2225,7 @@ class MovingVolumeModel(VolumeModel):
 
     """
 
-    def __init__(self, primitives: List[Primitive3D], step_frames: List[List[design3d.Frame3D]], name: str = ""):
+    def __init__(self, primitives: list[Primitive3D], step_frames: list[list[design3d.Frame3D]], name: str = ""):
         VolumeModel.__init__(self, primitives=primitives, name=name)
         self.step_frames = step_frames
 
@@ -2287,7 +2283,6 @@ class MovingVolumeModel(VolumeModel):
 
         steps = []
         for istep, frames in enumerate(self.step_frames):
-
             # step_positions = []
             # step_orientations = []
             step = {"time": istep}

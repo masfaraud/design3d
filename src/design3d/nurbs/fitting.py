@@ -1,6 +1,5 @@
 # cython: language_level=3
 # distutils: language = c++
-# pylint: disable=no-member, used-before-assignment, no-name-in-module, import-error, undefined-variable, cyclic-import
 """
 Provides curve and surface fitting functions.
 
@@ -16,12 +15,11 @@ The authors of this module make no warranty or guarantee as to the accuracy or s
 code for any particular purpose.
 """
 
-import cython.cimports.libc.math as math_c
 import cython
+import cython.cimports.libc.math as math_c
 import numpy as np
-from scipy.linalg import lu_factor, lu_solve
-
 from cython.cimports.libcpp.vector import vector
+from scipy.linalg import lu_factor, lu_solve
 
 from design3d.nurbs import core, helpers
 

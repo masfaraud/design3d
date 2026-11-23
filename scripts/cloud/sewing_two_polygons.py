@@ -1,21 +1,16 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Fri Jun  4 15:15:37 2021
 
 @author: dasilva
 """
 
-import matplotlib.pyplot as plt
 
 # import cv2
-import numpy as np
-from scipy.spatial import Delaunay
 
 import design3d as d3d
 import design3d.cloud
 import design3d.core
-import design3d.edges as d3de
 import design3d.faces as d3df
 import design3d.wires as d3dw
 

@@ -9,7 +9,6 @@ from design3d import edges, wires
 
 
 class TestWire(unittest.TestCase):
-
     def test_from_edge(self):
         lns2d = edges.LineSegment2D(design3d.Point2D(0.2, 0.1), design3d.Point2D(0.5, 0.8))
         wire = wires.Wire2D.from_edge(lns2d, 2)

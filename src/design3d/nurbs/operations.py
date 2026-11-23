@@ -3,7 +3,9 @@ Nurbs main operations algorithms.
 """
 
 from functools import lru_cache
+
 import numpy as np
+
 import design3d
 from design3d.nurbs import core
 
@@ -917,7 +919,6 @@ def helper_decompose(srf, idx, split_func, return_params, other_direction_params
     """
     Helper function to decompose_surface.
     """
-    # pylint: disable=too-many-locals
     surf_degrees = [srf.degree_u, srf.degree_v]
     knots = srf.knotvector[idx][surf_degrees[idx] + 1 : -(surf_degrees[idx] + 1)]
     param_min, param_max = 0.0, 1.0

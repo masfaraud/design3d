@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Wed Jun 15 2022
 
 @author: s.bendjebla
 """
 
-import design3d
 import design3d as d3d
 import design3d.primitives3d as primitives3d
 

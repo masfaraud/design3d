@@ -2,21 +2,18 @@
 Unittest for ClosedPolygon2D class
 """
 
-import unittest
-import math
 import random
+import unittest
 
 import design3d
 import design3d.core as d3dc
-import design3d.display as d3dd
-import design3d.wires as d3dw
 import design3d.faces as d3df
+import design3d.wires as d3dw
 
 random.seed(781)
 
 
 class TestClosedPolygon3D(unittest.TestCase):
-
     def circular_polygon(
         self,
         mean_radius: float,

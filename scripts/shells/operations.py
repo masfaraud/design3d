@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Goal: call shells methods (point_belongs, volume)
 """
 
-import time
-
 import os
 import sys
+import time
 
 import design3d as d3d
 

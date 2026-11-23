@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """ """
 
 import math
@@ -7,10 +6,9 @@ import math
 import design3d as d3d
 import design3d.core as d3dc
 import design3d.edges
-import design3d.edges as d3de
 import design3d.wires as d3dw
-from design3d.primitives3d import ExtrudedProfile
 from design3d import curves
+from design3d.primitives3d import ExtrudedProfile
 
 number_holes = 5
 

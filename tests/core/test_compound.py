@@ -1,5 +1,5 @@
-import unittest
 import os
+import unittest
 
 from design3d import step
 

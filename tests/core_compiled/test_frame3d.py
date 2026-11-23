@@ -1,5 +1,6 @@
-import unittest
 import math
+import unittest
+
 import design3d
 
 

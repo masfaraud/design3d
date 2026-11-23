@@ -1,8 +1,9 @@
-import os
 import math
+import os
 import unittest
+
 import design3d
-from design3d import edges, curves
+from design3d import curves, edges
 
 vector1 = design3d.Vector3D(1, 1, 1)
 vector1 = vector1.unit_vector()

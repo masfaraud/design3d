@@ -10,7 +10,6 @@ for iarc, arc in enumerate(
         d3de.Arc2D.from_3_points(d3d.Point2D(0.3, 0.4), d3d.Point2D(-0.35, 0.3), d3d.Point2D(0.37, 0.22)),
     ]
 ):
-
     arc_triangle = d3dw.ClosedPolygon2D([arc.start, arc.end, arc.circle.center])
 
     ax = arc.plot()

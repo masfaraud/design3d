@@ -4,7 +4,7 @@ import unittest
 from itertools import product
 
 import design3d
-from design3d import edges, curves
+from design3d import curves, edges
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "arcellipse_objects")
 

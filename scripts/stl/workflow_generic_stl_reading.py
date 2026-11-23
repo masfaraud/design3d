@@ -1,8 +1,6 @@
+import volmdlr as d3d
 from dessia_common.workflow.blocks import CadView, ClassMethod, ClassMethodType, Export, MethodType, ModelMethod
 from dessia_common.workflow.core import Pipe, Workflow
-
-import volmdlr as d3d
-from volmdlr import stl
 
 read_stl_method_type = ClassMethodType(class_=d3d.stl.Stl, name="from_binary_stream")
 cls_method_stl = ClassMethod(read_stl_method_type, name="STLFile")
