@@ -9,8 +9,8 @@ coverage can never go back down.
 import json
 import sys
 
-MIN_FILE_COVERAGE = 55.6
-MIN_PROJECT_COVERAGE = 74.8
+MIN_FILE_COVERAGE = 58.6
+MIN_PROJECT_COVERAGE = 75.1
 
 # Modules compiled by Cython, which coverage cannot trace.
 UNTRACKED_MODULES = [
