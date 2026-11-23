@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   which could give an open face contour on some platforms
 - BSplineSurface3D: changing the sample size now resets the points evaluated on the previous sampling grid
 - Vector3D.plot: the arrow is drawn with recent Matplotlib versions, which require `do_3d_projection` on 3D artists
+- Package metadata: the license is the LGPL 2.1 of the LICENSE file, not a Creative Commons license
 
 ### Build
 
