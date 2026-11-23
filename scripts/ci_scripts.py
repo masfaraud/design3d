@@ -27,6 +27,7 @@ scripts = [
     # Primitives
     "primitives/extrusion.py",
     "primitives/sweep.py",
+    "primitives/loft.py",
     "primitives/bspline_sweep.py",
     "primitives/revolved_profile.py",
     "primitives/block3d.py",
