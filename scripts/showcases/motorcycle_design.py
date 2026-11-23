@@ -22,7 +22,7 @@ import numpy as np
 import design3d as d3d
 from design3d.core import Assembly
 from design3d.curves import Circle2D
-from design3d.edges import Arc2D, LineSegment2D
+from design3d.edges import Arc2D, Arc3D, LineSegment2D
 from design3d.faces import PlaneFace3D
 from design3d.primitives2d import ClosedRoundedLineSegments2D
 from design3d.primitives3d import (
@@ -33,9 +33,11 @@ from design3d.primitives3d import (
     OpenRoundedLineSegments3D,
     RevolvedProfile,
     Sweep,
+    loft_faces,
 )
+from design3d.shells import OpenShell3D
 from design3d.surfaces import Plane3D
-from design3d.wires import ClosedPolygon2D, Contour2D
+from design3d.wires import ClosedPolygon2D, Contour2D, Wire3D
 
 
 def tyre_dimensions(tyre_size: str) -> tuple[float, float, float]:
@@ -91,8 +93,15 @@ chain_pitch = 0.0127
 front_sprocket_teeth = 14
 rear_sprocket_teeth = 48
 
-# Ground clearance of the MT-125, used to check the model
+# Rider position: the seat height is measured at the lowest point of the rider seat
+seat_height = 0.810
+seat_position = 0.900  # x of the lowest point of the seat
+footpeg_center = d3d.Point3D(0.830, 0, 0.330)
+footpegs_spacing = 0.340
+
+# Ground clearance and fuel tank capacity of the MT-125, used to check the model
 target_ground_clearance = 0.140
+target_fuel_tank_volume = 0.0115
 
 # Overall dimensions of the MT-125, used to check the model (they do not drive it)
 target_length = 1.955
@@ -245,6 +254,25 @@ sprocket_width = 0.006
 sprocket_tooth_height = 0.008
 chain_height = 0.012
 
+# Bodywork, as (x, width, bottom z, height) sections perpendicular to the X axis. The fuel tank cover also hides
+# the airbox, so its volume is larger than the fuel capacity.
+fuel_tank_sections = [(0.370, 0.20, 0.800, 0.110), (0.450, 0.34, 0.765, 0.190), (0.580, 0.32, 0.735, 0.170)]
+fuel_tank_sections.append((0.690, 0.22, 0.730, 0.090))
+# Seat sections, as (x relative to the seat position, width, top z relative to the seat height, thickness)
+seat_sections = [(-0.180, 0.20, -0.010, 0.060), (0.0, 0.28, 0.0, 0.080), (0.200, 0.24, 0.030, 0.080)]
+seat_sections += [(0.350, 0.20, 0.060, 0.070), (0.520, 0.14, 0.070, 0.050)]
+footpeg_diameter = 0.022
+footpeg_length = 0.090
+front_mudguard_width = 0.130
+front_mudguard_clearance = 0.025  # between the tyre and the mudguard
+front_mudguard_angles = [math.radians(angle) for angle in (-55, -20, 15, 45)]  # from the fork tubes axis, + backward
+exhaust_header_diameter = 0.035
+exhaust_y = 0.035  # on the right side
+exhaust_header_points = [(0.400, 0.390), (0.430, 0.210), (0.610, 0.185)]  # (x, z), after the exhaust port
+muffler_sections = [(0.600, 0.14, 0.160, 0.080), (0.700, 0.17, 0.155, 0.095), (0.800, 0.14, 0.165, 0.080)]
+headlight_diameter = 0.150
+headlight_depth = 0.080
+
 # Rear shock
 shock_eye_diameter = 0.030
 shock_eye_width = 0.025
@@ -268,6 +296,9 @@ frame_grey = (0.27, 0.28, 0.29)  # dark painted steel
 engine_grey = (0.33, 0.33, 0.34)  # cast aluminium, painted dark grey
 chain_dark = (0.19, 0.19, 0.2)
 steel = (0.55, 0.55, 0.56)
+body_blue = (0.19, 0.25, 0.42)
+plastic_black = (0.12, 0.12, 0.12)
+exhaust_grey = (0.4, 0.4, 0.41)
 spring_red = (0.55, 0.16, 0.13)
 
 # Steering head: middle of the frame pivot, between the fork crowns, on the steering axis
@@ -737,6 +768,35 @@ fork_frame_axle = RevolvedProfile(
 )
 fork_frame_nut = hexnut(fork_pivot_diameter, 0.012)
 
+
+# Front mudguard: open surface interpolating arcs above the tyre, in the fork frame (front axle at the origin, fork
+# tubes along Z), so that it turns with the fork
+def mudguard_section(angle: float) -> Wire3D:
+    radius = front_wheel_radius + front_mudguard_clearance
+    radial = d3d.Vector3D(math.sin(angle), 0, math.cos(angle))
+    return Wire3D(
+        [
+            Arc3D.from_3_points(
+                (radius * radial - 0.5 * front_mudguard_width * d3d.Y3D).to_point(),
+                ((radius + 0.02) * radial).to_point(),
+                (radius * radial + 0.5 * front_mudguard_width * d3d.Y3D).to_point(),
+            )
+        ]
+    )
+
+
+front_mudguard = OpenShell3D(
+    loft_faces([mudguard_section(angle) for angle in front_mudguard_angles]), color=body_blue, name="Front mudguard"
+)
+headlight_center = d3d.Point3D(-0.5 * headlight_depth - 0.06, 0, tube_height - crowns_distance - 2 * crown_width)
+headlight = tube_between(
+    headlight_center - 0.5 * headlight_depth * d3d.X3D,
+    headlight_center + 0.5 * headlight_depth * d3d.X3D,
+    headlight_diameter,
+    "Headlight",
+    color=plastic_black,
+)
+
 fork_assembly = Assembly(
     [
         left_fork_tube,
@@ -748,6 +808,8 @@ fork_assembly = Assembly(
         handlebar,
         fork_frame_axle,
         fork_frame_nut,
+        front_mudguard,
+        headlight,
     ],
     [
         d3d.OXYZ,
@@ -761,6 +823,8 @@ fork_assembly = Assembly(
             d3d.Point3D(fork_offset, 0, tube_height - 2 * crown_width - crowns_distance), d3d.X3D, d3d.Y3D, d3d.Z3D
         ),
         d3d.Frame3D(d3d.Point3D(fork_offset, 0, tube_height), d3d.X3D, d3d.Y3D, d3d.Z3D),
+        d3d.OXYZ,
+        d3d.OXYZ,
     ],
 )
 
@@ -880,6 +944,56 @@ transmission = Assembly(
     name="Transmission",
 )
 
+
+## Bodywork
+def x_sections_loft(sections, color, name: str) -> Loft:
+    """Loft of rounded rectangular sections perpendicular to the X axis, given as (x, width, bottom z, height)."""
+    return Loft(
+        [rounded_rectangle(width, height, 0.3 * min(width, height)) for _, width, _, height in sections],
+        [
+            d3d.Frame3D(d3d.Point3D(x, 0, bottom + 0.5 * height), d3d.Y3D, d3d.Z3D, d3d.X3D)
+            for x, _, bottom, height in sections
+        ],
+        color=color,
+        name=name,
+    )
+
+
+fuel_tank = x_sections_loft(fuel_tank_sections, body_blue, "Fuel tank")
+seat = x_sections_loft(
+    [
+        (seat_position + dx, width, seat_height + dz - thickness, thickness)
+        for dx, width, dz, thickness in seat_sections
+    ],
+    plastic_black,
+    "Seat",
+)
+footpegs = [
+    y_axis_tube(footpeg_center + side * 0.5 * footpegs_spacing * d3d.Y3D, footpeg_diameter, footpeg_length, name)
+    for side, name in ((1, "Right footpeg"), (-1, "Left footpeg"))
+]
+
+# Exhaust: header from the exhaust port, at the front of the cylinder head, to the muffler under the engine
+exhaust_port = (
+    crankshaft_center
+    + (cylinder_block_distance[1] + 0.3 * cylinder_head_height) * cylinder_axis
+    + 0.5 * cylinder_head_size * d3d.Vector3D(-math.cos(cylinder_inclination), 0, -math.sin(cylinder_inclination))
+    + exhaust_y * d3d.Y3D
+)
+exhaust_header = Sweep(
+    Contour2D.from_circle(Circle2D.from_center_and_radius(d3d.O2D, 0.5 * exhaust_header_diameter)),
+    OpenRoundedLineSegments3D(
+        [exhaust_port] + [d3d.Point3D(x, exhaust_y, z) for x, z in exhaust_header_points],
+        {1: 0.06, 2: 0.06},
+    ),
+    color=exhaust_grey,
+    name="Exhaust header",
+)
+muffler = x_sections_loft(muffler_sections, exhaust_grey, "Muffler")
+bodywork_parts = [fuel_tank, seat, *footpegs, exhaust_header, muffler]
+bodywork = Assembly(bodywork_parts, [d3d.OXYZ] * len(bodywork_parts), name="Bodywork")
+
+
 # The fork assembly is built with the front axle at its origin and the fork tubes along its Z axis
 fork_frame = d3d.XYZ.rotation(d3d.Y3D, caster_angle).to_frame(front_axle_center)
 
@@ -954,8 +1068,8 @@ frame = Assembly(
 )
 
 motorcycle = Assembly(
-    [fork_assembly, frame, swingarm_assembly, rear_shock, engine, transmission],
-    [fork_frame, d3d.OXYZ, swingarm_frame, d3d.OXYZ, d3d.OXYZ, d3d.OXYZ],
+    [fork_assembly, frame, swingarm_assembly, rear_shock, engine, transmission, bodywork],
+    [fork_frame, d3d.OXYZ, swingarm_frame, d3d.OXYZ, d3d.OXYZ, d3d.OXYZ, d3d.OXYZ],
     name="Motorcycle",
 )
 
@@ -974,6 +1088,7 @@ for hardpoint_name, hardpoint in [
     ("shock upper mount", shock_upper_mount),
     ("crankshaft", crankshaft_center),
     ("front sprocket", front_sprocket_center),
+    ("footpeg", footpeg_center),
 ]:
     print(f"  {hardpoint_name:<28} {1000 * hardpoint.x:7.1f} {1000 * hardpoint.z:7.1f}")
 print(f"Fork offset: {1000 * fork_offset:.1f} mm, tyre to lower crown clearance: {1000 * tyre_crown_clearance:.0f} mm")
@@ -1007,6 +1122,18 @@ def rider_side(part_name: str) -> str:
 print(f"Chain on the {rider_side('Chain')} side, rear brake disk on the {rider_side('Rear brake disk')} side")
 if (rider_side("Chain"), rider_side("Rear brake disk")) != ("left", "right"):
     raise ValueError("The chain must be on the left side and the rear brake on the right side.")
+print(
+    f"Fuel tank cover volume: {1000 * fuel_tank.volume():.1f} L, for a fuel capacity of {1000 * target_fuel_tank_volume} L"
+)
+# Rider triangle: seat, footpegs and handlebar grips
+grip_center = fork_frame.local_to_global_coordinates(
+    d3d.Point3D(fork_offset, 0, tube_height + crown_handlebar_offset + handlebar_offset)
+)
+print(
+    f"Rider triangle, from the seat: footpegs {1000 * (seat_position - footpeg_center.x):.0f} mm ahead and "
+    f"{1000 * (seat_height - footpeg_center.z):.0f} mm below, handlebar {1000 * (seat_position - grip_center.x):.0f} mm "
+    f"ahead and {1000 * (grip_center.z - seat_height):.0f} mm above"
+)
 
 primitives = [ground, motorcycle]
 
