@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Package metadata: the license is the LGPL 2.1 of the LICENSE file, not a Creative Commons license
 - Measure2D.plot: `ax` and `edge_style` are optional, as for other edges, and the axes are returned
 - BoundingBox.center and BSplineSurface3D.decompose no longer keep the objects alive in a global cache
+- BSplineCurve2D: `straight_line_area` is signed, as for arcs, and `straight_line_center_of_mass` is the center of
+  mass of this area. Contour2D.center_of_mass is right for contours with B-spline edges
+- Contour2D.area: holes joined to the outer loop at one point are subtracted, and full arcs, elliptic arcs and
+  B-spline curves use their area instead of a triangulation of the discretized contour
 
 ### Changed
 

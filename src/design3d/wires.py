@@ -2168,29 +2168,17 @@ class Contour2D(ContourMixin, Wire2D):
 
     def area(self):
         """Returns the area of the contour."""
-        # todo: use the sum of straight_line_area for all cases to avoid triangulation.
-        if not self._area:
-            area = self.edge_polygon.area()
-            classes = {prim.__class__ for prim in self.primitives}
-            verify_classes = classes.issubset({design3d.edges.LineSegment2D, design3d.edges.Arc2D})
-            if self.edge_polygon.is_trigo:
-                trigo = 1
-            else:
-                trigo = -1
-            if verify_classes:
+        if self._area is None:
+            if all(hasattr(edge, "straight_line_area") for edge in self.primitives):
+                # Area of the polygon of the edge extremities, corrected by the signed area between each edge
+                # and its chord. This avoids a triangulation.
+                area = self.edge_polygon.area()
+                trigo = 1 if self.edge_polygon.is_trigo else -1
                 for edge in self.primitives:
                     area += trigo * edge.straight_line_area()
                 self._area = abs(area)
             else:
-                polygon = self.to_polygon(angle_resolution=50)
-                points_set = set(polygon.points)
-                if len(points_set) < len(polygon.points):
-                    # This prevents segmentation fault from contours coming from step files
-                    for edge in self.primitives:
-                        area += trigo * edge.straight_line_area()
-                    self._area = abs(area)
-                else:
-                    self._area = polygon.triangulation().area()
+                self._area = self.to_polygon(angle_resolution=50).area()
         return self._area
 
     def center_of_mass(self):
