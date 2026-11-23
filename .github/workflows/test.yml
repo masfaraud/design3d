@@ -55,6 +55,12 @@ jobs:
 
           coverage report
 
+      - name: Check Coverage Thresholds
+        run: |
+          coverage json --data-file=.coverage -o coverage.json
+          python check_coverage.py coverage.json
+
       - name: Build Docs
         run: |
           make -C docs html SPHINXOPTS="-W --keep-going"
+
