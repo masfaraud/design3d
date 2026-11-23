@@ -4,6 +4,11 @@ Unittest for design3d.Vector3D
 
 import unittest
 
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
 import design3d
 from design3d import Vector3D, Point3D
 
@@ -138,6 +143,12 @@ class TestVector3D(unittest.TestCase):
         self.assertEqual(p1, Vector3D(0, 0, 1))
         self.assertEqual(p2, Vector3D(0, 0, -1))
         self.assertEqual(p3, Vector3D(0, 0, 0))
+
+    def test_plot(self):
+        ax = self.v1.plot(starting_point=self.point1)
+        # The arrow is projected when the figure is drawn: matplotlib requires do_3d_projection on 3D artists.
+        ax.figure.canvas.draw()
+        plt.close(ax.figure)
 
 
 if __name__ == "__main__":

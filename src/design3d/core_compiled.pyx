@@ -447,16 +447,25 @@ class Arrow3D(FancyArrowPatch):
         self.starting_point = starting_point
         self._xyz = x, y, z
 
+    def do_3d_projection(self, renderer=None):
+        """
+        Project the arrow in the 2D view of the axes. Called by Matplotlib on 3D artists, do not rename this method!
+
+        :return: The minimal depth of the arrow, used by Matplotlib to sort the artists.
+        """
+        x1, y1, z1 = self.starting_point
+        dx, dy, dz = self._xyz
+        x2, y2, z2 = (dx + x1, dy + y1, dz + z1)
+        xn, yn, zn = proj3d.proj_transform((x1, x2), (y1, y2), (z1, z2), self.axes.M)
+        self.set_positions((xn[0], yn[0]), (xn[1], yn[1]))
+        return min(zn)
+
     def draw(self, renderer):
         """
         Draw the arrow by overloading a Matplotlib method. Do not rename this method!
 
         """
-        x1, y1, z1 = self.starting_point
-        dx, dy, dz = self._xyz
-        x2, y2, z2 = (dx + x1, dy + y1, dz + z1)
-        xn, yn, _ = proj3d.proj_transform((x1, x2), (y1, y2), (z1, z2), self.axes.M)
-        self.set_positions((xn[0], yn[0]), (xn[1], yn[1]))
+        self.do_3d_projection(renderer)
         FancyArrowPatch.draw(self, renderer)
 
     def plot(self, ax=None, color="b"):

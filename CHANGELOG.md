@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BSplineSurface3D: point inversion near a singularity no longer depends on rounding to pick its starting point,
   which could give an open face contour on some platforms
 - BSplineSurface3D: changing the sample size now resets the points evaluated on the previous sampling grid
+- Vector3D.plot: the arrow is drawn with recent Matplotlib versions, which require `do_3d_projection` on 3D artists
 
 ### Build
 
