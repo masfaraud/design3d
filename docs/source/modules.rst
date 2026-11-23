@@ -1,11 +1,11 @@
-Volmdlr Modules
----------------
+design3d Modules
+----------------
 
 .. toctree::
     :maxdepth: 1
 
     modules/base_modules.rst
-    modules/bspline_compiled.rst
+    modules/nurbs.rst
     modules/module_geometry.rst
     modules/module_curves.rst
     modules/module_edges.rst
@@ -17,7 +17,6 @@ Volmdlr Modules
     modules/step.rst
     modules/stl.rst
     modules/module_cloud.rst
-    modules/voxelization.rst
     modules/module_display.rst
     modules/mesh.rst
     modules/grid.rst

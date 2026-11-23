@@ -5,7 +5,7 @@ import design3d
 from design3d.edges import Arc2D
 from design3d import curves
 
-folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'arc_objects')
+folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "arc_objects")
 
 
 class TestArc2D(unittest.TestCase):
@@ -14,30 +14,47 @@ class TestArc2D(unittest.TestCase):
     arc1 = Arc2D(circle2d, design3d.Point2D(0, -1), design3d.Point2D(0, 1))
     arc2 = Arc2D(circle2d, design3d.Point2D(1, 0), design3d.Point2D(-1, 0))
     arc3 = Arc2D(curves.Circle2D(design3d.OXY, 1.5), 1.5 * design3d.Point2D(0, -1), 1.5 * design3d.Point2D(0, 1))
-    arc4 = Arc2D(circle2d, design3d.Point2D(0.7071067811865475, -0.7071067811865475),
-                 design3d.Point2D(0.7071067811865475, 0.7071067811865475))
-    arc5 = Arc2D(circle2d, design3d.Point2D(-0.7071067811865475, 0.7071067811865475),
-                 design3d.Point2D(-0.7071067811865475, -0.7071067811865475))
+    arc4 = Arc2D(
+        circle2d,
+        design3d.Point2D(0.7071067811865475, -0.7071067811865475),
+        design3d.Point2D(0.7071067811865475, 0.7071067811865475),
+    )
+    arc5 = Arc2D(
+        circle2d,
+        design3d.Point2D(-0.7071067811865475, 0.7071067811865475),
+        design3d.Point2D(-0.7071067811865475, -0.7071067811865475),
+    )
     arc6 = arc4.complementary()
     circle2d_reversed = circle2d.reverse()
-    arc7 = Arc2D(circle2d_reversed, design3d.Point2D(-0.7071067811865475, 0.7071067811865475),
-                 design3d.Point2D(0.7071067811865475, 0.7071067811865475))
+    arc7 = Arc2D(
+        circle2d_reversed,
+        design3d.Point2D(-0.7071067811865475, 0.7071067811865475),
+        design3d.Point2D(0.7071067811865475, 0.7071067811865475),
+    )
     arc8 = arc7.complementary()
-    arc9 = Arc2D(circle2d_reversed, design3d.Point2D(-0.7071067811865475, -0.7071067811865475),
-                 design3d.Point2D(0.7071067811865475, -0.7071067811865475))
+    arc9 = Arc2D(
+        circle2d_reversed,
+        design3d.Point2D(-0.7071067811865475, -0.7071067811865475),
+        design3d.Point2D(0.7071067811865475, -0.7071067811865475),
+    )
     arc10 = arc9.complementary()
-    list_points = [design3d.Point2D(1, 0),
-                   design3d.Point2D(0.7071067811865475, -0.7071067811865475),
-                   design3d.Point2D(0, -1),
-                   design3d.Point2D(-0.7071067811865475, -0.7071067811865475),
-                   design3d.Point2D(-1, 0),
-                   design3d.Point2D(-0.7071067811865475, 0.7071067811865475),
-                   design3d.Point2D(0, 1),
-                   design3d.Point2D(0.7071067811865475, 0.7071067811865475)]
+    list_points = [
+        design3d.Point2D(1, 0),
+        design3d.Point2D(0.7071067811865475, -0.7071067811865475),
+        design3d.Point2D(0, -1),
+        design3d.Point2D(-0.7071067811865475, -0.7071067811865475),
+        design3d.Point2D(-1, 0),
+        design3d.Point2D(-0.7071067811865475, 0.7071067811865475),
+        design3d.Point2D(0, 1),
+        design3d.Point2D(0.7071067811865475, 0.7071067811865475),
+    ]
 
     def test_arc_angles(self):
-        frame = design3d.Frame2D(design3d.Point2D(-8.300842483198, 33.937305367912), design3d.Vector2D(-1.0, 0.0),
-                                design3d.Vector2D(-0.0, -1.0))
+        frame = design3d.Frame2D(
+            design3d.Point2D(-8.300842483198, 33.937305367912),
+            design3d.Vector2D(-1.0, 0.0),
+            design3d.Vector2D(-0.0, -1.0),
+        )
 
         radius = 18.985621313014995
 
@@ -48,9 +65,18 @@ class TestArc2D(unittest.TestCase):
         arc = Arc2D(circle, start, end)
         self.assertAlmostEqual(arc.angle_start, 2.369092548558922)
         self.assertAlmostEqual(arc.angle_end, 1.085744328897209)
-        expected_angles = [2.369092548558922, 2.9246300027275742, -2.8030178502833594, -2.247480396114707,
-                           -1.6919429419460545, -1.136405487777402, -0.5808680336087492, -0.02533057944009658,
-                           0.5302068747285559, 1.0857443288972086]
+        expected_angles = [
+            2.369092548558922,
+            2.9246300027275742,
+            -2.8030178502833594,
+            -2.247480396114707,
+            -1.6919429419460545,
+            -1.136405487777402,
+            -0.5808680336087492,
+            -0.02533057944009658,
+            0.5302068747285559,
+            1.0857443288972086,
+        ]
         for i, point in enumerate(arc.discretization_points(number_points=10)):
             self.assertAlmostEqual(arc._arc_point_angle(point), expected_angles[i])
 
@@ -64,27 +90,36 @@ class TestArc2D(unittest.TestCase):
         arc7 = Arc2D(circle_reversed, design3d.Point2D(-1, 0), design3d.Point2D(0, 1))
         arc8 = Arc2D(circle_reversed, design3d.Point2D(0, 1), design3d.Point2D(1, 0))
 
-        expected_angles = [(0.0, 0.5 * math.pi), (0.5 * math.pi, math.pi), (-math.pi, -0.5 * math.pi),
-                           (-0.5 * math.pi, 0.0),
-                           (0.0, -0.5 * math.pi), (-0.5 * math.pi, -math.pi), (math.pi, 0.5 * math.pi),
-                           (0.5 * math.pi, 0.0)
-                           ]
+        expected_angles = [
+            (0.0, 0.5 * math.pi),
+            (0.5 * math.pi, math.pi),
+            (-math.pi, -0.5 * math.pi),
+            (-0.5 * math.pi, 0.0),
+            (0.0, -0.5 * math.pi),
+            (-0.5 * math.pi, -math.pi),
+            (math.pi, 0.5 * math.pi),
+            (0.5 * math.pi, 0.0),
+        ]
         for arc, angles in zip([arc1, arc2, arc3, arc4, arc5, arc6, arc7, arc8], expected_angles):
             self.assertAlmostEqual(arc.angle_start, angles[0])
             self.assertAlmostEqual(arc.angle_end, angles[1])
             self.assertAlmostEqual(arc.angle, 0.5 * math.pi)
 
     def test_angle(self):
-        arc1 = Arc2D(self.circle2d, design3d.Point2D(-1/math.sqrt(2), 1/math.sqrt(2)),
-                     design3d.Point2D(-1/math.sqrt(2), -1/math.sqrt(2)))
+        arc1 = Arc2D(
+            self.circle2d,
+            design3d.Point2D(-1 / math.sqrt(2), 1 / math.sqrt(2)),
+            design3d.Point2D(-1 / math.sqrt(2), -1 / math.sqrt(2)),
+        )
 
         circle_reversed = self.circle2d.reverse()
-        arc2 = Arc2D(circle_reversed, design3d.Point2D(-1/math.sqrt(2), -1/math.sqrt(2)),
-                     design3d.Point2D(-1/math.sqrt(2), 1/math.sqrt(2)))
+        arc2 = Arc2D(
+            circle_reversed,
+            design3d.Point2D(-1 / math.sqrt(2), -1 / math.sqrt(2)),
+            design3d.Point2D(-1 / math.sqrt(2), 1 / math.sqrt(2)),
+        )
 
-
-        expected_angles = [(0.75 * math.pi, -0.75 * math.pi), (-0.75 * math.pi, 0.75 * math.pi)
-                           ]
+        expected_angles = [(0.75 * math.pi, -0.75 * math.pi), (-0.75 * math.pi, 0.75 * math.pi)]
         for arc, angles in zip([arc1, arc2], expected_angles):
             self.assertAlmostEqual(arc.angle_start, angles[0])
             self.assertAlmostEqual(arc.angle_end, angles[1])
@@ -104,29 +139,67 @@ class TestArc2D(unittest.TestCase):
         self.assertTrue(arc_split3[1].end.is_close(self.arc2d.end))
 
     def test_arc_intersections(self):
-        arc2 = Arc2D(curves.Circle2D(design3d.OXY.translation(design3d.Point2D(0, 1.5)), 1), design3d.Point2D(-1, 1.5),
-                     design3d.Point2D(1, 1.5), True)
+        arc2 = Arc2D(
+            curves.Circle2D(design3d.OXY.translation(design3d.Point2D(0, 1.5)), 1),
+            design3d.Point2D(-1, 1.5),
+            design3d.Point2D(1, 1.5),
+            True,
+        )
         arc_intersections = self.arc1.arc_intersections(arc2)
         self.assertEqual(len(arc_intersections), 1)
         self.assertTrue(arc_intersections[0].is_close(design3d.Point2D(0.6614378277661477, 0.75)))
         self.assertFalse(self.arc5.arc_intersections(arc2))
 
     def test_abscissa(self):
-        expected_abscissa_results = [[1.5707963267948966, 0.7853981633974483, 0, 3.141592653589793, 2.356194490192345],
-                                     [0, 3.141592653589793, 2.356194490192345, 1.5707963267948966, 0.7853981633974483],
-                                     [], [0.7853981633974483, 0, 1.5707963267948966],
-                                     [1.5707963267948966, 0.7853981633974483, 0],
-                                     [4.71238898038469, 3.9269908169872414, 3.141592653589793, 2.356194490192345,
-                                      1.5707963267948966, 0.7853981633974483, 0],
-                                     [0, 0.7853981633974483, 1.5707963267948966],
-                                     [0.7853981633974483, 1.5707963267948966, 2.356194490192345, 3.141592653589793,
-                                      3.9269908169872414, 4.71238898038469, 0],
-                                     [3.9269908169872414, 4.71238898038469, 0, 0.7853981633974483, 1.5707963267948966,
-                                      2.356194490192345, 3.141592653589793],
-                                     [0, 0.7853981633974483, 1.5707963267948966]]
+        expected_abscissa_results = [
+            [1.5707963267948966, 0.7853981633974483, 0, 3.141592653589793, 2.356194490192345],
+            [0, 3.141592653589793, 2.356194490192345, 1.5707963267948966, 0.7853981633974483],
+            [],
+            [0.7853981633974483, 0, 1.5707963267948966],
+            [1.5707963267948966, 0.7853981633974483, 0],
+            [
+                4.71238898038469,
+                3.9269908169872414,
+                3.141592653589793,
+                2.356194490192345,
+                1.5707963267948966,
+                0.7853981633974483,
+                0,
+            ],
+            [0, 0.7853981633974483, 1.5707963267948966],
+            [
+                0.7853981633974483,
+                1.5707963267948966,
+                2.356194490192345,
+                3.141592653589793,
+                3.9269908169872414,
+                4.71238898038469,
+                0,
+            ],
+            [
+                3.9269908169872414,
+                4.71238898038469,
+                0,
+                0.7853981633974483,
+                1.5707963267948966,
+                2.356194490192345,
+                3.141592653589793,
+            ],
+            [0, 0.7853981633974483, 1.5707963267948966],
+        ]
         list_abscissas = []
-        for arc in [self.arc1, self.arc2, self.arc3, self.arc4, self.arc5, self.arc6, self.arc7,
-                    self.arc8, self.arc9, self.arc10]:
+        for arc in [
+            self.arc1,
+            self.arc2,
+            self.arc3,
+            self.arc4,
+            self.arc5,
+            self.arc6,
+            self.arc7,
+            self.arc8,
+            self.arc9,
+            self.arc10,
+        ]:
             abscissas_ = []
             for point in self.list_points:
                 try:
@@ -140,19 +213,31 @@ class TestArc2D(unittest.TestCase):
                 self.assertAlmostEqual(abscissa, expected_abscissa)
 
     def test_point_belongs(self):
-        expected_results = [[True, True, True, False, False, False, True, True],
-                            [True, False, False, False, True, True, True, True],
-                            [False, False, False, False, False, False, False, False],
-                            [True, True, False, False, False, False, False, True],
-                            [False, False, False, True, True, True, False, False],
-                            [False, True, True, True, True, True, True, True],
-                            [False, False, False, False, False, True, True, True],
-                            [True, True, True, True, True, True, False, True],
-                            [True, True, False, True, True, True, True, True],
-                            [False, True, True, True, False, False, False, False]]
+        expected_results = [
+            [True, True, True, False, False, False, True, True],
+            [True, False, False, False, True, True, True, True],
+            [False, False, False, False, False, False, False, False],
+            [True, True, False, False, False, False, False, True],
+            [False, False, False, True, True, True, False, False],
+            [False, True, True, True, True, True, True, True],
+            [False, False, False, False, False, True, True, True],
+            [True, True, True, True, True, True, False, True],
+            [True, True, False, True, True, True, True, True],
+            [False, True, True, True, False, False, False, False],
+        ]
         list_point_belongs = []
-        for arc in [self.arc1, self.arc2, self.arc3, self.arc4, self.arc5, self.arc6, self.arc7,
-                    self.arc8, self.arc9, self.arc10]:
+        for arc in [
+            self.arc1,
+            self.arc2,
+            self.arc3,
+            self.arc4,
+            self.arc5,
+            self.arc6,
+            self.arc7,
+            self.arc8,
+            self.arc9,
+            self.arc10,
+        ]:
             point_belongs_ = []
             for point in self.list_points:
                 point_belongs_.append(arc.point_belongs(point))
@@ -171,11 +256,15 @@ class TestArc2D(unittest.TestCase):
     def test_get_shared_section(self):
         # =====================Sharing one end of the arc=====================#
         shared_section1 = self.arc1.get_shared_section(self.arc2)
-        expected_points = [design3d.Point2D(1.0, 0.0), design3d.Point2D(0.7071067811865476, 0.7071067811865475),
-                           design3d.Point2D(0.0, 1.0)]
-        for expected_point, point in zip(expected_points, [shared_section1[0].points[0],
-                                                           shared_section1[0].middle_point(),
-                                                           shared_section1[0].points[1]]):
+        expected_points = [
+            design3d.Point2D(1.0, 0.0),
+            design3d.Point2D(0.7071067811865476, 0.7071067811865475),
+            design3d.Point2D(0.0, 1.0),
+        ]
+        for expected_point, point in zip(
+            expected_points,
+            [shared_section1[0].points[0], shared_section1[0].middle_point(), shared_section1[0].points[1]],
+        ):
             self.assertTrue(expected_point.is_close(point))
         # =====================Two Arcs with different radius =====================#
         self.assertFalse(self.arc2.get_shared_section(self.arc3))
@@ -190,15 +279,21 @@ class TestArc2D(unittest.TestCase):
 
     def test_delete_shared_section(self):
         remaining_arc1 = self.arc1.delete_shared_section(self.arc2)
-        self.assertEqual(remaining_arc1, [Arc2D(curves.Circle2D(design3d.OXY, 1), design3d.Point2D(0.0, -1.0),
-                                                design3d.Point2D(1.0, 0.0), True)])
+        self.assertEqual(
+            remaining_arc1,
+            [Arc2D(curves.Circle2D(design3d.OXY, 1), design3d.Point2D(0.0, -1.0), design3d.Point2D(1.0, 0.0), True)],
+        )
         self.assertEqual(self.arc2.delete_shared_section(self.arc3), [self.arc2])
         remaining_arc2 = self.arc1.delete_shared_section(self.arc4)
         self.assertTrue(remaining_arc2[0].start.is_close(design3d.Point2D(0.0, -1.0)))
-        self.assertTrue(remaining_arc2[0].middle_point().is_close(design3d.Point2D(0.3826834323650898, -0.9238795325112867)))
+        self.assertTrue(
+            remaining_arc2[0].middle_point().is_close(design3d.Point2D(0.3826834323650898, -0.9238795325112867))
+        )
         self.assertTrue(remaining_arc2[0].end.is_close(design3d.Point2D(0.7071067811865475, -0.7071067811865475)))
         self.assertTrue(remaining_arc2[1].start.is_close(design3d.Point2D(0.7071067811865475, 0.7071067811865475)))
-        self.assertTrue(remaining_arc2[1].middle_point().is_close(design3d.Point2D(0.38268343236508984, 0.9238795325112867)))
+        self.assertTrue(
+            remaining_arc2[1].middle_point().is_close(design3d.Point2D(0.38268343236508984, 0.9238795325112867))
+        )
         self.assertTrue(remaining_arc2[1].end.is_close(design3d.Point2D(0.0, 1.0)))
         self.assertFalse(self.arc4.delete_shared_section(self.arc1))
 
@@ -208,7 +303,7 @@ class TestArc2D(unittest.TestCase):
         point1 = design3d.Point2D(1, 1)
         self.assertEqual(arc.point_distance(point1), math.sqrt(2) - 1)
 
-        point2 = design3d.Point2D(0.5/math.sqrt(2), 0.5/math.sqrt(2))
+        point2 = design3d.Point2D(0.5 / math.sqrt(2), 0.5 / math.sqrt(2))
         self.assertEqual(arc.point_distance(point2), 0.5)
 
         point3 = design3d.Point2D(0, 0)
@@ -259,18 +354,18 @@ class TestArc2D(unittest.TestCase):
         u_vector = design3d.Vector2D(0.7071067811865475, 0.7071067811865475)
         v_vector = design3d.Vector2D(-0.7071067811865475, 0.7071067811865475)
         frame = design3d.Frame2D(design3d.O2D, u_vector, v_vector)
-        frame_mapped_arc2d = self.arc4.frame_mapping(frame, 'new')
+        frame_mapped_arc2d = self.arc4.frame_mapping(frame, "new")
         self.assertTrue(frame_mapped_arc2d.start.is_close(design3d.Point2D(0.0, -1.0)))
         self.assertTrue(frame_mapped_arc2d.end.is_close(design3d.Point2D(1.0, 0.0)))
 
         # Test on non trigo Arc2D
-        frame_mapped_arc2d = self.arc9.frame_mapping(frame, 'new')
-        frame_mapped_arc2d = frame_mapped_arc2d.frame_mapping(frame, 'old')
+        frame_mapped_arc2d = self.arc9.frame_mapping(frame, "new")
+        frame_mapped_arc2d = frame_mapped_arc2d.frame_mapping(frame, "old")
         self.assertTrue(frame_mapped_arc2d.is_close(self.arc9))
 
         # Test on trigo Arc2D
-        frame_mapped_arc2d = self.arc2.frame_mapping(frame, 'new')
-        frame_mapped_arc2d = frame_mapped_arc2d.frame_mapping(frame, 'old')
+        frame_mapped_arc2d = self.arc2.frame_mapping(frame, "new")
+        frame_mapped_arc2d = frame_mapped_arc2d.frame_mapping(frame, "old")
         self.assertTrue(frame_mapped_arc2d.is_close(self.arc2))
 
     def test_reverse(self):
@@ -310,11 +405,13 @@ class TestArc2D(unittest.TestCase):
         point3d_ = self.arc4.middle_point().to_3d(design3d.O3D, vector1, vector2)
         self.assertTrue(arc3d.point_belongs(point3d_))
         circle = curves.Circle2D(
-            design3d.OXY.translation(design3d.Vector2D(0.2068381066975619, 0.1167563813274402)),
-            0.01500000000000002).reverse()
-        arc = design3d.edges.Arc2D(circle,
+            design3d.OXY.translation(design3d.Vector2D(0.2068381066975619, 0.1167563813274402)), 0.01500000000000002
+        ).reverse()
+        arc = design3d.edges.Arc2D(
+            circle,
             design3d.Point2D(0.21783000907195643, 0.10654961483693107),
-            design3d.Point2D(0.19291095633428304, 0.11118552118212867))
+            design3d.Point2D(0.19291095633428304, 0.11118552118212867),
+        )
         point3d = arc.middle_point().to_3d(design3d.O3D, design3d.X3D, design3d.Y3D)
         arc_to_3d = arc.to_3d(design3d.O3D, design3d.X3D, design3d.Y3D)
         self.assertTrue(arc_to_3d.point_belongs(point3d))
@@ -338,5 +435,5 @@ class TestArc2D(unittest.TestCase):
         self.assertEqual(arc_from_3_points2.translation(design3d.X2D).translation(-design3d.X2D), arc_from_3_points2)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

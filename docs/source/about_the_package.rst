@@ -20,7 +20,7 @@ appreciation, which we would also be very happy about:
 - Mention the project at local meetups and tell your friends/colleagues
 
 If you would like to contribute to the project, please go to our
-`GitHub page <https://github.com/Dessia-tech>`_
+`GitHub page <https://github.com/masfaraud/design3d>`_
 and submit a pull request or an issue. You can contribute in many ways: by
 improving the existing code, adding new features or changing the documentation.
 Documentation improvements are crucial to us to make this package as user
@@ -54,7 +54,7 @@ We have a process based on three branches and the process goes as follows:
 - testing that is regularly a freeze of testing. Release candidate (RC)
   can be made on testing
 - master that receive the code from testing before the release. Release are
-made on master
+  made on master
 
 Before coding, think of where to start from. You should start your branch
 for pull request where the pull request will point at:

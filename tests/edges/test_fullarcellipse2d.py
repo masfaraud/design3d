@@ -38,18 +38,20 @@ class TestFullArcEllipse2D(unittest.TestCase):
 
     def test_frame_mapping(self):
         new_frame = design3d.Frame2D(design3d.O2D, -design3d.Y2D, design3d.X2D)
-        new_ellipse = self.fullarcellipse.frame_mapping(new_frame, 'new')
+        new_ellipse = self.fullarcellipse.frame_mapping(new_frame, "new")
         self.assertEqual(new_ellipse.ellipse.major_dir, design3d.Vector2D(0.0, 1.0))
         self.assertEqual(new_ellipse.ellipse.minor_dir, design3d.Vector2D(-1.0, 0.0))
 
     def test_abscissa(self):
         point1 = design3d.Point2D(0, -0.0075)
         point2 = design3d.Point2D(0.0225, 0)
-        self.assertAlmostEqual(self.fullarcellipse.abscissa(point1), 0.75*self.fullarcellipse.length())
+        self.assertAlmostEqual(self.fullarcellipse.abscissa(point1), 0.75 * self.fullarcellipse.length())
         self.assertAlmostEqual(self.fullarcellipse.abscissa(point2), 0.0)
 
-        ellipse = d3de.FullArcEllipse2D(curves.Ellipse2D(0.000500289037421, 0.00050027520242, design3d.OXY),
-                                       design3d.Point2D(0.0005002890374210534, 0))
+        ellipse = d3de.FullArcEllipse2D(
+            curves.Ellipse2D(0.000500289037421, 0.00050027520242, design3d.OXY),
+            design3d.Point2D(0.0005002890374210534, 0),
+        )
         point = design3d.Point2D(-0.00018416867811365376, 0.00046514411968310123)
         self.assertAlmostEqual(ellipse.abscissa(point), 0.00098248885770749, 4)
 
@@ -59,5 +61,5 @@ class TestFullArcEllipse2D(unittest.TestCase):
         self.assertEqual(translated_ellipse.start_end, design3d.Point2D(1.0225, 0))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

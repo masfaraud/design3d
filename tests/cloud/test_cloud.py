@@ -25,8 +25,7 @@ wrapping = cloud3d.to_shell()
 ax = None
 for tri in wrapping.faces[1:40]:
     ax = tri.plot(ax=ax)
-    normal = 0.03*tri.normal()
-    
+    normal = 0.03 * tri.normal()
+
     # print('NORMAL', tri.normal())
     normal.plot(ax=ax, starting_point=tri.middle())
-    

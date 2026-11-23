@@ -1,6 +1,6 @@
-==============================================
+===============================================
 Section on how to create Basic design3d objects
-==============================================
+===============================================
 
 Basic Objects
 *************
@@ -74,7 +74,7 @@ How to create a Frame3D
 The given class Frame3D represents a 3D frame. It defines a frame by specifying its origin point and
 three basis vectors (u, v, and w) that determine the orientation of the frame.
 
-Exmaple:
+Example:
 
 .. plot::
    :include-source:
@@ -143,7 +143,7 @@ Circle2D
 The circle2d  is defined by its center point (Point2D) and a radius (float),
 and it also accepts an optional name for identification.
 
-.. grid-item-card::
+.. card::
 
     .. plot::
        :include-source:
@@ -164,7 +164,7 @@ The circle is defined by a Frame3D object that includes information about the ce
 circle in 3D space, along with a radius (float). The frame's u and v vectors define the plane in which the
 circle lies, and w represents the normal vector to the plane.
 
-.. grid-item-card::
+.. card::
 
     .. plot::
        :include-source:
@@ -297,11 +297,12 @@ Edges
 How to create a LineSegment
 ===========================
 
-To instanciate a LineSegment in 2D or 3D, you will need to provide two mandatory arguments, the start and end points.
+To instantiate a LineSegment in 2D or 3D, you will need to provide two mandatory arguments, the start and end points.
 Additionally you will have two optional arguments: an infinite line which the line segment lies on and a name argument.
 
 LineSegment2D
 -------------
+
 .. grid:: 1
 
     .. grid-item-card::
@@ -404,7 +405,7 @@ There also an optional name argument.
 ArcEllipse2D
 ------------
 
-Object's descrition
+Object's description
 
 .. grid:: 1
 
@@ -432,7 +433,7 @@ Object's descrition
 ArcEllipse3D
 ------------
 
-Object's descrition
+Object's description
 
 .. grid:: 1
 
@@ -462,7 +463,7 @@ Object's descrition
 How to create a BSplineCurve
 ============================
 
-To instanciate a BsplineCurve 2D or 3D, we must provide the necessary parameters, such as the degree, control points,
+To instantiate a BsplineCurve 2D or 3D, we must provide the necessary parameters, such as the degree, control points,
 knot multiplicities, knot vector, and optional weights and name.
 
 BSplineCurve2D
@@ -693,7 +694,7 @@ Attributes:
 Plane3D
 =======
 
-`Plane3D` represents a three-dimensional plane. To build it, it is needed a `frame` and an optinal `name` paramenter.
+`Plane3D` represents a three-dimensional plane. To build it, it is needed a `frame` and an optional `name` parameter.
 
 `frame`: This is a parameter passed to the constructor, representing a three-dimensional frame that describes the plane. The frame consists of an origin o and vectors u and v that define the plane, and w represents the normal vector to the plane. This implies that the plane is defined by a local coordinate system.
 
@@ -719,7 +720,7 @@ Plane3D
 CylindricalSurface3D
 ====================
 
-To instanciate a CylindricalSurface3D, you have to provide tree parameters: a `frame`, a `radius`, and an optional `name`.
+To instantiate a CylindricalSurface3D, you have to provide tree parameters: a `frame`, a `radius`, and an optional `name`.
 
 `frame`: This is a parameter passed to the constructor, representing a three-dimensional frame that describes the plane. The frame consists of an origin o and vectors u and v that define the plane, and w represents the normal vector to the plane. This implies that the plane is defined by a local coordinate system.
 
@@ -745,7 +746,7 @@ To instanciate a CylindricalSurface3D, you have to provide tree parameters: a `f
 ToroidalSurface3D
 =================
 
-To instanciate a ToroidalSurface3D, you have to provide tree parameters: a `frame`, a `major_radius`, a `minor_radius` and an optional `name`.
+To instantiate a ToroidalSurface3D, you have to provide tree parameters: a `frame`, a `major_radius`, a `minor_radius` and an optional `name`.
 
 `frame`: This is a parameter passed to the constructor, representing a three-dimensional frame that describes the plane. The frame consists of an origin o and vectors u and v that define the plane, and w represents the normal vector to the plane. This implies that the plane is defined by a local coordinate system.
 
@@ -772,7 +773,7 @@ To instanciate a ToroidalSurface3D, you have to provide tree parameters: a `fram
 ConicalSurface3D
 ================
 
-To instanciate a ConicalSurface3D, you have to provide tree parameters: a `frame`, a `angle` and an optional `name` parameter.
+To instantiate a ConicalSurface3D, you have to provide tree parameters: a `frame`, a `angle` and an optional `name` parameter.
 
 `frame`: This is a parameter passed to the constructor, representing a three-dimensional frame that describes the plane. The frame consists of an origin o and vectors u and v that define the plane, and w represents the normal vector to the plane. This implies that the plane is defined by a local coordinate system.
 
@@ -798,7 +799,7 @@ To instanciate a ConicalSurface3D, you have to provide tree parameters: a `frame
 SphericalSurface3D
 ==================
 
-To instanciate a SphericalSurface3D, you have to provide tree parameters: a `frame`, a `radius` and an optional `name`.
+To instantiate a SphericalSurface3D, you have to provide tree parameters: a `frame`, a `radius` and an optional `name`.
 
 `frame`: This is a parameter passed to the constructor, representing a three-dimensional frame that describes the plane. The frame consists of an origin o and vectors u and v that define the plane, and w represents the normal vector to the plane. This implies that the plane is defined by a local coordinate system.
 
@@ -824,7 +825,7 @@ To instanciate a SphericalSurface3D, you have to provide tree parameters: a `fra
 RulledSurface3D
 ===============
 This Class represents a three-dimensional ruled surface, which is a surface created by connecting points between two wires.
-To instanciate it, you need to provide 3 parameters: `wire1`, `wire2`and `name`.
+To instantiate it, you need to provide 3 parameters: `wire1`, `wire2`and `name`.
 
 `wire1`: This is a parameter passed to the constructor, representing the first wire defining the ruled surface. It is of type wires.Wire3D.
 
@@ -849,7 +850,7 @@ To instanciate it, you need to provide 3 parameters: `wire1`, `wire2`and `name`.
 ExtrusionSurface3D
 ==================
 
-This class represents a three-dimensional extrusion surface. It can be instanciated by providing:
+This class represents a three-dimensional extrusion surface. It can be instantiated by providing:
 
 `edge`: This is a parameter passed to the constructor, representing the edge that defines the curve to be extruded. It is of type Union[edges.FullArcEllipse3D, edges.BSplineCurve3D], indicating that the edge is expected to be an Ellipse or a B-Spline curve. But The edge can also be either a Wire3D or a Contour3D
 
@@ -882,9 +883,9 @@ This class represents a three-dimensional extrusion surface. It can be instancia
 RevolutionSurface3D
 ===================
 
-`RevolutionSurface3D` represents a three-dimensional surface of revolution. To instanciate it, it is needed to provide:
+`RevolutionSurface3D` represents a three-dimensional surface of revolution. To instantiate it, it is needed to provide:
 
-`edge: This is a parameter passed to the constructor, representing the edge that defines the profile curve of the surface of revolution. It is of type edges.Edge, indicating that it is expected to be an edge.
+`edge`: This is a parameter passed to the constructor, representing the edge that defines the profile curve of the surface of revolution. It is of type edges.Edge, indicating that it is expected to be an edge.
 
 `axis_point`: This is a parameter passed to the constructor, representing the placement of the axis of revolution. It is of type design3d.Point3D.
 
@@ -920,7 +921,7 @@ RevolutionSurface3D
 BSplineSurface3D
 ================
 
-`BsplineSurface3D` Represents a three-dimensional B-spline surface. To instanciate it, it is needed to provide:
+`BsplineSurface3D` Represents a three-dimensional B-spline surface. To instantiate it, it is needed to provide:
 
 `degree_u`: Represents the degree of the B-spline curve in the u direction.
 
@@ -1346,7 +1347,7 @@ Shells
 A shell is defined as a collection of connected faces. A Shell can a `ClosedShell3D` or an `OpenShell3D`.
 it receives as parameters a list of faces (instances of Face3D), optional color, alpha (transparency), name, and a bounding box.
 
-In the example bellow, it is shown the definition of the shell's lateral faces.
+In the example below, it is shown the definition of the shell's lateral faces.
 
 .. grid:: 1
 
@@ -1412,7 +1413,7 @@ ClosedShell3D
            shell1 = shells.ClosedShell3D(faces_)
            shell1.babylonjs()
 
-    .. figure:: ../source/_static/index-images/closedshell3d.png
+        .. figure:: ../source/_static/index-images/closedshell3d.png
 
 
 Primitives3D

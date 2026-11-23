@@ -1,10 +1,11 @@
 """
 Showcase of the 'TripleExtrusionSimplify' class.
 """
+
 import time
 
-from volmdlr.cad_simplification import TripleExtrusionSimplify
-from volmdlr.step import Step
+from design3d.cad_simplification import TripleExtrusionSimplify
+from design3d.step import Step
 
 # Load
 volume_model = Step.from_file("../step/engine.step").to_volume_model()

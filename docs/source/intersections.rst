@@ -11,8 +11,8 @@ Intersection between curves:
 ****************************
 
 
-To calculate the intersections between any two curves, you can call the `curve_intersections` methods.
-It will work for any edges in curves.py module.
+To calculate the intersections between two curves, you can call the ``<curve>_intersections`` method matching the
+other curve, such as ``line_intersections``, ``circle_intersections`` or ``ellipse_intersections``.
 
 For example, to calculate the intersections between a Ellipse2D and Circle2D you can do as follows:
 
@@ -28,7 +28,7 @@ For example, to calculate the intersections between a Ellipse2D and Circle2D you
     ellipse2d = curves.Ellipse2D(frame=design3d.Frame2D(origin=design3d.Point2D(1.6329931618544102, -1.1547005383785152), u=design3d.Vector2D(-0.8164965809277259, 0.5773502691896258), v=design3d.Vector2D(0.5773502691896258, 0.8164965809277259)),
                                  major_axis=1.7320508075677725, minor_axis=0.9999999999993615)
 
-    intersections = circle.curve_intersections(ellipse2d)
+    intersections = circle.ellipse_intersections(ellipse2d)
 
     ax = ellipse2d.plot()
     circle.plot(ax, EdgeStyle('r'))
@@ -36,8 +36,8 @@ For example, to calculate the intersections between a Ellipse2D and Circle2D you
         p.plot(ax, 'b')
 
 
-Intersections betweeen edges
-****************************
+Intersections between edges
+***************************
 
 Edges are generally objects having a curve as its base tragectoty and a start and end points on that curve.
 We Have edges like LineSegment, Arc, FullArc, ArcEllipse, FullArcEllipse, BSplineCurve, both in 2-D and in 3-D.
@@ -79,15 +79,16 @@ Another example in 3D: BSplineCurve3D and LineSegment3D:
     import design3d
     from design3d import edges
     from design3d.core import EdgeStyle
-    from design3d.models.edges import bspline_curve3d
 
-    #Here we are using a bspline curve previously defined as a model curve.
-    bs3d = bspline_curve3d()
+    # A bspline curve interpolating some points.
+    points = [design3d.Point3D(0, 0, 0), design3d.Point3D(1, 1, 0.5), design3d.Point3D(2, -1, 1),
+              design3d.Point3D(3, 0, 0.5), design3d.Point3D(4, 1, 0)]
+    bs3d = edges.BSplineCurve3D.from_points_interpolation(points, 3)
 
     #take two points of the bspline to use them to defined an intersecting line segment.
-    pt1, point2 = bs3d.points[30], bs3d.points[85]
+    discretization = bs3d.discretization_points(number_points=100)
+    pt1, point2 = discretization[30], discretization[85]
     vec = point2 - pt1
-    vec = vec.to_vector()
     lineseg = edges.LineSegment3D(pt1 - vec*0.5, point2 + vec * 0.5)
 
     #Search for intersections
@@ -101,12 +102,12 @@ Another example in 3D: BSplineCurve3D and LineSegment3D:
 
 
 
-Intersections betweeen an edge and a curve
+Intersections between an edge and a curve
 ******************************************
 
 
 
-Intersections betweeen a wire/contour and an edge
+Intersections between a wire/contour and an edge
 *************************************************
 
 If you ever need to calcule the intersections of a wire/contour with any edge, you can use the `edge_intersections` method.
@@ -118,16 +119,19 @@ Example:
     :align: center
 
     import design3d
-    from design3d.models.contours import contour2_unittest
-    from design3d.models.edges import bspline1
+    from design3d import edges, wires
     from design3d.core import EdgeStyle
 
-    # Here we are going to use a model contour2d and also a model bsplinecurve2d.
+    # A rectangular contour and a bspline curve crossing it.
+    contour2d = wires.Contour2D.from_points(
+        [design3d.Point2D(0, 0), design3d.Point2D(2, 0), design3d.Point2D(2, 1), design3d.Point2D(0, 1)]
+    )
+    bspline1 = edges.BSplineCurve2D.from_points_interpolation(
+        [design3d.Point2D(-0.5, 0.5), design3d.Point2D(0.5, -0.5), design3d.Point2D(1.5, 1.5), design3d.Point2D(2.5, 0.5)],
+        3,
+    )
 
-    contour2d = contour2_unittest.copy()
-    contour2d = contour2d.translation(design3d.Vector2D(1, 0.0))
-
-    #search for intersections betweeen a contour2d and an edge.
+    #search for intersections between a contour2d and an edge.
     edge_intersections = contour2d.edge_intersections(bspline1)
 
     #plot
@@ -184,7 +188,7 @@ Intersections between two surfaces
         intersection.plot(ax, EdgeStyle('r'))
 
 
-Intersections betweeen surfaces and faces
+Intersections between surfaces and faces
 *****************************************
 
 The intersections between a Face3D and a Surface3D are also possible, and you can do it by also calling the `surface_intersection` method.

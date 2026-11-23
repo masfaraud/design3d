@@ -1,6 +1,7 @@
 """
 Showcase of BoundingBox / Triangle3D intersection
 """
+
 from design3d.core import BoundingBox
 from design3d.faces import Triangle3D
 import design3d

@@ -8,57 +8,81 @@ from pylint.lint import Run
 
 MIN_NOTE = 9.6
 
-UNWATCHED_ERRORS = ['fixme', 'trailing-whitespace', 'import-error', 'missing-final-newline', 'use-maxsplit-arg']
+UNWATCHED_ERRORS = ["fixme", "trailing-whitespace", "import-error", "missing-final-newline", "use-maxsplit-arg"]
 
 EFFECTIVE_DATE = date(2023, 1, 31)
 
 WEEKLY_DECREASE = 0.03
 
 MAX_ERROR_BY_TYPE = {
-                     'invalid-name': 1,
-                     'arguments-differ': 16,
-                     'too-many-locals': 75,
-                     'unused-argument': 6,
-                     'too-many-arguments': 31,
-                     'line-too-long': 12,
-                     'too-many-branches': 22,
-                     'too-many-statements': 11,
-                     'no-name-in-module': 13,
-                     'abstract-method': 47,
-                     'duplicate-code': 8,
-                     'arguments-renamed': 8,
-                     'too-many-ancestors': 2,
-                     'too-many-public-methods': 18,
-                     'too-many-instance-attributes': 12,
-                     'protected-access': 4,
-                     'too-many-nested-blocks': 3,
-                     'too-many-return-statements': 4,
-                     'cyclic-import': 1,
-                     "broad-exception-caught": 1,
-                     'too-many-boolean-expressions': 2,
-                     'too-many-lines': 3,
-                     'signature-differs': 1,
-                     'consider-using-enumerate': 2,
-                     'too-few-public-methods': 2,
-                    }
+    "invalid-name": 1,
+    "arguments-differ": 16,
+    "too-many-locals": 75,
+    "unused-argument": 6,
+    "too-many-arguments": 31,
+    "line-too-long": 12,
+    "too-many-branches": 22,
+    "too-many-statements": 11,
+    "no-name-in-module": 13,
+    "abstract-method": 47,
+    "duplicate-code": 8,
+    "arguments-renamed": 8,
+    "too-many-ancestors": 2,
+    "too-many-public-methods": 18,
+    "too-many-instance-attributes": 12,
+    "protected-access": 4,
+    "too-many-nested-blocks": 3,
+    "too-many-return-statements": 4,
+    "cyclic-import": 1,
+    "broad-exception-caught": 1,
+    "too-many-boolean-expressions": 2,
+    "too-many-lines": 3,
+    "signature-differs": 1,
+    "consider-using-enumerate": 2,
+    "too-few-public-methods": 2,
+}
 
-ERRORS_WITHOUT_TIME_DECREASE = ["signature-differs", "broad-exception-caught", 'invalid-name', "too-many-locals",
-                                "too-many-branches", "too-many-arguments", "too-many-statements",
-                                "too-many-nested-blocks", "too-many-instance-attributes", "abstract-method",
-                                "no-name-in-module", "too-many-public-methods", "too-many-ancestors",
-                                "protected-access", "cyclic-import", "line-too-long", "too-many-lines", "no-member",
-                                "too-few-public-methods", "duplicate-code", "too-many-return-statements",
-                                "import-outside-toplevel", "arguments-differ", "arguments-renamed",
-                                "too-many-boolean-expressions", "super-init-not-called", "unused-argument", 
-                                'consider-using-enumerate', 'unbalanced-tuple-unpacking', 'undefined-variable',
-                                'wrong-spelling-in-comment', 'invalid-name']
+ERRORS_WITHOUT_TIME_DECREASE = [
+    "signature-differs",
+    "broad-exception-caught",
+    "invalid-name",
+    "too-many-locals",
+    "too-many-branches",
+    "too-many-arguments",
+    "too-many-statements",
+    "too-many-nested-blocks",
+    "too-many-instance-attributes",
+    "abstract-method",
+    "no-name-in-module",
+    "too-many-public-methods",
+    "too-many-ancestors",
+    "protected-access",
+    "cyclic-import",
+    "line-too-long",
+    "too-many-lines",
+    "no-member",
+    "too-few-public-methods",
+    "duplicate-code",
+    "too-many-return-statements",
+    "import-outside-toplevel",
+    "arguments-differ",
+    "arguments-renamed",
+    "too-many-boolean-expressions",
+    "super-init-not-called",
+    "unused-argument",
+    "consider-using-enumerate",
+    "unbalanced-tuple-unpacking",
+    "undefined-variable",
+    "wrong-spelling-in-comment",
+    "invalid-name",
+]
 
 limit_time_effect = False
-if os.environ.get('DRONE_BRANCH', '') in ['master', 'testing']:
+if os.environ.get("DRONE_BRANCH", "") in ["master", "testing"]:
     limit_time_effect = True
     print(f"Limiting time effect of 21 days as we are on {os.environ['DRONE_BRANCH']}")
 
-if os.environ.get('DRONE_TARGET_BRANCH', '') in ['master', 'testing']:
+if os.environ.get("DRONE_TARGET_BRANCH", "") in ["master", "testing"]:
     limit_time_effect = True
     print(f"Limiting time effect of 21 days as we are targeting {os.environ['DRONE_TARGET_BRANCH']}")
 
@@ -100,7 +124,7 @@ if PYLINT_OBJECT_STATS:
 else:
     stats_by_msg = results.linter.stats["by_msg"]
 
-print(f'Errors / Allowed errors: {sum(stats_by_msg.values())} / {sum(MAX_ERROR_BY_TYPE.values())})')
+print(f"Errors / Allowed errors: {sum(stats_by_msg.values())} / {sum(MAX_ERROR_BY_TYPE.values())})")
 
 for error_type, number_errors in stats_by_msg.items():
     if error_type not in UNWATCHED_ERRORS:
@@ -118,7 +142,8 @@ for error_type, number_errors in stats_by_msg.items():
             error_detected = True
             print(
                 f"\nFix some {error_type} errors: {number_errors}/{max_errors} "
-                f"(time effect: {time_decrease_effect} errors)")
+                f"(time effect: {time_decrease_effect} errors)"
+            )
 
             # messages = extract_messages_by_type(error_type)
             messages_to_show = extract_messages_by_type(error_type)
@@ -126,8 +151,10 @@ for error_type, number_errors in stats_by_msg.items():
             for message in messages_to_show:
                 print(f"{message.path} line {message.line}: {message.msg}")
         elif number_errors < max_errors:
-            print(f"\nYou can lower number of {error_type} to {number_errors+time_decrease_effect}"
-                  f" (actual {base_errors})")
+            print(
+                f"\nYou can lower number of {error_type} to {number_errors+time_decrease_effect}"
+                f" (actual {base_errors})"
+            )
 
 for error_type in MAX_ERROR_BY_TYPE:
     if error_type not in stats_by_msg:

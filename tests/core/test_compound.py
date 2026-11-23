@@ -18,5 +18,5 @@ class TestCompound(unittest.TestCase):
         self.assertEqual(model.primitives[0].compound_type, "geometric_curve_set")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

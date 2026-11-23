@@ -5,32 +5,59 @@ import numpy as np
 import design3d
 from design3d import surfaces, wires, edges, curves
 
-
-folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'objects_spherical_tests')
+folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_spherical_tests")
 
 
 class TestSphericalSurface3D(unittest.TestCase):
     surface3d = surfaces.SphericalSurface3D(design3d.OXYZ, 1)
 
     def test_parametric_points_to_3d(self):
-        parametric_points = np.array([[0.0, 0.0], [0.0, 0.5 * math.pi], [0.0, math.pi], [0.0, 1.5 * math.pi],
-                                      [0.5 * math.pi, 0.0], [0.5 * math.pi, 0.5 * math.pi],
-                                      [0.5 * math.pi, math.pi], [0.5 * math.pi, 1.5 * math.pi],
-                                      [math.pi, 0.0], [math.pi, 0.5 * math.pi],
-                                      [math.pi, math.pi], [math.pi, 1.5 * math.pi],
-                                      [1.5 * math.pi, 0.0], [1.5 * math.pi, 0.5 * math.pi],
-                                      [1.5 * math.pi, math.pi], [1.5 * math.pi, 1.5 * math.pi]])
+        parametric_points = np.array(
+            [
+                [0.0, 0.0],
+                [0.0, 0.5 * math.pi],
+                [0.0, math.pi],
+                [0.0, 1.5 * math.pi],
+                [0.5 * math.pi, 0.0],
+                [0.5 * math.pi, 0.5 * math.pi],
+                [0.5 * math.pi, math.pi],
+                [0.5 * math.pi, 1.5 * math.pi],
+                [math.pi, 0.0],
+                [math.pi, 0.5 * math.pi],
+                [math.pi, math.pi],
+                [math.pi, 1.5 * math.pi],
+                [1.5 * math.pi, 0.0],
+                [1.5 * math.pi, 0.5 * math.pi],
+                [1.5 * math.pi, math.pi],
+                [1.5 * math.pi, 1.5 * math.pi],
+            ]
+        )
         points3d = self.surface3d.parametric_points_to_3d(parametric_points)
-        expected_points = np.array([[1.0, 0.0, 0.0], [0.0, 0.0, 1.0], [-1.0, 0.0, 0.0], [0.0, 0.0, -1.0],
-                                    [0.0, 1.0, 0.0], [0.0, 0.0, 1.0], [0.0, -1.0, 0.0], [0.0, 0.0, -1.0],
-                                    [-1.0, 0.0, 0.0], [0.0, 0.0, 1.0], [1.0, 0.0, 0.0], [0.0, 0.0, -1.0],
-                                    [0.0, -1.0, 0.0], [0.0, 0.0, 1.0], [0.0, 1.0, 0.0], [0.0, 0.0, -1.0]])
+        expected_points = np.array(
+            [
+                [1.0, 0.0, 0.0],
+                [0.0, 0.0, 1.0],
+                [-1.0, 0.0, 0.0],
+                [0.0, 0.0, -1.0],
+                [0.0, 1.0, 0.0],
+                [0.0, 0.0, 1.0],
+                [0.0, -1.0, 0.0],
+                [0.0, 0.0, -1.0],
+                [-1.0, 0.0, 0.0],
+                [0.0, 0.0, 1.0],
+                [1.0, 0.0, 0.0],
+                [0.0, 0.0, -1.0],
+                [0.0, -1.0, 0.0],
+                [0.0, 0.0, 1.0],
+                [0.0, 1.0, 0.0],
+                [0.0, 0.0, -1.0],
+            ]
+        )
         for point, expected_point in zip(points3d, expected_points):
             self.assertAlmostEqual(np.linalg.norm(point - expected_point), 0.0)
 
     def test_arc3d_to_2d(self):
-        arc_with_two_singularities = edges.Arc3D.from_json(
-            os.path.join(folder, "arc_with_two_singularities.json"))
+        arc_with_two_singularities = edges.Arc3D.from_json(os.path.join(folder, "arc_with_two_singularities.json"))
         test_arc = self.surface3d.arc3d_to_2d(arc_with_two_singularities)
         self.assertEqual(len(test_arc), 5)
         self.assertTrue(test_arc[0].start.is_close(design3d.Point2D(0, 0)))
@@ -48,37 +75,35 @@ class TestSphericalSurface3D(unittest.TestCase):
         self.assertEqual(contour.primitives[0], primitives_mapping.get(contour2d.primitives[0]))
         self.assertEqual(contour.primitives[-1], primitives_mapping.get(contour2d.primitives[-1]))
 
-        surface = surfaces.SphericalSurface3D.from_json(
-            os.path.join(folder, "spherical_surface_arc3d_to_2d.json"))
-        contour = wires.Contour3D.from_json(
-            os.path.join(folder, "spherical_surface_arc3d_to_2d_contour3d.json"))
+        surface = surfaces.SphericalSurface3D.from_json(os.path.join(folder, "spherical_surface_arc3d_to_2d.json"))
+        contour = wires.Contour3D.from_json(os.path.join(folder, "spherical_surface_arc3d_to_2d_contour3d.json"))
         contour2d = surface.contour3d_to_2d(contour)
         self.assertEqual(len(contour2d.primitives), 4)
         self.assertTrue(contour2d.is_ordered(1e-2))
         self.assertAlmostEqual(contour2d.area(), 1.7779412219307336, 2)
 
-        surface = surfaces.SphericalSurface3D.from_json(
-            os.path.join(folder, "buggy_contour3d_to_2d_surface.json"))
-        contour = wires.Contour3D.from_json(
-            os.path.join(folder, "buggy_contour3d_to_2d_contour.json"))
+        surface = surfaces.SphericalSurface3D.from_json(os.path.join(folder, "buggy_contour3d_to_2d_surface.json"))
+        contour = wires.Contour3D.from_json(os.path.join(folder, "buggy_contour3d_to_2d_contour.json"))
         contour2d = surface.contour3d_to_2d(contour)
 
         self.assertTrue(contour2d.is_ordered(1e-2))
         self.assertAlmostEqual(contour2d.area(), 0.028684788284169843, 2)
 
         surface = surfaces.SphericalSurface3D.from_json(
-            os.path.join(folder, "contour3d_to_2d_surface_bspline_with_singularity.json"))
+            os.path.join(folder, "contour3d_to_2d_surface_bspline_with_singularity.json")
+        )
         contour = wires.Contour3D.from_json(
-            os.path.join(folder, "contour3d_to_2d_contour_bspline_with_singularity.json"))
+            os.path.join(folder, "contour3d_to_2d_contour_bspline_with_singularity.json")
+        )
         contour2d = surface.contour3d_to_2d(contour)
         self.assertEqual(len(contour2d.primitives), 4)
         self.assertTrue(contour2d.is_ordered(1e-2))
         self.assertAlmostEqual(contour2d.area(), 1.1836145679685492, 2)
 
         surface = surfaces.SphericalSurface3D.from_json(
-            os.path.join(folder, "repair_primitives2d_periodicity_surface.json"))
-        contour = wires.Contour3D.from_json(
-            os.path.join(folder, "repair_primitives2d_periodicity_contour.json"))
+            os.path.join(folder, "repair_primitives2d_periodicity_surface.json")
+        )
+        contour = wires.Contour3D.from_json(os.path.join(folder, "repair_primitives2d_periodicity_contour.json"))
         contour2d = surface.contour3d_to_2d(contour)
         self.assertEqual(len(contour2d.primitives), 4)
         self.assertTrue(contour2d.is_ordered(1e-2))
@@ -106,7 +131,8 @@ class TestSphericalSurface3D(unittest.TestCase):
         self.assertEqual(phi_max, 0)
 
         contour_any_direction_upper = wires.Contour3D.from_json(
-            os.path.join(folder, "contour_any_direction_upper_side.json"))
+            os.path.join(folder, "contour_any_direction_upper_side.json")
+        )
         test = self.surface3d.contour3d_to_2d(contour_any_direction_upper)
         theta_min, theta_max, phi_min, phi_max = test.bounding_rectangle.bounds()
         self.assertAlmostEqual(theta_min, 0, 6)
@@ -114,50 +140,60 @@ class TestSphericalSurface3D(unittest.TestCase):
         self.assertAlmostEqual(phi_max, 0.5 * math.pi, 3)
 
         surface = surfaces.SphericalSurface3D.from_json(
-            os.path.join(folder, "test_sphericalsurface_repair_periodicity_surface.json"))
+            os.path.join(folder, "test_sphericalsurface_repair_periodicity_surface.json")
+        )
         contour = wires.Contour3D.from_json(
-            os.path.join(folder, "test_sphericalsurface_repair_periodicity_contour.json"))
+            os.path.join(folder, "test_sphericalsurface_repair_periodicity_contour.json")
+        )
         contour2d = surface.contour3d_to_2d(contour)
         self.assertEqual(len(contour2d.primitives), 6)
         self.assertTrue(contour2d.is_ordered())
         self.assertAlmostEqual(contour2d.area(), 6.129921072323977, 2)
 
         surface = surfaces.SphericalSurface3D.from_json(
-            os.path.join(folder, "test_2_sphericalsurface_repair_periodicity_surface.json"))
+            os.path.join(folder, "test_2_sphericalsurface_repair_periodicity_surface.json")
+        )
         contour = wires.Contour3D.from_json(
-            os.path.join(folder, "test_2_sphericalsurface_repair_periodicity_contour.json"))
+            os.path.join(folder, "test_2_sphericalsurface_repair_periodicity_contour.json")
+        )
         contour2d = surface.contour3d_to_2d(contour)
         self.assertEqual(len(contour2d.primitives), 8)
         self.assertTrue(contour2d.is_ordered())
         self.assertAlmostEqual(contour2d.area(), 2.1665348983853794, 2)
 
         surface = surfaces.SphericalSurface3D.from_json(
-            os.path.join(folder, "sphericalsurface_contour3d_to_2d_positive_singularity.json"))
+            os.path.join(folder, "sphericalsurface_contour3d_to_2d_positive_singularity.json")
+        )
         contour = wires.Contour3D.from_json(
-            os.path.join(folder, "sphericalsurface_contour3d_to_2d_positive_singularity_contour.json"))
+            os.path.join(folder, "sphericalsurface_contour3d_to_2d_positive_singularity_contour.json")
+        )
         contour2d = surface.contour3d_to_2d(contour)
         self.assertEqual(len(contour2d.primitives), 4)
         self.assertTrue(contour2d.is_ordered(0.0001))
         self.assertAlmostEqual(contour2d.area(), 0.10067063484647809, 2)
 
     def test_plane_intersections(self):
-        frame = design3d.Frame3D.from_point_and_vector(design3d.Point3D(0, 0.5, 0.5),
-                                                      design3d.Vector3D(0, 1 / math.sqrt(2), 1 / math.sqrt(2)),
-                                                      design3d.Z3D)
+        frame = design3d.Frame3D.from_point_and_vector(
+            design3d.Point3D(0, 0.5, 0.5), design3d.Vector3D(0, 1 / math.sqrt(2), 1 / math.sqrt(2)), design3d.Z3D
+        )
         plane = surfaces.Plane3D(frame)
         fullarc = self.surface3d.plane_intersections(plane)[0]
-        self.assertAlmostEqual(fullarc.circle.radius, 1/math.sqrt(2))
+        self.assertAlmostEqual(fullarc.circle.radius, 1 / math.sqrt(2))
         self.assertTrue(fullarc.circle.normal.is_colinear_to(frame.w))
 
     def test_line_intersections(self):
         spherical_surface3d = surfaces.SphericalSurface3D(design3d.OXYZ, 1)
-        line = curves.Line3D(design3d.Point3D(-.01, -.01, -.01), design3d.Point3D(0.8, 0.8, 0.8))
+        line = curves.Line3D(design3d.Point3D(-0.01, -0.01, -0.01), design3d.Point3D(0.8, 0.8, 0.8))
         line_intersections = spherical_surface3d.line_intersections(line)
         self.assertEqual(len(line_intersections), 2)
-        self.assertTrue(line_intersections[0].is_close(
-            design3d.Point3D(0.5773502691896257, 0.5773502691896257, 0.5773502691896257)))
-        self.assertTrue(line_intersections[1].is_close(
-            design3d.Point3D(-0.5773502691896257, -0.5773502691896257, -0.5773502691896257)))
+        self.assertTrue(
+            line_intersections[0].is_close(design3d.Point3D(0.5773502691896257, 0.5773502691896257, 0.5773502691896257))
+        )
+        self.assertTrue(
+            line_intersections[1].is_close(
+                design3d.Point3D(-0.5773502691896257, -0.5773502691896257, -0.5773502691896257)
+            )
+        )
 
         line2 = curves.Line3D(design3d.Point3D(0, 1, -0.5), design3d.Point3D(0, 1, 0.5))
         line_intersections2 = spherical_surface3d.line_intersections(line2)
@@ -169,36 +205,45 @@ class TestSphericalSurface3D(unittest.TestCase):
 
     def test_linesegment_intersections(self):
         spherical_surface3d = surfaces.SphericalSurface3D(design3d.OXYZ, 1)
-        linesegment = edges.LineSegment3D(design3d.Point3D(-.01, -.01, -.01), design3d.Point3D(0.5, -0.4, 0.8))
+        linesegment = edges.LineSegment3D(design3d.Point3D(-0.01, -0.01, -0.01), design3d.Point3D(0.5, -0.4, 0.8))
         linesegment_intersections = spherical_surface3d.linesegment_intersections(linesegment)
         self.assertEqual(len(linesegment_intersections), 1)
-        self.assertTrue(linesegment_intersections[0].is_close(
-            design3d.Point3D(0.4878134615813934, -0.3906808823857714, 0.7806449095704483)))
+        self.assertTrue(
+            linesegment_intersections[0].is_close(
+                design3d.Point3D(0.4878134615813934, -0.3906808823857714, 0.7806449095704483)
+            )
+        )
 
         linesegment2 = edges.LineSegment3D(design3d.Point3D(-0.8, -0.8, -0.8), design3d.Point3D(0.8, 0.8, 0.8))
         linesegment2_intersections = spherical_surface3d.linesegment_intersections(linesegment2)
         self.assertEqual(len(linesegment2_intersections), 2)
-        self.assertTrue(linesegment2_intersections[0].is_close(
-            design3d.Point3D(0.5773502691896257, 0.5773502691896257, 0.5773502691896257)))
-        self.assertTrue(linesegment2_intersections[1].is_close(
-            design3d.Point3D(-0.5773502691896257, -0.5773502691896257, -0.5773502691896257)))
+        self.assertTrue(
+            linesegment2_intersections[0].is_close(
+                design3d.Point3D(0.5773502691896257, 0.5773502691896257, 0.5773502691896257)
+            )
+        )
+        self.assertTrue(
+            linesegment2_intersections[1].is_close(
+                design3d.Point3D(-0.5773502691896257, -0.5773502691896257, -0.5773502691896257)
+            )
+        )
 
-        linesegment3 = edges.LineSegment3D(design3d.Point3D(-.01, -.01, -.01), design3d.Point3D(0.3, -0.4, 0.5))
+        linesegment3 = edges.LineSegment3D(design3d.Point3D(-0.01, -0.01, -0.01), design3d.Point3D(0.3, -0.4, 0.5))
         self.assertFalse(spherical_surface3d.linesegment_intersections(linesegment3))
 
-        linesegment4 = edges.LineSegment3D(design3d.Point3D(-.01, -1.5, -.01), design3d.Point3D(0.3, -1.3, 0.5))
+        linesegment4 = edges.LineSegment3D(design3d.Point3D(-0.01, -1.5, -0.01), design3d.Point3D(0.3, -1.3, 0.5))
         self.assertFalse(spherical_surface3d.linesegment_intersections(linesegment4))
 
     def test_circle_intersections(self):
         spherical_surface3d = surfaces.SphericalSurface3D(design3d.OXYZ, 1)
 
         # test1
-        circle = curves.Circle3D(design3d.OXYZ.translation(design3d.Vector3D(.5, .5, 2)), .5)
+        circle = curves.Circle3D(design3d.OXYZ.translation(design3d.Vector3D(0.5, 0.5, 2)), 0.5)
         circle_intersections = spherical_surface3d.circle_intersections(circle)
         self.assertFalse(circle_intersections)
 
         # test2
-        circle = curves.Circle3D(design3d.OXYZ.translation(design3d.Vector3D(.5, .5, .5)), .5)
+        circle = curves.Circle3D(design3d.OXYZ.translation(design3d.Vector3D(0.5, 0.5, 0.5)), 0.5)
         circle_intersections = spherical_surface3d.circle_intersections(circle)
         self.assertEqual(len(circle_intersections), 2)
         self.assertTrue(circle_intersections[0], design3d.Point3D(0.853553390593, 0.146446609407, 0.5))
@@ -212,7 +257,7 @@ class TestSphericalSurface3D(unittest.TestCase):
         vector2 = vector1.deterministic_unit_normal_vector()
         vector3 = vector1.cross(vector2)
         frame = design3d.Frame3D(design3d.O3D, vector1, vector2, vector3)
-        circle = curves.Circle3D(frame.translation(design3d.Vector3D(.5, .5, .5)), .5)
+        circle = curves.Circle3D(frame.translation(design3d.Vector3D(0.5, 0.5, 0.5)), 0.5)
 
         point1 = circle.point_at_abscissa(0.2)
         point2 = circle.point_at_abscissa(1.5)
@@ -235,7 +280,7 @@ class TestSphericalSurface3D(unittest.TestCase):
         vector2 = vector1.deterministic_unit_normal_vector()
         vector3 = vector1.cross(vector2)
         frame = design3d.Frame3D(design3d.O3D, vector1, vector2, vector3)
-        ellipse = curves.Ellipse3D(1, .5, frame.translation(design3d.Vector3D(.5, .5, .5)))
+        ellipse = curves.Ellipse3D(1, 0.5, frame.translation(design3d.Vector3D(0.5, 0.5, 0.5)))
 
         point1 = ellipse.point_at_abscissa(0.2)
         # test 2
@@ -243,23 +288,25 @@ class TestSphericalSurface3D(unittest.TestCase):
         arcellipse = edges.ArcEllipse3D(ellipse, point1, point2)
         arcellipse_intersections = spherical_surface3d.arcellipse_intersections(arcellipse)
         self.assertEqual(len(arcellipse_intersections), 1)
-        self.assertTrue(arcellipse_intersections[0].is_close(
-            design3d.Point3D(0.908248233153, 0.295875797457, 0.295875797457)))
+        self.assertTrue(
+            arcellipse_intersections[0].is_close(design3d.Point3D(0.908248233153, 0.295875797457, 0.295875797457))
+        )
 
         # test 3
         point2 = ellipse.point_at_abscissa(4.5)
         arcellipse = edges.ArcEllipse3D(ellipse, point1, point2)
         arcellipse_intersections = spherical_surface3d.arcellipse_intersections(arcellipse)
         self.assertEqual(len(arcellipse_intersections), 2)
-        self.assertTrue(arcellipse_intersections[0].is_close(
-            design3d.Point3D(0.908248233153, 0.295875797457, 0.295875797457)))
-        self.assertTrue(arcellipse_intersections[1].is_close(
-            design3d.Point3D(0.091751652225, 0.704124087921, 0.704124087921)))
+        self.assertTrue(
+            arcellipse_intersections[0].is_close(design3d.Point3D(0.908248233153, 0.295875797457, 0.295875797457))
+        )
+        self.assertTrue(
+            arcellipse_intersections[1].is_close(design3d.Point3D(0.091751652225, 0.704124087921, 0.704124087921))
+        )
 
     def test_sphericalsurface_intersections(self):
-        #test1
-        spherical_surface1 = surfaces.SphericalSurface3D(
-            design3d.OXYZ.translation(design3d.Vector3D(0.5, 0.5, 0)), 2)
+        # test1
+        spherical_surface1 = surfaces.SphericalSurface3D(design3d.OXYZ.translation(design3d.Vector3D(0.5, 0.5, 0)), 2)
 
         spherical_surface2 = spherical_surface1.translation(design3d.Vector3D(1, 1, 1))
 
@@ -267,9 +314,8 @@ class TestSphericalSurface3D(unittest.TestCase):
         self.assertEqual(len(inters), 1)
         self.assertAlmostEqual(inters[0].length(), 11.327173398039175)
 
-        #test2
-        spherical_surface2 = surfaces.SphericalSurface3D(
-            design3d.OXYZ.translation(design3d.Vector3D(0.5, 0.5, 0)), 1)
+        # test2
+        spherical_surface2 = surfaces.SphericalSurface3D(design3d.OXYZ.translation(design3d.Vector3D(0.5, 0.5, 0)), 1)
         spherical_surface2 = spherical_surface2.translation(design3d.Vector3D(1, 1, 1))
         inters = spherical_surface1.surface_intersections(spherical_surface2)
         self.assertEqual(len(inters), 1)
@@ -282,5 +328,5 @@ class TestSphericalSurface3D(unittest.TestCase):
         self.assertTrue(normal.is_close(design3d.Vector3D(0.9082483187228496, 0.2958758253326914, 0.30974418137711035)))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

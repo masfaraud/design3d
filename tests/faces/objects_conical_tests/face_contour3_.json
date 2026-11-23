@@ -6,67 +6,69 @@
   "alpha": 1,
   "primitives": [
     {
-  "object_class": "design3d.edges.Arc3D",
-  "name": "",
-  "start": {
-    "object_class": "design3d.Point3D",
-    "x": 0.00700901099103195,
-    "y": 0.00252512671515575,
-    "z": 0.02325
-  },
-  "end": {
-    "object_class": "design3d.Point3D",
-    "x": 0.00700901099103195,
-    "y": -0.00252512671515575,
-    "z": 0.02325
-  },
-  "circle": {
-    "object_class": "design3d.curves.Circle3D",
-    "name": "",
-    "radius": 0.007449999999999921,
-    "frame": {
-      "object_class": "design3d.Frame3D",
+      "object_class": "design3d.edges.Arc3D",
       "name": "",
-      "origin": {
+      "start": {
         "object_class": "design3d.Point3D",
-        "x": 7.892991815694472e-17,
-        "y": 2.168404344971009e-18,
+        "x": 0.00700901099103195,
+        "y": 0.00252512671515575,
         "z": 0.02325
       },
-      "u": {
+      "end": {
         "object_class": "design3d.Point3D",
-        "x": 0.17203655943749543,
-        "y": -0.9850905654897468,
-        "z": 0.0
+        "x": 0.00700901099103195,
+        "y": -0.00252512671515575,
+        "z": 0.02325
       },
-      "v": {
-        "object_class": "design3d.Point3D",
-        "x": -0.9850905654897468,
-        "y": -0.17203655943749543,
-        "z": -0.0
+      "circle": {
+        "object_class": "design3d.curves.Circle3D",
+        "name": "",
+        "radius": 0.007449999999999921,
+        "frame": {
+          "object_class": "design3d.Frame3D",
+          "name": "",
+          "origin": {
+            "object_class": "design3d.Point3D",
+            "x": 7.892991815694472e-17,
+            "y": 2.168404344971009e-18,
+            "z": 0.02325
+          },
+          "u": {
+            "object_class": "design3d.Point3D",
+            "x": 0.17203655943749543,
+            "y": -0.9850905654897468,
+            "z": 0.0
+          },
+          "v": {
+            "object_class": "design3d.Point3D",
+            "x": -0.9850905654897468,
+            "y": -0.17203655943749543,
+            "z": -0.0
+          },
+          "w": {
+            "object_class": "design3d.Point3D",
+            "x": 0.0,
+            "y": 0.0,
+            "z": -1.0
+          }
+        }
       },
-      "w": {
-        "object_class": "design3d.Point3D",
-        "x": 0.0,
-        "y": 0.0,
-        "z": -1.0
-      }
-    }
-  },
-  "is_trigo": true,
-  "angle_start": 4.539492299913965,
-  "angle_end": 5.231079021796865,
-  "_references": {}
-},
+      "is_trigo": true,
+      "angle_start": 4.539492299913965,
+      "angle_end": 5.231079021796865,
+      "_references": {}
+    },
     {
       "name": "",
       "object_class": "design3d.edges.BSplineCurve3D",
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/0/end"
+        "object_class": "design3d.Point3D",
+        "x": 0.00700901099103195,
+        "y": -0.00252512671515575,
+        "z": 0.02325
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -77,7 +79,10 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/0/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00700901099103195,
+          "y": -0.00252512671515575,
+          "z": 0.02325
         },
         {
           "object_class": "design3d.Point3D",
@@ -94,7 +99,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/1/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00704585747030378,
+          "y": -0.00254651582244934,
+          "z": 0.0215522804371318,
+          "name": ""
         }
       ],
       "knots": [
@@ -107,7 +116,10 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/0/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00700901099103195,
+          "y": -0.00252512671515575,
+          "z": 0.02325
         },
         {
           "object_class": "design3d.Point3D",
@@ -334,7 +346,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/1/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": 0.00702129422520927,
+          "y": -0.00253225725801332,
+          "z": 0.0226840935129518,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -561,7 +577,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/1/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": 0.00703357637858057,
+          "y": -0.00253938695550937,
+          "z": 0.0221181869917932,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -788,7 +808,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/1/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00704585747030378,
+          "y": -0.00254651582244934,
+          "z": 0.0215522804371318,
+          "name": ""
         }
       ]
     },
@@ -798,7 +822,6 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
         "object_class": "design3d.Point3D",
         "x": 0.00704420645450533,
@@ -815,7 +838,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/2/start"
+          "object_class": "design3d.Point3D",
+          "x": 0.00704420645450533,
+          "y": -0.00255107776177524,
+          "z": 0.0215523020753013,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -832,7 +859,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/2/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00720123256802272,
+          "y": -0.00265744477194558,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ],
       "knots": [
@@ -845,7 +876,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/2/start"
+          "object_class": "design3d.Point3D",
+          "x": 0.00704420645450533,
+          "y": -0.00255107776177524,
+          "z": 0.0215523020753013,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -1072,7 +1107,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/2/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": 0.0070965881245909,
+          "y": -0.00258656203164585,
+          "z": 0.0190682691126636,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -1299,7 +1338,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/2/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": 0.00714892914407472,
+          "y": -0.00262201697488478,
+          "z": 0.016584234874073,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -1526,7 +1569,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/2/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00720123256802272,
+          "y": -0.00265744477194558,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ]
     },
@@ -1536,9 +1583,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/2/end"
+        "object_class": "design3d.Point3D",
+        "x": 0.00720123256802272,
+        "y": -0.00265744477194558,
+        "z": 0.0141001994566002,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -1549,7 +1599,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/2/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00720123256802272,
+          "y": -0.00265744477194558,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -1573,7 +1627,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/3/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00667528983175837,
+          "y": -0.00385398038128446,
+          "z": 0.0128025891159583,
+          "name": ""
         }
       ],
       "knots": [
@@ -1588,7 +1646,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/2/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00720123256802272,
+          "y": -0.00265744477194558,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -2277,7 +2339,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/3/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00667528983175837,
+          "y": -0.00385398038128446,
+          "z": 0.0128025891159583,
+          "name": ""
         }
       ]
     },
@@ -2287,9 +2353,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/3/end"
+        "object_class": "design3d.Point3D",
+        "x": 0.00667528983175837,
+        "y": -0.00385398038128446,
+        "z": 0.0128025891159583,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -2300,7 +2369,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/3/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00667528983175837,
+          "y": -0.00385398038128446,
+          "z": 0.0128025891159583,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -2324,7 +2397,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/4/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00590203096567038,
+          "y": -0.00490772795649473,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ],
       "knots": [
@@ -2339,7 +2416,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/3/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00667528983175837,
+          "y": -0.00385398038128446,
+          "z": 0.0128025891159583,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -3028,7 +3109,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/4/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00590203096567038,
+          "y": -0.00490772795649473,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ]
     },
@@ -3038,9 +3123,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/4/end"
+        "object_class": "design3d.Point3D",
+        "x": 0.00590203096567038,
+        "y": -0.00490772795649473,
+        "z": 0.0141001994566002,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -3051,7 +3139,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/4/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00590203096567038,
+          "y": -0.00490772795649473,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -3068,7 +3160,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/5/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00573139686974019,
+          "y": -0.00482492067150416,
+          "z": 0.0215524987272309,
+          "name": ""
         }
       ],
       "knots": [
@@ -3081,7 +3177,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/4/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00590203096567038,
+          "y": -0.00490772795649473,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -3308,7 +3408,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/5/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": 0.00584519638168481,
+          "y": -0.00488014503332027,
+          "z": 0.0165843004247825,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -3535,7 +3639,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/5/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": 0.00578831948842027,
+          "y": -0.00485254312354455,
+          "z": 0.0190684002140158,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -3762,7 +3870,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/5/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00573139686974019,
+          "y": -0.00482492067150416,
+          "z": 0.0215524987272309,
+          "name": ""
         }
       ]
     },
@@ -3772,7 +3884,6 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
         "object_class": "design3d.Point3D",
         "x": 0.00572827203875342,
@@ -3789,7 +3900,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/6/start"
+          "object_class": "design3d.Point3D",
+          "x": 0.00572827203875342,
+          "y": -0.00482863130101303,
+          "z": 0.0215524683834759,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -3806,7 +3921,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/6/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00569132937861561,
+          "y": -0.00480741821606014,
+          "z": 0.02325,
+          "name": ""
         }
       ],
       "knots": [
@@ -3819,7 +3938,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/6/start"
+          "object_class": "design3d.Point3D",
+          "x": 0.00572827203875342,
+          "y": -0.00482863130101303,
+          "z": 0.0215524683834759,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -4046,7 +4169,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/6/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": 0.00571595907600436,
+          "y": -0.0048215607797828,
+          "z": 0.0221183122893485,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -4273,7 +4400,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/6/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": 0.00570364486342291,
+          "y": -0.00481448975452701,
+          "z": 0.0226841561617257,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -4500,72 +4631,78 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/6/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00569132937861561,
+          "y": -0.00480741821606014,
+          "z": 0.02325,
+          "name": ""
         }
       ]
     },
     {
-  "object_class": "design3d.edges.Arc3D",
-  "name": "",
-  "start": {
-    "object_class": "design3d.Point3D",
-    "x": 0.00569132937861561,
-    "y": -0.00480741821606014,
-    "z": 0.02325
-  },
-  "end": {
-    "object_class": "design3d.Point3D",
-    "x": 0.00131768161241634,
-    "y": -0.00733254493121589,
-    "z": 0.02325
-  },
-  "circle": {
-    "object_class": "design3d.curves.Circle3D",
-    "name": "",
-    "radius": 0.00745000000267122,
-    "frame": {
-      "object_class": "design3d.Frame3D",
+      "object_class": "design3d.edges.Arc3D",
       "name": "",
-      "origin": {
+      "start": {
         "object_class": "design3d.Point3D",
-        "x": -1.4196395795029737e-12,
-        "y": 2.458897668811133e-12,
+        "x": 0.00569132937861561,
+        "y": -0.00480741821606014,
         "z": 0.02325
       },
-      "u": {
+      "end": {
         "object_class": "design3d.Point3D",
-        "x": -0.7670951750610099,
-        "y": -0.6415333135528649,
-        "z": 0.0
+        "x": 0.00131768161241634,
+        "y": -0.00733254493121589,
+        "z": 0.02325
       },
-      "v": {
-        "object_class": "design3d.Point3D",
-        "x": -0.6415333135528649,
-        "y": 0.7670951750610099,
-        "z": -0.0
+      "circle": {
+        "object_class": "design3d.curves.Circle3D",
+        "name": "",
+        "radius": 0.00745000000267122,
+        "frame": {
+          "object_class": "design3d.Frame3D",
+          "name": "",
+          "origin": {
+            "object_class": "design3d.Point3D",
+            "x": -1.4196395795029737e-12,
+            "y": 2.458897668811133e-12,
+            "z": 0.02325
+          },
+          "u": {
+            "object_class": "design3d.Point3D",
+            "x": -0.7670951750610099,
+            "y": -0.6415333135528649,
+            "z": 0.0
+          },
+          "v": {
+            "object_class": "design3d.Point3D",
+            "x": -0.6415333135528649,
+            "y": 0.7670951750610099,
+            "z": -0.0
+          },
+          "w": {
+            "object_class": "design3d.Point3D",
+            "x": 0.0,
+            "y": -0.0,
+            "z": -1.0
+          }
+        }
       },
-      "w": {
-        "object_class": "design3d.Point3D",
-        "x": 0.0,
-        "y": -0.0,
-        "z": -1.0
-      }
-    }
-  },
-  "is_trigo": true,
-  "angle_start": 4.539492299985066,
-  "angle_end": 5.231079021609609,
-  "_references": {}
-},
+      "is_trigo": true,
+      "angle_start": 4.539492299985066,
+      "angle_end": 5.231079021609609,
+      "_references": {}
+    },
     {
       "name": "",
       "object_class": "design3d.edges.BSplineCurve3D",
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/7/end"
+        "object_class": "design3d.Point3D",
+        "x": 0.00131768161241634,
+        "y": -0.00733254493121589,
+        "z": 0.02325
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -4576,7 +4713,10 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/7/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00131768161241634,
+          "y": -0.00733254493121589,
+          "z": 0.02325
         },
         {
           "object_class": "design3d.Point3D",
@@ -4593,7 +4733,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/8/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00131758134177174,
+          "y": -0.0073751494719521,
+          "z": 0.0215522804371318,
+          "name": ""
         }
       ],
       "knots": [
@@ -4606,7 +4750,10 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/7/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00131768161241634,
+          "y": -0.00733254493121589,
+          "z": 0.02325
         },
         {
           "object_class": "design3d.Point3D",
@@ -4833,7 +4980,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/8/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": 0.00131764799824757,
+          "y": -0.00734674779548287,
+          "z": 0.0226840935129518,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -5060,7 +5211,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/8/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": 0.00131761457578034,
+          "y": -0.0073609493010636,
+          "z": 0.0221181869917932,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -5287,7 +5442,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/8/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00131758134177174,
+          "y": -0.0073751494719521,
+          "z": 0.0215522804371318,
+          "name": ""
         }
       ]
     },
@@ -5297,7 +5456,6 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
         "object_class": "design3d.Point3D",
         "x": 0.00131280507852576,
@@ -5314,7 +5472,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/9/start"
+          "object_class": "design3d.Point3D",
+          "x": 0.00131280507852576,
+          "y": -0.00737600061999155,
+          "z": 0.0215523020753013,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -5331,7 +5493,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/9/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00129920160235234,
+          "y": -0.00756517272844032,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ],
       "knots": [
@@ -5344,7 +5510,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/9/start"
+          "object_class": "design3d.Point3D",
+          "x": 0.00131280507852576,
+          "y": -0.00737600061999155,
+          "z": 0.0215523020753013,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -5571,7 +5741,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/9/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": 0.00130826563442585,
+          "y": -0.00743910661191361,
+          "z": 0.0190682691126636,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -5798,7 +5972,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/9/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": 0.00130373126263312,
+          "y": -0.00750216273606605,
+          "z": 0.016584234874073,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -6025,7 +6203,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/9/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00129920160235234,
+          "y": -0.00756517272844032,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ]
     },
@@ -6035,9 +6217,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/9/end"
+        "object_class": "design3d.Point3D",
+        "x": 0.00129920160235234,
+        "y": -0.00756517272844032,
+        "z": 0.0141001994566002,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -6048,7 +6233,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/9/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00129920160235234,
+          "y": -0.00756517272844032,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -6072,7 +6261,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/10/end"
+          "object_class": "design3d.Point3D",
+          "x": 1.6104946115322e-18,
+          "y": -0.00770796076256893,
+          "z": 0.0128025891159583,
+          "name": ""
         }
       ],
       "knots": [
@@ -6087,7 +6280,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/9/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00129920160235234,
+          "y": -0.00756517272844032,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -6776,7 +6973,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/10/end"
+          "object_class": "design3d.Point3D",
+          "x": 1.6104946115322e-18,
+          "y": -0.00770796076256893,
+          "z": 0.0128025891159583,
+          "name": ""
         }
       ]
     },
@@ -6786,9 +6987,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/10/end"
+        "object_class": "design3d.Point3D",
+        "x": 1.6104946115322e-18,
+        "y": -0.00770796076256893,
+        "z": 0.0128025891159583,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -6799,7 +7003,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/10/end"
+          "object_class": "design3d.Point3D",
+          "x": 1.6104946115322e-18,
+          "y": -0.00770796076256893,
+          "z": 0.0128025891159583,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -6823,7 +7031,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/11/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00129920160235234,
+          "y": -0.00756517272844032,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ],
       "knots": [
@@ -6838,7 +7050,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/10/end"
+          "object_class": "design3d.Point3D",
+          "x": 1.6104946115322e-18,
+          "y": -0.00770796076256893,
+          "z": 0.0128025891159583,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -7527,7 +7743,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/11/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00129920160235234,
+          "y": -0.00756517272844032,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ]
     },
@@ -7537,9 +7757,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/11/end"
+        "object_class": "design3d.Point3D",
+        "x": -0.00129920160235234,
+        "y": -0.00756517272844032,
+        "z": 0.0141001994566002,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -7550,7 +7773,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/11/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00129920160235234,
+          "y": -0.00756517272844032,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -7567,7 +7794,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/12/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00131280543789718,
+          "y": -0.00737599562411769,
+          "z": 0.0215524987272309,
+          "name": ""
         }
       ],
       "knots": [
@@ -7580,7 +7811,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/11/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00129920160235234,
+          "y": -0.00756517272844032,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -7807,7 +8042,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/12/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": -0.00130373138216541,
+          "y": -0.00750216107330807,
+          "z": 0.0165843004247825,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -8034,7 +8273,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/12/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": -0.00130826587373893,
+          "y": -0.00743910328396477,
+          "z": 0.0190684002140158,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -8261,7 +8504,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/12/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00131280543789718,
+          "y": -0.00737599562411769,
+          "z": 0.0215524987272309,
+          "name": ""
         }
       ]
     },
@@ -8271,7 +8518,6 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
         "object_class": "design3d.Point3D",
         "x": -0.00131758135280927,
@@ -8288,7 +8534,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/13/start"
+          "object_class": "design3d.Point3D",
+          "x": -0.00131758135280927,
+          "y": -0.00737514475585505,
+          "z": 0.0215524683834759,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -8305,7 +8555,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/13/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00131768161241634,
+          "y": -0.00733254493121589,
+          "z": 0.02325,
+          "name": ""
         }
       ],
       "knots": [
@@ -8318,7 +8572,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/13/start"
+          "object_class": "design3d.Point3D",
+          "x": -0.00131758135280927,
+          "y": -0.00737514475585505,
+          "z": 0.0215524683834759,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -8545,7 +8803,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/13/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": -0.00131761458318042,
+          "y": -0.00736094615670339,
+          "z": 0.0221183122893485,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -8772,7 +9034,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/13/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": -0.00131764800196883,
+          "y": -0.00734674622315237,
+          "z": 0.0226841561617257,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -8999,72 +9265,78 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/13/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00131768161241634,
+          "y": -0.00733254493121589,
+          "z": 0.02325,
+          "name": ""
         }
       ]
     },
     {
-  "object_class": "design3d.edges.Arc3D",
-  "name": "",
-  "start": {
-    "object_class": "design3d.Point3D",
-    "x": -0.00131768161241634,
-    "y": -0.00733254493121589,
-    "z": 0.02325
-  },
-  "end": {
-    "object_class": "design3d.Point3D",
-    "x": -0.00569132937861561,
-    "y": -0.00480741821606014,
-    "z": 0.02325
-  },
-  "circle": {
-    "object_class": "design3d.curves.Circle3D",
-    "name": "",
-    "radius": 0.007450000002671219,
-    "frame": {
-      "object_class": "design3d.Frame3D",
+      "object_class": "design3d.edges.Arc3D",
       "name": "",
-      "origin": {
+      "start": {
         "object_class": "design3d.Point3D",
-        "x": 1.4196404468647117e-12,
-        "y": 2.458896801449395e-12,
+        "x": -0.00131768161241634,
+        "y": -0.00733254493121589,
         "z": 0.02325
       },
-      "u": {
+      "end": {
         "object_class": "design3d.Point3D",
-        "x": -0.9391317344368195,
-        "y": 0.3435572519591039,
-        "z": 0.0
+        "x": -0.00569132937861561,
+        "y": -0.00480741821606014,
+        "z": 0.02325
       },
-      "v": {
-        "object_class": "design3d.Point3D",
-        "x": 0.3435572519591039,
-        "y": 0.9391317344368195,
-        "z": -0.0
+      "circle": {
+        "object_class": "design3d.curves.Circle3D",
+        "name": "",
+        "radius": 0.007450000002671219,
+        "frame": {
+          "object_class": "design3d.Frame3D",
+          "name": "",
+          "origin": {
+            "object_class": "design3d.Point3D",
+            "x": 1.4196404468647117e-12,
+            "y": 2.458896801449395e-12,
+            "z": 0.02325
+          },
+          "u": {
+            "object_class": "design3d.Point3D",
+            "x": -0.9391317344368195,
+            "y": 0.3435572519591039,
+            "z": 0.0
+          },
+          "v": {
+            "object_class": "design3d.Point3D",
+            "x": 0.3435572519591039,
+            "y": 0.9391317344368195,
+            "z": -0.0
+          },
+          "w": {
+            "object_class": "design3d.Point3D",
+            "x": -0.0,
+            "y": -0.0,
+            "z": -1.0
+          }
+        }
       },
-      "w": {
-        "object_class": "design3d.Point3D",
-        "x": -0.0,
-        "y": -0.0,
-        "z": -1.0
-      }
-    }
-  },
-  "is_trigo": true,
-  "angle_start": 4.539492299972041,
-  "angle_end": 5.231079021596584,
-  "_references": {}
-},
+      "is_trigo": true,
+      "angle_start": 4.539492299972041,
+      "angle_end": 5.231079021596584,
+      "_references": {}
+    },
     {
       "name": "",
       "object_class": "design3d.edges.BSplineCurve3D",
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/14/end"
+        "object_class": "design3d.Point3D",
+        "x": -0.00569132937861561,
+        "y": -0.00480741821606014,
+        "z": 0.02325
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -9075,7 +9347,10 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/14/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00569132937861561,
+          "y": -0.00480741821606014,
+          "z": 0.02325
         },
         {
           "object_class": "design3d.Point3D",
@@ -9092,7 +9367,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/15/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00572827612853204,
+          "y": -0.00482863364950276,
+          "z": 0.0215522804371318,
+          "name": ""
         }
       ],
       "knots": [
@@ -9105,7 +9384,10 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/14/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00569132937861561,
+          "y": -0.00480741821606014,
+          "z": 0.02325
         },
         {
           "object_class": "design3d.Point3D",
@@ -9332,7 +9614,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/15/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": -0.0057036462269617,
+          "y": -0.00481449053746955,
+          "z": 0.0226840935129518,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -9559,7 +9845,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/15/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": -0.00571596180280022,
+          "y": -0.00482156234555423,
+          "z": 0.0221181869917932,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -9786,7 +10076,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/15/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00572827612853204,
+          "y": -0.00482863364950276,
+          "z": 0.0215522804371318,
+          "name": ""
         }
       ]
     },
@@ -9796,7 +10090,6 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
         "object_class": "design3d.Point3D",
         "x": -0.00573140137597958,
@@ -9813,7 +10106,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/16/start"
+          "object_class": "design3d.Point3D",
+          "x": -0.00573140137597958,
+          "y": -0.00482492285821631,
+          "z": 0.0215523020753013,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -9830,7 +10127,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/16/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00590203096567038,
+          "y": -0.00490772795649473,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ],
       "knots": [
@@ -9843,7 +10144,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/16/start"
+          "object_class": "design3d.Point3D",
+          "x": -0.00573140137597958,
+          "y": -0.00482492285821631,
+          "z": 0.0215523020753013,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -10070,7 +10375,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/16/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": -0.00578832249016506,
+          "y": -0.00485254458026777,
+          "z": 0.0190682691126636,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -10297,7 +10606,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/16/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": -0.00584519788144161,
+          "y": -0.00488014576118126,
+          "z": 0.016584234874073,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -10524,7 +10837,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/16/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00590203096567038,
+          "y": -0.00490772795649473,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ]
     },
@@ -10534,9 +10851,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/16/end"
+        "object_class": "design3d.Point3D",
+        "x": -0.00590203096567038,
+        "y": -0.00490772795649473,
+        "z": 0.0141001994566002,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -10547,7 +10867,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/16/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00590203096567038,
+          "y": -0.00490772795649473,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -10571,7 +10895,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/17/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00667528983175837,
+          "y": -0.00385398038128446,
+          "z": 0.0128025891159583,
+          "name": ""
         }
       ],
       "knots": [
@@ -10586,7 +10914,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/16/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00590203096567038,
+          "y": -0.00490772795649473,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -11275,7 +11607,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/17/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00667528983175837,
+          "y": -0.00385398038128446,
+          "z": 0.0128025891159583,
+          "name": ""
         }
       ]
     },
@@ -11285,9 +11621,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/17/end"
+        "object_class": "design3d.Point3D",
+        "x": -0.00667528983175837,
+        "y": -0.00385398038128446,
+        "z": 0.0128025891159583,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -11298,7 +11637,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/17/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00667528983175837,
+          "y": -0.00385398038128446,
+          "z": 0.0128025891159583,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -11322,7 +11665,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/18/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00720123256802272,
+          "y": -0.00265744477194558,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ],
       "knots": [
@@ -11337,7 +11684,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/17/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00667528983175837,
+          "y": -0.00385398038128446,
+          "z": 0.0128025891159583,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -12026,7 +12377,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/18/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00720123256802272,
+          "y": -0.00265744477194558,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ]
     },
@@ -12036,9 +12391,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/18/end"
+        "object_class": "design3d.Point3D",
+        "x": -0.00720123256802272,
+        "y": -0.00265744477194558,
+        "z": 0.0141001994566002,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -12049,7 +12407,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/18/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00720123256802272,
+          "y": -0.00265744477194558,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -12066,7 +12428,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/19/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00704420230763737,
+          "y": -0.00255107495261353,
+          "z": 0.0215524987272309,
+          "name": ""
         }
       ],
       "knots": [
@@ -12079,7 +12445,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/18/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00720123256802272,
+          "y": -0.00265744477194558,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -12306,7 +12676,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/19/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": -0.00714892776385022,
+          "y": -0.00262201603998779,
+          "z": 0.0165843004247825,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -12533,7 +12907,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/19/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": -0.00709658536215921,
+          "y": -0.00258656016042022,
+          "z": 0.0190684002140158,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -12760,7 +13138,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/19/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00704420230763737,
+          "y": -0.00255107495261353,
+          "z": 0.0215524987272309,
+          "name": ""
         }
       ]
     },
@@ -12770,7 +13152,6 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
         "object_class": "design3d.Point3D",
         "x": -0.0070458533915627,
@@ -12787,7 +13168,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/20/start"
+          "object_class": "design3d.Point3D",
+          "x": -0.0070458533915627,
+          "y": -0.00254651345484202,
+          "z": 0.0215524683834759,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -12804,7 +13189,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/20/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00700901099103195,
+          "y": -0.00252512671515575,
+          "z": 0.02325,
+          "name": ""
         }
       ],
       "knots": [
@@ -12817,7 +13206,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/20/start"
+          "object_class": "design3d.Point3D",
+          "x": -0.0070458533915627,
+          "y": -0.00254651345484202,
+          "z": 0.0215524683834759,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -13044,7 +13437,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/20/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": -0.00703357365918479,
+          "y": -0.0025393853769206,
+          "z": 0.0221183122893485,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -13271,7 +13668,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/20/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": -0.00702129286539175,
+          "y": -0.00253225646862536,
+          "z": 0.0226841561617257,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -13498,72 +13899,78 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/20/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00700901099103195,
+          "y": -0.00252512671515575,
+          "z": 0.02325,
+          "name": ""
         }
       ]
     },
     {
-  "object_class": "design3d.edges.Arc3D",
-  "name": "",
-  "start": {
-    "object_class": "design3d.Point3D",
-    "x": -0.00700901099103195,
-    "y": -0.00252512671515575,
-    "z": 0.02325
-  },
-  "end": {
-    "object_class": "design3d.Point3D",
-    "x": -0.00700901099103195,
-    "y": 0.00252512671515575,
-    "z": 0.02325
-  },
-  "circle": {
-    "object_class": "design3d.curves.Circle3D",
-    "name": "",
-    "radius": 0.007449999999999921,
-    "frame": {
-      "object_class": "design3d.Frame3D",
+      "object_class": "design3d.edges.Arc3D",
       "name": "",
-      "origin": {
+      "start": {
         "object_class": "design3d.Point3D",
-        "x": -7.892991815694472e-17,
-        "y": -2.168404344971009e-18,
+        "x": -0.00700901099103195,
+        "y": -0.00252512671515575,
         "z": 0.02325
       },
-      "u": {
+      "end": {
         "object_class": "design3d.Point3D",
-        "x": -0.17203655943749543,
-        "y": 0.9850905654897468,
-        "z": 0.0
+        "x": -0.00700901099103195,
+        "y": 0.00252512671515575,
+        "z": 0.02325
       },
-      "v": {
-        "object_class": "design3d.Point3D",
-        "x": 0.9850905654897468,
-        "y": 0.17203655943749543,
-        "z": 0.0
+      "circle": {
+        "object_class": "design3d.curves.Circle3D",
+        "name": "",
+        "radius": 0.007449999999999921,
+        "frame": {
+          "object_class": "design3d.Frame3D",
+          "name": "",
+          "origin": {
+            "object_class": "design3d.Point3D",
+            "x": -7.892991815694472e-17,
+            "y": -2.168404344971009e-18,
+            "z": 0.02325
+          },
+          "u": {
+            "object_class": "design3d.Point3D",
+            "x": -0.17203655943749543,
+            "y": 0.9850905654897468,
+            "z": 0.0
+          },
+          "v": {
+            "object_class": "design3d.Point3D",
+            "x": 0.9850905654897468,
+            "y": 0.17203655943749543,
+            "z": 0.0
+          },
+          "w": {
+            "object_class": "design3d.Point3D",
+            "x": -0.0,
+            "y": 0.0,
+            "z": -1.0
+          }
+        }
       },
-      "w": {
-        "object_class": "design3d.Point3D",
-        "x": -0.0,
-        "y": 0.0,
-        "z": -1.0
-      }
-    }
-  },
-  "is_trigo": true,
-  "angle_start": 4.539492299913965,
-  "angle_end": 5.231079021796865,
-  "_references": {}
-},
+      "is_trigo": true,
+      "angle_start": 4.539492299913965,
+      "angle_end": 5.231079021796865,
+      "_references": {}
+    },
     {
       "name": "",
       "object_class": "design3d.edges.BSplineCurve3D",
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/21/end"
+        "object_class": "design3d.Point3D",
+        "x": -0.00700901099103195,
+        "y": 0.00252512671515575,
+        "z": 0.02325
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -13574,7 +13981,10 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/21/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00700901099103195,
+          "y": 0.00252512671515575,
+          "z": 0.02325
         },
         {
           "object_class": "design3d.Point3D",
@@ -13591,7 +14001,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/22/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00704585747030378,
+          "y": 0.00254651582244934,
+          "z": 0.0215522804371318,
+          "name": ""
         }
       ],
       "knots": [
@@ -13604,7 +14018,10 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/21/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00700901099103195,
+          "y": 0.00252512671515575,
+          "z": 0.02325
         },
         {
           "object_class": "design3d.Point3D",
@@ -13831,7 +14248,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/22/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": -0.00702129422520927,
+          "y": 0.00253225725801332,
+          "z": 0.0226840935129518,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -14058,7 +14479,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/22/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": -0.00703357637858057,
+          "y": 0.00253938695550937,
+          "z": 0.0221181869917932,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -14285,7 +14710,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/22/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00704585747030378,
+          "y": 0.00254651582244934,
+          "z": 0.0215522804371318,
+          "name": ""
         }
       ]
     },
@@ -14295,7 +14724,6 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
         "object_class": "design3d.Point3D",
         "x": -0.00704420645450533,
@@ -14312,7 +14740,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/23/start"
+          "object_class": "design3d.Point3D",
+          "x": -0.00704420645450533,
+          "y": 0.00255107776177524,
+          "z": 0.0215523020753013,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -14329,7 +14761,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/23/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00720123256802272,
+          "y": 0.00265744477194558,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ],
       "knots": [
@@ -14342,7 +14778,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/23/start"
+          "object_class": "design3d.Point3D",
+          "x": -0.00704420645450533,
+          "y": 0.00255107776177524,
+          "z": 0.0215523020753013,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -14569,7 +15009,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/23/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": -0.0070965881245909,
+          "y": 0.00258656203164585,
+          "z": 0.0190682691126636,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -14796,7 +15240,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/23/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": -0.00714892914407472,
+          "y": 0.00262201697488478,
+          "z": 0.016584234874073,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -15023,7 +15471,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/23/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00720123256802272,
+          "y": 0.00265744477194558,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ]
     },
@@ -15033,9 +15485,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/23/end"
+        "object_class": "design3d.Point3D",
+        "x": -0.00720123256802272,
+        "y": 0.00265744477194558,
+        "z": 0.0141001994566002,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -15046,7 +15501,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/23/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00720123256802272,
+          "y": 0.00265744477194558,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -15070,7 +15529,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/24/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00667528983175837,
+          "y": 0.00385398038128446,
+          "z": 0.0128025891159583,
+          "name": ""
         }
       ],
       "knots": [
@@ -15085,7 +15548,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/23/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00720123256802272,
+          "y": 0.00265744477194558,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -15774,7 +16241,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/24/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00667528983175837,
+          "y": 0.00385398038128446,
+          "z": 0.0128025891159583,
+          "name": ""
         }
       ]
     },
@@ -15784,9 +16255,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/24/end"
+        "object_class": "design3d.Point3D",
+        "x": -0.00667528983175837,
+        "y": 0.00385398038128446,
+        "z": 0.0128025891159583,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -15797,7 +16271,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/24/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00667528983175837,
+          "y": 0.00385398038128446,
+          "z": 0.0128025891159583,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -15821,7 +16299,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/25/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00590203096567038,
+          "y": 0.00490772795649473,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ],
       "knots": [
@@ -15836,7 +16318,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/24/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00667528983175837,
+          "y": 0.00385398038128446,
+          "z": 0.0128025891159583,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -16525,7 +17011,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/25/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00590203096567038,
+          "y": 0.00490772795649473,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ]
     },
@@ -16535,9 +17025,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/25/end"
+        "object_class": "design3d.Point3D",
+        "x": -0.00590203096567038,
+        "y": 0.00490772795649473,
+        "z": 0.0141001994566002,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -16548,7 +17041,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/25/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00590203096567038,
+          "y": 0.00490772795649473,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -16565,7 +17062,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/26/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00573139686974019,
+          "y": 0.00482492067150416,
+          "z": 0.0215524987272309,
+          "name": ""
         }
       ],
       "knots": [
@@ -16578,7 +17079,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/25/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00590203096567038,
+          "y": 0.00490772795649473,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -16805,7 +17310,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/26/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": -0.00584519638168481,
+          "y": 0.00488014503332027,
+          "z": 0.0165843004247825,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -17032,7 +17541,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/26/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": -0.00578831948842027,
+          "y": 0.00485254312354455,
+          "z": 0.0190684002140158,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -17259,7 +17772,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/26/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00573139686974019,
+          "y": 0.00482492067150416,
+          "z": 0.0215524987272309,
+          "name": ""
         }
       ]
     },
@@ -17269,7 +17786,6 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
         "object_class": "design3d.Point3D",
         "x": -0.00572827203875342,
@@ -17286,7 +17802,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/27/start"
+          "object_class": "design3d.Point3D",
+          "x": -0.00572827203875342,
+          "y": 0.00482863130101302,
+          "z": 0.0215524683834759,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -17303,7 +17823,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/27/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00569132937861561,
+          "y": 0.00480741821606014,
+          "z": 0.02325,
+          "name": ""
         }
       ],
       "knots": [
@@ -17316,7 +17840,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/27/start"
+          "object_class": "design3d.Point3D",
+          "x": -0.00572827203875342,
+          "y": 0.00482863130101302,
+          "z": 0.0215524683834759,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -17543,7 +18071,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/27/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": -0.00571595907600436,
+          "y": 0.00482156077978279,
+          "z": 0.0221183122893485,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -17770,7 +18302,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/27/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": -0.00570364486342291,
+          "y": 0.00481448975452701,
+          "z": 0.0226841561617257,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -17997,72 +18533,78 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/27/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00569132937861561,
+          "y": 0.00480741821606014,
+          "z": 0.02325,
+          "name": ""
         }
       ]
     },
     {
-  "object_class": "design3d.edges.Arc3D",
-  "name": "",
-  "start": {
-    "object_class": "design3d.Point3D",
-    "x": -0.00569132937861561,
-    "y": 0.00480741821606014,
-    "z": 0.02325
-  },
-  "end": {
-    "object_class": "design3d.Point3D",
-    "x": -0.00131768161241634,
-    "y": 0.00733254493121589,
-    "z": 0.02325
-  },
-  "circle": {
-    "object_class": "design3d.curves.Circle3D",
-    "name": "",
-    "radius": 0.00745000000267122,
-    "frame": {
-      "object_class": "design3d.Frame3D",
+      "object_class": "design3d.edges.Arc3D",
       "name": "",
-      "origin": {
+      "start": {
         "object_class": "design3d.Point3D",
-        "x": 1.4196395795029737e-12,
-        "y": -2.458897668811133e-12,
+        "x": -0.00569132937861561,
+        "y": 0.00480741821606014,
         "z": 0.02325
       },
-      "u": {
+      "end": {
         "object_class": "design3d.Point3D",
-        "x": 0.7670951750610099,
-        "y": 0.6415333135528649,
-        "z": 0.0
+        "x": -0.00131768161241634,
+        "y": 0.00733254493121589,
+        "z": 0.02325
       },
-      "v": {
-        "object_class": "design3d.Point3D",
-        "x": 0.6415333135528649,
-        "y": -0.7670951750610099,
-        "z": -0.0
+      "circle": {
+        "object_class": "design3d.curves.Circle3D",
+        "name": "",
+        "radius": 0.00745000000267122,
+        "frame": {
+          "object_class": "design3d.Frame3D",
+          "name": "",
+          "origin": {
+            "object_class": "design3d.Point3D",
+            "x": 1.4196395795029737e-12,
+            "y": -2.458897668811133e-12,
+            "z": 0.02325
+          },
+          "u": {
+            "object_class": "design3d.Point3D",
+            "x": 0.7670951750610099,
+            "y": 0.6415333135528649,
+            "z": 0.0
+          },
+          "v": {
+            "object_class": "design3d.Point3D",
+            "x": 0.6415333135528649,
+            "y": -0.7670951750610099,
+            "z": -0.0
+          },
+          "w": {
+            "object_class": "design3d.Point3D",
+            "x": -0.0,
+            "y": 0.0,
+            "z": -1.0
+          }
+        }
       },
-      "w": {
-        "object_class": "design3d.Point3D",
-        "x": -0.0,
-        "y": 0.0,
-        "z": -1.0
-      }
-    }
-  },
-  "is_trigo": true,
-  "angle_start": 4.539492299985066,
-  "angle_end": 5.231079021609609,
-  "_references": {}
-},
+      "is_trigo": true,
+      "angle_start": 4.539492299985066,
+      "angle_end": 5.231079021609609,
+      "_references": {}
+    },
     {
       "name": "",
       "object_class": "design3d.edges.BSplineCurve3D",
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/28/end"
+        "object_class": "design3d.Point3D",
+        "x": -0.00131768161241634,
+        "y": 0.00733254493121589,
+        "z": 0.02325
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -18073,7 +18615,10 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/28/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00131768161241634,
+          "y": 0.00733254493121589,
+          "z": 0.02325
         },
         {
           "object_class": "design3d.Point3D",
@@ -18090,7 +18635,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/29/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00131758134177174,
+          "y": 0.0073751494719521,
+          "z": 0.0215522804371318,
+          "name": ""
         }
       ],
       "knots": [
@@ -18103,7 +18652,10 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/28/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00131768161241634,
+          "y": 0.00733254493121589,
+          "z": 0.02325
         },
         {
           "object_class": "design3d.Point3D",
@@ -18330,7 +18882,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/29/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": -0.00131764799824757,
+          "y": 0.00734674779548287,
+          "z": 0.0226840935129518,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -18557,7 +19113,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/29/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": -0.00131761457578034,
+          "y": 0.0073609493010636,
+          "z": 0.0221181869917932,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -18784,7 +19344,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/29/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00131758134177174,
+          "y": 0.0073751494719521,
+          "z": 0.0215522804371318,
+          "name": ""
         }
       ]
     },
@@ -18794,7 +19358,6 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
         "object_class": "design3d.Point3D",
         "x": -0.00131280507852576,
@@ -18811,7 +19374,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/30/start"
+          "object_class": "design3d.Point3D",
+          "x": -0.00131280507852576,
+          "y": 0.00737600061999155,
+          "z": 0.0215523020753013,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -18828,7 +19395,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/30/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00129920160235234,
+          "y": 0.00756517272844032,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ],
       "knots": [
@@ -18841,7 +19412,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/30/start"
+          "object_class": "design3d.Point3D",
+          "x": -0.00131280507852576,
+          "y": 0.00737600061999155,
+          "z": 0.0215523020753013,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -19068,7 +19643,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/30/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": -0.00130826563442585,
+          "y": 0.00743910661191361,
+          "z": 0.0190682691126636,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -19295,7 +19874,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/30/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": -0.00130373126263312,
+          "y": 0.00750216273606605,
+          "z": 0.016584234874073,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -19522,7 +20105,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/30/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00129920160235234,
+          "y": 0.00756517272844032,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ]
     },
@@ -19532,9 +20119,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/30/end"
+        "object_class": "design3d.Point3D",
+        "x": -0.00129920160235234,
+        "y": 0.00756517272844032,
+        "z": 0.0141001994566002,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -19545,7 +20135,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/30/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00129920160235234,
+          "y": 0.00756517272844032,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -19569,7 +20163,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/31/end"
+          "object_class": "design3d.Point3D",
+          "x": -8.52400123739603e-19,
+          "y": 0.00770796076256893,
+          "z": 0.0128025891159583,
+          "name": ""
         }
       ],
       "knots": [
@@ -19584,7 +20182,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/30/end"
+          "object_class": "design3d.Point3D",
+          "x": -0.00129920160235234,
+          "y": 0.00756517272844032,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -20273,7 +20875,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/31/end"
+          "object_class": "design3d.Point3D",
+          "x": -8.52400123739603e-19,
+          "y": 0.00770796076256893,
+          "z": 0.0128025891159583,
+          "name": ""
         }
       ]
     },
@@ -20283,9 +20889,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/31/end"
+        "object_class": "design3d.Point3D",
+        "x": -8.52400123739603e-19,
+        "y": 0.00770796076256893,
+        "z": 0.0128025891159583,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -20296,7 +20905,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/31/end"
+          "object_class": "design3d.Point3D",
+          "x": -8.52400123739603e-19,
+          "y": 0.00770796076256893,
+          "z": 0.0128025891159583,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -20320,7 +20933,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/32/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00129920160235234,
+          "y": 0.00756517272844032,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ],
       "knots": [
@@ -20335,7 +20952,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/31/end"
+          "object_class": "design3d.Point3D",
+          "x": -8.52400123739603e-19,
+          "y": 0.00770796076256893,
+          "z": 0.0128025891159583,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -21024,7 +21645,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/32/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00129920160235234,
+          "y": 0.00756517272844032,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ]
     },
@@ -21034,9 +21659,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/32/end"
+        "object_class": "design3d.Point3D",
+        "x": 0.00129920160235234,
+        "y": 0.00756517272844032,
+        "z": 0.0141001994566002,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -21047,7 +21675,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/32/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00129920160235234,
+          "y": 0.00756517272844032,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -21064,7 +21696,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/33/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00131280543789718,
+          "y": 0.00737599562411769,
+          "z": 0.0215524987272309,
+          "name": ""
         }
       ],
       "knots": [
@@ -21077,7 +21713,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/32/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00129920160235234,
+          "y": 0.00756517272844032,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -21304,7 +21944,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/33/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": 0.00130373138216541,
+          "y": 0.00750216107330807,
+          "z": 0.0165843004247825,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -21531,7 +22175,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/33/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": 0.00130826587373893,
+          "y": 0.00743910328396477,
+          "z": 0.0190684002140158,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -21758,7 +22406,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/33/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00131280543789718,
+          "y": 0.00737599562411769,
+          "z": 0.0215524987272309,
+          "name": ""
         }
       ]
     },
@@ -21768,7 +22420,6 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
         "object_class": "design3d.Point3D",
         "x": 0.00131758135280927,
@@ -21785,7 +22436,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/34/start"
+          "object_class": "design3d.Point3D",
+          "x": 0.00131758135280927,
+          "y": 0.00737514475585505,
+          "z": 0.0215524683834759,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -21802,7 +22457,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/34/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00131768161241634,
+          "y": 0.00733254493121589,
+          "z": 0.02325,
+          "name": ""
         }
       ],
       "knots": [
@@ -21815,7 +22474,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/34/start"
+          "object_class": "design3d.Point3D",
+          "x": 0.00131758135280927,
+          "y": 0.00737514475585505,
+          "z": 0.0215524683834759,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -22042,7 +22705,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/34/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": 0.00131761458318042,
+          "y": 0.00736094615670339,
+          "z": 0.0221183122893485,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -22269,7 +22936,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/34/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": 0.00131764800196884,
+          "y": 0.00734674622315237,
+          "z": 0.0226841561617257,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -22496,72 +23167,78 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/34/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00131768161241634,
+          "y": 0.00733254493121589,
+          "z": 0.02325,
+          "name": ""
         }
       ]
     },
     {
-  "object_class": "design3d.edges.Arc3D",
-  "name": "",
-  "start": {
-    "object_class": "design3d.Point3D",
-    "x": 0.00131768161241634,
-    "y": 0.00733254493121589,
-    "z": 0.02325
-  },
-  "end": {
-    "object_class": "design3d.Point3D",
-    "x": 0.00569132937861561,
-    "y": 0.00480741821606014,
-    "z": 0.02325
-  },
-  "circle": {
-    "object_class": "design3d.curves.Circle3D",
-    "name": "",
-    "radius": 0.007450000002671219,
-    "frame": {
-      "object_class": "design3d.Frame3D",
+      "object_class": "design3d.edges.Arc3D",
       "name": "",
-      "origin": {
+      "start": {
         "object_class": "design3d.Point3D",
-        "x": -1.4196404468647117e-12,
-        "y": -2.458896801449395e-12,
+        "x": 0.00131768161241634,
+        "y": 0.00733254493121589,
         "z": 0.02325
       },
-      "u": {
+      "end": {
         "object_class": "design3d.Point3D",
-        "x": 0.9391317344368195,
-        "y": -0.3435572519591039,
-        "z": 0.0
+        "x": 0.00569132937861561,
+        "y": 0.00480741821606014,
+        "z": 0.02325
       },
-      "v": {
-        "object_class": "design3d.Point3D",
-        "x": -0.3435572519591039,
-        "y": -0.9391317344368195,
-        "z": -0.0
+      "circle": {
+        "object_class": "design3d.curves.Circle3D",
+        "name": "",
+        "radius": 0.007450000002671219,
+        "frame": {
+          "object_class": "design3d.Frame3D",
+          "name": "",
+          "origin": {
+            "object_class": "design3d.Point3D",
+            "x": -1.4196404468647117e-12,
+            "y": -2.458896801449395e-12,
+            "z": 0.02325
+          },
+          "u": {
+            "object_class": "design3d.Point3D",
+            "x": 0.9391317344368195,
+            "y": -0.3435572519591039,
+            "z": 0.0
+          },
+          "v": {
+            "object_class": "design3d.Point3D",
+            "x": -0.3435572519591039,
+            "y": -0.9391317344368195,
+            "z": -0.0
+          },
+          "w": {
+            "object_class": "design3d.Point3D",
+            "x": 0.0,
+            "y": 0.0,
+            "z": -1.0
+          }
+        }
       },
-      "w": {
-        "object_class": "design3d.Point3D",
-        "x": 0.0,
-        "y": 0.0,
-        "z": -1.0
-      }
-    }
-  },
-  "is_trigo": true,
-  "angle_start": 4.539492299972041,
-  "angle_end": 5.231079021596584,
-  "_references": {}
-},
+      "is_trigo": true,
+      "angle_start": 4.539492299972041,
+      "angle_end": 5.231079021596584,
+      "_references": {}
+    },
     {
       "name": "",
       "object_class": "design3d.edges.BSplineCurve3D",
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/35/end"
+        "object_class": "design3d.Point3D",
+        "x": 0.00569132937861561,
+        "y": 0.00480741821606014,
+        "z": 0.02325
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -22572,7 +23249,10 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/35/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00569132937861561,
+          "y": 0.00480741821606014,
+          "z": 0.02325
         },
         {
           "object_class": "design3d.Point3D",
@@ -22589,7 +23269,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/36/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00572827612853204,
+          "y": 0.00482863364950276,
+          "z": 0.0215522804371318,
+          "name": ""
         }
       ],
       "knots": [
@@ -22602,7 +23286,10 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/35/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00569132937861561,
+          "y": 0.00480741821606014,
+          "z": 0.02325
         },
         {
           "object_class": "design3d.Point3D",
@@ -22829,7 +23516,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/36/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": 0.0057036462269617,
+          "y": 0.00481449053746955,
+          "z": 0.0226840935129518,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -23056,7 +23747,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/36/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": 0.00571596180280022,
+          "y": 0.00482156234555423,
+          "z": 0.0221181869917932,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -23283,7 +23978,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/36/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00572827612853204,
+          "y": 0.00482863364950276,
+          "z": 0.0215522804371318,
+          "name": ""
         }
       ]
     },
@@ -23293,7 +23992,6 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
         "object_class": "design3d.Point3D",
         "x": 0.00573140137597958,
@@ -23310,7 +24008,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/37/start"
+          "object_class": "design3d.Point3D",
+          "x": 0.00573140137597958,
+          "y": 0.00482492285821631,
+          "z": 0.0215523020753013,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -23327,7 +24029,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/37/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00590203096567038,
+          "y": 0.00490772795649473,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ],
       "knots": [
@@ -23340,7 +24046,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/37/start"
+          "object_class": "design3d.Point3D",
+          "x": 0.00573140137597958,
+          "y": 0.00482492285821631,
+          "z": 0.0215523020753013,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -23567,7 +24277,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/37/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": 0.00578832249016506,
+          "y": 0.00485254458026777,
+          "z": 0.0190682691126636,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -23794,7 +24508,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/37/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": 0.00584519788144161,
+          "y": 0.00488014576118126,
+          "z": 0.016584234874073,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -24021,7 +24739,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/37/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00590203096567038,
+          "y": 0.00490772795649473,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ]
     },
@@ -24031,9 +24753,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/37/end"
+        "object_class": "design3d.Point3D",
+        "x": 0.00590203096567038,
+        "y": 0.00490772795649473,
+        "z": 0.0141001994566002,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -24044,7 +24769,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/37/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00590203096567038,
+          "y": 0.00490772795649473,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -24068,7 +24797,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/38/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00667528983175836,
+          "y": 0.00385398038128447,
+          "z": 0.0128025891159583,
+          "name": ""
         }
       ],
       "knots": [
@@ -24083,7 +24816,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/37/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00590203096567038,
+          "y": 0.00490772795649473,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -24772,7 +25509,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/38/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00667528983175836,
+          "y": 0.00385398038128447,
+          "z": 0.0128025891159583,
+          "name": ""
         }
       ]
     },
@@ -24782,9 +25523,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/38/end"
+        "object_class": "design3d.Point3D",
+        "x": 0.00667528983175836,
+        "y": 0.00385398038128447,
+        "z": 0.0128025891159583,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -24795,7 +25539,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/38/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00667528983175836,
+          "y": 0.00385398038128447,
+          "z": 0.0128025891159583,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -24819,7 +25567,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/39/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00720123256802272,
+          "y": 0.00265744477194559,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ],
       "knots": [
@@ -24834,7 +25586,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/38/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00667528983175836,
+          "y": 0.00385398038128447,
+          "z": 0.0128025891159583,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -25523,7 +26279,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/39/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00720123256802272,
+          "y": 0.00265744477194559,
+          "z": 0.0141001994566002,
+          "name": ""
         }
       ]
     },
@@ -25533,9 +26293,12 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
-        "$ref": "#/primitives/39/end"
+        "object_class": "design3d.Point3D",
+        "x": 0.00720123256802272,
+        "y": 0.00265744477194559,
+        "z": 0.0141001994566002,
+        "name": ""
       },
       "end": {
         "object_class": "design3d.Point3D",
@@ -25546,7 +26309,11 @@
       },
       "control_points": [
         {
-          "$ref": "#/primitives/39/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00720123256802272,
+          "y": 0.00265744477194559,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -25563,7 +26330,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/40/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00704420230763737,
+          "y": 0.00255107495261353,
+          "z": 0.0215524987272309,
+          "name": ""
         }
       ],
       "knots": [
@@ -25576,7 +26347,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/39/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00720123256802272,
+          "y": 0.00265744477194559,
+          "z": 0.0141001994566002,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -25803,7 +26578,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/40/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": 0.00714892776385022,
+          "y": 0.00262201603998779,
+          "z": 0.0165843004247825,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -26030,7 +26809,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/40/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": 0.00709658536215921,
+          "y": 0.00258656016042023,
+          "z": 0.0190684002140158,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -26257,7 +27040,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/40/end"
+          "object_class": "design3d.Point3D",
+          "x": 0.00704420230763737,
+          "y": 0.00255107495261353,
+          "z": 0.0215524987272309,
+          "name": ""
         }
       ]
     },
@@ -26267,7 +27054,6 @@
       "package_version": "0.7.1.dev905+g8a826d99",
       "degree": 3,
       "weights": null,
-
       "start": {
         "object_class": "design3d.Point3D",
         "x": 0.0070458533915627,
@@ -26276,11 +27062,18 @@
         "name": ""
       },
       "end": {
-        "$ref": "#/primitives/0/start"
+        "object_class": "design3d.Point3D",
+        "x": 0.00700901099103195,
+        "y": 0.00252512671515575,
+        "z": 0.02325
       },
       "control_points": [
         {
-          "$ref": "#/primitives/41/start"
+          "object_class": "design3d.Point3D",
+          "x": 0.0070458533915627,
+          "y": 0.00254651345484203,
+          "z": 0.0215524683834759,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -26297,7 +27090,10 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/0/start"
+          "object_class": "design3d.Point3D",
+          "x": 0.00700901099103195,
+          "y": 0.00252512671515575,
+          "z": 0.02325
         }
       ],
       "knots": [
@@ -26310,7 +27106,11 @@
       ],
       "points": [
         {
-          "$ref": "#/primitives/41/start"
+          "object_class": "design3d.Point3D",
+          "x": 0.0070458533915627,
+          "y": 0.00254651345484203,
+          "z": 0.0215524683834759,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -26537,7 +27337,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/41/control_points/1"
+          "object_class": "design3d.Point3D",
+          "x": 0.00703357365918479,
+          "y": 0.00253938537692061,
+          "z": 0.0221183122893485,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -26764,7 +27568,11 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/41/control_points/2"
+          "object_class": "design3d.Point3D",
+          "x": 0.00702129286539175,
+          "y": 0.00253225646862537,
+          "z": 0.0226841561617257,
+          "name": ""
         },
         {
           "object_class": "design3d.Point3D",
@@ -26991,7 +27799,10 @@
           "name": ""
         },
         {
-          "$ref": "#/primitives/0/start"
+          "object_class": "design3d.Point3D",
+          "x": 0.00700901099103195,
+          "y": 0.00252512671515575,
+          "z": 0.02325
         }
       ]
     }

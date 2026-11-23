@@ -2,7 +2,9 @@
   "object_class": "design3d.edges.FullArcEllipse2D",
   "name": "",
   "start_end": {
-    "$ref": "#/_references/db10c8b6-0f54-11ee-99c6-d2c33e3011fd"
+    "object_class": "design3d.Point2D",
+    "x": 0.0005002890374210534,
+    "y": 0.0
   },
   "ellipse": {
     "object_class": "design3d.curves.Ellipse2D",
@@ -56,17 +58,14 @@
   "angle_start": 0.0,
   "angle_end": 6.283185307179586,
   "start": {
-    "$ref": "#/_references/db10c8b6-0f54-11ee-99c6-d2c33e3011fd"
+    "object_class": "design3d.Point2D",
+    "x": 0.0005002890374210534,
+    "y": 0.0
   },
   "end": {
-    "$ref": "#/_references/db10c8b6-0f54-11ee-99c6-d2c33e3011fd"
+    "object_class": "design3d.Point2D",
+    "x": 0.0005002890374210534,
+    "y": 0.0
   },
-  "theta": 0.0,
-  "_references": {
-    "db10c8b6-0f54-11ee-99c6-d2c33e3011fd": {
-      "object_class": "design3d.Point2D",
-      "x": 0.0005002890374210534,
-      "y": 0.0
-    }
-  }
+  "theta": 0.0
 }

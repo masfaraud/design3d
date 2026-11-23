@@ -43,7 +43,9 @@ class TestVolumeModel(unittest.TestCase):
             self.assertEqual(p1, p2)
 
     def test_frame_mapping(self):
-        frame = design3d.Frame3D.from_point_and_vector(design3d.Point3D(1.0, 1.0, 1.0), design3d.Vector3D(1.0, 1.0, 1.0))
+        frame = design3d.Frame3D.from_point_and_vector(
+            design3d.Point3D(1.0, 1.0, 1.0), design3d.Vector3D(1.0, 1.0, 1.0)
+        )
         side = "old"
         mapped_volume_model = self.volume_model.frame_mapping(frame, side)
 

@@ -14,13 +14,22 @@
       "z": 0.31114886258063
     },
     {
-      "$ref": "#/control_points/0"
+      "object_class": "design3d.Point3D",
+      "x": 0.29851599999999,
+      "y": 0.45774099653199,
+      "z": 0.31114886258063
     },
     {
-      "$ref": "#/control_points/0"
+      "object_class": "design3d.Point3D",
+      "x": 0.29851599999999,
+      "y": 0.45774099653199,
+      "z": 0.31114886258063
     },
     {
-      "$ref": "#/control_points/0"
+      "object_class": "design3d.Point3D",
+      "x": 0.29851599999999,
+      "y": 0.45774099653199,
+      "z": 0.31114886258063
     },
     {
       "object_class": "design3d.Point3D",
@@ -29,13 +38,22 @@
       "z": 0.31068761433964
     },
     {
-      "$ref": "#/control_points/4"
+      "object_class": "design3d.Point3D",
+      "x": 0.29851599999999,
+      "y": 0.45774099653199,
+      "z": 0.31068761433964
     },
     {
-      "$ref": "#/control_points/4"
+      "object_class": "design3d.Point3D",
+      "x": 0.29851599999999,
+      "y": 0.45774099653199,
+      "z": 0.31068761433964
     },
     {
-      "$ref": "#/control_points/4"
+      "object_class": "design3d.Point3D",
+      "x": 0.29851599999999,
+      "y": 0.45774099653199,
+      "z": 0.31068761433964
     },
     {
       "object_class": "design3d.Point3D",
@@ -123,58 +141,106 @@
   "control_points_table": [
     [
       {
-        "$ref": "#/control_points/0"
+        "object_class": "design3d.Point3D",
+        "x": 0.29851599999999,
+        "y": 0.45774099653199,
+        "z": 0.31114886258063
       },
       {
-        "$ref": "#/control_points/0"
+        "object_class": "design3d.Point3D",
+        "x": 0.29851599999999,
+        "y": 0.45774099653199,
+        "z": 0.31114886258063
       },
       {
-        "$ref": "#/control_points/0"
+        "object_class": "design3d.Point3D",
+        "x": 0.29851599999999,
+        "y": 0.45774099653199,
+        "z": 0.31114886258063
       },
       {
-        "$ref": "#/control_points/0"
+        "object_class": "design3d.Point3D",
+        "x": 0.29851599999999,
+        "y": 0.45774099653199,
+        "z": 0.31114886258063
       }
     ],
     [
       {
-        "$ref": "#/control_points/4"
+        "object_class": "design3d.Point3D",
+        "x": 0.29851599999999,
+        "y": 0.45774099653199,
+        "z": 0.31068761433964
       },
       {
-        "$ref": "#/control_points/4"
+        "object_class": "design3d.Point3D",
+        "x": 0.29851599999999,
+        "y": 0.45774099653199,
+        "z": 0.31068761433964
       },
       {
-        "$ref": "#/control_points/4"
+        "object_class": "design3d.Point3D",
+        "x": 0.29851599999999,
+        "y": 0.45774099653199,
+        "z": 0.31068761433964
       },
       {
-        "$ref": "#/control_points/4"
+        "object_class": "design3d.Point3D",
+        "x": 0.29851599999999,
+        "y": 0.45774099653199,
+        "z": 0.31068761433964
       }
     ],
     [
       {
-        "$ref": "#/control_points/8"
+        "object_class": "design3d.Point3D",
+        "x": 0.29822040612105005,
+        "y": 0.45760315884254,
+        "z": 0.31036146258063
       },
       {
-        "$ref": "#/control_points/9"
+        "object_class": "design3d.Point3D",
+        "x": 0.29820019775080997,
+        "y": 0.45764649583236,
+        "z": 0.31036146258063
       },
       {
-        "$ref": "#/control_points/10"
+        "object_class": "design3d.Point3D",
+        "x": 0.29818984824098,
+        "y": 0.45769317945435,
+        "z": 0.31036146258063
       },
       {
-        "$ref": "#/control_points/11"
+        "object_class": "design3d.Point3D",
+        "x": 0.29818984824098,
+        "y": 0.45774099653199,
+        "z": 0.31036146258063
       }
     ],
     [
       {
-        "$ref": "#/control_points/12"
+        "object_class": "design3d.Point3D",
+        "x": 0.29780237324848,
+        "y": 0.4574082269127,
+        "z": 0.31036146258063
       },
       {
-        "$ref": "#/control_points/13"
+        "object_class": "design3d.Point3D",
+        "x": 0.29775358592698004,
+        "y": 0.45751285166128997,
+        "z": 0.31036146258063
       },
       {
-        "$ref": "#/control_points/14"
+        "object_class": "design3d.Point3D",
+        "x": 0.29772859999999,
+        "y": 0.45762555589462,
+        "z": 0.31036146258063
       },
       {
-        "$ref": "#/control_points/15"
+        "object_class": "design3d.Point3D",
+        "x": 0.29772859999999,
+        "y": 0.45774099653199,
+        "z": 0.31036146258063
       }
     ]
   ]

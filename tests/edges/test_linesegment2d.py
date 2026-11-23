@@ -1,6 +1,7 @@
 """
 Unit tests for design3d.edges.LineSegment2D
 """
+
 import unittest
 
 import design3d
@@ -55,5 +56,5 @@ class TestLineSegment2D(unittest.TestCase):
         self.assertFalse(lineseg_9.delete_shared_section(lineseg_10))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

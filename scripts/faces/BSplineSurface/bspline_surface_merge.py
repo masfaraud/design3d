@@ -9,7 +9,13 @@
 
 import numpy as npy
 from design3d import faces
-from design3d.models import bspline_surfaces
+
+# bspline_surfaces model is defined in the scripts root folder (run from this script folder)
+import os  # noqa: E402
+import sys  # noqa: E402
+
+sys.path.insert(0, os.path.abspath(os.path.join("..", "..")))
+import bspline_surfaces  # noqa: E402
 
 # %% Read Step file
 
@@ -28,8 +34,10 @@ from design3d.models import bspline_surfaces
 
 #     bspline_faces.append(faces[0])
 
-bspline_faces = [faces.BSplineFace3D.from_surface_rectangular_cut(bspline_surfaces.bspline_surface_1, 0, 1, 0, 1),
-                 faces.BSplineFace3D.from_surface_rectangular_cut(bspline_surfaces.bspline_surface_2, 0, 1, 0, 1)]
+bspline_faces = [
+    faces.BSplineFace3D.from_surface_rectangular_cut(bspline_surfaces.bspline_surface_1, 0, 1, 0, 1),
+    faces.BSplineFace3D.from_surface_rectangular_cut(bspline_surfaces.bspline_surface_2, 0, 1, 0, 1),
+]
 
 # %% Merge faces/surfaces
 
@@ -40,9 +48,13 @@ bspline_faces.append(faces.BSplineFace3D.from_surface_rectangular_cut(merged_sur
 # %% Display
 random_colors = []
 for i in range(0, 3):
-    random_colors.append([list(npy.random.choice(range(255), size=1))[0] / 256,
-                          list(npy.random.choice(range(255), size=1))[0] / 256,
-                          list(npy.random.choice(range(255), size=1))[0] / 256])
+    random_colors.append(
+        [
+            list(npy.random.choice(range(255), size=1))[0] / 256,
+            list(npy.random.choice(range(255), size=1))[0] / 256,
+            list(npy.random.choice(range(255), size=1))[0] / 256,
+        ]
+    )
 
 ax = bspline_faces[0].plot()
 for i, face in enumerate(bspline_faces):

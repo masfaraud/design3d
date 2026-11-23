@@ -1,12 +1,15 @@
 """
 Demo usage of HollowCylinder class.
 """
+
 import design3d
 from design3d.core import VolumeModel
 from design3d.primitives3d import HollowCylinder
 
 # 1. Instantiate a red HollowCylinder directly with the init:
-hollow_cylinder1 = HollowCylinder(frame=design3d.OXYZ, inner_radius=0.08, outer_radius=0.1, length=0.5, color=(1.0, 0.0, 0.0))
+hollow_cylinder1 = HollowCylinder(
+    frame=design3d.OXYZ, inner_radius=0.08, outer_radius=0.1, length=0.5, color=(1.0, 0.0, 0.0)
+)
 
 # 2. Instantiate a blue HollowCylinder with `from_end_points` classmethod:
 hollow_cylinder2 = HollowCylinder.from_end_points(

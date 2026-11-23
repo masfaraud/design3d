@@ -1,14 +1,15 @@
 """
 Unit testing of design3d.display.Mesh3D class.
 """
+
 import math
+import io
 import os
 import tempfile
 import unittest
 
 import numpy as np
 import trimesh
-from dessia_common.serialization import BinaryFile
 from design3d import Point3D
 from design3d.display import Mesh3D
 from design3d.faces import Triangle3D
@@ -265,7 +266,7 @@ class TestMesh3DImport(unittest.TestCase):
 
     def test_from_stl_stream(self):
         with open(self.stl_file_path, "rb") as file:
-            binary_content = BinaryFile()
+            binary_content = io.BytesIO()
             binary_content.write(file.read())
 
         mesh = Mesh3D.from_stl_stream(binary_content)
@@ -321,7 +322,7 @@ class TestMesh3DExport(unittest.TestCase):
         os.remove(temp_stl_filename)
 
     def test_save_to_stl_stream(self):
-        stream = BinaryFile()
+        stream = io.BytesIO()
         self.mesh.save_to_stl_stream(stream)
         mesh_from_stream = Mesh3D.from_stl_stream(stream)
 
@@ -345,7 +346,7 @@ class TestMesh3DExport(unittest.TestCase):
         os.remove(temp_obj_filename)
 
     def test_save_to_obj_stream(self):
-        stream = BinaryFile()
+        stream = io.BytesIO()
         self.mesh.save_to_obj_stream(stream)
         mesh_from_stream = Mesh3D.from_obj_stream(stream)
 
@@ -369,7 +370,7 @@ class TestMesh3DExport(unittest.TestCase):
         os.remove(temp_ply_filename)
 
     def test_save_to_ply_stream(self):
-        stream = BinaryFile()
+        stream = io.BytesIO()
         self.mesh.save_to_ply_stream(stream)
         mesh_from_stream = Mesh3D.from_ply_stream(stream)
 
@@ -393,7 +394,7 @@ class TestMesh3DExport(unittest.TestCase):
         os.remove(temp_off_filename)
 
     def test_save_to_off_stream(self):
-        stream = BinaryFile()
+        stream = io.BytesIO()
         self.mesh.save_to_off_stream(stream)
         mesh_from_stream = Mesh3D.from_off_stream(stream)
 
@@ -417,7 +418,7 @@ class TestMesh3DExport(unittest.TestCase):
         os.remove(temp_3mf_filename)
 
     def test_save_to_3mf_stream(self):
-        stream = BinaryFile()
+        stream = io.BytesIO()
         self.mesh.save_to_3mf_stream(stream)
         mesh_from_stream = Mesh3D.from_3mf_stream(stream)
 

@@ -46,7 +46,7 @@ Here we will present you all possible boolean operations using ClosedShell3D.
     top_face = faces.PlaneFace3D(top_surface3d, top_surface2d)
     faces_ += [bottom_face, top_face]
 
-    #Instanciate shell
+    # Instantiate shell
     shell1 = shells.ClosedShell3D(faces_, color=(1, .1, .1), alpha=0.6)
 
     shell2 = shell1.rotation(design3d.O3D, design3d.X3D, math.pi / 5)
@@ -74,8 +74,8 @@ Otherwise, it will return a list with the resulting union closed shell 3d.
 
 .. figure:: ../source/_static/index-images/union.png
 
-Substraction
-************
+Subtraction
+***********
 
 .. code-block:: python
 
@@ -92,8 +92,8 @@ Otherwise, the shell2 is subtracted from shell1 and the result is a list contain
 
 .. figure:: ../source/_static/index-images/subtract.png
 
-Substraction to CloseShell3D
-****************************
+Subtraction to CloseShell3D
+***************************
 
 .. code-block:: python
 

@@ -9,12 +9,19 @@
 
 import design3d as d3d
 import design3d.grid
-from design3d.models import bspline_surfaces
+
+# bspline_surfaces model is defined in the scripts root folder (run from this script folder)
+import os  # noqa: E402
+import sys  # noqa: E402
+
+sys.path.insert(0, os.path.abspath(os.path.join("..", "..")))
+import bspline_surfaces  # noqa: E402
 from design3d import faces
 
-
-bspline_faces = [faces.BSplineFace3D.from_surface_rectangular_cut(bspline_surfaces.bspline_surface_1, 0,1,0,1),
-                 faces.BSplineFace3D.from_surface_rectangular_cut(bspline_surfaces.bspline_surface_2, 0,1,0,1)]
+bspline_faces = [
+    faces.BSplineFace3D.from_surface_rectangular_cut(bspline_surfaces.bspline_surface_1, 0, 1, 0, 1),
+    faces.BSplineFace3D.from_surface_rectangular_cut(bspline_surfaces.bspline_surface_2, 0, 1, 0, 1),
+]
 
 
 # %% Bspline surfaces
@@ -37,12 +44,12 @@ for i, bspline in enumerate(bspline_surfaces):
 
 ax1 = points3d[0][0].plot()
 for i, points in enumerate(points3d):
-    for k,p in enumerate(points):
-        if k<points_x:
+    for k, p in enumerate(points):
+        if k < points_x:
             if k == 0:
-                p.plot(ax=ax1, color='g')  
+                p.plot(ax=ax1, color="g")
             else:
-                p.plot(ax=ax1, color='r')
+                p.plot(ax=ax1, color="r")
         else:
             p.plot(ax=ax1)
 
@@ -54,8 +61,7 @@ points_x, points_y, xmin, xmax, ymin, ymax = 5, 5, 0, 1, 0, 1
 
 points3d = []
 for i, bspline in enumerate(bspline_surfaces):
-    grid2d = design3d.grid.Grid2D.from_properties((xmin, xmax), (ymin, ymax),
-                                                 (points_x, points_y), grid2d_direction[i])
+    grid2d = design3d.grid.Grid2D.from_properties((xmin, xmax), (ymin, ymax), (points_x, points_y), grid2d_direction[i])
     grid3d = bspline.grid3d(grid2d)
     points3d.append(grid3d)
 
@@ -67,8 +73,8 @@ for i, points in enumerate(points3d):
     for k, p in enumerate(points):
         if k < points_x:
             if k == 0:
-                p.plot(ax=ax1, color='g')
+                p.plot(ax=ax1, color="g")
             else:
-                p.plot(ax=ax1, color='r')
+                p.plot(ax=ax1, color="r")
         else:
             p.plot(ax=ax1)

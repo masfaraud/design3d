@@ -1,125 +1,124 @@
 User guide
 ==========
 
+.. toctree::
+   :hidden:
+
+   how-tos
+   distances
+   intersections
+   boolean_operations
+   dealing_with_step
+   dealing_with_stl
+   useful_operations
+   design3d
+
 .. grid:: 3
 
     .. grid-item-card::
         :img-top: ../source/_static/index-images/geometric-svgrepo-com.svg
 
-        ^^^^^^^^^^^^^^
-
         How to
 
-        +++
+        .. card-footer::
 
-        .. button-ref:: how-tos
-            :expand:
-            :color: primary
-            :click-parent:
+            .. button-ref:: how-tos
+                :ref-type: doc
+                :expand:
+                :color: primary
+                :click-parent:
 
-            How to
+                How to
 
     .. grid-item-card::
         :img-top: ../source/_static/index-images/distance.svg
 
-
-        ^^^^^^^^^^^^^^
-
         Distances operations
 
-        +++
+        .. card-footer::
 
-        .. button-ref:: distances
-            :expand:
-            :color: primary
-            :click-parent:
+            .. button-ref:: distances
+                :ref-type: doc
+                :expand:
+                :color: primary
+                :click-parent:
 
-            To distances
+                To distances
 
     .. grid-item-card::
         :img-top: ../source/_static/index-images/intersection-svgrepo-com.svg
 
-
-        ^^^^^^^^^^^^^^
-
         Intersections
 
-        +++
+        .. card-footer::
 
-        .. button-ref:: intersections
-            :expand:
-            :color: primary
-            :click-parent:
+            .. button-ref:: intersections
+                :ref-type: doc
+                :expand:
+                :color: primary
+                :click-parent:
 
-            To intersections
+                To intersections
 
     .. grid-item-card::
         :img-top: ../source/_static/index-images/union-svgrepo-com.svg
 
-
-        ^^^^^^^^^^^^^^
-
         Boolean Operations
 
-        +++
+        .. card-footer::
 
-        .. button-ref:: boolean_operations
-            :expand:
-            :color: primary
-            :click-parent:
+            .. button-ref:: boolean_operations
+                :ref-type: doc
+                :expand:
+                :color: primary
+                :click-parent:
 
-            To Boolean ops
+                To Boolean ops
 
     .. grid-item-card::
         :img-top: ../source/_static/index-images/step.svg
 
-
-        ^^^^^^^^^^^^^^
-
         Dealing with STEP files
 
-        +++
+        .. card-footer::
 
-        .. button-ref:: dealing_with_step
-            :expand:
-            :color: primary
-            :click-parent:
+            .. button-ref:: dealing_with_step
+                :ref-type: doc
+                :expand:
+                :color: primary
+                :click-parent:
 
-            STEP files
+                STEP files
 
     .. grid-item-card::
         :img-top: ../source/_static/index-images/stl_file.svg
 
-
-        ^^^^^^^^^^^^^^
-
         Dealing with STL files
 
-        +++
+        .. card-footer::
 
-        .. button-ref:: dealing_with_stl
-            :expand:
-            :color: primary
-            :click-parent:
+            .. button-ref:: dealing_with_stl
+                :ref-type: doc
+                :expand:
+                :color: primary
+                :click-parent:
 
-            STL files
+                STL files
 
     .. grid-item-card::
         :img-top: ../source/_static/index-images/tools-folder-svgrepo-com.svg
 
-
-        ^^^^^^^^^^^^^^
-
         Very useful Operations
 
-        +++
+        .. card-footer::
 
-        .. button-ref:: useful_operations
-            :expand:
-            :color: primary
-            :click-parent:
+            .. button-ref:: useful_operations
+                :ref-type: doc
+                :expand:
+                :color: primary
+                :click-parent:
 
-            Useful
+                Useful
 
 The design3d library is structured using a modular approach as follows:
 

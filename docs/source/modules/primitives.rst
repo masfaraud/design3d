@@ -18,6 +18,7 @@ Primitives2d
    :show-inheritance:
 
 .. _primitives3d:
+
 Primitives3d
 ------------
 

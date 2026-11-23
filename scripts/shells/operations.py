@@ -6,8 +6,14 @@ Goal: call shells methods (point_belongs, volume)
 
 import time
 
-import volmdlr as d3d
-from volmdlr.models import casing
+import os
+import sys
+
+import design3d as d3d
+
+# The casing model is defined in the casing showcase (run from this script folder)
+sys.path.insert(0, os.path.abspath(os.path.join("..", "showcases")))
+from casing import casing  # noqa: E402
 
 bottom, sides, belt = casing.primitives
 

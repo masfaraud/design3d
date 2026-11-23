@@ -59,14 +59,20 @@
   "is_trigo": true,
   "angle_start": 2.9802322387695312e-08,
   "center": {
-    "$ref": "#/ellipse/center"
+    "object_class": "design3d.Point2D",
+    "x": 0.0,
+    "y": 0.0
   },
   "angle_end": 2.9802322387695312e-08,
   "start": {
-    "$ref": "#/start_end"
+    "object_class": "design3d.Point2D",
+    "x": 0.2749999999999999,
+    "y": 0.0
   },
   "end": {
-    "$ref": "#/start_end"
+    "object_class": "design3d.Point2D",
+    "x": 0.2749999999999999,
+    "y": 0.0
   },
   "angle": 0.0,
   "theta": 0.0

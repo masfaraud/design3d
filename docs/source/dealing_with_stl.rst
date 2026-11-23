@@ -11,10 +11,10 @@ Each triangle in the mesh is defined by three vertices (corner points) in 3D spa
 Additionally, each triangle has a normal vector that indicates the direction of its surface, which helps determine the orientation of the triangle.
 
 
-Users can also import STL files using Volmdlr and then use our features to perform powerful studies.
+Users can also import STL files using design3d and then use our features to perform powerful studies.
 
 import STL files
-***************
+****************
 
 .. code-block:: python
 
@@ -74,7 +74,7 @@ Babylon.js is a JavaScript framework for rendering 3D graphics in web browsers.
 Simplify volume using Cloud of points
 *************************************
 
-Sometimes when working with stl files, it is needed to simplify the model to have a rough aproximation of its shape in order to run some space related calculations.
+Sometimes when working with stl files, it is needed to simplify the model to have a rough approximation of its shape in order to run some space related calculations.
 To achieve it, you can do as follows:
 
 .. code-block:: python

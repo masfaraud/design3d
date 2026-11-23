@@ -28,16 +28,17 @@ ax = a.plot()
 # for p in a.polygon_points():
 #     p.plot(ax=ax)
 
-s.plot(ax=ax, color='r')
-e.plot(ax=ax, color='g')
-i.plot(ax=ax, color='b')
+s.plot(ax=ax, color="r")
+e.plot(ax=ax, color="g")
+i.plot(ax=ax, color="b")
 
 
-arc1 = design3d.edges.Arc3D.from_3_points(design3d.Point3D(-0.03096, 0.001162, -0.02),
-                                         design3d.Point3D(-0.03120, -0.000400635, -0.02),
-                                         design3d.Point3D(-0.026119083, 0.0, -0.02),
-                                         # design3d.Vector3D(0.0, 0.0, 0.001)
-                                         )
+arc1 = design3d.edges.Arc3D.from_3_points(
+    design3d.Point3D(-0.03096, 0.001162, -0.02),
+    design3d.Point3D(-0.03120, -0.000400635, -0.02),
+    design3d.Point3D(-0.026119083, 0.0, -0.02),
+    # design3d.Vector3D(0.0, 0.0, 0.001)
+)
 
 
 ax = arc1.plot()
@@ -45,9 +46,9 @@ ax = arc1.plot()
 #     p.plot(ax=ax)
 
 
-arc1.start.plot(ax=ax, color='r')
-arc1.end.plot(ax=ax, color='g')
-arc1.circle.center.plot(ax=ax, color='m')
+arc1.start.plot(ax=ax, color="r")
+arc1.end.plot(ax=ax, color="g")
+arc1.circle.center.plot(ax=ax, color="m")
 # ax.set_aspect('equal')
 
 print(arc1.circle.center)

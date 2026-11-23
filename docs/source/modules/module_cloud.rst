@@ -1,4 +1,5 @@
 .. _cloud:
+
 Cloud
 -----
 

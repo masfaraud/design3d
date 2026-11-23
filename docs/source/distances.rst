@@ -156,7 +156,7 @@ Here are some examples:
    print('distance_arc3d_arcellipse3d: ', distance_arc3d_arcellipse3d)
    >>> distance_arc3d_arcellipse3d: 0.5340975460532926
 
-Distances betweeen two faces
+Distances between two faces
 ****************************
 
 You can also calculate the distance between two faces. To do so, you can use the `face_minimum_distance` method.
@@ -189,7 +189,7 @@ It will work for any two faces.
    print('minimum_distance: ', minimum_distance)
    >>> minimum_distance: 0.3097688266437426
 
-Distances betweeen two shells
+Distances between two shells
 *****************************
 
 Likewise, you can calculate the distance between two shells as shown in the next example:
@@ -222,14 +222,14 @@ Likewise, you can calculate the distance between two shells as shown in the next
     top_face = faces.PlaneFace3D(top_surface3d, top_surface2d)
     faces_ += [bottom_face, top_face]
 
-    #Instanciate shell
+    # Instantiate shell
     shell1 = shells.ClosedShell3D(faces_)
 
     #Create a second shell from the first one, by rotating and translating it.
     shell2 = shell1.rotation(design3d.O3D, design3d.X3D, math.pi / 5)
     shell2 = shell2.translation(design3d.Vector3D(.5, .5, .5))
 
-    #Search mimimum distance
+    #Search minimum distance
     minimum_distance_between_two_shells, point1, point2 = shell1.minimum_distance(shell2, True)
 
     #plot

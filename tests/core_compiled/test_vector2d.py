@@ -1,6 +1,7 @@
 """
 Unittest for design3d.Vector2D
 """
+
 import unittest
 from design3d import Vector2D
 
@@ -48,5 +49,5 @@ class TestVector2D(unittest.TestCase):
         self.assertAlmostEqual(v1.point_distance(v2), 5.0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
