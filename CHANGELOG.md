@@ -27,3 +27,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - moved source to src folder
 - package metadata moved from setup.py to pyproject.toml, version computed from git tags by setuptools-scm
+- ruff replaces black and pylint for formatting and linting, configured in pyproject.toml
