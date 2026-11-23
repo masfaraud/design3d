@@ -91,6 +91,10 @@ class TestLoft(unittest.TestCase):
         with self.assertRaises(ValueError):
             Loft([square(1.0)], [frame_at_height(0.0)])
 
+    def test_identical_consecutive_sections(self):
+        with self.assertRaises(ValueError):
+            Loft([square(1.0), square(1.0)], [frame_at_height(0.0), frame_at_height(0.0)])
+
     def test_serialization(self):
         loft = Loft([square(1.0), square(0.5)], [frame_at_height(0.0), frame_at_height(1.0)], name="loft")
         dict_ = loft.to_dict()
