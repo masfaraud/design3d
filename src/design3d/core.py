@@ -119,16 +119,6 @@ def get_edge_index_in_list(edge, list_edges, tol: float = 1e-6):
     return get_element_index_in_list(edge, list_edges, tol)
 
 
-def determinant(vec1, vec2, vec3):
-    """
-    Calculates the determinant for a three vector matrix.
-
-    """
-    # TODO: to be removed
-    a = np.array((vec1.vector, vec2.vector, vec3.vector))
-    return np.linalg.det(a)
-
-
 def delete_double_point(list_point):
     """
     Delete duplicate points from a list of points.

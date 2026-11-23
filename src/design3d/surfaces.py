@@ -396,29 +396,6 @@ class Surface2D(DataEqualityObject):
                         intersection_points.append((point, primitive))
         return sorted(intersection_points, key=lambda ip: line.abscissa(ip[0]))
 
-    def split_at_centers(self):
-        """
-        Split in n slices.
-
-        # TODO: is this used ?
-        """
-
-        cutted_contours = []
-        center_of_mass1 = self.inner_contours[0].center_of_mass()
-        center_of_mass2 = self.inner_contours[1].center_of_mass()
-        cut_line = curves.Line2D(center_of_mass1, center_of_mass2)
-
-        iteration_contours2 = []
-
-        surface_cut = self.cut_by_line(cut_line)
-
-        iteration_contours2.extend(surface_cut)
-
-        iteration_contours = iteration_contours2[:]
-        cutted_contours.extend(iteration_contours)
-
-        return cutted_contours
-
     def bounding_rectangle(self):
         """
         Returns bounding rectangle.

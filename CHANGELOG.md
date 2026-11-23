@@ -29,6 +29,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - design3d requires Python 3.12 or later
 
+### Removed
+
+- `design3d.core.determinant`, `Surface2D.split_at_centers` and `Point3D.babylon_script`, which were unused
+
 ### Build
 
 - moved source to src folder
