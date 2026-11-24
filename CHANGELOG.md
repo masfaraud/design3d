@@ -43,6 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OpenedRoundedLineSegments2D and ClosedRoundedLineSegments2D: `invert` no longer fails, and keeps each radius on
   its point
 - ClosedPolygon2D.offset: the sides are moved by the offset distance, instead of a distance depending on the angles
+- Arc2D.direction_vector follows the direction of travel of clockwise arcs, instead of always turning
+  counterclockwise
 
 ### Changed
 

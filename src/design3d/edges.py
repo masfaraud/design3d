@@ -2970,9 +2970,12 @@ class ArcMixin:
 
         :param abscissa: defines where in the Arc2D the
             direction vector is to be calculated
-        :return: The direction vector of the Arc2D
+        :return: The direction vector of the Arc2D, in its direction of travel
         """
-        return -self.normal_vector(abscissa=abscissa).normal_vector()
+        direction_vector = -self.normal_vector(abscissa=abscissa).normal_vector()
+        if self.is_trigo:
+            return direction_vector
+        return -direction_vector
 
     def point_distance(self, point):
         """Returns the minimal distance to a point."""
