@@ -162,6 +162,77 @@ def map_primitive_with_initial_and_final_frames(primitive, initial_frame, final_
     return primitive.frame_mapping(initial_frame, "new").frame_mapping(final_frame, "old")
 
 
+def _babylon_tree_node(primitive) -> dict:
+    """Empty node of the babylonjs scene tree, describing a primitive of a model."""
+    return {
+        "name": getattr(primitive, "name", "") or "",
+        "type": primitive.__class__.__name__,
+        "meshes": [],
+        "lines": [],
+        "children": [],
+    }
+
+
+def _offset_babylon_tree(tree: list[dict], mesh_offset: int, line_offset: int) -> list[dict]:
+    """
+    Copy a babylonjs scene tree, shifting its mesh and line indices.
+
+    Used when the meshes and lines of a sub model are appended after those already collected.
+    """
+    return [
+        dict(
+            node,
+            meshes=[index + mesh_offset for index in node["meshes"]],
+            lines=[index + line_offset for index in node["lines"]],
+            children=_offset_babylon_tree(node["children"], mesh_offset, line_offset),
+        )
+        for node in tree
+    ]
+
+
+def primitives_babylon_data(primitives, merge_meshes: bool = True) -> dict:
+    """
+    Get the babylonjs data of a list of primitives, with the scene tree of these primitives.
+
+    The meshes and lines of all primitives are flattened in the "meshes" and "lines" lists. The "tree" list keeps the
+    hierarchy of the primitives (assemblies, compounds...): each node has a name, a type, the indices of its own
+    meshes and lines, and its children nodes. It is displayed as the scene tree of the babylonjs viewer.
+
+    :param primitives: The primitives to display.
+    :param merge_meshes: Merge the faces of each shell into a single mesh. If False, each shell mesh has the meshes of
+        its faces as children.
+    :return: Dictionary with babylon data.
+    """
+    babylon_data = {"meshes": [], "lines": [], "tree": []}
+    display_points = []
+    for primitive in primitives:
+        node = _babylon_tree_node(primitive)
+        n_meshes, n_lines = len(babylon_data["meshes"]), len(babylon_data["lines"])
+        if hasattr(primitive, "babylon_meshes"):
+            meshes = primitive.babylon_meshes(merge_meshes=merge_meshes)
+            node["meshes"] = list(range(n_meshes, n_meshes + len(meshes)))
+            babylon_data["meshes"].extend(meshes)
+        elif hasattr(primitive, "babylon_curves"):
+            curves = primitive.babylon_curves()
+            if curves:
+                node["lines"] = [n_lines]
+                babylon_data["lines"].append(curves)
+        elif hasattr(primitive, "babylon_data"):
+            data = primitive.babylon_data(merge_meshes=merge_meshes)
+            if "tree" in data:
+                node["children"] = _offset_babylon_tree(data["tree"], n_meshes, n_lines)
+            else:
+                node["meshes"] = list(range(n_meshes, n_meshes + len(data.get("meshes", []))))
+                node["lines"] = list(range(n_lines, n_lines + len(data.get("lines", []))))
+            babylon_data["meshes"].extend(data.get("meshes", []))
+            babylon_data["lines"].extend(data.get("lines", []))
+        elif isinstance(primitive, design3d.Point3D):
+            display_points.append(primitive)
+        if node["meshes"] or node["lines"] or node["children"]:
+            babylon_data["tree"].append(node)
+    return helper_babylon_data(babylon_data, display_points)
+
+
 def helper_babylon_data(babylon_data, display_points):
     """Helper function to babylon_data."""
     # Compute max length in each direction
@@ -1072,22 +1143,7 @@ class Assembly(DataEqualityObject):
         :return: Dictionary with babylon data.
         """
 
-        babylon_data = {"meshes": [], "lines": []}
-        display_points = []
-        for primitive in self.primitives:
-            if hasattr(primitive, "babylon_meshes"):
-                babylon_data["meshes"].extend(primitive.babylon_meshes(merge_meshes=merge_meshes))
-            elif hasattr(primitive, "babylon_curves"):
-                curves = primitive.babylon_curves()
-                if curves:
-                    babylon_data["lines"].append(curves)
-            elif hasattr(primitive, "babylon_data"):
-                data = primitive.babylon_data(merge_meshes=merge_meshes)
-                babylon_data["meshes"].extend(mesh for mesh in data.get("meshes"))
-                babylon_data["lines"].extend(line for line in data.get("lines"))
-            elif isinstance(primitive, design3d.Point3D):
-                display_points.append(primitive)
-        return helper_babylon_data(babylon_data, display_points)
+        return primitives_babylon_data(self.primitives, merge_meshes=merge_meshes)
 
     def frame_mapping(self, frame: design3d.Frame3D, side: str):
         """
@@ -1258,22 +1314,7 @@ class Compound(DataEqualityObject):
         :return: Dictionary with babylon data.
         """
 
-        babylon_data = {"meshes": [], "lines": []}
-        display_points = []
-        for primitive in self.primitives:
-            if hasattr(primitive, "babylon_meshes"):
-                babylon_data["meshes"].extend(primitive.babylon_meshes(merge_meshes=merge_meshes))
-            elif hasattr(primitive, "babylon_curves"):
-                curves = primitive.babylon_curves()
-                if curves:
-                    babylon_data["lines"].append(curves)
-            elif hasattr(primitive, "babylon_data"):
-                data = primitive.babylon_data(merge_meshes=merge_meshes)
-                babylon_data["meshes"].extend(mesh for mesh in data.get("meshes"))
-                babylon_data["lines"].extend(line for line in data.get("lines"))
-            elif isinstance(primitive, design3d.Point3D):
-                display_points.append(primitive)
-        return helper_babylon_data(babylon_data, display_points)
+        return primitives_babylon_data(self.primitives, merge_meshes=merge_meshes)
 
     def to_step(self, current_id):
         """
@@ -1442,34 +1483,22 @@ class VolumeModel(DataEqualityObject):
         :return: Dictionary with babylon data.
         """
 
-        babylon_data = {"meshes": [], "lines": []}
-        display_points = []
-        for primitive in self.primitives:
-            if hasattr(primitive, "babylon_meshes"):
-                babylon_data["meshes"].extend(primitive.babylon_meshes(merge_meshes=merge_meshes))
-            elif hasattr(primitive, "babylon_curves"):
-                curves = primitive.babylon_curves()
-                if curves:
-                    babylon_data["lines"].append(curves)
-            elif hasattr(primitive, "babylon_data"):
-                data = primitive.babylon_data(merge_meshes=merge_meshes)
-                babylon_data["meshes"].extend(mesh for mesh in data.get("meshes"))
-                babylon_data["lines"].extend(line for line in data.get("lines"))
-            elif isinstance(primitive, design3d.Point3D):
-                display_points.append(primitive)
-        return helper_babylon_data(babylon_data, display_points)
+        return primitives_babylon_data(self.primitives, merge_meshes=merge_meshes)
 
     @classmethod
-    def babylonjs_script(cls, babylon_data, title="", use_cdn=True, **kwargs):
+    def babylonjs_script(cls, babylon_data, title="", use_cdn=True, debug=False, **kwargs):
         """
-        Run babylonjs script.
+        Get the html page displaying babylonjs data.
 
+        The page shows the scene tree of the model in a side panel, to hide, show, select, focus and change the
+        opacity or color of its parts. With debug, the babylonjs inspector is also opened at startup.
         """
         if use_cdn:
             script = design3d.templates.BABYLON_UNPACKER_CDN_HEADER.substitute(title=title)
         else:
             script = design3d.templates.BABYLON_UNPACKER_EMBEDDED_HEADER.substitute(title=title)
 
+        babylon_data = dict(babylon_data, debug=1 if debug else 0, title=title)
         script += design3d.templates.BABYLON_UNPACKER_BODY_TEMPLATE.substitute(babylon_data=babylon_data)
         return script
 

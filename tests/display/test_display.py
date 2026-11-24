@@ -110,7 +110,7 @@ class TestDisplayStep(unittest.TestCase):
         self.bracket2_path = os.path.join(FOLDER, "..", "..", "scripts", "step", "bracket2.step")
         self.engine_path = os.path.join(FOLDER, "..", "..", "scripts", "step", "engine.step")
 
-        self.expected_keys = ["meshes", "lines", "max_length", "center"]
+        self.expected_keys = ["meshes", "lines", "tree", "max_length", "center"]
 
     def test_display_block(self):
         volume_model = Step.from_file(self.block_path).to_volume_model()
