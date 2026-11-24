@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Block: the bounding box encloses the block when its frame is not aligned with the axes, for instance a block
   placed in an assembly with a rotated frame, instead of being flattened
+- STEP export: conical surfaces whose apex is not on their axis are no longer reimported with a radius divided by
+  1000 (`ConicalSurface3D.to_step` wrote `ref_radius` in meters in a file declared in millimeters)
 - Arc3D: the bounding box is exact, instead of being computed on discretization points that miss the extrema of
   the arc
 - ToroidalFace3D: the bounding box includes the extrema of the coordinates inside the face, such as the outer equator

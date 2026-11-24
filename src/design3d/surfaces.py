@@ -4522,7 +4522,7 @@ class ConicalSurface3D(UPeriodicalSurface):
         """
         content, frame_id = self.frame.to_step(current_id)
         current_id = frame_id + 1
-        content += f"#{current_id} = CONICAL_SURFACE('{self.name}',#{frame_id},{self.ref_radius},{self.semi_angle});\n"
+        content += f"#{current_id} = CONICAL_SURFACE('{self.name}',#{frame_id},{round(1000 * self.ref_radius, 4)},{self.semi_angle});\n"
         return content, [current_id]
 
     def frame_mapping(self, frame: design3d.Frame3D, side: str):
