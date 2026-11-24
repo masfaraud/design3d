@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Arc3D: the bounding box is exact, instead of being computed on discretization points that miss the extrema of
+  the arc
+- ToroidalFace3D: the bounding box includes the extrema of the coordinates inside the face, such as the outer equator
+  of a band around the torus, instead of only its boundary contour
 - BSplineFace3D: triangulation of faces with few control points has interior vertices, instead of triangles joining
   distant boundary points away from the surface
 - BSplineSurface3D: point inversion no longer gets stuck when it starts on the seam of a periodic surface

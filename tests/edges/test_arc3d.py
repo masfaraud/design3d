@@ -419,6 +419,29 @@ class TestArc3D(unittest.TestCase):
         self.assertTrue(ending_frame.origin.is_close(self.arc3d.end))
         self.assertTrue(ending_frame.w.is_close(self.arc3d.unit_direction_vector(self.arc3d.length())))
 
+    def test_bounding_box(self):
+        # Arcs on a tilted circle, whose extrema are inside the arcs or not. The bounding box is compared with the
+        # one of a dense sampling of each arc.
+        tilted_frame = design3d.Frame3D(design3d.Point3D(0.2, -0.1, 0.4), vector1, vector2, vector3)
+        circle = curves.Circle3D(tilted_frame, 0.5)
+        for start_angle, end_angle in [(0.3, 2.9), (-2.0, 0.5), (1.0, 1.4), (0.2, 6.0)]:
+            arc = edges.Arc3D(
+                circle,
+                circle.point_at_abscissa(start_angle * circle.radius),
+                circle.point_at_abscissa(end_angle * circle.radius),
+            )
+            points = [arc.point_at_abscissa(arc.length() * i / 10000) for i in range(10001)]
+            bounding_box = arc.bounding_box
+            for value, expected_value in [
+                (bounding_box.xmin, min(point.x for point in points)),
+                (bounding_box.xmax, max(point.x for point in points)),
+                (bounding_box.ymin, min(point.y for point in points)),
+                (bounding_box.ymax, max(point.y for point in points)),
+                (bounding_box.zmin, min(point.z for point in points)),
+                (bounding_box.zmax, max(point.z for point in points)),
+            ]:
+                self.assertAlmostEqual(value, expected_value, delta=1e-6)
+
 
 if __name__ == "__main__":
     unittest.main()

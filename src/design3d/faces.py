@@ -2767,6 +2767,41 @@ class ToroidalFace3D(PeriodicalFaceMixin, Face3D):
         """Returns a copy of the ToroidalFace3D."""
         return ToroidalFace3D(self.surface3d.copy(deep, memo), self.surface2d.copy(), self.name)
 
+    def get_bounding_box(self):
+        """
+        Gets the bounding box of the face: the one of its outer contour, extended to the extrema of the coordinates.
+
+        The extrema of a coordinate on a face can be inside the face, for instance the farthest points from the axis
+        on a band around the outer equator of the torus. On the torus, the coordinate along a unit vector e is
+        (R + r cos(phi)) (a cos(theta) + b sin(theta)) + r c sin(phi), with (a, b, c) the components of e in the frame
+        of the torus. Its critical points are at theta = atan2(b, a) (mod pi) and phi = atan2(c, a cos(theta) +
+        b sin(theta)) (mod pi), and are kept when they are on the face.
+        """
+        frame = self.surface3d.frame
+        theta_min, theta_max, phi_min, _ = self.surface2d.bounding_rectangle().bounds()
+        extrema = []
+        for axis in (design3d.X3D, design3d.Y3D, design3d.Z3D):
+            a, b, c = frame.u.dot(axis), frame.v.dot(axis), frame.w.dot(axis)
+            if math.isclose(a, 0.0, abs_tol=1e-12) and math.isclose(b, 0.0, abs_tol=1e-12):
+                # Axis of the torus: the coordinate does not depend on theta
+                thetas = [0.5 * (theta_min + theta_max)]
+            else:
+                thetas = [math.atan2(b, a), math.atan2(b, a) + math.pi]
+            for theta in thetas:
+                phi0 = math.atan2(c, a * math.cos(theta) + b * math.sin(theta))
+                for phi in (phi0, phi0 + math.pi):
+                    # Parametric point in the domain of the face, using the periodicity of the torus
+                    point2d = design3d.Point2D(
+                        theta_min + (theta - theta_min) % design3d.TWO_PI, phi_min + (phi - phi_min) % design3d.TWO_PI
+                    )
+                    if self.surface2d.point_belongs(point2d):
+                        extrema.append(self.surface3d.point2d_to_3d(point2d))
+        if not extrema:
+            return self.outer_contour3d.bounding_box
+        return design3d.core.BoundingBox.from_bounding_boxes(
+            [self.outer_contour3d.bounding_box, design3d.core.BoundingBox.from_points(extrema)]
+        )
+
     @staticmethod
     def points_resolution(line, pos, resolution):  # With a resolution wished
         """
