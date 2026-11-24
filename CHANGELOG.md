@@ -28,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - babylonjs: pages generated with `use_cdn=False` no longer fail on the `$` characters of the embedded javascript
   libraries
 - MovingVolumeModel: babylonjs pages are no longer blank with numpy 2, which wrote the scene size as `np.float64(...)`
+- Block: the bounding box encloses the block when its frame is not aligned with the axes, for instance a block
+  placed in an assembly with a rotated frame, instead of being flattened
 - Arc3D: the bounding box is exact, instead of being computed on discretization points that miss the extrema of
   the arc
 - ToroidalFace3D: the bounding box includes the extrema of the coordinates inside the face, such as the outer equator

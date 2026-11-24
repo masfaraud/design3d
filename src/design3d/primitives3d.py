@@ -226,12 +226,7 @@ class Block(shells.ClosedShell3D):
         :return: the created bounding box.
         :rtype: BoundingBox
         """
-        return design3d.core.BoundingBox.from_points(
-            [
-                self.frame.origin - design3d.Point3D(self.frame.u.x / 2, self.frame.v.y / 2, self.frame.w.z / 2),
-                self.frame.origin + design3d.Point3D(self.frame.u.x / 2, self.frame.v.y / 2, self.frame.w.z / 2),
-            ]
-        )
+        return design3d.core.BoundingBox.from_points(self.vertices())
 
     def vertices(self):
         """Computes the vertices of the block."""
