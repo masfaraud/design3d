@@ -3727,8 +3727,9 @@ class Arc2D(ArcMixin, Edge):
     def axial_symmetry(self, line):
         """Finds out the symmetric arc 2D according to a line."""
         points_symmetry = [point.axial_symmetry(line) for point in [self.start, self.end]]
-
-        return self.__class__(self.circle, start=points_symmetry[0], end=points_symmetry[1])
+        # A symmetry moves the center and inverts the direction of travel along the circle.
+        circle = self.circle.axial_symmetry(line).reverse()
+        return self.__class__(circle, start=points_symmetry[0], end=points_symmetry[1])
 
 
 class FullArc2D(FullArcMixin, Arc2D):

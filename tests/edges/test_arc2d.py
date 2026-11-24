@@ -213,6 +213,17 @@ class TestArc2D(unittest.TestCase):
             for abscissa, expected_abscissa in zip(abscissas, expected_abscissas):
                 self.assertAlmostEqual(abscissa, expected_abscissa)
 
+    def test_axial_symmetry(self):
+        circle = curves.Circle2D(design3d.Frame2D(design3d.Point2D(2.0, 0.0), design3d.X2D, design3d.Y2D), 1.0)
+        arc = Arc2D(circle, design3d.Point2D(2.0, -1.0), design3d.Point2D(2.0, 1.0))
+        line = curves.Line2D(design3d.O2D, design3d.Point2D(0.0, 1.0))
+        symmetric_arc = arc.axial_symmetry(line)
+        self.assertTrue(symmetric_arc.start.is_close(design3d.Point2D(-2.0, -1.0)))
+        self.assertTrue(symmetric_arc.end.is_close(design3d.Point2D(-2.0, 1.0)))
+        self.assertTrue(symmetric_arc.center.is_close(design3d.Point2D(-2.0, 0.0)))
+        self.assertTrue(symmetric_arc.middle_point().is_close(design3d.Point2D(-3.0, 0.0)))
+        self.assertAlmostEqual(symmetric_arc.length(), math.pi)
+
     def test_point_belongs(self):
         expected_results = [
             [True, True, True, False, False, False, True, True],

@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   mass of this area. Contour2D.center_of_mass is right for contours with B-spline edges
 - Contour2D.area: holes joined to the outer loop at one point are subtracted, and full arcs, elliptic arcs and
   B-spline curves use their area instead of a triangulation of the discretized contour
+- Arc2D.axial_symmetry: the arc lies on the symmetric circle, instead of the original one
 
 ### Changed
 
