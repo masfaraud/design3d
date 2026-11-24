@@ -8,8 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v0.1.0 [Future]
 
+### Added
+
+- Loft primitive: a solid interpolating planar sections, each given by a 2D contour and a frame
+- primitives3d.loft_faces: B-spline faces interpolating 3D wires (open or closed), to build open shells
+- BSplineSurface3D.from_parametrized_points_interpolation: surface interpolation through points at imposed parameters
+
 ### Fixed
 
+- BSplineFace3D: triangulation of faces with few control points has interior vertices, instead of triangles joining
+  distant boundary points away from the surface
 - BSplineSurface3D: point inversion no longer gets stuck when it starts on the seam of a periodic surface
 - BSplineSurface3D: parametric coordinate of an edge start/end lying on a singularity is taken from its neighbour
   parametric point, instead of an ill-conditioned point inversion
