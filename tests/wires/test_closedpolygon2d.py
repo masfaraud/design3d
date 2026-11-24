@@ -16,6 +16,11 @@ class TestClosedPolygon2D(unittest.TestCase):
     points = [design3d.Point2D(0, 0), design3d.Point2D(1, 0), design3d.Point2D(1, 1), design3d.Point2D(0, 1)]
     polygon = d3dw.ClosedPolygon2D(points)
 
+    def test_name(self):
+        polygon = d3dw.ClosedPolygon2D(self.points, name="square")
+        self.assertEqual(polygon.name, "square")
+        self.assertEqual(polygon.reference_path, design3d.PATH_ROOT)
+
     def test_triangulation(self):
 
         # Call the triangulation method with different options

@@ -2928,7 +2928,7 @@ class ClosedPolygon2D(ClosedPolygonMixin, Contour2D):
         self.points = points
         self._line_segments = None
 
-        Contour2D.__init__(self, self.line_segments, name)
+        Contour2D.__init__(self, self.line_segments, name=name)
 
     def copy(self, *args, **kwargs):
         """Returns a copy of the object."""
