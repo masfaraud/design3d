@@ -1688,3 +1688,36 @@ The constructor takes several parameters:
     sweep.babylonjs()
 
 .. image:: ../source/_static/index-images/sweep.png
+
+Loft
+====
+
+The Loft class is used to create a 3D object interpolating planar sections, for instance a beam whose section varies.
+
+The constructor takes several parameters:
+
+    - sections2d: The 2D contours of the sections. They must have the same number of primitives, the same
+      orientation, and their first primitives must correspond to each other.
+    - frames: One frame per section, the contour being drawn in the (u, v) plane of its frame.
+    - Optional keyword arguments include number_points (sampling of curved primitives), color, alpha, and name.
+
+The lateral faces are B-spline faces interpolating the sections. To interpolate open wires into an open surface, use
+``primitives3d.loft_faces`` and build an ``OpenShell3D`` from its faces.
+
+.. code-block:: python
+
+    import design3d
+    from design3d import primitives2d, primitives3d
+
+    def rounded_rectangle(width, height, radius):
+        return primitives2d.ClosedRoundedLineSegments2D(
+            [design3d.Point2D(-0.5 * width, -0.5 * height), design3d.Point2D(0.5 * width, -0.5 * height),
+             design3d.Point2D(0.5 * width, 0.5 * height), design3d.Point2D(-0.5 * width, 0.5 * height)],
+            {0: radius, 1: radius, 2: radius, 3: radius})
+
+    sections = [rounded_rectangle(0.12, 0.20, 0.02), rounded_rectangle(0.10, 0.12, 0.02),
+                rounded_rectangle(0.06, 0.06, 0.02)]
+    frames = [design3d.Frame3D(design3d.Point3D(0, 0, z), design3d.X3D, design3d.Y3D, design3d.Z3D)
+              for z in (0.0, 0.3, 0.5)]
+    loft = primitives3d.Loft(sections, frames, name='MyLoft')
+    loft.babylonjs()

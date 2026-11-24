@@ -24,7 +24,7 @@ import design3d.utils.parametric as d3d_parametric
 from design3d import curves, display, edges, grid, wires
 from design3d.base import DataEqualityObject
 from design3d.core import EdgeStyle
-from design3d.nurbs.core import derivatives_surface, evaluate_surface, point_inversion
+from design3d.nurbs.core import build_coeff_matrix, derivatives_surface, evaluate_surface, point_inversion
 from design3d.nurbs.fitting import approximate_surface, interpolate_surface
 from design3d.nurbs.helpers import generate_knot_vector
 from design3d.nurbs.operations import (
@@ -9928,6 +9928,69 @@ class BSplineSurface3D(Surface3D):
             knot_multiplicities_v,
             knots_u,
             knots_v,
+            name=name,
+        )
+
+    @classmethod
+    def from_parametrized_points_interpolation(
+        cls,
+        points_grid: list[list[design3d.Point3D]],
+        params_u: list[float],
+        params_v: list[float],
+        degree_u: int,
+        degree_v: int,
+        name: str = "",
+    ):
+        """
+        Bspline Surface interpolation through a grid of 3d points, at imposed parameters.
+
+        Unlike from_points_interpolation, which computes the parameters from the points, the parameters are given.
+        Two surfaces interpolating the same points with the same parameters along a boundary have the same
+        boundary curve: this is used to build adjacent faces sharing an edge.
+
+        :param points_grid: data points, points_grid[i][j] being interpolated at (params_u[i], params_v[j]).
+        :param params_u: increasing parameters in [0, 1], starting at 0 and ending at 1.
+        :param params_v: increasing parameters in [0, 1], starting at 0 and ending at 1.
+        :param degree_u: degree of the output surface for the u-direction, lower than len(params_u).
+        :param degree_v: degree of the output surface for the v-direction, lower than len(params_v).
+        :param name: (Optional) instance name.
+        :return: B-spline surface.
+        :rtype: BSplineSurface3D
+        """
+        points = np.asarray([[[*point] for point in row] for row in points_grid], dtype=np.float64)
+        size_u, size_v = points.shape[0], points.shape[1]
+        params_u = np.asarray(params_u, dtype=np.float64)
+        params_v = np.asarray(params_v, dtype=np.float64)
+
+        def averaging_knot_vector(degree, params):
+            # Averaging method: The NURBS Book (2nd Edition) Eq 9.8
+            num_points = len(params)
+            inner_knots = [sum(params[i + 1 : i + degree + 1]) / degree for i in range(num_points - degree - 1)]
+            return np.array([0.0] * (degree + 1) + inner_knots + [1.0] * (degree + 1), dtype=np.float64)
+
+        knot_vector_u = averaging_knot_vector(degree_u, params_u)
+        knot_vector_v = averaging_knot_vector(degree_v, params_v)
+
+        # Global interpolation, first along u for each v, then along v (Algorithm A9.4)
+        matrix_u = np.asarray(build_coeff_matrix(degree_u, knot_vector_u, params_u, size_u))
+        matrix_v = np.asarray(build_coeff_matrix(degree_v, knot_vector_v, params_v, size_v))
+        lu_u = lu_factor(matrix_u)
+        lu_v = lu_factor(matrix_v)
+        ctrlpts_r = np.stack([lu_solve(lu_u, points[:, j, :]) for j in range(size_v)], axis=1)
+        ctrlpts = np.stack([lu_solve(lu_v, ctrlpts_r[i, :, :]) for i in range(size_u)], axis=0)
+
+        knots_u, knot_multiplicities_u = np.unique(knot_vector_u, return_counts=True)
+        knots_v, knot_multiplicities_v = np.unique(knot_vector_v, return_counts=True)
+        return cls(
+            degree_u,
+            degree_v,
+            [design3d.Point3D(*point) for point in ctrlpts.reshape(-1, 3)],
+            size_u,
+            size_v,
+            knot_multiplicities_u.tolist(),
+            knot_multiplicities_v.tolist(),
+            knots_u.tolist(),
+            knots_v.tolist(),
             name=name,
         )
 
