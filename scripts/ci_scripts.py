@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 
 import matplotlib
@@ -81,6 +82,7 @@ scripts = [
     "showcases/simple_shapes.py",
     "showcases/casing.py",
     "showcases/vessel.py",
+    "showcases/car/car.py",
     # Mesh
     "mesh/read_msh_file.py",
     # 'mesh/geo_file_1.py',
@@ -102,7 +104,7 @@ scripts = [
 
 
 # Maximum time for a script
-CONTROLED_TIMES = {"showcases/casing.py": 15, "primitives/sweep.py": 15}
+CONTROLED_TIMES = {"showcases/casing.py": 15, "showcases/car/car.py": 30, "primitives/sweep.py": 15}
 
 # Executing scripts
 print("Executing scripts for CI:")
@@ -126,6 +128,8 @@ for script_name in scripts:
     file_name = script_name.split("/")[-1]
     time_start_script = time.time()
 
+    # Like the python interpreter, make the modules next to the script importable
+    sys.path.insert(0, os.getcwd())
     with open(file_name, encoding="utf-8") as script:
         # # Call babylon_data instead of babylonjs to avoid opening browser windows
         # pattern = r'\.babylonjs\(.*?\)'
@@ -133,6 +137,7 @@ for script_name in scripts:
         # exec(re.sub(pattern, replacement, script.read()))
         exec(script.read())
 
+    sys.path.pop(0)
     time_start_script = time.time() - time_start_script
     times[script_name] = time_start_script
     _plt.close("all")

@@ -32,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   angle by default, as for a molded part, or their own angles, for instance to keep the thickness of stamped walls.
   A symmetric extrusion spans half its length on each side of the sketch plane, which is the neutral plane of the
   draft
+- Car showcase (scripts/showcases/car): a parametric car built as a recursive tree of subassemblies (body, engine,
+  drivetrain, suspensions, wheels...) instantiated from architecture parameters, with ergonomic constraints
+  (steering wheel reach, knee clearances) checked on the placed seats and steering wheel
 
 ### Fixed
 
