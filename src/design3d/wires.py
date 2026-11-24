@@ -893,6 +893,11 @@ class Wire2D(WireMixin):
         """
         Generates an offset of a Wire2D.
 
+        A positive offset moves the wire to the right of its direction of travel: it enlarges a counterclockwise
+        contour and shrinks a clockwise one. A negative offset moves it to the left.
+
+        :param offset: offset distance.
+        :return: the offset wire.
         """
         offset_primitives = []
         infinite_primitives = []

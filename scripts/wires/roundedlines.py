@@ -47,7 +47,7 @@ rl2D_o = primitives2d.OpenedRoundedLineSegments2D(
 )
 
 
-rl2D_o2 = rl2D_o.offset_lines([2], -1.25)
+rl2D_o2 = rl2D_o.offset_lines([2], 1.25)
 ax = rl2D_o.plot()
 rl2D_o2.plot(ax=ax)
 
@@ -58,7 +58,7 @@ rl2D_c = primitives2d.ClosedRoundedLineSegments2D(
     # {0:1, 1:0.05, 2:0.05, 3:1},
     adapt_radius=True,
 )
-rl2D_c2 = rl2D_c.offset_lines([2], 0.2)
+rl2D_c2 = rl2D_c.offset_lines([2], -0.2)
 ax2 = rl2D_c.plot()
 rl2D_c2.plot(ax=ax2)
 

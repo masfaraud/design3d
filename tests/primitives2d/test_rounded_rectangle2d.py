@@ -70,9 +70,8 @@ class TestRoundedRectangle2D(unittest.TestCase):
 
     def test_operations_returning_generic_contours(self):
         self.assertAlmostEqual(self.rectangle.invert().area(), self.rectangle.area())
-        # ClosedRoundedLineSegments2D convention: a positive offset shrinks the profile.
-        self.assertAlmostEqual(self.rectangle.offset(0.01).area(), 0.38 * 0.18 - (4 - math.pi) * 0.04**2)
-        self.assertAlmostEqual(self.rectangle.offset(-0.01).area(), 0.42 * 0.22 - (4 - math.pi) * 0.06**2)
+        self.assertAlmostEqual(self.rectangle.offset(0.01).area(), 0.42 * 0.22 - (4 - math.pi) * 0.06**2)
+        self.assertAlmostEqual(self.rectangle.offset(-0.01).area(), 0.38 * 0.18 - (4 - math.pi) * 0.04**2)
         self.assertEqual(len(self.rectangle.offset_lines([0], 0.01).primitives), 8)
         line = design3d.curves.Line2D(design3d.O2D, design3d.Point2D(0.0, 1.0))
         self.assertAlmostEqual(self.rectangle.axial_symmetry(line).area(), self.rectangle.area())

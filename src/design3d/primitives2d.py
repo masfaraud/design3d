@@ -181,7 +181,8 @@ class RoundedLineSegments2D(RoundedLineSegments):
         Return a new rounded line segment with the specified offset.
 
         This method creates a new rounded line segment by offsetting the current one by a given distance.
-        The offset can be both positive and negative, moving the line segments outward or inward.
+        As for Wire2D.offset, a positive offset moves the line segments to the right of the direction of travel: it
+        enlarges a counterclockwise contour and shrinks a clockwise one.
 
         :param offset: The offset distance for the new rounded line segment.
         :type offset: float
@@ -189,6 +190,8 @@ class RoundedLineSegments2D(RoundedLineSegments):
         :return: A new RoundedLineSegments2D instance with the specified offset.
         :rtype: RoundedLineSegments2D
         """
+        # The computation below offsets to the left of the direction of travel.
+        offset = -offset
         number_points = len(self.points)
         vectors = []
         for i in range(number_points - 1):
@@ -306,13 +309,20 @@ class RoundedLineSegments2D(RoundedLineSegments):
 
     def offset_lines(self, line_indexes, offset):
         """
-        Line indexes is a list of consecutive line indexes.
+        Offsets some consecutive aligned lines, the other points being kept.
 
-        These line should all be aligned line_indexes = 0 being the 1st line.
+        Line indexes is a list of consecutive line indexes, line_indexes = 0 being the 1st line.
+        These lines should all be aligned.
 
         if self.close last line_index can be len(self.points)-1
         if not, last line_index can be len(self.points)-2
+
+        As for offset, a positive offset moves the lines to the right of the direction of travel.
         """
+        return self._offset_lines_to_the_left(line_indexes, -offset)
+
+    def _offset_lines_to_the_left(self, line_indexes, offset):
+        """Offsets some consecutive aligned lines to the left of the direction of travel."""
         new_linesegment2d_points = []
 
         dir_vec_1, dir_vec_2 = self._offset_directive_vector_helper(line_indexes)
@@ -329,11 +339,11 @@ class RoundedLineSegments2D(RoundedLineSegments):
         if math.isclose(dot1, 0, abs_tol=1e-9):
             # call function considering the line before, because the latter and
             # the first offset segment are parallel
-            return self.offset_lines([line_indexes[0] - 1] + line_indexes, offset)
+            return self._offset_lines_to_the_left([line_indexes[0] - 1] + line_indexes, offset)
         if math.isclose(dot2, 0, abs_tol=1e-9):
             # call function considering the line after, because the latter and
             # the last offset segment are parallel
-            return self.offset_lines(line_indexes + [line_indexes[-1] + 1], offset)
+            return self._offset_lines_to_the_left(line_indexes + [line_indexes[-1] + 1], offset)
 
         distance_dir1 = offset / dot1
         distance_dir2 = offset / dot2
@@ -420,6 +430,7 @@ class ParametricContour2DMixin:
     ``generic_contour``. Transformations that keep the shape (copy, rotation, translation, frame mapping) return a
     new instance of the subclass with an updated placement. Operations that change the shape (invert, offset, axial
     symmetry, reordering) return the equivalent generic contour, as their result is no longer the parametric profile.
+    The profiles are counterclockwise, so a positive offset enlarges them.
     """
 
     def _parameters(self) -> dict:
@@ -559,11 +570,7 @@ class RoundedRectangle2D(ParametricContour2DMixin, ClosedRoundedLineSegments2D):
         )
 
     def offset(self, offset):
-        """
-        Returns the offset profile, as a ClosedRoundedLineSegments2D.
-
-        As for ClosedRoundedLineSegments2D, a positive offset shrinks the profile.
-        """
+        """Returns the offset profile, as a ClosedRoundedLineSegments2D. A positive offset enlarges it."""
         return self._rounded_line_segments().offset(offset)
 
     def offset_lines(self, line_indexes, offset):
@@ -654,6 +661,22 @@ class Slot2D(ParametricContour2DMixin, wires.Contour2D):
 
     def _parameters(self) -> dict:
         return {"total_length": self.total_length, "width": self.width}
+
+    def offset(self, offset):
+        """
+        Returns the offset slot, which is still a slot. A positive offset enlarges it.
+
+        :param offset: offset distance.
+        :return: a new Slot2D with the same center and angle.
+        """
+        return self.__class__(
+            self.total_length + 2 * offset,
+            self.width + 2 * offset,
+            center=self.center.copy(),
+            angle=self.angle,
+            reference_path=self.reference_path,
+            name=self.name,
+        )
 
     def generic_contour(self):
         """Returns the profile as a Contour2D."""

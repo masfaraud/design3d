@@ -46,6 +46,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- RoundedLineSegments2D: `offset` and `offset_lines` follow the convention of Wire2D, Contour2D and
+  ClosedPolygon2D: a positive offset moves to the right of the direction of travel, which enlarges a counterclockwise
+  contour. The sign of existing calls must be inverted
 - design3d requires Python 3.12 or later
 - Library messages go through `warnings` or `logging` instead of `print`, and warnings point to the calling code
 - FlatElementError gives the element area in its message instead of printing it and plotting the element
