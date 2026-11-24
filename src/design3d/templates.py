@@ -59,11 +59,14 @@ BABYLON_UNPACKER_EMBEDDED_HEADER = """
 base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "assets/js/"))
 
 
-for filename in ["babylon.js", "babylonjs.loaders.min.js", "earcut.min.js", "pep.js"]:
-    file_path = os.path.join(base_path, filename)
+def _read_asset(path: str) -> str:
+    """Read an asset to inline it in a Template, escaping the $ of Template placeholders."""
+    with open(path, encoding="utf-8") as file:
+        return file.read().replace("$", "$$")
 
-    with open(file_path, encoding="utf-8") as fjs:
-        BABYLON_UNPACKER_EMBEDDED_HEADER += fjs.read()
+
+for filename in ["babylon.js", "babylonjs.loaders.min.js", "earcut.min.js", "pep.js"]:
+    BABYLON_UNPACKER_EMBEDDED_HEADER += _read_asset(os.path.join(base_path, filename))
 
 
 BABYLON_UNPACKER_EMBEDDED_HEADER += """
