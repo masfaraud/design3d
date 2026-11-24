@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Loft primitive: a solid interpolating planar sections, each given by a 2D contour and a frame
 - primitives3d.loft_faces: B-spline faces interpolating 3D wires (open or closed), to build open shells
 - BSplineSurface3D.from_parametrized_points_interpolation: surface interpolation through points at imposed parameters
+- primitives2d: parametric profiles `RoundedRectangle2D`, `RegularPolygon2D` and `Slot2D`, placed by a center and an
+  angle. Copies and rigid transformations keep the class and its parameters
 
 ### Fixed
 

@@ -10,7 +10,7 @@ import json
 import sys
 
 MIN_FILE_COVERAGE = 59.1
-MIN_PROJECT_COVERAGE = 75.3
+MIN_PROJECT_COVERAGE = 75.5
 
 # Modules compiled by Cython, which coverage cannot trace.
 UNTRACKED_MODULES = [

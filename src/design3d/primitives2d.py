@@ -397,6 +397,254 @@ class ClosedRoundedLineSegments2D(RoundedLineSegments2D, wires.Contour2D):
         )
 
 
+class ParametricContour2DMixin:
+    """
+    Common behavior of the parametric 2D profiles placed by a center and an angle.
+
+    Subclasses store their shape parameters as attributes, list them in ``_parameters`` and implement
+    ``generic_contour``. Transformations that keep the shape (copy, rotation, translation, frame mapping) return a
+    new instance of the subclass with an updated placement. Operations that change the shape (invert, offset, axial
+    symmetry, reordering) return the equivalent generic contour, as their result is no longer the parametric profile.
+    """
+
+    def _parameters(self) -> dict:
+        """Returns the shape parameters, as keyword arguments of the constructor."""
+        raise NotImplementedError(f"{self.__class__.__name__} must implement _parameters")
+
+    def generic_contour(self):
+        """Returns the profile as a generic contour of the parent class."""
+        raise NotImplementedError(f"{self.__class__.__name__} must implement generic_contour")
+
+    def _local_to_global(self, x: float, y: float) -> design3d.Point2D:
+        """Places a point given in the profile local coordinates (centered, not rotated)."""
+        cos_angle, sin_angle = math.cos(self.angle), math.sin(self.angle)
+        return design3d.Point2D(
+            self.center.x + cos_angle * x - sin_angle * y, self.center.y + sin_angle * x + cos_angle * y
+        )
+
+    def _placed(self, center: design3d.Point2D, angle: float):
+        """Returns the same profile at another placement."""
+        return self.__class__(
+            **self._parameters(), center=center, angle=angle, reference_path=self.reference_path, name=self.name
+        )
+
+    def copy(self, deep=True, memo=None):
+        """Returns a copy of the profile."""
+        return self._placed(self.center.copy(), self.angle)
+
+    def rotation(self, center: design3d.Point2D, angle: float):
+        """
+        Rotates the profile.
+
+        :param center: rotation center.
+        :param angle: rotation angle.
+        :return: a new rotated profile of the same class.
+        """
+        return self._placed(self.center.rotation(center, angle), self.angle + angle)
+
+    def translation(self, offset: design3d.Vector2D):
+        """
+        Translates the profile.
+
+        :param offset: translation vector.
+        :return: a new translated profile of the same class.
+        """
+        return self._placed(self.center.translation(offset), self.angle)
+
+    def frame_mapping(self, frame: design3d.Frame2D, side: str):
+        """
+        Changes the frame of the profile.
+
+        The profiles are symmetric with respect to their local x-axis, so an indirect frame is also handled.
+
+        :param frame: the frame.
+        :param side: 'old' or 'new'.
+        :return: a new profile of the same class.
+        """
+        new_center = self.center.frame_mapping(frame, side)
+        direction_point = self._local_to_global(1.0, 0.0).frame_mapping(frame, side)
+        direction = direction_point - new_center
+        return self._placed(new_center, math.atan2(direction.y, direction.x))
+
+    def to_dict(self, *args, **kwargs):
+        """Serializes the profile from its parameters."""
+        dict_ = self.base_dict()
+        dict_.update(self._parameters())
+        dict_.update({"center": self.center.to_dict(), "angle": self.angle, "reference_path": self.reference_path})
+        return dict_
+
+    def invert(self):
+        """Returns the inverted generic contour."""
+        return self.generic_contour().invert()
+
+    def order_wire(self, tol=1e-6):
+        """Returns the ordered generic contour."""
+        return self.generic_contour().order_wire(tol)
+
+    def offset(self, offset):
+        """Returns the offset generic contour."""
+        return self.generic_contour().offset(offset)
+
+    def axial_symmetry(self, line):
+        """Returns the generic contour symmetric with respect to a line."""
+        return self.generic_contour().axial_symmetry(line)
+
+    def reorder_contour_at_point(self, point):
+        """Returns the generic contour reordered to start at a point."""
+        return self.generic_contour().reorder_contour_at_point(point)
+
+
+class RoundedRectangle2D(ParametricContour2DMixin, ClosedRoundedLineSegments2D):
+    """
+    A rectangle with its four corners rounded with the same radius.
+
+    :param width: the dimension along the local x-axis.
+    :param height: the dimension along the local y-axis.
+    :param corner_radius: the radius of the corners. A zero radius gives sharp corners.
+    :param center: the center of the rectangle.
+    :param angle: the angle between the global x-axis and the width direction.
+    """
+
+    def __init__(
+        self,
+        width: float,
+        height: float,
+        corner_radius: float,
+        center: design3d.Point2D = design3d.O2D,
+        angle: float = 0.0,
+        reference_path: str = PATH_ROOT,
+        name: str = "",
+    ):
+        self.width = width
+        self.height = height
+        self.corner_radius = corner_radius
+        self.center = center
+        self.angle = angle
+        half_width, half_height = 0.5 * width, 0.5 * height
+        points = [
+            self._local_to_global(-half_width, -half_height),
+            self._local_to_global(half_width, -half_height),
+            self._local_to_global(half_width, half_height),
+            self._local_to_global(-half_width, half_height),
+        ]
+        radius = {i: corner_radius for i in range(4)} if corner_radius else {}
+        ClosedRoundedLineSegments2D.__init__(self, points, radius, reference_path=reference_path, name=name)
+
+    def _parameters(self) -> dict:
+        return {"width": self.width, "height": self.height, "corner_radius": self.corner_radius}
+
+    def generic_contour(self):
+        """Returns the profile as a Contour2D."""
+        return wires.Contour2D([primitive.copy() for primitive in self.primitives], reference_path=self.reference_path)
+
+    def _rounded_line_segments(self):
+        """Returns the profile as a ClosedRoundedLineSegments2D, used for the offsets."""
+        return ClosedRoundedLineSegments2D(
+            [point.copy() for point in self.points], self.radius.copy(), reference_path=self.reference_path
+        )
+
+    def offset(self, offset):
+        """
+        Returns the offset profile, as a ClosedRoundedLineSegments2D.
+
+        As for ClosedRoundedLineSegments2D, a positive offset shrinks the profile.
+        """
+        return self._rounded_line_segments().offset(offset)
+
+    def offset_lines(self, line_indexes, offset):
+        """Returns the profile with some lines offset, as a ClosedRoundedLineSegments2D."""
+        return self._rounded_line_segments().offset_lines(line_indexes, offset)
+
+
+class RegularPolygon2D(ParametricContour2DMixin, wires.ClosedPolygon2D):
+    """
+    A regular polygon defined by its circumscribed circle.
+
+    :param number_sides: the number of sides.
+    :param radius: the radius of the circumscribed circle.
+    :param center: the center of the polygon.
+    :param angle: the angle between the global x-axis and the direction from the center to the first vertex.
+    """
+
+    def __init__(
+        self,
+        number_sides: int,
+        radius: float,
+        center: design3d.Point2D = design3d.O2D,
+        angle: float = 0.0,
+        reference_path: str = PATH_ROOT,
+        name: str = "",
+    ):
+        self.number_sides = number_sides
+        self.radius = radius
+        self.center = center
+        self.angle = angle
+        angle_step = 2 * math.pi / number_sides
+        points = [
+            self._local_to_global(radius * math.cos(i * angle_step), radius * math.sin(i * angle_step))
+            for i in range(number_sides)
+        ]
+        wires.ClosedPolygon2D.__init__(self, points, name=name)
+        # ClosedPolygon2D has no reference_path argument: set it after the parent initialization.
+        self.reference_path = reference_path
+
+    def _parameters(self) -> dict:
+        return {"number_sides": self.number_sides, "radius": self.radius}
+
+    def generic_contour(self):
+        """Returns the profile as a ClosedPolygon2D."""
+        return wires.ClosedPolygon2D([point.copy() for point in self.points])
+
+    def simplify_polygon(self, min_distance: float = 0.01, max_distance: float = 0.05, angle: float = 15):
+        """Returns the simplified generic polygon."""
+        return self.generic_contour().simplify_polygon(min_distance, max_distance, angle)
+
+
+class Slot2D(ParametricContour2DMixin, wires.Contour2D):
+    """
+    An oblong profile: two parallel lines joined by two half circles.
+
+    :param total_length: the overall length, from one end to the other, along the local x-axis.
+    :param width: the width of the slot, which is the diameter of the half circles.
+    :param center: the center of the slot.
+    :param angle: the angle between the global x-axis and the length direction.
+    """
+
+    def __init__(
+        self,
+        total_length: float,
+        width: float,
+        center: design3d.Point2D = design3d.O2D,
+        angle: float = 0.0,
+        reference_path: str = PATH_ROOT,
+        name: str = "",
+    ):
+        self.total_length = total_length
+        self.width = width
+        self.center = center
+        self.angle = angle
+        radius = 0.5 * width
+        half_straight = 0.5 * total_length - radius
+        bottom_right = self._local_to_global(half_straight, -radius)
+        top_right = self._local_to_global(half_straight, radius)
+        top_left = self._local_to_global(-half_straight, radius)
+        bottom_left = self._local_to_global(-half_straight, -radius)
+        primitives = [
+            edges.LineSegment2D(bottom_left, bottom_right),
+            edges.Arc2D.from_3_points(bottom_right, self._local_to_global(half_straight + radius, 0.0), top_right),
+            edges.LineSegment2D(top_right, top_left),
+            edges.Arc2D.from_3_points(top_left, self._local_to_global(-half_straight - radius, 0.0), bottom_left),
+        ]
+        wires.Contour2D.__init__(self, primitives, reference_path=reference_path, name=name)
+
+    def _parameters(self) -> dict:
+        return {"total_length": self.total_length, "width": self.width}
+
+    def generic_contour(self):
+        """Returns the profile as a Contour2D."""
+        return wires.Contour2D([primitive.copy() for primitive in self.primitives], reference_path=self.reference_path)
+
+
 class Measure2D(edges.LineSegment2D):
     """
     Measure 2D class.
