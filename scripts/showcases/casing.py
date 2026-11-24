@@ -24,14 +24,14 @@ inner_contour = primitives2d.ClosedRoundedLineSegments2D(
     [p1, p2, p3, p4, p5, p6], {0: 0.01, 1: 0.01, 2: 0.015, 3: 0.020, 4: 0.012, 5: 0.008}, adapt_radius=True
 )
 
-outer_contour = inner_contour.offset(-THICKNESS)
+outer_contour = inner_contour.offset(THICKNESS)
 
 
 sides = primitives3d.ExtrudedProfile(d3d.OXYZ, outer_contour, [inner_contour], HEIGHT - 2 * THICKNESS, name="sides")
 
 bottom = primitives3d.ExtrudedProfile(d3d.OXYZ, outer_contour, [], -THICKNESS, name="bottom")
 
-screw_holes_rl = inner_contour.offset(-(THICKNESS + SCREW_HOLES_CLEARANCE + 0.5 * SCREW_HOLES_DIAMETER))
+screw_holes_rl = inner_contour.offset(THICKNESS + SCREW_HOLES_CLEARANCE + 0.5 * SCREW_HOLES_DIAMETER)
 screw_holes = []
 length = screw_holes_rl.length()
 for i in range(N_SCREWS):
@@ -40,7 +40,7 @@ for i in range(N_SCREWS):
     circle = curves.Circle2D(design3d.Frame2D(p, design3d.X2D, design3d.Y2D), SCREW_HOLES_DIAMETER * 0.5)
     screw_holes.append(design3d.wires.Contour2D([edges.FullArc2D.from_curve(circle)]))
 
-belt_outer_contour = inner_contour.offset(-(2 * SCREW_HOLES_CLEARANCE + SCREW_HOLES_DIAMETER + THICKNESS))
+belt_outer_contour = inner_contour.offset(2 * SCREW_HOLES_CLEARANCE + SCREW_HOLES_DIAMETER + THICKNESS)
 belt = primitives3d.ExtrudedProfile(
     design3d.Frame3D(d3d.Point3D(0, 0, 1) * (HEIGHT - 2 * THICKNESS), d3d.X3D, d3d.Y3D, d3d.Z3D),
     belt_outer_contour,

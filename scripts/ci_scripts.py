@@ -39,6 +39,7 @@ scripts = [
     "primitives/cone.py",
     "primitives/cylinder.py",
     "primitives/hollow_cylinder.py",
+    "primitives/profiles2d.py",
     # Faces
     "faces/triangle3d.py",
     "faces/bspline.py",

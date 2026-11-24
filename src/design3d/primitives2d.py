@@ -9,7 +9,7 @@ import matplotlib.patches
 import matplotlib.pyplot as plt
 
 import design3d
-from design3d import PATH_ROOT, curves, edges, wires
+from design3d import PATH_ROOT, edges, wires
 from design3d.core import EdgeStyle
 from design3d.primitives import RoundedLineSegments
 
@@ -115,6 +115,21 @@ class RoundedLineSegments2D(RoundedLineSegments):
             name=self.name,
         )
 
+    def invert(self):
+        """
+        Returns the rounded line segments traveled in the opposite direction.
+
+        The points are reversed, and each radius follows its point to its new index.
+        """
+        last_index = len(self.points) - 1
+        return self.__class__(
+            self.points[::-1],
+            {last_index - index: radius for index, radius in self.radius.items()},
+            adapt_radius=self.adapt_radius,
+            reference_path=self.reference_path,
+            name=self.name,
+        )
+
     def _helper_offset_points_and_radii(self, vectors, number_points, offset):
         """
         Helper method to get offset points and new radii for offset method.
@@ -166,7 +181,8 @@ class RoundedLineSegments2D(RoundedLineSegments):
         Return a new rounded line segment with the specified offset.
 
         This method creates a new rounded line segment by offsetting the current one by a given distance.
-        The offset can be both positive and negative, moving the line segments outward or inward.
+        As for Wire2D.offset, a positive offset moves the line segments to the right of the direction of travel: it
+        enlarges a counterclockwise contour and shrinks a clockwise one.
 
         :param offset: The offset distance for the new rounded line segment.
         :type offset: float
@@ -174,6 +190,8 @@ class RoundedLineSegments2D(RoundedLineSegments):
         :return: A new RoundedLineSegments2D instance with the specified offset.
         :rtype: RoundedLineSegments2D
         """
+        # The computation below offsets to the left of the direction of travel.
+        offset = -offset
         number_points = len(self.points)
         vectors = []
         for i in range(number_points - 1):
@@ -197,144 +215,73 @@ class RoundedLineSegments2D(RoundedLineSegments):
 
         return self.__class__(offset_points, new_radii, adapt_radius=self.adapt_radius)
 
-    def _offset_directive_vector_helper(self, line_indexes):
+    def _is_aligned(self, start_index, end_index, direction, tol: float = 1e-9):
+        """Returns True if the side between two points is parallel to a unit direction."""
+        side_direction = (self.points[end_index] - self.points[start_index]).unit_vector()
+        return abs(side_direction.cross(direction)) < tol
+
+    def _offset_lines_end_point(self, point_index, side_point_index, normal, offset):
         """
-        Computes the directive vectors between which the offset will be drawn.
+        Moves an end point of the offset lines, so that the offset lines are at the offset distance.
 
-        :param line_indexes: A list of consecutive line indexes.
-        :return: directive vector 1 and 2.
+        :param point_index: index of the end point.
+        :param side_point_index: index of the other point of the adjacent side, along which the end point slides, or
+            None for a free end of an opened wire, which then moves along the normal.
+        :param normal: unit normal of the offset lines, on the side of a positive offset.
+        :param offset: offset distance.
+        :return: the new end point.
         """
-        dir_vec_1 = None
-        dir_vec_2 = None
-
-        if line_indexes[0] == 0 and not self.closed:
-            pass
-        else:
-            dir_vec_1 = self.points[line_indexes[0]] - self.points[line_indexes[0] - 1]
-
-        if line_indexes[-1] == len(self.points) - (2 - self.closed):
-            if not self.closed:
-                pass
-            else:
-                dir_vec_2 = design3d.Vector2D(self.points[0] - self.points[1])
-        elif self.closed and line_indexes[-1] == len(self.points) - 2:
-            dir_vec_2 = design3d.Vector2D(self.points[line_indexes[-1] + 1] - self.points[0])
-        else:
-            dir_vec_2 = self.points[line_indexes[-1] + 1] - self.points[line_indexes[-1] + 2]
-
-        if dir_vec_1 is None:
-            dir_vec_1 = dir_vec_2
-        if dir_vec_2 is None:
-            dir_vec_2 = dir_vec_1
-
-        dir_vec_1 = dir_vec_1.unit_vector()
-        dir_vec_2 = dir_vec_2.unit_vector()
-        return dir_vec_1, dir_vec_2
-
-    def get_offset_normal_vectors(self, line_indexes):
-        """
-        Gets offset normal vectors.
-
-        :param line_indexes:
-        :return: A list of consecutive line indexes.
-        """
-        normal_vectors = []
-        for index in line_indexes:
-            if index == len(self.points) - 1:
-                normal_vectors.append(design3d.Vector2D(self.points[0] - self.points[index]).normalVector(unit=True))
-            else:
-                normal_vectors.append((self.points[index + 1] - self.points[index]).unit_normal_vector())
-        return normal_vectors
-
-    def _helper_get_offset_vectors(self, line_indexes, directive_vector1, directive_vector2):
-        """
-        Helper method: get offset vectors.
-
-        """
-        intersection = design3d.Point2D.line_intersection(
-            curves.Line2D(self.points[line_indexes[0]], self.points[line_indexes[0]] + directive_vector1),
-            curves.Line2D(self.points[line_indexes[-1] + 1], self.points[line_indexes[-1] + 1] + directive_vector2),
-        )
-        vec1 = intersection.point_distance(self.points[line_indexes[0]]) * directive_vector1
-        vec2 = intersection.point_distance(self.points[line_indexes[-1] + 1]) * directive_vector2
-        return vec1, vec2
-
-    def get_offset_new_points(
-        self, line_indexes, offset, distance_dir1, distance_dir2, directive_vector1, directive_vector2, normal_vectors
-    ):
-        """
-        Get Offset new points.
-
-        """
-        if len(line_indexes) <= 1:
-            return []
-        vec1, vec2 = self._helper_get_offset_vectors(line_indexes, directive_vector1, directive_vector2)
-        new_points = {line_indexes[0]: self.points[line_indexes[0]] + distance_dir1 * directive_vector1}
-
-        for i, index in enumerate(line_indexes[1:]):
-            coeff_vec_2 = design3d.Point2D.point_distance(
-                self.points[line_indexes[0]], self.points[index]
-            ) / design3d.Point2D.point_distance(self.points[line_indexes[0]], self.points[line_indexes[-1] + 1])
-            coeff_vec_1 = 1 - coeff_vec_2
-            if directive_vector1.dot(normal_vectors[i + 1]) < 0:
-                coeff_vec_1 = -coeff_vec_1
-            if directive_vector2.dot(normal_vectors[i + 1]) < 0:
-                coeff_vec_2 = -coeff_vec_2
-            index_dir_vector = coeff_vec_1 * vec1 + coeff_vec_2 * vec2
-            index_dot = index_dir_vector.dot(normal_vectors[i + 1])
-            new_points[index] = self.points[index] + (offset / index_dot) * index_dir_vector
-        if self.closed and line_indexes[-1] == len(self.points) - 1:
-            new_points[0] = self.points[0] + distance_dir2 * directive_vector2
-        else:
-            new_points[line_indexes[-1] + 1] = self.points[line_indexes[-1] + 1] + distance_dir2 * directive_vector2
-        return new_points
+        point = self.points[point_index]
+        if side_point_index is None:
+            return point + offset * normal
+        side_direction = (point - self.points[side_point_index]).unit_vector()
+        return point + (offset / side_direction.dot(normal)) * side_direction
 
     def offset_lines(self, line_indexes, offset):
         """
-        Line indexes is a list of consecutive line indexes.
+        Offsets some consecutive aligned lines, the other points being kept.
 
-        These line should all be aligned line_indexes = 0 being the 1st line.
+        The end points of the offset lines slide along the adjacent sides, and the intermediate points keep their
+        relative position between the end points. A free end of an opened wire moves along the normal of the lines.
+        An adjacent side aligned with the offset lines is offset with them.
 
-        if self.close last line_index can be len(self.points)-1
-        if not, last line_index can be len(self.points)-2
+        As for offset, a positive offset moves the lines to the right of the direction of travel: it pushes them out
+        of a counterclockwise contour.
+
+        :param line_indexes: consecutive indexes of aligned lines, the line i going from the point i to the next one.
+            For a closed contour, the last line, from the last point to the first one, has the index len(points) - 1.
+        :param offset: offset distance.
+        :return: a new rounded line segments, with the same radii.
         """
-        new_linesegment2d_points = []
+        number_points = len(self.points)
+        first_index = line_indexes[0]
+        last_index = (line_indexes[-1] + 1) % number_points
+        direction = (self.points[(first_index + 1) % number_points] - self.points[first_index]).unit_vector()
+        normal = design3d.Vector2D(direction.y, -direction.x)
 
-        dir_vec_1, dir_vec_2 = self._offset_directive_vector_helper(line_indexes)
+        previous_index = (first_index - 1) % number_points if self.closed or first_index > 0 else None
+        next_index = (last_index + 1) % number_points if self.closed or last_index < number_points - 1 else None
+        # An adjacent side aligned with the offset lines is offset with them.
+        if previous_index is not None and self._is_aligned(previous_index, first_index, direction):
+            return self.offset_lines([previous_index] + list(line_indexes), offset)
+        if next_index is not None and self._is_aligned(last_index, next_index, direction):
+            return self.offset_lines(list(line_indexes) + [last_index], offset)
 
-        normal_vectors = self.get_offset_normal_vectors(line_indexes)
+        new_first_point = self._offset_lines_end_point(first_index, previous_index, normal, offset)
+        new_last_point = self._offset_lines_end_point(last_index, next_index, normal, offset)
+        new_points = {first_index: new_first_point, last_index: new_last_point}
+        length = self.points[first_index].point_distance(self.points[last_index])
+        for index in line_indexes[1:]:
+            ratio = self.points[first_index].point_distance(self.points[index]) / length
+            new_points[index] = new_first_point + ratio * (new_last_point - new_first_point)
 
-        # =============================================================================
-        # COMPUTES THE ANGLE BETWEEN THE NORMAL VECTOR OF THE SURFACE TO OFFSET AND
-        # THE DIRECTIVE VECTOR IN ORDER TO SET THE NEW POINT AT THE RIGHT DISTANCE
-        # =============================================================================
-        dot1 = dir_vec_1.dot(normal_vectors[0])
-        dot2 = dir_vec_2.dot(normal_vectors[-1])
-
-        if math.isclose(dot1, 0, abs_tol=1e-9):
-            # call function considering the line before, because the latter and
-            # the first offset segment are parallel
-            return self.offset_lines([line_indexes[0] - 1] + line_indexes, offset)
-        if math.isclose(dot2, 0, abs_tol=1e-9):
-            # call function considering the line after, because the latter and
-            # the last offset segment are parallel
-            return self.offset_lines(line_indexes + [line_indexes[-1] + 1], offset)
-
-        distance_dir1 = offset / dot1
-        distance_dir2 = offset / dot2
-
-        new_points = self.get_offset_new_points(
-            line_indexes, offset, distance_dir1, distance_dir2, dir_vec_1, dir_vec_2, normal_vectors
+        return self.__class__(
+            [new_points.get(index, point) for index, point in enumerate(self.points)],
+            self.radius.copy(),
+            adapt_radius=self.adapt_radius,
+            reference_path=self.reference_path,
+            name=self.name,
         )
-        for i, point in enumerate(self.points):
-            if i in new_points:
-                new_linesegment2d_points.append(new_points[i])
-            else:
-                new_linesegment2d_points.append(point)
-
-        rls_2d = self.__class__(new_linesegment2d_points, self.radius, adapt_radius=self.adapt_radius)
-
-        return rls_2d
 
 
 class OpenedRoundedLineSegments2D(RoundedLineSegments2D, wires.Wire2D):
@@ -395,6 +342,267 @@ class ClosedRoundedLineSegments2D(RoundedLineSegments2D, wires.Contour2D):
             self.adapt_radius,
             name="copy_" + self.name,
         )
+
+
+class ParametricContour2DMixin:
+    """
+    Common behavior of the parametric 2D profiles placed by a center and an angle.
+
+    Subclasses store their shape parameters as attributes, list them in ``_parameters`` and implement
+    ``generic_contour``. Transformations that keep the shape (copy, rotation, translation, frame mapping) return a
+    new instance of the subclass with an updated placement. Operations that change the shape (invert, offset, axial
+    symmetry, reordering) return the equivalent generic contour, as their result is no longer the parametric profile.
+    The profiles are counterclockwise, so a positive offset enlarges them.
+    """
+
+    def _parameters(self) -> dict:
+        """Returns the shape parameters, as keyword arguments of the constructor."""
+        raise NotImplementedError(f"{self.__class__.__name__} must implement _parameters")
+
+    def generic_contour(self):
+        """Returns the profile as a generic contour of the parent class."""
+        raise NotImplementedError(f"{self.__class__.__name__} must implement generic_contour")
+
+    def _local_to_global(self, x: float, y: float) -> design3d.Point2D:
+        """Places a point given in the profile local coordinates (centered, not rotated)."""
+        cos_angle, sin_angle = math.cos(self.angle), math.sin(self.angle)
+        return design3d.Point2D(
+            self.center.x + cos_angle * x - sin_angle * y, self.center.y + sin_angle * x + cos_angle * y
+        )
+
+    def _placed(self, center: design3d.Point2D, angle: float):
+        """Returns the same profile at another placement."""
+        return self.__class__(
+            **self._parameters(), center=center, angle=angle, reference_path=self.reference_path, name=self.name
+        )
+
+    def copy(self, deep=True, memo=None):
+        """Returns a copy of the profile."""
+        return self._placed(self.center.copy(), self.angle)
+
+    def rotation(self, center: design3d.Point2D, angle: float):
+        """
+        Rotates the profile.
+
+        :param center: rotation center.
+        :param angle: rotation angle.
+        :return: a new rotated profile of the same class.
+        """
+        return self._placed(self.center.rotation(center, angle), self.angle + angle)
+
+    def translation(self, offset: design3d.Vector2D):
+        """
+        Translates the profile.
+
+        :param offset: translation vector.
+        :return: a new translated profile of the same class.
+        """
+        return self._placed(self.center.translation(offset), self.angle)
+
+    def frame_mapping(self, frame: design3d.Frame2D, side: str):
+        """
+        Changes the frame of the profile.
+
+        The profiles are symmetric with respect to their local x-axis, so an indirect frame is also handled.
+
+        :param frame: the frame.
+        :param side: 'old' or 'new'.
+        :return: a new profile of the same class.
+        """
+        new_center = self.center.frame_mapping(frame, side)
+        direction_point = self._local_to_global(1.0, 0.0).frame_mapping(frame, side)
+        direction = direction_point - new_center
+        return self._placed(new_center, math.atan2(direction.y, direction.x))
+
+    def to_dict(self, *args, **kwargs):
+        """Serializes the profile from its parameters."""
+        dict_ = self.base_dict()
+        dict_.update(self._parameters())
+        dict_.update({"center": self.center.to_dict(), "angle": self.angle, "reference_path": self.reference_path})
+        return dict_
+
+    def invert(self):
+        """Returns the inverted generic contour."""
+        return self.generic_contour().invert()
+
+    def order_wire(self, tol=1e-6):
+        """Returns the ordered generic contour."""
+        return self.generic_contour().order_wire(tol)
+
+    def offset(self, offset):
+        """Returns the offset generic contour."""
+        return self.generic_contour().offset(offset)
+
+    def axial_symmetry(self, line):
+        """Returns the generic contour symmetric with respect to a line."""
+        return self.generic_contour().axial_symmetry(line)
+
+    def reorder_contour_at_point(self, point):
+        """Returns the generic contour reordered to start at a point."""
+        return self.generic_contour().reorder_contour_at_point(point)
+
+
+class RoundedRectangle2D(ParametricContour2DMixin, ClosedRoundedLineSegments2D):
+    """
+    A rectangle with its four corners rounded with the same radius.
+
+    :param width: the dimension along the local x-axis.
+    :param height: the dimension along the local y-axis.
+    :param corner_radius: the radius of the corners. A zero radius gives sharp corners.
+    :param center: the center of the rectangle.
+    :param angle: the angle between the global x-axis and the width direction.
+    """
+
+    def __init__(
+        self,
+        width: float,
+        height: float,
+        corner_radius: float,
+        center: design3d.Point2D = design3d.O2D,
+        angle: float = 0.0,
+        reference_path: str = PATH_ROOT,
+        name: str = "",
+    ):
+        self.width = width
+        self.height = height
+        self.corner_radius = corner_radius
+        self.center = center
+        self.angle = angle
+        half_width, half_height = 0.5 * width, 0.5 * height
+        points = [
+            self._local_to_global(-half_width, -half_height),
+            self._local_to_global(half_width, -half_height),
+            self._local_to_global(half_width, half_height),
+            self._local_to_global(-half_width, half_height),
+        ]
+        radius = {i: corner_radius for i in range(4)} if corner_radius else {}
+        ClosedRoundedLineSegments2D.__init__(self, points, radius, reference_path=reference_path, name=name)
+
+    def _parameters(self) -> dict:
+        return {"width": self.width, "height": self.height, "corner_radius": self.corner_radius}
+
+    def generic_contour(self):
+        """Returns the profile as a Contour2D."""
+        return wires.Contour2D([primitive.copy() for primitive in self.primitives], reference_path=self.reference_path)
+
+    def _rounded_line_segments(self):
+        """Returns the profile as a ClosedRoundedLineSegments2D, used for the offsets."""
+        return ClosedRoundedLineSegments2D(
+            [point.copy() for point in self.points], self.radius.copy(), reference_path=self.reference_path
+        )
+
+    def offset(self, offset):
+        """Returns the offset profile, as a ClosedRoundedLineSegments2D. A positive offset enlarges it."""
+        return self._rounded_line_segments().offset(offset)
+
+    def offset_lines(self, line_indexes, offset):
+        """Returns the profile with some lines offset, as a ClosedRoundedLineSegments2D."""
+        return self._rounded_line_segments().offset_lines(line_indexes, offset)
+
+
+class RegularPolygon2D(ParametricContour2DMixin, wires.ClosedPolygon2D):
+    """
+    A regular polygon defined by its circumscribed circle.
+
+    :param number_sides: the number of sides.
+    :param radius: the radius of the circumscribed circle.
+    :param center: the center of the polygon.
+    :param angle: the angle between the global x-axis and the direction from the center to the first vertex.
+    """
+
+    def __init__(
+        self,
+        number_sides: int,
+        radius: float,
+        center: design3d.Point2D = design3d.O2D,
+        angle: float = 0.0,
+        reference_path: str = PATH_ROOT,
+        name: str = "",
+    ):
+        self.number_sides = number_sides
+        self.radius = radius
+        self.center = center
+        self.angle = angle
+        angle_step = 2 * math.pi / number_sides
+        points = [
+            self._local_to_global(radius * math.cos(i * angle_step), radius * math.sin(i * angle_step))
+            for i in range(number_sides)
+        ]
+        wires.ClosedPolygon2D.__init__(self, points, name=name)
+        # ClosedPolygon2D has no reference_path argument: set it after the parent initialization.
+        self.reference_path = reference_path
+
+    def _parameters(self) -> dict:
+        return {"number_sides": self.number_sides, "radius": self.radius}
+
+    def generic_contour(self):
+        """Returns the profile as a ClosedPolygon2D."""
+        return wires.ClosedPolygon2D([point.copy() for point in self.points])
+
+    def simplify_polygon(self, min_distance: float = 0.01, max_distance: float = 0.05, angle: float = 15):
+        """Returns the simplified generic polygon."""
+        return self.generic_contour().simplify_polygon(min_distance, max_distance, angle)
+
+
+class Slot2D(ParametricContour2DMixin, wires.Contour2D):
+    """
+    An oblong profile: two parallel lines joined by two half circles.
+
+    :param total_length: the overall length, from one end to the other, along the local x-axis.
+    :param width: the width of the slot, which is the diameter of the half circles.
+    :param center: the center of the slot.
+    :param angle: the angle between the global x-axis and the length direction.
+    """
+
+    def __init__(
+        self,
+        total_length: float,
+        width: float,
+        center: design3d.Point2D = design3d.O2D,
+        angle: float = 0.0,
+        reference_path: str = PATH_ROOT,
+        name: str = "",
+    ):
+        self.total_length = total_length
+        self.width = width
+        self.center = center
+        self.angle = angle
+        radius = 0.5 * width
+        half_straight = 0.5 * total_length - radius
+        bottom_right = self._local_to_global(half_straight, -radius)
+        top_right = self._local_to_global(half_straight, radius)
+        top_left = self._local_to_global(-half_straight, radius)
+        bottom_left = self._local_to_global(-half_straight, -radius)
+        primitives = [
+            edges.LineSegment2D(bottom_left, bottom_right),
+            edges.Arc2D.from_3_points(bottom_right, self._local_to_global(half_straight + radius, 0.0), top_right),
+            edges.LineSegment2D(top_right, top_left),
+            edges.Arc2D.from_3_points(top_left, self._local_to_global(-half_straight - radius, 0.0), bottom_left),
+        ]
+        wires.Contour2D.__init__(self, primitives, reference_path=reference_path, name=name)
+
+    def _parameters(self) -> dict:
+        return {"total_length": self.total_length, "width": self.width}
+
+    def offset(self, offset):
+        """
+        Returns the offset slot, which is still a slot. A positive offset enlarges it.
+
+        :param offset: offset distance.
+        :return: a new Slot2D with the same center and angle.
+        """
+        return self.__class__(
+            self.total_length + 2 * offset,
+            self.width + 2 * offset,
+            center=self.center.copy(),
+            angle=self.angle,
+            reference_path=self.reference_path,
+            name=self.name,
+        )
+
+    def generic_contour(self):
+        """Returns the profile as a Contour2D."""
+        return wires.Contour2D([primitive.copy() for primitive in self.primitives], reference_path=self.reference_path)
 
 
 class Measure2D(edges.LineSegment2D):

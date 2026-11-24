@@ -17,7 +17,7 @@ When a bug is identified:
 
 1. Write a test that reproduces it, and check that this test fails on the current code.
 2. Fix the bug.
-3. Check that the new test passes, and that the rest of the test suite still passes.
+3. Check that the new test passes, and that the tests related to the change still pass.
 
 Do not adjust expected values in existing tests to make them pass without understanding why they changed. If an
 expected value was produced by a buggy behavior, explain it in the commented diff before changing it.
@@ -36,9 +36,21 @@ expected value was produced by a buggy behavior, explain it in the commented dif
 
 - Never lower the coverage thresholds (`MIN_PROJECT_COVERAGE` and `MIN_FILE_COVERAGE` in `check_coverage.py`).
 - Each change should keep or improve coverage: add tests for new and modified code.
-- When coverage has increased above a threshold, raise that threshold accordingly.
+- When coverage has increased above a threshold (as reported by the CI), raise that threshold accordingly.
 
 ## Running checks locally
+
+To keep the work interactive, do not run the whole test suite, the CI scripts or the coverage check locally: run
+only the tests related to the change, that is the test files of the modified modules and classes, the new tests, and
+the tests of the code that calls the modified code. Run `pre-commit` on the modified files only. The CI runs the
+whole test suite, the scripts and the coverage check on the pull request.
+
+```bash
+pre-commit run --files path/to/modified_file.py tests/path/to/test_file.py
+python -m unittest tests.wires.test_contour2d tests.primitives2d.test_slot2d
+```
+
+The full checks, run by the CI, for when the maintainer asks for them:
 
 ```bash
 pre-commit run --all-files

@@ -835,17 +835,47 @@ class Wire2D(WireMixin):
         return Wire3D(primitives3d, reference_path=self.reference_path)
         # TODO: method to check if it is a wire
 
-    def infinite_intersections(self, infinite_primitives):
+    def _offset_tangent_junction(self, index: int, offset: float, tol: float = 1e-6):
+        """
+        Returns the offset of the junction between a primitive and the next one, if they are tangent there.
+
+        The offsets of two tangent edges are tangent at the offset of their common point, which is then their
+        intersection. Computing it directly avoids searching a tangent intersection, which is ill-conditioned.
+
+        :param index: index of the primitive.
+        :param offset: offset distance, positive to the right of the direction of travel.
+        :param tol: tolerance on the junction point and on the directions.
+        :return: the offset junction point, or None if the primitives do not join tangentially.
+        """
+        primitive = self.primitives[index]
+        next_primitive = self.primitives[(index + 1) % len(self.primitives)]
+        if not primitive.end.is_close(next_primitive.start, tol):
+            return None
+        direction = primitive.unit_direction_vector(primitive.length())
+        if not direction.is_close(next_primitive.unit_direction_vector(0.0), tol):
+            return None
+        return primitive.end + offset * design3d.Vector2D(direction.y, -direction.x)
+
+    def infinite_intersections(self, infinite_primitives, offset: float = None):
         """
         Returns a list that contains the intersections between a succession of infinite primitives.
 
         There must be a method implemented to intersect the two infinite primitives.
+
+        :param infinite_primitives: the offset primitives, one per primitive of the wire.
+        :param offset: the offset distance. When given, the intersection of the offsets of two tangent primitives is
+            the offset of their junction.
         """
         offset_intersections = []
 
-        for primitive_1, primitive_2 in zip(infinite_primitives, infinite_primitives[1:] + [infinite_primitives[0]]):
-            i = infinite_primitives.index(primitive_1)
-            # k = infinite_primitives.index(primitive_2)
+        for i, (primitive_1, primitive_2) in enumerate(
+            zip(infinite_primitives, infinite_primitives[1:] + [infinite_primitives[0]])
+        ):
+            if offset is not None and len(infinite_primitives) == len(self.primitives):
+                junction = self._offset_tangent_junction(i, offset)
+                if junction is not None:
+                    offset_intersections.append(junction)
+                    continue
 
             primitive_name = primitive_1.__class__.__name__.lower().replace("2d", "")
             intersection_method_name = f"{primitive_name}_intersections"
@@ -893,6 +923,11 @@ class Wire2D(WireMixin):
         """
         Generates an offset of a Wire2D.
 
+        A positive offset moves the wire to the right of its direction of travel: it enlarges a counterclockwise
+        contour and shrinks a clockwise one. A negative offset moves it to the left.
+
+        :param offset: offset distance.
+        :return: the offset wire.
         """
         offset_primitives = []
         infinite_primitives = []
@@ -901,7 +936,7 @@ class Wire2D(WireMixin):
             infinite_primitive = primitive.infinite_primitive(offset)
             if infinite_primitive is not None:
                 infinite_primitives.append(infinite_primitive)
-        offset_intersections += self.infinite_intersections(infinite_primitives)
+        offset_intersections += self.infinite_intersections(infinite_primitives, offset)
         for i, (point1, point2) in enumerate(
             zip(offset_intersections, offset_intersections[1:] + [offset_intersections[0]])
         ):
@@ -2928,7 +2963,7 @@ class ClosedPolygon2D(ClosedPolygonMixin, Contour2D):
         self.points = points
         self._line_segments = None
 
-        Contour2D.__init__(self, self.line_segments, name)
+        Contour2D.__init__(self, self.line_segments, name=name)
 
     def copy(self, *args, **kwargs):
         """Returns a copy of the object."""
@@ -3126,10 +3161,13 @@ class ClosedPolygon2D(ClosedPolygonMixin, Contour2D):
 
     def offset(self, offset):
         """
-        Offsets a polygon 2d edges from a distance.
+        Offsets the polygon sides by a distance.
+
+        A positive offset moves the sides to the right of the direction of travel: it enlarges a counterclockwise
+        polygon and shrinks a clockwise one, as for Wire2D.offset.
 
         :param offset: offset distance.
-        :return:
+        :return: the offset polygon.
         """
         bounding_rectangle_bounds = self.bounding_rectangle.bounds()
 
@@ -3158,10 +3196,12 @@ class ClosedPolygon2D(ClosedPolygonMixin, Contour2D):
 
         for i in range(nb_points):
             # check = False
-            vector_i = vectors[2 * i - 1] + vectors[2 * i].unit_vector()
-            if vector_i == design3d.Vector2D(0, 0):
+            vector_i = vectors[2 * i - 1] + vectors[2 * i]
+            if vector_i.is_close(design3d.Vector2D(0, 0)):
                 offset_vectors.append(vectors[2 * i].normal_vector())
             else:
+                # The bisector must be a unit vector for the point to be at the offset distance from the sides.
+                vector_i = vector_i.unit_vector()
                 if vector_i.dot(vectors[2 * i - 1].normal_vector()) > 0:
                     vector_i = -vector_i
                     # check = True

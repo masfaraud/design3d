@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Loft primitive: a solid interpolating planar sections, each given by a 2D contour and a frame
 - primitives3d.loft_faces: B-spline faces interpolating 3D wires (open or closed), to build open shells
 - BSplineSurface3D.from_parametrized_points_interpolation: surface interpolation through points at imposed parameters
+- primitives2d: parametric profiles `RoundedRectangle2D`, `RegularPolygon2D` and `Slot2D`, placed by a center and an
+  angle. Copies and rigid transformations keep the class and its parameters
 
 ### Fixed
 
@@ -36,9 +38,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   mass of this area. Contour2D.center_of_mass is right for contours with B-spline edges
 - Contour2D.area: holes joined to the outer loop at one point are subtracted, and full arcs, elliptic arcs and
   B-spline curves use their area instead of a triangulation of the discretized contour
+- Arc2D.axial_symmetry: the arc lies on the symmetric circle, instead of the original one
+- ClosedPolygon2D: the `name` argument is kept, instead of being passed as the reference path
+- OpenedRoundedLineSegments2D and ClosedRoundedLineSegments2D: `invert` no longer fails, and keeps each radius on
+  its point
+- ClosedPolygon2D.offset: the sides are moved by the offset distance, instead of a distance depending on the angles
+- Arc2D.direction_vector follows the direction of travel of clockwise arcs, instead of always turning
+  counterclockwise
+- Wire2D.offset and Contour2D.offset: contours with arcs tangent to their neighbouring edges, such as rounded
+  profiles, are offset instead of failing
+- RoundedLineSegments2D.offset_lines: a single line is offset, instead of being left in place, adjacent sides
+  parallel to each other and the closing line of a closed contour no longer make it fail, and a free end of an
+  opened wire moves along the normal of the lines
 
 ### Changed
 
+- RoundedLineSegments2D: `offset` and `offset_lines` follow the convention of Wire2D, Contour2D and
+  ClosedPolygon2D: a positive offset moves to the right of the direction of travel, which enlarges a counterclockwise
+  contour. The sign of existing calls must be inverted
 - design3d requires Python 3.12 or later
 - Library messages go through `warnings` or `logging` instead of `print`, and warnings point to the calling code
 - FlatElementError gives the element area in its message instead of printing it and plotting the element
@@ -46,6 +63,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - `design3d.core.determinant`, `Surface2D.split_at_centers` and `Point3D.babylon_script`, which were unused
+- `RoundedLineSegments2D.get_offset_normal_vectors` and `RoundedLineSegments2D.get_offset_new_points`, helpers of
+  `offset_lines` replaced by a simpler computation
 
 ### Build
 
