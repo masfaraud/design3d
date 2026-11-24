@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ClosedPolygon2D: the `name` argument is kept, instead of being passed as the reference path
 - OpenedRoundedLineSegments2D and ClosedRoundedLineSegments2D: `invert` no longer fails, and keeps each radius on
   its point
+- ClosedPolygon2D.offset: the sides are moved by the offset distance, instead of a distance depending on the angles
 
 ### Changed
 

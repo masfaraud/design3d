@@ -3126,10 +3126,13 @@ class ClosedPolygon2D(ClosedPolygonMixin, Contour2D):
 
     def offset(self, offset):
         """
-        Offsets a polygon 2d edges from a distance.
+        Offsets the polygon sides by a distance.
+
+        A positive offset moves the sides to the right of the direction of travel: it enlarges a counterclockwise
+        polygon and shrinks a clockwise one, as for Wire2D.offset.
 
         :param offset: offset distance.
-        :return:
+        :return: the offset polygon.
         """
         bounding_rectangle_bounds = self.bounding_rectangle.bounds()
 
@@ -3158,10 +3161,12 @@ class ClosedPolygon2D(ClosedPolygonMixin, Contour2D):
 
         for i in range(nb_points):
             # check = False
-            vector_i = vectors[2 * i - 1] + vectors[2 * i].unit_vector()
-            if vector_i == design3d.Vector2D(0, 0):
+            vector_i = vectors[2 * i - 1] + vectors[2 * i]
+            if vector_i.is_close(design3d.Vector2D(0, 0)):
                 offset_vectors.append(vectors[2 * i].normal_vector())
             else:
+                # The bisector must be a unit vector for the point to be at the offset distance from the sides.
+                vector_i = vector_i.unit_vector()
                 if vector_i.dot(vectors[2 * i - 1].normal_vector()) > 0:
                     vector_i = -vector_i
                     # check = True
