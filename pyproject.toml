@@ -79,8 +79,8 @@ line-length = 120
 target-version = "py312"
 
 [tool.ruff.lint]
-# pycodestyle, pyflakes, isort and pyupgrade
-select = ["E", "W", "F", "I", "UP"]
+# pycodestyle, pyflakes, isort, pyupgrade, and explicit stacklevel on warnings (B028)
+select = ["E", "W", "F", "I", "UP", "B028"]
 ignore = [
     # Long lines are handled by the formatter, the remaining ones are strings that cannot be split
     "E501",

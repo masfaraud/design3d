@@ -148,6 +148,7 @@ class Edge(DataEqualityObject):
             "polygon_points is deprecated,\
         please use discretization_points instead",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.discretization_points(number_points=discretization_resolution)
 
@@ -1728,7 +1729,8 @@ class BSplineCurve(Edge):
         set_points = set(points)
         if len(set_points) < len(points) - 1:
             warnings.warn(
-                "Not able to perform point interpolation.There are repeated points not in the edges of the point list."
+                "Not able to perform point interpolation.There are repeated points not in the edges of the point list.",
+                stacklevel=2,
             )
             return None
         point_name = "Point" + points[0].__class__.__name__[-2:]
@@ -2220,25 +2222,35 @@ class BSplineCurve2D(BSplineCurve):
         """Gets bounding box if a 3D object, or bounding rectangle if 2D."""
         return self.bounding_rectangle
 
+    def _straight_line_polygon_moments(self):
+        """
+        Signed area and first moments of the polygon made of the discretized curve closed by its chord.
+
+        Uses the shoelace formula on the discretization points.
+        """
+        points = np.array([[point[0], point[1]] for point in self.discretization_points(number_points=100)])
+        x, y = points[:, 0], points[:, 1]
+        x_next, y_next = np.roll(x, -1), np.roll(y, -1)
+        cross = x * y_next - x_next * y
+        signed_area = 0.5 * float(cross.sum())
+        moment_x = float(((x + x_next) * cross).sum()) / 6
+        moment_y = float(((y + y_next) * cross).sum()) / 6
+        return signed_area, moment_x, moment_y
+
     def straight_line_area(self):
         """
-        Uses shoelace algorithm for evaluating the area.
+        Calculates the signed area between the curve and the line drawn from end to start.
+
+        As for arcs, the area is positive when the curve closed by its chord is counterclockwise.
         """
-        points = self.discretization_points(number_points=100)
-        x = [point.x for point in points]
-        y = [point.y for point in points]
-        x1 = [x[-1]] + x[0:-1]
-        y1 = [y[-1]] + y[0:-1]
-        return 0.5 * abs(sum(i * j for i, j in zip(x, y1)) - sum(i * j for i, j in zip(y, x1)))
+        return self._straight_line_polygon_moments()[0]
 
     def straight_line_center_of_mass(self):
-        """Straight line center of mass."""
-        polygon_points = self.discretization_points(number_points=100)
-        cog = design3d.O2D
-        for point in polygon_points:
-            cog += point
-        cog = cog / len(polygon_points)
-        return cog
+        """Center of mass of the area between the curve and the line drawn from end to start."""
+        signed_area, moment_x, moment_y = self._straight_line_polygon_moments()
+        if abs(signed_area) < 1e-15:
+            return 0.5 * (self.start + self.end)
+        return design3d.Point2D(moment_x / signed_area, moment_y / signed_area)
 
     def plot(self, ax=None, edge_style: EdgeStyle = EdgeStyle()):
         """Plot a B-Spline curve 2D."""
@@ -5523,7 +5535,7 @@ class BSplineCurve3D(BSplineCurve):
         :param parameter1: evaluation parameter 1, bigger than 0 and smaller than its length.
         :param parameter2: evaluation parameter 2, bigger than 0 and smaller than its length.
         """
-        warnings.warn("Use BSplineCurve3D.trim instead of trim_between_evaluation")
+        warnings.warn("Use BSplineCurve3D.trim instead of trim_between_evaluation", stacklevel=2)
         parameter1, parameter2 = min([parameter1, parameter2]), max([parameter1, parameter2])
 
         if math.isclose(parameter1, 0, abs_tol=1e-7) and math.isclose(parameter2, 1, abs_tol=1e-7):

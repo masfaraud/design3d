@@ -6,6 +6,7 @@ Extended primitives 2D classes.
 import math
 
 import matplotlib.patches
+import matplotlib.pyplot as plt
 
 import design3d
 from design3d import PATH_ROOT, curves, edges, wires
@@ -414,8 +415,12 @@ class Measure2D(edges.LineSegment2D):
         self.unit = unit
         self.type_ = type_
 
-    def plot(self, ax, edge_style: EdgeStyle()):
+    def plot(self, ax=None, edge_style: EdgeStyle = None):
         """Plots the Measure2D."""
+        if ax is None:
+            _, ax = plt.subplots()
+        if edge_style is None:
+            edge_style = EdgeStyle()
         ndigits = 6
         x1, y1 = self.start
         x2, y2 = self.end
@@ -456,3 +461,4 @@ class Measure2D(edges.LineSegment2D):
         else:
             theta = math.degrees(math.atan((y2 - y1) / (x2 - x1)))
         ax.text(x_middle, y_middle, label, va="bottom", ha="center", rotation=theta)
+        return ax

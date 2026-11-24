@@ -2054,21 +2054,6 @@ cdef class Point3D(Vector3D):
 
         return content, current_id
 
-    def babylon_script(self):
-        """
-        # TODO: to be deleted ?
-        Returns the babylonjs script for 3D display in browser.
-
-        :return: A babylonjs script
-        :rtype: str
-        """
-        s = 'var sphere = BABYLON.MeshBuilder.CreateSphere("point", {diameter: 0.05}, scene);\n'
-        s += "sphere.setPositionWithLocalVector(new BABYLON.Vector3({},{},{}));\n".format(self.x, self.y, self.z)
-        s += 'var mat = new BABYLON.StandardMaterial("mat", scene);\n'
-        s += "mat.diffuseColor = new BABYLON.Color3(1, 0, 0);\n"
-        s += "sphere.material = mat;\n"
-        return s
-
     def nearest_point(self, points: List["Point3D"]):
         """
         Returns the nearest 3-dimensional point out of the list.
@@ -2519,6 +2504,7 @@ class Basis2D(Basis):
         warnings.warn(
             "new_coordinates is deprecated. Use global_to_local_coordinates instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.global_to_local_coordinates(vector)
 
@@ -2536,6 +2522,7 @@ class Basis2D(Basis):
         warnings.warn(
             "old_coordinates is deprecated. Use local_to_global_coordinates instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.local_to_global_coordinates(vector)
 
@@ -2855,6 +2842,7 @@ class Basis3D(Basis):
         warnings.warn(
             "new_coordinates is deprecated. Use global_to_local_coordinates instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.global_to_local_coordinates(vector)
 
@@ -2872,6 +2860,7 @@ class Basis3D(Basis):
         warnings.warn(
             "old_coordinates is deprecated. Use local_to_global_coordinates instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.local_to_global_coordinates(vector)
 
@@ -3079,6 +3068,7 @@ class Frame2D(Basis2D):
         warnings.warn(
             "new_coordinates is deprecated. Use global_to_local_coordinates instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.global_to_local_coordinates(vector)
 
@@ -3096,6 +3086,7 @@ class Frame2D(Basis2D):
         warnings.warn(
             "old_coordinates is deprecated. Use local_to_global_coordinates instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.local_to_global_coordinates(vector)
 
@@ -3350,6 +3341,7 @@ class Frame3D(Basis3D):
         warnings.warn(
             "new_coordinates is deprecated. Use global_to_local_coordinates instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.global_to_local_coordinates(vector)
 
@@ -3367,6 +3359,7 @@ class Frame3D(Basis3D):
         warnings.warn(
             "old_coordinates is deprecated. Use local_to_global_coordinates instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.local_to_global_coordinates(vector)
 
@@ -3652,39 +3645,6 @@ class Frame3D(Basis3D):
         u_vector = normal.deterministic_unit_normal_vector()
         v_vector = normal.cross(u_vector)
         return cls(origin, u_vector, v_vector, normal, name=name)
-
-    # def babylonjs(self, size=0.1, parent=None):
-    #     """
-    #     # TODO: to be deleted ?
-    #     Returns the babylonjs script for 3D display in browser.
-
-    #     :param size: The adjustable size of the 3-dimensional frame. Default
-    #         value is 0.1
-    #     :type size: float, optional
-    #     :param parent:
-    #     :type parent:
-    #     :return: A babylonjs script
-    #     :rtype: str
-    #     """
-    #     s = "var origin = new BABYLON.Vector3({},{},{});\n".format(*self.origin)
-    #     s += "var o_u = new BABYLON.Vector3({}, {}, {});\n".format(*(size * self.u + self.origin))
-    #     s += "var o_v = new BABYLON.Vector3({}, {}, {});\n".format(*(size * self.v + self.origin))
-    #     s += "var o_w = new BABYLON.Vector3({}, {}, {});\n".format(*(size * self.w + self.origin))
-    #     s += 'var line1 = BABYLON.MeshBuilder.CreateTube("frame_U",{{path:[origin, o_u], radius:{}}},scene);'.format(
-    #         0.03 * size)
-    #     s += "line1.material = red_material;\n"
-    #     s += 'var line2 = BABYLON.MeshBuilder.CreateTube("frame_V",{{path:[origin, o_v], radius:{}}},scene);'.format(
-    #         0.03 * size)
-    #     s += "line2.material = green_material;\n"
-    #     s += 'var line3 = BABYLON.MeshBuilder.CreateTube("frame_W",{{path:[origin, o_w], radius:{}}},scene);'.format(
-    #         0.03 * size)
-    #     s += "line3.material = blue_material;\n"
-    #     if parent is not None:
-    #         s += "line1.parent = {};\n".format(parent)
-    #         s += "line2.parent = {};\n".format(parent)
-    #         s += "line3.parent = {};\n".format(parent)
-
-    #     return s
 
 
 cdef bint line_point_belongs_with_points(Point3D line_start, Point3D line_end, Point3D point):

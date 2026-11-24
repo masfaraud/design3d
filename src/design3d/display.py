@@ -3,6 +3,7 @@
 Classes to define mesh for display use. Display mesh do not require good aspect ratios on elements.
 """
 
+import logging
 import warnings
 from typing import TypeVar, Union
 
@@ -16,6 +17,8 @@ from trimesh import Trimesh
 import design3d.edges
 from design3d.core import Primitive3D
 from design3d.geometry import numpy_cross2d
+
+logger = logging.getLogger(__name__)
 
 # TODO: make this module "mesh" as it is not useful only for display
 
@@ -856,7 +859,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         :return: The triangles comosing the mesh.
         :rtype: list[design3d.faces.Triangle3D]
         """
-        warnings.warn("Deprecated: use to_triangles3d instead.", DeprecationWarning)
+        warnings.warn("Deprecated: use to_triangles3d instead.", DeprecationWarning, stacklevel=2)
         return self.to_triangles3d()
 
     def to_triangles3d(self):
@@ -885,10 +888,13 @@ class Mesh3D(MeshMixin, Primitive3D):
         :return: A closed triangle shell representation of the Mesh3D object.
         :rtype: ClosedTriangleShell3D
         """
-        warnings.warn("""
+        warnings.warn(
+            """
             ClosedTriangleShell3D is not an efficient object to deal with mesh data.
             Try to stick to Mesh3D or Trimesh object if possible.
-            """)
+            """,
+            stacklevel=2,
+        )
 
         from design3d.shells import ClosedTriangleShell3D
 
@@ -901,10 +907,13 @@ class Mesh3D(MeshMixin, Primitive3D):
         :return: An open triangle shell representation of the Mesh3D object.
         :rtype: OpenTriangleShell3D
         """
-        warnings.warn("""
+        warnings.warn(
+            """
             OpenTriangleShell3D is not an efficient object to deal with mesh data.
             Try to stick to Mesh3D or Trimesh object if possible.
-            """)
+            """,
+            stacklevel=2,
+        )
 
         from design3d.shells import OpenTriangleShell3D
 
@@ -932,7 +941,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         """
         if not filepath.lower().endswith(".stl"):
             filepath += ".stl"
-            print(f"Changing name to {filepath}")
+            logger.info("Changing name to %s", filepath)
 
         with open(filepath, "wb") as file:
             self.save_to_stl_stream(file, scale_factor=scale_factor)
@@ -961,7 +970,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         """
         if not filepath.lower().endswith(".obj"):
             filepath += ".obj"
-            print(f"Changing name to {filepath}")
+            logger.info("Changing name to %s", filepath)
 
         with open(filepath, "wb") as file:
             self.save_to_obj_stream(file, scale_factor=scale_factor)
@@ -990,7 +999,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         """
         if not filepath.lower().endswith(".ply"):
             filepath += ".ply"
-            print(f"Changing name to {filepath}")
+            logger.info("Changing name to %s", filepath)
 
         with open(filepath, "wb") as file:
             self.save_to_ply_stream(file, scale_factor=scale_factor)
@@ -1019,7 +1028,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         """
         if not filepath.lower().endswith(".off"):
             filepath += ".off"
-            print(f"Changing name to {filepath}")
+            logger.info("Changing name to %s", filepath)
 
         with open(filepath, "wb") as file:
             self.save_to_off_stream(file, scale_factor=scale_factor)
@@ -1048,7 +1057,7 @@ class Mesh3D(MeshMixin, Primitive3D):
         """
         if not filepath.lower().endswith(".3mf"):
             filepath += ".3mf"
-            print(f"Changing name to {filepath}")
+            logger.info("Changing name to %s", filepath)
 
         with open(filepath, "wb") as file:
             self.save_to_3mf_stream(file, scale_factor=scale_factor)

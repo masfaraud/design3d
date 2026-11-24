@@ -129,7 +129,8 @@ class TestPlaneFace3D(unittest.TestCase):
         divide_face = plane_face.set_operations_new_faces({plane_face: cutting_contours3d})
         divide_face = sorted(divide_face, key=lambda face: face.area())
         self.assertEqual(len(divide_face), 7)
-        expected_areas = [0.05000000000000002, 0.25, 0.4375, 0.5, 1.0621681469282045, 1.29875, 2.4002627208849607]
+        # The largest face has a circular hole of radius 0.2, whose area 0.04 * pi is computed exactly
+        expected_areas = [0.05000000000000002, 0.25, 0.4375, 0.5, 1.0621681469282045, 1.29875, 2.4002544407846127]
         areas = [f.area() for f in divide_face]
         for area, expected_area in zip(areas, expected_areas):
             self.assertAlmostEqual(area, expected_area, 6)

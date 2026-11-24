@@ -2,8 +2,10 @@
 Unit tests for design3d.faces.BSplineSurface3D
 """
 
+import gc
 import os
 import unittest
+import weakref
 
 import numpy as np
 from geomdl import BSpline
@@ -2467,6 +2469,17 @@ class TestBSplineSurface3D(unittest.TestCase):
         self.assertEqual(len(bezier_patches), 29)
         bezier_patches = surface.decompose()
         self.assertEqual(len(bezier_patches), 116)
+
+    def test_decompose_cache_does_not_keep_surface_alive(self):
+        surface = surfaces.BSplineSurface3D.from_json(
+            os.path.join(folder, "bsplineface_triangulation_problem_surface.json")
+        )
+        first_call = surface.decompose(decompose_dir="u")
+        self.assertIs(surface.decompose(decompose_dir="u"), first_call)
+        surface_ref = weakref.ref(surface)
+        del surface, first_call
+        gc.collect()
+        self.assertIsNone(surface_ref())
 
     def test_evaluation_follows_sample_size(self):
         surface = surfaces.BSplineSurface3D.from_json(os.path.join(folder, "periodic_surface_smallbsplinecurve3d.json"))

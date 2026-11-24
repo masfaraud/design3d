@@ -9,7 +9,6 @@ import warnings
 import webbrowser
 from dataclasses import dataclass
 from datetime import datetime
-from functools import lru_cache
 
 try:
     import gmsh
@@ -118,16 +117,6 @@ def get_edge_index_in_list(edge, list_edges, tol: float = 1e-6):
     """
 
     return get_element_index_in_list(edge, list_edges, tol)
-
-
-def determinant(vec1, vec2, vec3):
-    """
-    Calculates the determinant for a three vector matrix.
-
-    """
-    # TODO: to be removed
-    a = np.array((vec1.vector, vec2.vector, vec3.vector))
-    return np.linalg.det(a)
 
 
 def delete_double_point(list_point):
@@ -444,7 +433,7 @@ class BoundingRectangle:
         :param b_rectangle2: bounding rectangle to verify intersection
         :type b_rectangle2: :class:`BoundingRectangle`
         """
-        warnings.warn("b_rectangle_intersection is deprecated, please use is_intersecting instead")
+        warnings.warn("b_rectangle_intersection is deprecated, please use is_intersecting instead", stacklevel=2)
         return self.is_intersecting(b_rectangle2)
 
     def is_inside_b_rectangle(self, b_rectangle2, tol: float = 1e-6):
@@ -591,12 +580,11 @@ class BoundingBox(DataEqualityObject):
         self.name = name
 
     @property
-    @lru_cache
     def center(self):
         """
         Computes the center of the bounding box.
 
-        TODO: change lru_cache to cached property when support for py3.7 is dropped.
+        It is not cached: bounds can be updated after creation and the computation is cheap.
         """
         return design3d.Point3D(
             0.5 * (self.xmin + self.xmax), 0.5 * (self.ymin + self.ymax), 0.5 * (self.zmin + self.zmax)
@@ -1593,6 +1581,7 @@ class VolumeModel(DataEqualityObject):
         warnings.warn(
             "design3d.stl module is deprecated. Use design3d.display module and 'Mesh3D' class instead for STL export.",
             DeprecationWarning,
+            stacklevel=2,
         )
 
         mesh = self.to_mesh()

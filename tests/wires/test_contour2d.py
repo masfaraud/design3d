@@ -493,7 +493,26 @@ class TestContour2D(unittest.TestCase):
 
     def test_area(self):
         contour = wires.Contour2D.from_json(os.path.join(folder, "strange_contour_from_step_file.json"))
-        self.assertAlmostEqual(contour.area(), 0.00016865275423510724, 6)
+        # The main loop (area 1.5394e-4) holds three small clockwise circles (area 4.905e-6 each) joined to it at
+        # one point: they are holes, so the area is 1.5394e-4 - 3 * 4.905e-6
+        self.assertAlmostEqual(contour.area(), 0.00013921, 6)
+
+    def test_area_and_center_of_mass_with_bspline_edge(self):
+        # Unit square whose top side is replaced by a quadratic Bezier curve dipping to y=0.5:
+        # the top side is y = 2x^2 - 2x + 1, so the area is 2/3 and the center of mass (0.5, 0.35)
+        point = design3d.Point2D
+        lines = [
+            edges.LineSegment2D(point(0.0, 1.0), point(0.0, 0.0)),
+            edges.LineSegment2D(point(0.0, 0.0), point(1.0, 0.0)),
+            edges.LineSegment2D(point(1.0, 0.0), point(1.0, 1.0)),
+        ]
+        top = edges.BSplineCurve2D(2, [point(1.0, 1.0), point(0.5, 0.0), point(0.0, 1.0)], [3, 3], [0.0, 1.0])
+        contour = wires.Contour2D(lines + [top])
+        for oriented_contour in (contour, contour.invert()):
+            self.assertAlmostEqual(oriented_contour.area(), 2 / 3, 4)
+            center_of_mass = oriented_contour.center_of_mass()
+            self.assertAlmostEqual(center_of_mass.x, 0.5, 4)
+            self.assertAlmostEqual(center_of_mass.y, 0.35, 4)
 
     def test_cut_by_line(self):
         contour, line = wires.Contour2D.from_json(os.path.join(folder, "test_contour2d_cut_by_line.json")).primitives

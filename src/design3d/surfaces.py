@@ -4,7 +4,7 @@ import math
 import traceback
 import warnings
 from collections import deque
-from functools import cached_property, lru_cache
+from functools import cached_property
 from itertools import chain
 
 import matplotlib.pyplot as plt
@@ -395,29 +395,6 @@ class Surface2D(DataEqualityObject):
                     if (point, primitive) not in intersection_points:
                         intersection_points.append((point, primitive))
         return sorted(intersection_points, key=lambda ip: line.abscissa(ip[0]))
-
-    def split_at_centers(self):
-        """
-        Split in n slices.
-
-        # TODO: is this used ?
-        """
-
-        cutted_contours = []
-        center_of_mass1 = self.inner_contours[0].center_of_mass()
-        center_of_mass2 = self.inner_contours[1].center_of_mass()
-        cut_line = curves.Line2D(center_of_mass1, center_of_mass2)
-
-        iteration_contours2 = []
-
-        surface_cut = self.cut_by_line(cut_line)
-
-        iteration_contours2.extend(surface_cut)
-
-        iteration_contours = iteration_contours2[:]
-        cutted_contours.extend(iteration_contours)
-
-        return cutted_contours
 
     def bounding_rectangle(self):
         """
@@ -1041,10 +1018,10 @@ class Surface3D(DataEqualityObject):
                     primitives3d.extend(primitives)
                     primitives_mapping[primitive2d] = primitives[0]
                 except AttributeError:
-                    print(traceback.format_exc())
-                    print(
-                        f"Class {self.__class__.__name__} does not implement {method_name}"
-                        f"with {primitive2d.__class__.__name__}"
+                    warnings.warn(
+                        f"Class {self.__class__.__name__} does not implement {method_name} "
+                        f"with {primitive2d.__class__.__name__}:\n{traceback.format_exc()}",
+                        stacklevel=2,
                     )
             else:
                 raise AttributeError(f"Class {self.__class__.__name__} does not implement {method_name}")
@@ -5268,9 +5245,10 @@ class SphericalSurface3D(UVPeriodicalSurface):
                         continue
                     primitives_mapping[primitive2d] = primitives_list[0]
                 except AttributeError:
-                    print(
-                        f"Class {self.__class__.__name__} does not implement {method_name}"
-                        f"with {primitive2d.__class__.__name__}"
+                    warnings.warn(
+                        f"Class {self.__class__.__name__} does not implement {method_name} "
+                        f"with {primitive2d.__class__.__name__}",
+                        stacklevel=2,
                     )
             else:
                 raise AttributeError(f"Class {self.__class__.__name__} does not implement {method_name}")
@@ -7328,6 +7306,7 @@ class BSplineSurface3D(Surface3D):
         self._grids2d = None
         self._grids2d_deformed = None
         self._bbox = None
+        self._decompose_cache = {}
         self._surface_curves = None
         self._knotvector = None
         self.ctrlptsw = None
@@ -8142,7 +8121,6 @@ class BSplineSurface3D(Surface3D):
                 blending_mat[i][j] = self.basis_functions_v(v_i, self.degree_v, j)
         return blending_mat
 
-    @lru_cache(maxsize=6)
     def decompose(self, return_params: bool = False, decompose_dir="uv"):
         """
         Decomposes the surface into Bezier surface patches of the same degree.
@@ -8153,7 +8131,10 @@ class BSplineSurface3D(Surface3D):
         :param decompose_dir: Direction of decomposition. 'uv', 'u' or 'v'.
         :type decompose_dir: str
         """
-        return decompose_surface(self, return_params, decompose_dir=decompose_dir)
+        key = (return_params, decompose_dir)
+        if key not in self._decompose_cache:
+            self._decompose_cache[key] = decompose_surface(self, return_params, decompose_dir=decompose_dir)
+        return self._decompose_cache[key]
 
     def point2d_to_3d(self, point2d: design3d.Point2D):
         """
@@ -8883,7 +8864,7 @@ class BSplineSurface3D(Surface3D):
         lth = bspline_curve3d.length()
 
         if lth <= 1e-6:
-            print("BSplineCurve3D skipped because it is too small")
+            warnings.warn("BSplineCurve3D skipped because it is too small", stacklevel=2)
             return None
 
         n = min(bspline_curve3d.ctrlpts.shape[0], 20)
@@ -9887,7 +9868,9 @@ class BSplineSurface3D(Surface3D):
         """
         Bspline Surface interpolation through 3d points.
         """
-        warnings.warn("points_fitting_into_bspline_surface is deprecated. Use from_points_interpolation instead")
+        warnings.warn(
+            "points_fitting_into_bspline_surface is deprecated. Use from_points_interpolation instead", stacklevel=2
+        )
         return cls.from_points_interpolation(points_3d, size_u, size_v, degree_u, degree_v, name)
 
     @classmethod
@@ -10001,7 +9984,9 @@ class BSplineSurface3D(Surface3D):
         """
         Bspline Surface approximate through 3d points.
         """
-        warnings.warn("points_approximate_into_bspline_surface is deprecated. Use from_points_approximation instead")
+        warnings.warn(
+            "points_approximate_into_bspline_surface is deprecated. Use from_points_approximation instead", stacklevel=2
+        )
         return cls.from_points_approximation(points_3d, size_u, size_v, degree_u, degree_v, name, **kwargs)
 
     @classmethod

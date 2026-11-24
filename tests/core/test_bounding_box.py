@@ -1,4 +1,6 @@
+import gc
 import unittest
+import weakref
 
 import design3d
 from design3d.core import BoundingBox
@@ -14,6 +16,20 @@ class TestBoundingBox(unittest.TestCase):
     def test_center(self):
         self.assertEqual(self.bbox1.center, design3d.Point3D(1.0, 1.0, 1.0))
         self.assertEqual(self.bbox2.center, design3d.Point3D(2.0, 2.5, 0.0))
+
+    def test_center_does_not_keep_bounding_box_alive(self):
+        bbox = BoundingBox(10.0, 12.0, 0.0, 2.0, 0.0, 2.0)
+        _ = bbox.center
+        bbox_ref = weakref.ref(bbox)
+        del bbox
+        gc.collect()
+        self.assertIsNone(bbox_ref())
+
+    def test_center_follows_bounds_update(self):
+        bbox = BoundingBox(0.0, 2.0, 0.0, 2.0, 0.0, 2.0)
+        self.assertEqual(bbox.center, design3d.Point3D(1.0, 1.0, 1.0))
+        bbox.xmax = 4.0
+        self.assertEqual(bbox.center, design3d.Point3D(2.0, 1.0, 1.0))
 
     def test_add(self):
         self.assertEqual(self.bbox1 + self.bbox2, BoundingBox(0.0, 3.0, 0.0, 5.0, -1.0, 2.0))

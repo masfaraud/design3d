@@ -115,7 +115,8 @@ def reorder_contour3d_edges_from_step(raw_edges, step_data):
             f" {abs(raw_edges[0].end.y - raw_edges[1].end.y)}.\n"
             f"delta_z = {abs(raw_edges[0].start.z - raw_edges[1].end.z)}, "
             f" {abs(raw_edges[0].end.z - raw_edges[1].end.z)}.\n"
-            f"distance = {min(distances)}"
+            f"distance = {min(distances)}",
+            stacklevel=2,
         )
         return None
 
@@ -165,7 +166,8 @@ def reorder_contour3d_edges_from_step(raw_edges, step_data):
                 f" {abs(raw_edge.end.y - last_edge.end.y)}.\n"
                 f"delta_z = {abs(raw_edge.start.z - last_edge.end.z)}, "
                 f" {abs(raw_edge.end.z - last_edge.end.z)}.\n"
-                f"distance = {min(distances)}"
+                f"distance = {min(distances)}",
+                stacklevel=2,
             )
             return None
         if index == 0:
@@ -1170,7 +1172,7 @@ class Wire2D(WireMixin):
             try:
                 primitives_symmetry.append(primitive.axial_symmetry(line))
             except NotImplementedError:
-                print(f"Class {self.__class__.__name__} does not implement symmetry method")
+                warnings.warn(f"Class {primitive.__class__.__name__} does not implement symmetry method", stacklevel=2)
 
         return self.__class__(primitives=primitives_symmetry)
 
@@ -1730,7 +1732,7 @@ class ContourMixin(WireMixin):
         """
 
         if self.is_superposing(contour):
-            warnings.warn("The contours are superposing")
+            warnings.warn("The contours are superposing", stacklevel=2)
             return []
 
         list_p, edges1 = [], set()
@@ -1750,7 +1752,7 @@ class ContourMixin(WireMixin):
                             edges1.add(edge2)
 
         if len(list_p) < 2:
-            warnings.warn("The contours are not adjacent")
+            warnings.warn("The contours are not adjacent", stacklevel=2)
             return []
 
         if len(list_p) == 2:
@@ -2168,29 +2170,17 @@ class Contour2D(ContourMixin, Wire2D):
 
     def area(self):
         """Returns the area of the contour."""
-        # todo: use the sum of straight_line_area for all cases to avoid triangulation.
-        if not self._area:
-            area = self.edge_polygon.area()
-            classes = {prim.__class__ for prim in self.primitives}
-            verify_classes = classes.issubset({design3d.edges.LineSegment2D, design3d.edges.Arc2D})
-            if self.edge_polygon.is_trigo:
-                trigo = 1
-            else:
-                trigo = -1
-            if verify_classes:
+        if self._area is None:
+            if all(hasattr(edge, "straight_line_area") for edge in self.primitives):
+                # Area of the polygon of the edge extremities, corrected by the signed area between each edge
+                # and its chord. This avoids a triangulation.
+                area = self.edge_polygon.area()
+                trigo = 1 if self.edge_polygon.is_trigo else -1
                 for edge in self.primitives:
                     area += trigo * edge.straight_line_area()
                 self._area = abs(area)
             else:
-                polygon = self.to_polygon(angle_resolution=50)
-                points_set = set(polygon.points)
-                if len(points_set) < len(polygon.points):
-                    # This prevents segmentation fault from contours coming from step files
-                    for edge in self.primitives:
-                        area += trigo * edge.straight_line_area()
-                    self._area = abs(area)
-                else:
-                    self._area = polygon.triangulation().area()
+                self._area = self.to_polygon(angle_resolution=50).area()
         return self._area
 
     def center_of_mass(self):
@@ -3151,8 +3141,9 @@ class ClosedPolygon2D(ClosedPolygonMixin, Contour2D):
             / 2
         )
         if offset <= -max_offset_len:
-            print("Inadapted offset, polygon might turn over. Offset must be greater than", -max_offset_len)
-            raise ValueError("inadapted offset")
+            raise ValueError(
+                f"Inadapted offset, polygon might turn over. Offset must be greater than {-max_offset_len}"
+            )
         nb_points = len(self.points)
         vectors = []
         for i in range(nb_points - 1):
