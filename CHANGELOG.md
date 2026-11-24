@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   placed in an assembly with a rotated frame, instead of being flattened
 - STEP export: conical surfaces whose apex is not on their axis are no longer reimported with a radius divided by
   1000 (`ConicalSurface3D.to_step` wrote `ref_radius` in meters in a file declared in millimeters)
+- STEP export: cones narrowing along their axis are written with a positive `semi_angle`, as required by STEP, by
+  reversing their axis
 - Arc3D: the bounding box is exact, instead of being computed on discretization points that miss the extrema of
   the arc
 - ToroidalFace3D: the bounding box includes the extrema of the coordinates inside the face, such as the outer equator
