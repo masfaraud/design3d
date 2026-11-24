@@ -125,5 +125,54 @@ class TestOpenWiresOffset(unittest.TestCase):
             self.assertAlmostEqual(offset_wire.points[index].y, -OFFSET)
 
 
+class TestOffsetLines(unittest.TestCase):
+    """RoundedLineSegments2D.offset_lines moves some aligned lines, the end points sliding on the adjacent sides."""
+
+    def _assert_points(self, wire, expected_points):
+        self.assertEqual(len(wire.points), len(expected_points))
+        for point, expected_point in zip(wire.points, expected_points):
+            self.assertTrue(point.is_close(design3d.Point2D(*expected_point)), f"{point} != {expected_point}")
+
+    def test_single_line(self):
+        wire = OpenedRoundedLineSegments2D([design3d.Point2D(*xy) for xy in ((-1, 1), (0, 0), (2, 0), (3, 1))], {})
+        self._assert_points(wire.offset_lines([1], OFFSET), [(-1, 1), (OFFSET, -OFFSET), (2 - OFFSET, -OFFSET), (3, 1)])
+
+    def test_single_line_between_parallel_sides(self):
+        wire = OpenedRoundedLineSegments2D([design3d.Point2D(*xy) for xy in ((0, 1), (0, 0), (2, 0), (2, 1))], {})
+        self._assert_points(wire.offset_lines([1], OFFSET), [(0, 1), (0, -OFFSET), (2, -OFFSET), (2, 1)])
+
+    def test_aligned_lines_between_parallel_sides(self):
+        wire = OpenedRoundedLineSegments2D(
+            [design3d.Point2D(*xy) for xy in ((0, 1), (0, 0), (1, 0), (2, 0), (2, 1))], {}
+        )
+        self._assert_points(
+            wire.offset_lines([1, 2], OFFSET), [(0, 1), (0, -OFFSET), (1, -OFFSET), (2, -OFFSET), (2, 1)]
+        )
+
+    def test_aligned_adjacent_side(self):
+        """An adjacent side aligned with the offset line is offset with it."""
+        wire = OpenedRoundedLineSegments2D(
+            [design3d.Point2D(*xy) for xy in ((0, 1), (0, 0), (1, 0), (2, 0), (2, 1))], {}
+        )
+        expected_points = [(0, 1), (0, -OFFSET), (1, -OFFSET), (2, -OFFSET), (2, 1)]
+        self._assert_points(wire.offset_lines([1], OFFSET), expected_points)
+        self._assert_points(wire.offset_lines([2], OFFSET), expected_points)
+
+    def test_free_end(self):
+        """The free end of an opened wire moves along the normal of the line."""
+        wire = OpenedRoundedLineSegments2D([design3d.Point2D(*xy) for xy in ((0, 0), (1, 0), (2, 1))], {})
+        self._assert_points(wire.offset_lines([0], OFFSET), [(0, -OFFSET), (1 - OFFSET, -OFFSET), (2, 1)])
+
+    def test_closing_line_of_a_closed_contour(self):
+        contour = ClosedRoundedLineSegments2D(SQUARE, {})
+        offset_contour = contour.offset_lines([3], OFFSET)
+        self._assert_points(offset_contour, [(-OFFSET, 0), (1, 0), (1, 1), (-OFFSET, 1)])
+        self.assertAlmostEqual(offset_contour.area(), 1 + OFFSET)
+
+    def test_rounded_rectangle2d(self):
+        rectangle = RoundedRectangle2D(1.0, 0.5, RADIUS)
+        self.assertAlmostEqual(rectangle.offset_lines([0], OFFSET).area(), rectangle.area() + OFFSET)
+
+
 if __name__ == "__main__":
     unittest.main()

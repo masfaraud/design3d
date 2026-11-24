@@ -47,6 +47,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   counterclockwise
 - Wire2D.offset and Contour2D.offset: contours with arcs tangent to their neighbouring edges, such as rounded
   profiles, are offset instead of failing
+- RoundedLineSegments2D.offset_lines: a single line is offset, instead of being left in place, adjacent sides
+  parallel to each other and the closing line of a closed contour no longer make it fail, and a free end of an
+  opened wire moves along the normal of the lines
 
 ### Changed
 
@@ -60,6 +63,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - `design3d.core.determinant`, `Surface2D.split_at_centers` and `Point3D.babylon_script`, which were unused
+- `RoundedLineSegments2D.get_offset_normal_vectors` and `RoundedLineSegments2D.get_offset_new_points`, helpers of
+  `offset_lines` replaced by a simpler computation
 
 ### Build
 

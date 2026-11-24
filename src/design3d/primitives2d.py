@@ -9,7 +9,7 @@ import matplotlib.patches
 import matplotlib.pyplot as plt
 
 import design3d
-from design3d import PATH_ROOT, curves, edges, wires
+from design3d import PATH_ROOT, edges, wires
 from design3d.core import EdgeStyle
 from design3d.primitives import RoundedLineSegments
 
@@ -215,151 +215,73 @@ class RoundedLineSegments2D(RoundedLineSegments):
 
         return self.__class__(offset_points, new_radii, adapt_radius=self.adapt_radius)
 
-    def _offset_directive_vector_helper(self, line_indexes):
+    def _is_aligned(self, start_index, end_index, direction, tol: float = 1e-9):
+        """Returns True if the side between two points is parallel to a unit direction."""
+        side_direction = (self.points[end_index] - self.points[start_index]).unit_vector()
+        return abs(side_direction.cross(direction)) < tol
+
+    def _offset_lines_end_point(self, point_index, side_point_index, normal, offset):
         """
-        Computes the directive vectors between which the offset will be drawn.
+        Moves an end point of the offset lines, so that the offset lines are at the offset distance.
 
-        :param line_indexes: A list of consecutive line indexes.
-        :return: directive vector 1 and 2.
+        :param point_index: index of the end point.
+        :param side_point_index: index of the other point of the adjacent side, along which the end point slides, or
+            None for a free end of an opened wire, which then moves along the normal.
+        :param normal: unit normal of the offset lines, on the side of a positive offset.
+        :param offset: offset distance.
+        :return: the new end point.
         """
-        dir_vec_1 = None
-        dir_vec_2 = None
-
-        if line_indexes[0] == 0 and not self.closed:
-            pass
-        else:
-            dir_vec_1 = self.points[line_indexes[0]] - self.points[line_indexes[0] - 1]
-
-        if line_indexes[-1] == len(self.points) - (2 - self.closed):
-            if not self.closed:
-                pass
-            else:
-                dir_vec_2 = design3d.Vector2D(self.points[0] - self.points[1])
-        elif self.closed and line_indexes[-1] == len(self.points) - 2:
-            dir_vec_2 = design3d.Vector2D(self.points[line_indexes[-1] + 1] - self.points[0])
-        else:
-            dir_vec_2 = self.points[line_indexes[-1] + 1] - self.points[line_indexes[-1] + 2]
-
-        if dir_vec_1 is None:
-            dir_vec_1 = dir_vec_2
-        if dir_vec_2 is None:
-            dir_vec_2 = dir_vec_1
-
-        dir_vec_1 = dir_vec_1.unit_vector()
-        dir_vec_2 = dir_vec_2.unit_vector()
-        return dir_vec_1, dir_vec_2
-
-    def get_offset_normal_vectors(self, line_indexes):
-        """
-        Gets offset normal vectors.
-
-        :param line_indexes:
-        :return: A list of consecutive line indexes.
-        """
-        normal_vectors = []
-        for index in line_indexes:
-            if index == len(self.points) - 1:
-                normal_vectors.append(design3d.Vector2D(self.points[0] - self.points[index]).normalVector(unit=True))
-            else:
-                normal_vectors.append((self.points[index + 1] - self.points[index]).unit_normal_vector())
-        return normal_vectors
-
-    def _helper_get_offset_vectors(self, line_indexes, directive_vector1, directive_vector2):
-        """
-        Helper method: get offset vectors.
-
-        """
-        intersection = design3d.Point2D.line_intersection(
-            curves.Line2D(self.points[line_indexes[0]], self.points[line_indexes[0]] + directive_vector1),
-            curves.Line2D(self.points[line_indexes[-1] + 1], self.points[line_indexes[-1] + 1] + directive_vector2),
-        )
-        vec1 = intersection.point_distance(self.points[line_indexes[0]]) * directive_vector1
-        vec2 = intersection.point_distance(self.points[line_indexes[-1] + 1]) * directive_vector2
-        return vec1, vec2
-
-    def get_offset_new_points(
-        self, line_indexes, offset, distance_dir1, distance_dir2, directive_vector1, directive_vector2, normal_vectors
-    ):
-        """
-        Get Offset new points.
-
-        """
-        if len(line_indexes) <= 1:
-            return []
-        vec1, vec2 = self._helper_get_offset_vectors(line_indexes, directive_vector1, directive_vector2)
-        new_points = {line_indexes[0]: self.points[line_indexes[0]] + distance_dir1 * directive_vector1}
-
-        for i, index in enumerate(line_indexes[1:]):
-            coeff_vec_2 = design3d.Point2D.point_distance(
-                self.points[line_indexes[0]], self.points[index]
-            ) / design3d.Point2D.point_distance(self.points[line_indexes[0]], self.points[line_indexes[-1] + 1])
-            coeff_vec_1 = 1 - coeff_vec_2
-            if directive_vector1.dot(normal_vectors[i + 1]) < 0:
-                coeff_vec_1 = -coeff_vec_1
-            if directive_vector2.dot(normal_vectors[i + 1]) < 0:
-                coeff_vec_2 = -coeff_vec_2
-            index_dir_vector = coeff_vec_1 * vec1 + coeff_vec_2 * vec2
-            index_dot = index_dir_vector.dot(normal_vectors[i + 1])
-            new_points[index] = self.points[index] + (offset / index_dot) * index_dir_vector
-        if self.closed and line_indexes[-1] == len(self.points) - 1:
-            new_points[0] = self.points[0] + distance_dir2 * directive_vector2
-        else:
-            new_points[line_indexes[-1] + 1] = self.points[line_indexes[-1] + 1] + distance_dir2 * directive_vector2
-        return new_points
+        point = self.points[point_index]
+        if side_point_index is None:
+            return point + offset * normal
+        side_direction = (point - self.points[side_point_index]).unit_vector()
+        return point + (offset / side_direction.dot(normal)) * side_direction
 
     def offset_lines(self, line_indexes, offset):
         """
         Offsets some consecutive aligned lines, the other points being kept.
 
-        Line indexes is a list of consecutive line indexes, line_indexes = 0 being the 1st line.
-        These lines should all be aligned.
+        The end points of the offset lines slide along the adjacent sides, and the intermediate points keep their
+        relative position between the end points. A free end of an opened wire moves along the normal of the lines.
+        An adjacent side aligned with the offset lines is offset with them.
 
-        if self.close last line_index can be len(self.points)-1
-        if not, last line_index can be len(self.points)-2
+        As for offset, a positive offset moves the lines to the right of the direction of travel: it pushes them out
+        of a counterclockwise contour.
 
-        As for offset, a positive offset moves the lines to the right of the direction of travel.
+        :param line_indexes: consecutive indexes of aligned lines, the line i going from the point i to the next one.
+            For a closed contour, the last line, from the last point to the first one, has the index len(points) - 1.
+        :param offset: offset distance.
+        :return: a new rounded line segments, with the same radii.
         """
-        return self._offset_lines_to_the_left(line_indexes, -offset)
+        number_points = len(self.points)
+        first_index = line_indexes[0]
+        last_index = (line_indexes[-1] + 1) % number_points
+        direction = (self.points[(first_index + 1) % number_points] - self.points[first_index]).unit_vector()
+        normal = design3d.Vector2D(direction.y, -direction.x)
 
-    def _offset_lines_to_the_left(self, line_indexes, offset):
-        """Offsets some consecutive aligned lines to the left of the direction of travel."""
-        new_linesegment2d_points = []
+        previous_index = (first_index - 1) % number_points if self.closed or first_index > 0 else None
+        next_index = (last_index + 1) % number_points if self.closed or last_index < number_points - 1 else None
+        # An adjacent side aligned with the offset lines is offset with them.
+        if previous_index is not None and self._is_aligned(previous_index, first_index, direction):
+            return self.offset_lines([previous_index] + list(line_indexes), offset)
+        if next_index is not None and self._is_aligned(last_index, next_index, direction):
+            return self.offset_lines(list(line_indexes) + [last_index], offset)
 
-        dir_vec_1, dir_vec_2 = self._offset_directive_vector_helper(line_indexes)
+        new_first_point = self._offset_lines_end_point(first_index, previous_index, normal, offset)
+        new_last_point = self._offset_lines_end_point(last_index, next_index, normal, offset)
+        new_points = {first_index: new_first_point, last_index: new_last_point}
+        length = self.points[first_index].point_distance(self.points[last_index])
+        for index in line_indexes[1:]:
+            ratio = self.points[first_index].point_distance(self.points[index]) / length
+            new_points[index] = new_first_point + ratio * (new_last_point - new_first_point)
 
-        normal_vectors = self.get_offset_normal_vectors(line_indexes)
-
-        # =============================================================================
-        # COMPUTES THE ANGLE BETWEEN THE NORMAL VECTOR OF THE SURFACE TO OFFSET AND
-        # THE DIRECTIVE VECTOR IN ORDER TO SET THE NEW POINT AT THE RIGHT DISTANCE
-        # =============================================================================
-        dot1 = dir_vec_1.dot(normal_vectors[0])
-        dot2 = dir_vec_2.dot(normal_vectors[-1])
-
-        if math.isclose(dot1, 0, abs_tol=1e-9):
-            # call function considering the line before, because the latter and
-            # the first offset segment are parallel
-            return self._offset_lines_to_the_left([line_indexes[0] - 1] + line_indexes, offset)
-        if math.isclose(dot2, 0, abs_tol=1e-9):
-            # call function considering the line after, because the latter and
-            # the last offset segment are parallel
-            return self._offset_lines_to_the_left(line_indexes + [line_indexes[-1] + 1], offset)
-
-        distance_dir1 = offset / dot1
-        distance_dir2 = offset / dot2
-
-        new_points = self.get_offset_new_points(
-            line_indexes, offset, distance_dir1, distance_dir2, dir_vec_1, dir_vec_2, normal_vectors
+        return self.__class__(
+            [new_points.get(index, point) for index, point in enumerate(self.points)],
+            self.radius.copy(),
+            adapt_radius=self.adapt_radius,
+            reference_path=self.reference_path,
+            name=self.name,
         )
-        for i, point in enumerate(self.points):
-            if i in new_points:
-                new_linesegment2d_points.append(new_points[i])
-            else:
-                new_linesegment2d_points.append(point)
-
-        rls_2d = self.__class__(new_linesegment2d_points, self.radius, adapt_radius=self.adapt_radius)
-
-        return rls_2d
 
 
 class OpenedRoundedLineSegments2D(RoundedLineSegments2D, wires.Wire2D):
