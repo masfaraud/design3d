@@ -44,6 +44,23 @@ class TestClosedContoursOffset(unittest.TestCase):
         self.assertAlmostEqual(wires.Contour2D.from_points(SQUARE).offset(OFFSET).area(), (1 + 2 * OFFSET) ** 2)
         self.assertAlmostEqual(wires.Contour2D.from_points(SQUARE[::-1]).offset(OFFSET).area(), (1 - 2 * OFFSET) ** 2)
 
+    def test_contour2d_with_arcs_tangent_to_lines(self):
+        """Offsets of consecutive tangent edges stay tangent: their junction is the offset of the common point."""
+        slot = wires.Contour2D(Slot2D(1.0, 0.2).primitives)
+        for contour, width in ((slot, 0.2 + 2 * OFFSET), (slot.invert(), 0.2 - OFFSET)):
+            offset = OFFSET if contour is slot else 0.5 * OFFSET
+            offset_contour = contour.offset(offset)
+            self.assertTrue(offset_contour.is_ordered())
+            self.assertAlmostEqual(offset_contour.area(), (1.0 - 0.2) * width + math.pi * width**2 / 4)
+
+        rounded_square = wires.Contour2D(ClosedRoundedLineSegments2D(SQUARE, {i: RADIUS for i in range(4)}).primitives)
+        self.assertAlmostEqual(
+            rounded_square.offset(OFFSET).area(), rounded_square_area(1 + 2 * OFFSET, RADIUS + OFFSET)
+        )
+        self.assertAlmostEqual(
+            rounded_square.invert().offset(OFFSET).area(), rounded_square_area(1 - 2 * OFFSET, RADIUS - OFFSET)
+        )
+
     def test_closed_polygon2d(self):
         self._check(wires.ClosedPolygon2D(SQUARE), (1 + 2 * OFFSET) ** 2, (1 - 2 * OFFSET) ** 2)
 

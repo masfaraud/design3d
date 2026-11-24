@@ -45,6 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ClosedPolygon2D.offset: the sides are moved by the offset distance, instead of a distance depending on the angles
 - Arc2D.direction_vector follows the direction of travel of clockwise arcs, instead of always turning
   counterclockwise
+- Wire2D.offset and Contour2D.offset: contours with arcs tangent to their neighbouring edges, such as rounded
+  profiles, are offset instead of failing
 
 ### Changed
 
