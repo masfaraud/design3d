@@ -115,6 +115,21 @@ class RoundedLineSegments2D(RoundedLineSegments):
             name=self.name,
         )
 
+    def invert(self):
+        """
+        Returns the rounded line segments traveled in the opposite direction.
+
+        The points are reversed, and each radius follows its point to its new index.
+        """
+        last_index = len(self.points) - 1
+        return self.__class__(
+            self.points[::-1],
+            {last_index - index: radius for index, radius in self.radius.items()},
+            adapt_radius=self.adapt_radius,
+            reference_path=self.reference_path,
+            name=self.name,
+        )
+
     def _helper_offset_points_and_radii(self, vectors, number_points, offset):
         """
         Helper method to get offset points and new radii for offset method.
