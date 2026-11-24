@@ -1738,6 +1738,19 @@ class TestBSplineSurface3D(unittest.TestCase):
         for point in [point1, point2, point3, point4, point5]:
             self.assertAlmostEqual(point.point_distance(design3d.Point3D(0.0, 0.0, point.z)), 1.0)
 
+    def test_from_parametrized_points_interpolation(self):
+        params_u = [0.0, 0.2, 0.6, 1.0]
+        params_v = [0.0, 0.7, 1.0]
+        points_grid = [[design3d.Point3D(u, v, np.sin(3 * u) * np.cos(2 * v)) for v in params_v] for u in params_u]
+        surface = surfaces.BSplineSurface3D.from_parametrized_points_interpolation(
+            points_grid, params_u, params_v, degree_u=3, degree_v=2
+        )
+        self.assertEqual((surface.degree_u, surface.degree_v), (3, 2))
+        # The surface passes through the points at the given parameters
+        for u, row in zip(params_u, points_grid):
+            for v, point in zip(params_v, row):
+                self.assertTrue(surface.point2d_to_3d(design3d.Point2D(u, v)).is_close(point, 1e-9))
+
     def test_approximation_surface(self):
         construction_linesegment1 = d3de.LineSegment3D(design3d.Point3D(0.5, -0.5, 0), design3d.Point3D(0.1, -0.5, 0))
         construction_linesegment2 = d3de.LineSegment3D(

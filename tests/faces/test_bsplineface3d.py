@@ -1563,6 +1563,25 @@ class TestBSplineFace3D(unittest.TestCase):
         self.assertLessEqual(len(mesh.vertices), 2750)
         self.assertLessEqual(total_time, 2)
 
+    def test_triangulation_with_two_control_points_in_v(self):
+        # Half of a cone frustum, ruled (degree 1) between two half circles: only 2 control points in v.
+        # The mesh needs interior vertices, otherwise its triangles join distant boundary points through the cone.
+        radius1, radius2, number_points_u = 0.5, 0.25, 10
+        points = []
+        for i in range(number_points_u):
+            angle = np.pi * i / (number_points_u - 1)
+            for radius, height in ((radius1, 0.0), (radius2, 1.0)):
+                points.append(design3d.Point3D(radius * np.cos(angle), radius * np.sin(angle), height))
+        surface = surfaces.BSplineSurface3D.from_points_interpolation(points, number_points_u, 2, 3, 1)
+        face = faces.BSplineFace3D.from_surface_rectangular_cut(surface, 0.0, 1.0, 0.0, 1.0)
+        mesh = face.triangulation()
+        vertices = np.array(mesh.vertices)
+        centroids = vertices[np.array(mesh.triangles)].mean(axis=1)
+        # Distance between triangle centroids and the cone, along the radius
+        cone_radii = radius1 + (radius2 - radius1) * centroids[:, 2]
+        radial_gaps = cone_radii - np.hypot(centroids[:, 0], centroids[:, 1])
+        self.assertLess(radial_gaps.max(), 0.03 * radius1)
+
 
 if __name__ == "__main__":
     unittest.main()

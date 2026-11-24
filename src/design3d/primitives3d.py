@@ -2115,6 +2115,170 @@ class Sweep(shells.ClosedShell3D):
         )
 
 
+def loft_faces(sections: list[design3d.wires.Wire3D], number_points: int = 10) -> list[design3d.faces.BSplineFace3D]:
+    """
+    Interpolates B-spline faces through 3D sections (skinning).
+
+    Sections are wires (open or closed) with the same number of primitives, all oriented the same way: one face
+    interpolates the i-th primitives of all the sections. Adjacent faces share their edge, as they interpolate the
+    same points with the same parameters along it.
+
+    :param sections: The 3D wires to interpolate, in the order of the loft (at least 2).
+    :param number_points: Number of points sampled on each primitive of the sections, unless the i-th primitives
+        of all the sections are line segments, which only need their end points.
+    :return: The lateral faces of the loft, one per primitive of the sections, two for closed primitives.
+    """
+    if len(sections) < 2:
+        raise ValueError("A loft needs at least 2 sections.")
+    number_primitives = len(sections[0].primitives)
+    if any(len(section.primitives) != number_primitives for section in sections):
+        raise ValueError("All the sections of a loft must have the same number of primitives.")
+
+    # Points of each section, for each face: points_grids[i][j][k] is the k-th point of the i-th face on the j-th
+    # section. Closed primitives (full circles...) are split in two halves, giving two faces: a face interpolating a
+    # whole closed primitive would be periodic, with a seam on its boundary.
+    points_grids = []
+    for primitives in zip(*(section.primitives for section in sections)):
+        if all(isinstance(primitive, design3d.edges.LineSegment3D) for primitive in primitives):
+            abscissa_ratios = [[0.0, 1.0]]
+        elif all(primitive.start.is_close(primitive.end) for primitive in primitives):
+            abscissa_ratios = [
+                [0.5 * k / (number_points - 1) for k in range(number_points)],
+                [0.5 + 0.5 * k / (number_points - 1) for k in range(number_points)],
+            ]
+        else:
+            abscissa_ratios = [[k / (number_points - 1) for k in range(number_points)]]
+        for face_abscissa_ratios in abscissa_ratios:
+            points_grids.append(
+                [
+                    [primitive.point_at_abscissa(ratio * primitive.length()) for ratio in face_abscissa_ratios]
+                    for primitive in primitives
+                ]
+            )
+
+    # Chord length parameters across the sections, averaged over all the sampled points. They are shared by all the
+    # faces so that adjacent faces have the same edge.
+    distances = np.zeros(len(sections) - 1)
+    total_number_points = 0
+    for points_grid in points_grids:
+        points = np.array([[[*point] for point in section_points] for section_points in points_grid])
+        distances += np.linalg.norm(points[1:] - points[:-1], axis=2).sum(axis=1)
+        total_number_points += points.shape[1]
+    distances /= total_number_points
+    if any(distance == 0.0 for distance in distances):
+        raise ValueError("Two consecutive sections of a loft are identical.")
+    params_v = np.concatenate([[0.0], np.cumsum(distances) / distances.sum()])
+    degree_v = min(3, len(sections) - 1)
+
+    lateral_faces = []
+    for points_grid in points_grids:
+        size_u = len(points_grid[0])
+        params_u = np.linspace(0.0, 1.0, size_u)
+        # Data points in the surface layout: along a primitive in u, across the sections in v
+        transposed_grid = [[section_points[k] for section_points in points_grid] for k in range(size_u)]
+        surface = surfaces.BSplineSurface3D.from_parametrized_points_interpolation(
+            transposed_grid, params_u, params_v, min(3, size_u - 1), degree_v
+        )
+        lateral_faces.append(design3d.faces.BSplineFace3D.from_surface_rectangular_cut(surface, 0.0, 1.0, 0.0, 1.0))
+    return lateral_faces
+
+
+class Loft(shells.ClosedShell3D):
+    """
+    Interpolates a solid through planar sections.
+
+    Each section is a 2D contour placed in 3D by a frame, as for an ExtrudedProfile: the contour is drawn in the
+    (u, v) plane of the frame. The lateral faces interpolate the sections (see loft_faces), and two planar faces
+    close the solid at the first and last sections.
+
+    The sections must have the same number of primitives, the same orientation, and their first primitives must
+    correspond to each other: for instance ClosedRoundedLineSegments2D with the same rounded corners.
+
+    :param sections2d: The 2D contours of the sections (at least 2).
+    :param frames: The frames positioning each section in 3D.
+    :param number_points: Number of points sampled on each curved primitive of the sections to interpolate them.
+    :param color: (optional) The RGB color of the resulting shell.
+    :param alpha: (optional) The transparency of the resulting shell.
+    :param name: The name of the loft.
+    """
+
+    def __init__(
+        self,
+        sections2d: list[design3d.wires.Contour2D],
+        frames: list[design3d.Frame3D],
+        number_points: int = 10,
+        *,
+        color: tuple[float, float, float] = None,
+        alpha: float = 1.0,
+        reference_path: str = design3d.PATH_ROOT,
+        name: str = "",
+    ):
+        if len(sections2d) != len(frames):
+            raise ValueError("A loft needs one frame per section.")
+        self.sections2d = sections2d
+        self.frames = frames
+        self.number_points = number_points
+        faces = self.shell_faces()
+        shells.ClosedShell3D.__init__(self, faces, color=color, alpha=alpha, reference_path=reference_path, name=name)
+
+    def to_dict(self, *args, **kwargs):
+        """Custom serialization for performance."""
+        dict_ = shells.ClosedShell3D.base_dict(self)
+        dict_.update(
+            {
+                "color": self.color,
+                "alpha": self.alpha,
+                "sections2d": [section.to_dict() for section in self.sections2d],
+                "frames": [frame.to_dict() for frame in self.frames],
+                "number_points": self.number_points,
+                "reference_path": self.reference_path,
+            }
+        )
+        return dict_
+
+    def shell_faces(self):
+        """Generates the lateral faces and the two end faces."""
+        sections3d = [
+            section.to_3d(frame.origin, frame.u, frame.v) for section, frame in zip(self.sections2d, self.frames)
+        ]
+        start_face = design3d.faces.PlaneFace3D(
+            surfaces.Plane3D(self.frames[0]), surfaces.Surface2D(self.sections2d[0], [])
+        )
+        end_face = design3d.faces.PlaneFace3D(
+            surfaces.Plane3D(self.frames[-1]), surfaces.Surface2D(self.sections2d[-1], [])
+        )
+        return [start_face] + loft_faces(sections3d, self.number_points) + [end_face]
+
+    def frame_mapping(self, frame: design3d.Frame3D, side: str):
+        """
+        Changes frame_mapping and return a new Loft.
+
+        :param frame: Frame to map.
+        :param side: 'old' or 'new'
+        """
+        return Loft(
+            self.sections2d,
+            [section_frame.frame_mapping(frame, side) for section_frame in self.frames],
+            self.number_points,
+            color=self.color,
+            alpha=self.alpha,
+            reference_path=self.reference_path,
+            name=self.name,
+        )
+
+    def copy(self, deep=True, memo=None):
+        """Creates a copy of the Loft."""
+        return Loft(
+            [section.copy() for section in self.sections2d],
+            [frame.copy() for frame in self.frames],
+            self.number_points,
+            color=self.color,
+            alpha=self.alpha,
+            reference_path=self.reference_path,
+            name=self.name,
+        )
+
+
 class Sphere(shells.ClosedShell3D):
     """
     Defines a sphere at a given position & radius.
