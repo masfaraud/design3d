@@ -119,7 +119,7 @@ BABYLON_UNPACKER_BODY_TEMPLATE = """
       	camera.attachControl(canvas);
       	camera.inertia = 0;
       	camera.panningInertia = 0;
-      	// cam.mode = BABYLON.Camera.ORTHOGRAPHIC_CAMERA;
+      	// Orthographic projection set by the viewer script, with a toggle to perspective
       	camera.upVector = new BABYLON.Vector3(0, 0, 1);
       	camera.lowerBetaLimit = null;
         camera.upperBetaLimit = null;

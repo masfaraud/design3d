@@ -103,15 +103,31 @@ body.d3d-panel-hidden #d3d-panel { display: none; }
 }
 .d3d-buttons button:hover, #d3d-toolbar button:hover { background: var(--d3d-hover); }
 #d3d-toolbar button.d3d-active { border-color: var(--d3d-accent); color: var(--d3d-accent); }
-#d3d-toolbar {
+/* Toolbar and view cube in the top right corner of the 3D view */
+#d3d-corner {
    position: absolute;
    top: 8px;
    right: 8px;
    display: flex;
+   flex-direction: column;
+   align-items: flex-end;
+   gap: 6px;
+   max-width: 60vw;
+   pointer-events: none;
+}
+#d3d-corner > * { pointer-events: auto; }
+#d3d-toolbar {
+   display: flex;
    flex-wrap: wrap;
    justify-content: flex-end;
    gap: 4px;
-   max-width: 60vw;
+}
+#d3d-viewcube {
+   width: 110px;
+   height: 110px;
+   touch-action: none;
+   outline: none;
+   cursor: pointer;
 }
 #d3d-toolbar .d3d-sep { width: 8px; }
 #d3d-help {
