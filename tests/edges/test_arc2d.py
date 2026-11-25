@@ -454,6 +454,30 @@ class TestArc2D(unittest.TestCase):
         self.assertEqual(arc_from_3_points.translation(design3d.X2D).translation(-design3d.X2D), arc_from_3_points)
         self.assertEqual(arc_from_3_points2.translation(design3d.X2D).translation(-design3d.X2D), arc_from_3_points2)
 
+    def _assert_bounds(self, bounding_rectangle, expected_bounds):
+        for value, expected_value in zip(bounding_rectangle.bounds(), expected_bounds):
+            self.assertAlmostEqual(value, expected_value, places=12)
+
+    def test_bounding_rectangle(self):
+        # Trigonometric arc from 0 to 3 pi / 4 on a circle of center (1, 2) and radius 0.05: it reaches y = 2.05
+        center = design3d.Point2D(1.0, 2.0)
+        circle = curves.Circle2D(design3d.Frame2D(center, design3d.X2D, design3d.Y2D), 0.05)
+        start = center + 0.05 * design3d.X2D
+        end = center + 0.05 * design3d.Vector2D(math.cos(0.75 * math.pi), math.sin(0.75 * math.pi))
+        arc = Arc2D(circle, start, end)
+        self.assertTrue(arc.is_trigo)
+        self._assert_bounds(arc.bounding_rectangle, (end.x, 1.05, 2.0, 2.05))
+
+        # Same end points on the reversed circle: clockwise arc going through the bottom and the left of the circle
+        arc = Arc2D(circle.reverse(), start, end)
+        self.assertFalse(arc.is_trigo)
+        self._assert_bounds(arc.bounding_rectangle, (0.95, 1.05, 1.95, end.y))
+
+        # Circle with a rotated frame: the extreme points do not depend on the frame
+        frame = design3d.Frame2D(center, design3d.Vector2D(0.6, 0.8), design3d.Vector2D(-0.8, 0.6))
+        arc = Arc2D(curves.Circle2D(frame, 0.05), center + 0.05 * design3d.Y2D, center - 0.05 * design3d.Y2D)
+        self._assert_bounds(arc.bounding_rectangle, (0.95, 1.0, 1.95, 2.05))
+
 
 if __name__ == "__main__":
     unittest.main()

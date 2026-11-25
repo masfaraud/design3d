@@ -36,6 +36,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   reversing their axis
 - Arc3D: the bounding box is exact, instead of being computed on discretization points that miss the extrema of
   the arc
+- Arc2D: the bounding rectangle is exact, instead of being computed on discretization points that miss the extrema
+  of the arc. Bounding rectangles of 2D wires and contours, `Contour2D.bounding_points` and
+  `Contour2D.point_inside` no longer reject points on or near the extreme points of arcs, such as the ends of a slot
 - ToroidalFace3D: the bounding box includes the extrema of the coordinates inside the face, such as the outer equator
   of a band around the torus, instead of only its boundary contour
 - BSplineFace3D: triangulation of faces with few control points has interior vertices, instead of triangles joining

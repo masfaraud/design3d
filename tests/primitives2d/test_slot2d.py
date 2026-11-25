@@ -22,6 +22,19 @@ class TestSlot2D(unittest.TestCase):
         self.assertAlmostEqual(self.slot.length(), 2 * 0.4 + math.pi * 0.1)
         self.assertTrue(self.slot.center_of_mass().is_close(self.center))
 
+    def test_bounding_rectangle(self):
+        # The arcs of the slot reach x = -0.25 and x = 0.25: the bounding rectangle and point_inside must be exact
+        slot = Slot2D(0.5, 0.1)
+        for value, expected_value in zip(slot.bounding_rectangle.bounds(), (-0.25, 0.25, -0.05, 0.05)):
+            self.assertAlmostEqual(value, expected_value, places=12)
+        x_min, y_min = slot.bounding_points()[0]
+        x_max, y_max = slot.bounding_points()[1]
+        for value, expected_value in zip((x_min, x_max, y_min, y_max), (-0.25, 0.25, -0.05, 0.05)):
+            self.assertAlmostEqual(value, expected_value, places=12)
+        for point in (design3d.Point2D(-0.25, 0.0), design3d.Point2D(0.25, 0.0)):
+            self.assertTrue(slot.point_inside(point, include_edge_points=True))
+            self.assertFalse(slot.point_inside(point, include_edge_points=False))
+
     def test_angle(self):
         slot = Slot2D(0.5, 0.1, angle=0.5 * math.pi)
         self.assertTrue(slot.primitives[1].middle_point().is_close(design3d.Point2D(0.0, 0.25)))

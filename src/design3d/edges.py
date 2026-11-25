@@ -3417,13 +3417,28 @@ class Arc2D(ArcMixin, Edge):
 
     @property
     def bounding_rectangle(self):
-        """Gets the bounding rectangle for an Arc 2D."""
+        """
+        Gets the bounding rectangle for an Arc 2D.
+
+        On the circle, x and y are extremal at the points of global angles 0, pi / 2, pi and 3 pi / 2 around the
+        center. These points are added to the arc end points when they are on the arc.
+        """
         if not self._bounding_rectangle:
-            discretization_points = self.discretization_points(number_points=20)
-            x_values, y_values = [], []
-            for point in discretization_points:
-                x_values.append(point.x)
-                y_values.append(point.y)
+            center, radius = self.circle.center, self.circle.radius
+            # Global angle of the arc point from which the arc goes counterclockwise
+            first_point = self.start if self.is_trigo else self.end
+            first_angle = math.atan2(first_point.y - center.y, first_point.x - center.x)
+            angle_tolerance = 1e-9 / radius
+            x_values, y_values = [self.start.x, self.end.x], [self.start.y, self.end.y]
+            for angle, x, y in (
+                (0.0, center.x + radius, center.y),
+                (0.5 * math.pi, center.x, center.y + radius),
+                (math.pi, center.x - radius, center.y),
+                (1.5 * math.pi, center.x, center.y - radius),
+            ):
+                if (angle - first_angle) % design3d.TWO_PI <= self.angle + angle_tolerance:
+                    x_values.append(x)
+                    y_values.append(y)
             self._bounding_rectangle = design3d.core.BoundingRectangle(
                 min(x_values), max(x_values), min(y_values), max(y_values)
             )
