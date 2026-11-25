@@ -4520,9 +4520,18 @@ class ConicalSurface3D(UPeriodicalSurface):
         :return: The STEP representation of the object and the last ID.
         :rtype: tuple[str, list[int]]
         """
-        content, frame_id = self.frame.to_step(current_id)
+        frame, semi_angle = self.frame, self.semi_angle
+        if semi_angle < 0:
+            # STEP requires a positive semi_angle: the same cone is described with the axis reversed
+            # (radius = tan(semi_angle) * z + ref_radius is unchanged when both z and semi_angle change sign)
+            frame = design3d.Frame3D(frame.origin, frame.u, -frame.v, -frame.w)
+            semi_angle = -semi_angle
+        content, frame_id = frame.to_step(current_id)
         current_id = frame_id + 1
-        content += f"#{current_id} = CONICAL_SURFACE('{self.name}',#{frame_id},{self.ref_radius},{self.semi_angle});\n"
+        content += (
+            f"#{current_id} = CONICAL_SURFACE('{self.name}',#{frame_id},{round(1000 * self.ref_radius, 4)},"
+            f"{semi_angle});\n"
+        )
         return content, [current_id]
 
     def frame_mapping(self, frame: design3d.Frame3D, side: str):
