@@ -24,9 +24,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   opened at startup with `debug=True`
 - `babylon_data` of volume models, assemblies and compounds has a `tree` entry describing the hierarchy of the
   primitives
-- ExtrudedProfile: `draft_angle` and `symmetric` options. A draft shrinks the section away from the sketch plane,
-  with planar faces on line segments and conical faces on arcs, and a symmetric extrusion spans half its length on
-  each side of the sketch plane, which is the neutral plane of the draft
+- ExtrudedProfile: `draft_angle`, `inner_draft_angles` and `symmetric` options. A draft shrinks the section away
+  from the sketch plane, with planar faces on line segments and conical faces on arcs. The holes take the draft
+  angle by default, as for a molded part, or their own angles, for instance to keep the thickness of stamped walls.
+  A symmetric extrusion spans half its length on each side of the sketch plane, which is the neutral plane of the
+  draft
 
 ### Fixed
 

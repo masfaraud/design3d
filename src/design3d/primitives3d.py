@@ -481,6 +481,10 @@ class ExtrudedProfile(shells.ClosedShell3D):
     :param draft_angle: (optional) the draft angle, in radians. A positive angle shrinks the section away from the
         sketch plane, as for a molded part: the outer contour moves inwards and the holes widen. A negative angle
         flares it. Line segments give planar faces and arcs give conical faces.
+    :param inner_draft_angles: (optional) the draft angles of the holes, one per inner contour, in radians. A positive
+        angle widens the hole away from the sketch plane. By default, the holes take the draft angle, which gives the
+        draft of a molded part. Giving the holes the opposite of the draft angle gives walls of constant thickness,
+        as for a stamped part.
     :param symmetric: (optional) if True, the extrusion spans half its length on each side of the sketch plane.
         With a draft angle, the sketch plane is the neutral plane, and each half shrinks away from it.
     """
@@ -499,6 +503,7 @@ class ExtrudedProfile(shells.ClosedShell3D):
         name: str = "",
         *,
         draft_angle: float = 0.0,
+        inner_draft_angles: list[float] = None,
         symmetric: bool = False,
     ):
         self.frame = frame
@@ -509,6 +514,11 @@ class ExtrudedProfile(shells.ClosedShell3D):
         self.inner_contours2d = inner_contours2d
         self.extrusion_vector = self.frame.w * extrusion_length
         self.draft_angle = draft_angle
+        if inner_draft_angles is not None and len(inner_draft_angles) != len(inner_contours2d):
+            raise ValueError(
+                f"{len(inner_draft_angles)} inner draft angles are given for {len(inner_contours2d)} inner contours."
+            )
+        self.inner_draft_angles = inner_draft_angles
         self.symmetric = symmetric
         self.inner_contours3d = []
         self.color = color
@@ -542,6 +552,7 @@ class ExtrudedProfile(shells.ClosedShell3D):
                 "inner_contours2d": [c.to_dict() for c in self.inner_contours2d],
                 "extrusion_length": self.extrusion_length,
                 "draft_angle": self.draft_angle,
+                "inner_draft_angles": self.inner_draft_angles,
                 "symmetric": self.symmetric,
                 "reference_path": self.reference_path,
             }
@@ -561,6 +572,7 @@ class ExtrudedProfile(shells.ClosedShell3D):
             "reference_path": self.reference_path,
             "name": self.name,
             "draft_angle": self.draft_angle,
+            "inner_draft_angles": self.inner_draft_angles,
             "symmetric": self.symmetric,
         }
         kwargs.update(changes)
@@ -621,24 +633,34 @@ class ExtrudedProfile(shells.ClosedShell3D):
                 primitive.circle.radius + (offset if primitive.is_trigo else -offset) <= 0.0
             ):
                 raise ValueError(
-                    f"The draft angle {self.draft_angle} is too large: an arc of the profile vanishes in the section "
-                    f"at a distance {distance} from the sketch plane."
+                    f"The draft is too large: an arc of the profile vanishes in the section offset by {distance}."
                 )
         primitives = design3d.wires.Contour2D(contour.primitives).offset(offset).primitives
         if len(primitives) != len(contour.primitives):
             raise ValueError(
-                f"The draft angle {self.draft_angle} is too large: some edges of the profile vanish in the section "
-                f"at a distance {distance} from the sketch plane."
+                f"The draft is too large: some edges of the profile vanish in the section offset by {distance}."
             )
         # Wire2D.offset starts with the offset of the second primitive.
         return primitives[-1:] + primitives[:-1]
 
-    def _section_contours(self, distance: float):
-        """Returns the outer and inner contours of the section offset for the draft at a distance."""
-        outer_contour = design3d.wires.Contour2D(self._offset_primitives(self.outer_contour2d, distance, True))
+    def _inner_draft_angles(self) -> list[float]:
+        """Returns the draft angle of each hole."""
+        if self.inner_draft_angles is None:
+            return [self.draft_angle] * len(self.inner_contours2d)
+        return self.inner_draft_angles
+
+    def _has_draft(self) -> bool:
+        """Returns True if the outer contour or a hole has a draft."""
+        return self.draft_angle != 0.0 or any(angle != 0.0 for angle in self._inner_draft_angles())
+
+    def _section_contours(self, height: float):
+        """Returns the outer and inner contours of the section at a height from the sketch plane, for the draft."""
+        outer_contour = design3d.wires.Contour2D(
+            self._offset_primitives(self.outer_contour2d, height * math.tan(self.draft_angle), True)
+        )
         inner_contours = [
-            design3d.wires.Contour2D(self._offset_primitives(contour, distance, False))
-            for contour in self.inner_contours2d
+            design3d.wires.Contour2D(self._offset_primitives(contour, height * math.tan(angle), False))
+            for contour, angle in zip(self.inner_contours2d, self._inner_draft_angles())
         ]
         return outer_contour, inner_contours
 
@@ -682,7 +704,7 @@ class ExtrudedProfile(shells.ClosedShell3D):
 
         """
         parts = self._parts()
-        if self.draft_angle == 0.0:
+        if not self._has_draft():
             start_height = -0.5 * self.extrusion_length if self.symmetric else 0.0
             lower_origin = self.frame.origin + start_height * self.frame.w
             lower_plane = surfaces.Plane3D.from_plane_vectors(lower_origin, self.frame.u, self.frame.v)
@@ -707,9 +729,7 @@ class ExtrudedProfile(shells.ClosedShell3D):
         lateral_faces = []
         profile_contours = [self.outer_contour2d] + self.inner_contours2d
         for start_height, end_height in parts:
-            outer_contour, inner_contours = self._section_contours(
-                abs(end_height - start_height) * math.tan(self.draft_angle)
-            )
+            outer_contour, inner_contours = self._section_contours(abs(end_height - start_height))
             end_plane = surfaces.Plane3D.from_plane_vectors(
                 self.frame.origin + end_height * self.frame.w, self.frame.u, self.frame.v
             )
@@ -727,27 +747,26 @@ class ExtrudedProfile(shells.ClosedShell3D):
         areas -= sum(contour.area() for contour in self.inner_contours2d)
         return areas
 
-    def _section_area(self, distance: float) -> float:
-        """Returns the area of the section offset for the draft at a distance."""
-        outer_contour, inner_contours = self._section_contours(distance)
+    def _section_area(self, height: float) -> float:
+        """Returns the area of the section at a height from the sketch plane, for the draft."""
+        outer_contour, inner_contours = self._section_contours(height)
         return outer_contour.area() - sum(contour.area() for contour in inner_contours)
 
     def volume(self):
         """
         Gets the Volume of an extruded profile volume.
 
-        With a draft, the area of an offset section is a quadratic function of the offset distance, so Simpson's
-        rule gives the exact volume of each part.
+        With a draft, each contour of a section is offset by a distance proportional to the height, so the area of
+        the section is a quadratic function of the height and Simpson's rule gives the exact volume of each part.
 
         :return: the volume.
         """
-        if self.draft_angle == 0.0:
+        if not self._has_draft():
             return self.area() * self.extrusion_length
         volume = 0.0
         for start_height, end_height in self._parts():
             length = abs(end_height - start_height)
-            distance = length * math.tan(self.draft_angle)
-            volume += length / 6 * (self.area() + 4 * self._section_area(0.5 * distance) + self._section_area(distance))
+            volume += length / 6 * (self.area() + 4 * self._section_area(0.5 * length) + self._section_area(length))
         # As for a straight extrusion, the volume has the sign of the extrusion length.
         return math.copysign(volume, self.extrusion_length)
 

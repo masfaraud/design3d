@@ -105,8 +105,41 @@ class TestExtrudedProfile(unittest.TestCase):
         with self.assertRaises(ValueError):
             ExtrudedProfile(design3d.OXYZ, Slot2D(1.0, 0.2), [], LENGTH, draft_angle=math.atan(0.15 / LENGTH))
 
+    def test_stamped_wall(self):
+        """A hole drafted with the opposite angle flares with the outer contour: the wall keeps its thickness."""
+        hole = wires.Contour2D.from_points(
+            [
+                design3d.Point2D(0.25, 0.25),
+                design3d.Point2D(0.75, 0.25),
+                design3d.Point2D(0.75, 0.75),
+                design3d.Point2D(0.25, 0.75),
+            ]
+        )
+        profile = ExtrudedProfile(
+            design3d.OXYZ, SQUARE, [hole], LENGTH, draft_angle=-DRAFT_ANGLE, inner_draft_angles=[DRAFT_ANGLE]
+        )
+        # Each section is a square ring of width 0.25: (1 + 2d)^2 - (0.5 + 2d)^2 = 0.75 + 2d.
+        self._assert_volume(profile, LENGTH * (0.75 + 2 * 0.05), check_shell_volume=False)
+        top_section, top_holes = profile._section_contours(LENGTH)
+        self.assertAlmostEqual(top_section.area() - top_holes[0].area(), 0.75 + 2 * 0.1)
+
+    def test_inner_draft_angles_number(self):
+        with self.assertRaises(ValueError):
+            ExtrudedProfile(design3d.OXYZ, SQUARE, [], LENGTH, inner_draft_angles=[DRAFT_ANGLE])
+
     def test_parameters_are_kept(self):
-        profile = ExtrudedProfile(design3d.OXYZ, SQUARE, [], LENGTH, draft_angle=DRAFT_ANGLE, symmetric=True)
+        hole = wires.Contour2D.from_circle(
+            curves.Circle2D(design3d.Frame2D(design3d.Point2D(0.5, 0.5), design3d.X2D, design3d.Y2D), 0.2)
+        )
+        profile = ExtrudedProfile(
+            design3d.OXYZ,
+            SQUARE,
+            [hole],
+            LENGTH,
+            draft_angle=DRAFT_ANGLE,
+            inner_draft_angles=[-DRAFT_ANGLE],
+            symmetric=True,
+        )
         offset = design3d.Vector3D(1.0, 0.0, 0.0)
         for new_profile in (
             profile.copy(),
@@ -115,7 +148,10 @@ class TestExtrudedProfile(unittest.TestCase):
             profile.frame_mapping(design3d.OXYZ.translation(offset), "new"),
             ExtrudedProfile.dict_to_object(profile.to_dict()),
         ):
-            self.assertEqual((new_profile.draft_angle, new_profile.symmetric), (DRAFT_ANGLE, True))
+            self.assertEqual(
+                (new_profile.draft_angle, new_profile.inner_draft_angles, new_profile.symmetric),
+                (DRAFT_ANGLE, [-DRAFT_ANGLE], True),
+            )
             self.assertAlmostEqual(new_profile.volume(), profile.volume())
 
 
