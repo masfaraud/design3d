@@ -9,7 +9,7 @@ import matplotlib.patches
 import matplotlib.pyplot as plt
 
 import design3d
-from design3d import PATH_ROOT, edges, wires
+from design3d import PATH_ROOT, curves, edges, wires
 from design3d.core import EdgeStyle
 from design3d.primitives import RoundedLineSegments
 
@@ -596,6 +596,196 @@ class Slot2D(ParametricContour2DMixin, wires.Contour2D):
             self.width + 2 * offset,
             center=self.center.copy(),
             angle=self.angle,
+            reference_path=self.reference_path,
+            name=self.name,
+        )
+
+    def generic_contour(self):
+        """Returns the profile as a Contour2D."""
+        return wires.Contour2D([primitive.copy() for primitive in self.primitives], reference_path=self.reference_path)
+
+
+class CirclesConvexHull2D(ParametricContour2DMixin, wires.Contour2D):
+    """
+    The convex contour enveloping circles: arcs of the circles joined by their external tangents.
+
+    Typical profiles are crank webs, connecting rods, levers or housings around shafts. A slot is the hull of two
+    circles of the same radius. The circles inside the hull of the others are kept as parameters but add no edge.
+    Unlike the other parametric profiles, this one is placed by the centers of its circles.
+
+    :param centers: the centers of the circles.
+    :param radii: the radii of the circles, strictly positive.
+    """
+
+    def __init__(
+        self,
+        centers: list[design3d.Point2D],
+        radii: list[float],
+        reference_path: str = PATH_ROOT,
+        name: str = "",
+    ):
+        if not centers or len(centers) != len(radii):
+            raise ValueError("CirclesConvexHull2D needs at least one circle, and as many radii as centers")
+        if min(radii) <= 0:
+            raise ValueError("The radii of a CirclesConvexHull2D must be strictly positive")
+        self.centers = centers
+        self.radii = list(radii)
+        wires.Contour2D.__init__(self, self._hull_primitives(), reference_path=reference_path, name=name)
+
+    def hull_circle_indices(self, tol: float = 1e-9) -> list[int]:
+        """Returns the indices of the circles that are not inside another one, the largest first."""
+        indices = []
+        for i in sorted(range(len(self.radii)), key=lambda index: -self.radii[index]):
+            if not any(
+                self.centers[i].point_distance(self.centers[j]) + self.radii[i] <= self.radii[j] + tol for j in indices
+            ):
+                indices.append(i)
+        return indices
+
+    def _tangent(self, i: int, j: int):
+        """
+        Returns the external tangent from circle i to circle j leaving the circles on its left, as the unit normal
+        pointing outwards and the two tangency points.
+        """
+        center_i, center_j = self.centers[i], self.centers[j]
+        distance = center_i.point_distance(center_j)
+        direction = (center_j - center_i) / distance
+        right = design3d.Vector2D(direction.y, -direction.x)
+        sin_alpha = (self.radii[i] - self.radii[j]) / distance
+        cos_alpha = math.sqrt(max(0.0, 1.0 - sin_alpha**2))
+        normal = cos_alpha * right + sin_alpha * direction
+        return normal, center_i + self.radii[i] * normal, center_j + self.radii[j] * normal
+
+    def _arc(self, index: int, start: design3d.Point2D, end: design3d.Point2D):
+        """Returns the counterclockwise arc of a circle from start to end, None if they are the same point."""
+        center, radius = self.centers[index], self.radii[index]
+        angle_start = math.atan2(start.y - center.y, start.x - center.x)
+        angle_end = math.atan2(end.y - center.y, end.x - center.x)
+        sweep = (angle_end - angle_start) % (2 * math.pi)
+        if sweep < 1e-9 or sweep > 2 * math.pi - 1e-9:
+            return None
+        middle_angle = angle_start + 0.5 * sweep
+        middle = center + design3d.Vector2D(radius * math.cos(middle_angle), radius * math.sin(middle_angle))
+        return edges.Arc2D.from_3_points(start, middle, end)
+
+    def _hull_primitives(self, tol: float = 1e-9):
+        """Computes the arcs and tangent segments of the hull, counterclockwise."""
+        indices = self.hull_circle_indices(tol)
+        if len(indices) == 1:
+            circle = curves.Circle2D.from_center_and_radius(self.centers[indices[0]], self.radii[indices[0]])
+            return wires.Contour2D.from_circle(circle).primitives
+
+        # A tangent belongs to the hull when all the circles are on its left. When several circles touch the same
+        # tangent line, the longest tangent skips the circles in between.
+        outgoing = {}
+        for i in indices:
+            for j in indices:
+                if i == j:
+                    continue
+                normal, point_i, point_j = self._tangent(i, j)
+                level = normal.dot(point_i)
+                if all(normal.dot(self.centers[k]) + self.radii[k] <= level + tol for k in indices):
+                    length = point_i.point_distance(point_j)
+                    if i not in outgoing or length > outgoing[i][0]:
+                        outgoing[i] = (length, j, point_i, point_j)
+
+        # Start from the rightmost point of the hull, which is on an arc of the boundary: a circle only touching a
+        # tangent line between two others has an outgoing tangent too, but is not on the boundary loop
+        primitives = []
+        start = max(
+            outgoing, key=lambda index: (round(self.centers[index].x + self.radii[index], 9), self.centers[index].y)
+        )
+        current = start
+        incoming_point = None
+        for _ in range(len(indices)):
+            _, following, point_start, point_end = outgoing[current]
+            if incoming_point is not None:
+                arc = self._arc(current, incoming_point, point_start)
+                if arc is not None:
+                    primitives.append(arc)
+            primitives.append(edges.LineSegment2D(point_start, point_end))
+            incoming_point = point_end
+            current = following
+            if current == start:
+                break
+        arc = self._arc(start, incoming_point, outgoing[start][2])
+        if arc is not None:
+            primitives.append(arc)
+        return primitives
+
+    def _parameters(self) -> dict:
+        return {"centers": self.centers, "radii": self.radii}
+
+    def _with_centers(self, centers: list[design3d.Point2D]):
+        """Returns the same profile with moved circle centers."""
+        return self.__class__(centers, list(self.radii), reference_path=self.reference_path, name=self.name)
+
+    def copy(self, deep=True, memo=None):
+        """Returns a copy of the profile."""
+        return self._with_centers([center.copy() for center in self.centers])
+
+    def rotation(self, center: design3d.Point2D, angle: float):
+        """
+        Rotates the profile.
+
+        :param center: rotation center.
+        :param angle: rotation angle.
+        :return: a new rotated CirclesConvexHull2D.
+        """
+        return self._with_centers([circle_center.rotation(center, angle) for circle_center in self.centers])
+
+    def translation(self, offset: design3d.Vector2D):
+        """
+        Translates the profile.
+
+        :param offset: translation vector.
+        :return: a new translated CirclesConvexHull2D.
+        """
+        return self._with_centers([center.translation(offset) for center in self.centers])
+
+    def frame_mapping(self, frame: design3d.Frame2D, side: str):
+        """
+        Changes the frame of the profile. With an indirect frame, the profile is still counterclockwise.
+
+        :param frame: the frame.
+        :param side: 'old' or 'new'.
+        :return: a new CirclesConvexHull2D.
+        """
+        return self._with_centers([center.frame_mapping(frame, side) for center in self.centers])
+
+    def to_dict(self, *args, **kwargs):
+        """Serializes the profile from its parameters."""
+        dict_ = self.base_dict()
+        dict_.update(
+            {
+                "centers": [center.to_dict() for center in self.centers],
+                "radii": list(self.radii),
+                "reference_path": self.reference_path,
+            }
+        )
+        return dict_
+
+    def offset(self, offset):
+        """
+        Returns the offset profile. A positive offset enlarges it.
+
+        The offset of the hull is the hull of the offset circles, which is exact as long as the circles of the hull
+        keep a positive radius. The circles inside the hull that would vanish are dropped.
+
+        :param offset: offset distance.
+        :return: a new CirclesConvexHull2D.
+        :raises ValueError: if the inward offset is larger than the radius of a circle of the hull.
+        """
+        hull_indices = self.hull_circle_indices()
+        if any(self.radii[i] + offset <= 0 for i in hull_indices):
+            raise ValueError(
+                f"The inward offset {-offset} is larger than the radius of a circle of the hull: the offset profile"
+                " is no longer a hull of circles"
+            )
+        kept = [i for i in range(len(self.radii)) if self.radii[i] + offset > 0]
+        return self.__class__(
+            [self.centers[i].copy() for i in kept],
+            [self.radii[i] + offset for i in kept],
             reference_path=self.reference_path,
             name=self.name,
         )

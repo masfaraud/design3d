@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BSplineSurface3D.from_parametrized_points_interpolation: surface interpolation through points at imposed parameters
 - primitives2d: parametric profiles `RoundedRectangle2D`, `RegularPolygon2D` and `Slot2D`, placed by a center and an
   angle. Copies and rigid transformations keep the class and its parameters
+- primitives2d: `CirclesConvexHull2D`, the exact contour enveloping circles (arcs joined by their external
+  tangents) for crank webs, connecting rods or levers. Its offset is the hull of the offset circles
 - babylonjs viewer: a scene tree panel replaces the babylonjs inspector. It shows the hierarchy of the model
   (assemblies, compounds, shells and their faces when `merge_meshes=False`), with per-node visibility, opacity,
   color, focus and isolation, selection from the tree or by clicking in the 3D view, a name filter, standard views,
