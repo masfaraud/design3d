@@ -15,9 +15,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BSplineSurface3D.from_parametrized_points_interpolation: surface interpolation through points at imposed parameters
 - primitives2d: parametric profiles `RoundedRectangle2D`, `RegularPolygon2D` and `Slot2D`, placed by a center and an
   angle. Copies and rigid transformations keep the class and its parameters
+- babylonjs viewer: a scene tree panel replaces the babylonjs inspector. It shows the hierarchy of the model
+  (assemblies, compounds, shells and their faces when `merge_meshes=False`), with per-node visibility, opacity,
+  color, focus and isolation, selection from the tree or by clicking in the 3D view, a name filter, standard views,
+  edges, wireframe and axes toggles, and keyboard shortcuts. The inspector stays available from the toolbar, and is
+  opened at startup with `debug=True`
+- `babylon_data` of volume models, assemblies and compounds has a `tree` entry describing the hierarchy of the
+  primitives
 
 ### Fixed
 
+- babylonjs: pages generated with `use_cdn=False` no longer fail on the `$` characters of the embedded javascript
+  libraries
+- MovingVolumeModel: babylonjs pages are no longer blank with numpy 2, which wrote the scene size as `np.float64(...)`
 - Block: the bounding box encloses the block when its frame is not aligned with the axes, for instance a block
   placed in an assembly with a rotated frame, instead of being flattened
 - STEP export: conical surfaces whose apex is not on their axis are no longer reimported with a radius divided by

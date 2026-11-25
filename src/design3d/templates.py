@@ -5,7 +5,7 @@ design3d to babylonjs templates.
 import os
 from string import Template
 
-BABYLON_UNPACKER_CDN_HEADER = Template("""
+BABYLON_UNPACKER_CDN_HEADER = """
 <!doctype html>
 <html>
 <head>
@@ -31,7 +31,7 @@ BABYLON_UNPACKER_CDN_HEADER = Template("""
       <script src='https://unpkg.com/earcut@3.2.3/dist/earcut.min.js'></script>
       <script src='https://cdn.babylonjs.com/gui/babylon.gui.min.js'></script>
 </head>
-""")
+"""
 
 BABYLON_UNPACKER_EMBEDDED_HEADER = """
 <!doctype html>
@@ -57,13 +57,22 @@ BABYLON_UNPACKER_EMBEDDED_HEADER = """
    """
 
 base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "assets/js/"))
+css_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "assets/css/"))
+
+
+def _read_asset(path: str) -> str:
+    """Read an asset to inline it in a Template, escaping the $ of Template placeholders."""
+    with open(path, encoding="utf-8") as file:
+        return file.read().replace("$", "$$")
+
+
+# Scene tree panel and tools of the viewer, inlined in the pages
+VIEWER_STYLE = "<style>\n" + _read_asset(os.path.join(css_path, "viewer.css")) + "</style>\n"
+VIEWER_SCRIPT = '<script type="text/javascript">\n' + _read_asset(os.path.join(base_path, "viewer.js")) + "</script>\n"
 
 
 for filename in ["babylon.js", "babylonjs.loaders.min.js", "earcut.min.js", "pep.js"]:
-    file_path = os.path.join(base_path, filename)
-
-    with open(file_path, encoding="utf-8") as fjs:
-        BABYLON_UNPACKER_EMBEDDED_HEADER += fjs.read()
+    BABYLON_UNPACKER_EMBEDDED_HEADER += _read_asset(os.path.join(base_path, filename))
 
 
 BABYLON_UNPACKER_EMBEDDED_HEADER += """
@@ -71,12 +80,15 @@ BABYLON_UNPACKER_EMBEDDED_HEADER += """
 </head>
 """
 
-BABYLON_UNPACKER_EMBEDDED_HEADER = Template(BABYLON_UNPACKER_EMBEDDED_HEADER)
+BABYLON_UNPACKER_EMBEDDED_HEADER = Template(
+    BABYLON_UNPACKER_EMBEDDED_HEADER.replace("</head>", VIEWER_STYLE + "</head>")
+)
 
 
-BABYLON_UNPACKER_BODY_TEMPLATE = Template("""
+BABYLON_UNPACKER_BODY_TEMPLATE = """
 <body>
    <canvas id="renderCanvas"></canvas>
+   VIEWER_SCRIPT
    <script type="text/javascript">
       // Get the canvas element from our HTML below
       var canvas = document.querySelector("#renderCanvas");
@@ -141,6 +153,7 @@ BABYLON_UNPACKER_BODY_TEMPLATE = Template("""
 
 
         var showAxis = function (size) {
+            var axes = new BABYLON.TransformNode("axes", scene);
             var makeTextPlane = function (text, color, size) {
                 var dynamicTexture = new BABYLON.DynamicTexture("DynamicTexture", 50, scene, true);
                 dynamicTexture.hasAlpha = true;
@@ -176,9 +189,14 @@ BABYLON_UNPACKER_BODY_TEMPLATE = Template("""
             axisZ.color = new BABYLON.Color3(0, 0, 1);
             var zChar = makeTextPlane("Z", "blue", size / 10);
             zChar.position = new BABYLON.Vector3(0, 0.05 * size, 0.9 * size);
+            for (let axis_mesh of [axisX, xChar, axisY, yChar, axisZ, zChar]) {
+                axis_mesh.parent = axes;
+                axis_mesh.isPickable = false;
+            }
+            return axes;
         };
 
-        showAxis(1);
+        var axes = showAxis(1);
 
 
         var meshes = [];
@@ -255,8 +273,8 @@ BABYLON_UNPACKER_BODY_TEMPLATE = Template("""
 
                 }
 
+        var list_lines = [];
         if ('lines' in babylon_data){
-            var list_lines = [];
             for (let line_data of babylon_data['lines']){
                     var path = [];
                     for (let point of line_data['points']){
@@ -295,16 +313,15 @@ BABYLON_UNPACKER_BODY_TEMPLATE = Template("""
           let heightInPixels = buttonHeightInPixels*7;
           let widthInPixels = buttonWidthInPixels;
 
-          let topInPixels = -canvas.height/2 + heightInPixels/2;
-          let leftInPixels = -canvas.width/2 + widthInPixels/2;
 
           var buttonsContainer = new BABYLON.GUI.StackPanel("buttons_panel");
           buttonsContainer.background = "#263238";
           buttonsContainer.color = "white";
           buttonsContainer.height = ""+heightInPixels+"px";
           buttonsContainer.width = ""+widthInPixels+"px";
-          buttonsContainer.top = ""+topInPixels+"px";
-          buttonsContainer.left = ""+leftInPixels+"px";
+          // Anchored to the top left corner: the canvas is resized when the scene tree panel is shown
+          buttonsContainer.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+          buttonsContainer.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
 
           var step_number_label = new BABYLON.GUI.TextBlock();
           step_number_label.text = "Step n°1/"+n_steps;
@@ -406,6 +423,7 @@ BABYLON_UNPACKER_BODY_TEMPLATE = Template("""
           }
 
 
+        scene.d3d = {meshes: meshes, lines: list_lines, axes: axes, camera: camera};
     	return scene;	  };
 
       var scene = createScene();
@@ -419,11 +437,17 @@ BABYLON_UNPACKER_BODY_TEMPLATE = Template("""
          engine.resize();
       });
 
-      scene.debugLayer.show();
+      // Scene tree panel and tools, replacing the babylonjs inspector (still available from the toolbar)
+      var viewer = design3dViewer({scene: scene, engine: engine, canvas: canvas, data: babylon_data,
+                                   camera: scene.d3d.camera, meshes: scene.d3d.meshes, lines: scene.d3d.lines,
+                                   axes: scene.d3d.axes});
 
    </script>
 </body>
 
 </html>
 
-""")
+"""
+
+BABYLON_UNPACKER_CDN_HEADER = Template(BABYLON_UNPACKER_CDN_HEADER.replace("</head>", VIEWER_STYLE + "</head>"))
+BABYLON_UNPACKER_BODY_TEMPLATE = Template(BABYLON_UNPACKER_BODY_TEMPLATE.replace("VIEWER_SCRIPT", VIEWER_SCRIPT))
