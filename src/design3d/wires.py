@@ -2192,15 +2192,8 @@ class Contour2D(ContourMixin, Wire2D):
         return False
 
     def bounding_points(self):
-        """Bounding points (x_min, y_min) (x_max, y_max)."""
-        points = self.edge_polygon.points[:]
-        for primitive in self.primitives:
-            if hasattr(primitive, "discretization_points"):
-                points.extend(primitive.discretization_points(number_points=10))
-        x_min = min(point[0] for point in points)
-        x_max = max(point[0] for point in points)
-        y_min = min(point[1] for point in points)
-        y_max = max(point[1] for point in points)
+        """Bounding points (x_min, y_min) (x_max, y_max), the corners of the bounding rectangle."""
+        x_min, x_max, y_min, y_max = self.bounding_rectangle.bounds()
         return design3d.Point2D(x_min, y_min), design3d.Point2D(x_max, y_max)
 
     def area(self):
