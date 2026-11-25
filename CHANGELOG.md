@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BSplineSurface3D.from_parametrized_points_interpolation: surface interpolation through points at imposed parameters
 - primitives2d: parametric profiles `RoundedRectangle2D`, `RegularPolygon2D` and `Slot2D`, placed by a center and an
   angle. Copies and rigid transformations keep the class and its parameters
+- ExtrudedProfile: `draft_angle` and `symmetric` options. A draft shrinks the section away from the sketch plane,
+  with planar faces on line segments and conical faces on arcs, and a symmetric extrusion spans half its length on
+  each side of the sketch plane, which is the neutral plane of the draft
 
 ### Fixed
 
