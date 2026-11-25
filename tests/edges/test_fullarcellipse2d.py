@@ -61,6 +61,24 @@ class TestFullArcEllipse2D(unittest.TestCase):
         self.assertEqual(translated_ellipse.ellipse.center, design3d.Point2D(1, 0))
         self.assertEqual(translated_ellipse.start_end, design3d.Point2D(1.0225, 0))
 
+    def test_bounding_rectangle(self):
+        expected_bounds = [-0.0225, 0.0225, -0.0075, 0.0075]
+        for bound, expected_bound in zip(self.fullarcellipse.bounding_rectangle.bounds(), expected_bounds):
+            self.assertAlmostEqual(bound, expected_bound, places=12)
+
+        # Ellipse rotated by pi / 4: the half extent along x and y is sqrt(a^2 / 2 + b^2 / 2) = sqrt(2.5)
+        frame = design3d.Frame2D(
+            design3d.Point2D(1.0, 2.0),
+            design3d.Vector2D(0.7071067811865475, 0.7071067811865475),
+            design3d.Vector2D(-0.7071067811865475, 0.7071067811865475),
+        )
+        ellipse = curves.Ellipse2D(2, 1, frame)
+        fullarcellipse = d3de.FullArcEllipse2D(ellipse, ellipse.point_at_abscissa(0.3))
+        half_extent = 2.5**0.5
+        expected_bounds = [1.0 - half_extent, 1.0 + half_extent, 2.0 - half_extent, 2.0 + half_extent]
+        for bound, expected_bound in zip(fullarcellipse.bounding_rectangle.bounds(), expected_bounds):
+            self.assertAlmostEqual(bound, expected_bound, places=12)
+
 
 if __name__ == "__main__":
     unittest.main()

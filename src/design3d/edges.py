@@ -4223,14 +4223,30 @@ class ArcEllipse2D(ArcEllipseMixin, Edge):
         """
         Calculates the bounding rectangle for the arc ellipse 2d.
 
+        The ellipse points are center + a cos(t) u + b sin(t) v, the arc going from angle_start to angle_end with t
+        increasing. A coordinate along a unit vector e is extremal at t = atan2(b v.e, a u.e) and this angle + pi.
+        These points are added to the arc end points when they are on the arc.
+
         :return: Bounding Rectangle object.
         """
         if not self._bounding_rectangle:
-            discretization_points = self.discretization_points(number_points=20)
-            x_values, y_values = [], []
-            for point in discretization_points:
-                x_values.append(point.x)
-                y_values.append(point.y)
+            frame, major_axis, minor_axis = self.ellipse.frame, self.ellipse.major_axis, self.ellipse.minor_axis
+            angle_start = self.angle_start
+            # Angular span of the arc, computed as in discretization_points
+            angle_span = (self.angle_end - angle_start) % design3d.TWO_PI or design3d.TWO_PI
+            angle_tolerance = 1e-9 / minor_axis
+            x_values, y_values = [self.start.x, self.end.x], [self.start.y, self.end.y]
+            for u_component, v_component in ((frame.u.x, frame.v.x), (frame.u.y, frame.v.y)):
+                angle = math.atan2(minor_axis * v_component, major_axis * u_component)
+                for extremum_angle in (angle, angle + math.pi):
+                    if (extremum_angle - angle_start) % design3d.TWO_PI <= angle_span + angle_tolerance:
+                        point = frame.local_to_global_coordinates(
+                            design3d.Point2D(
+                                major_axis * math.cos(extremum_angle), minor_axis * math.sin(extremum_angle)
+                            )
+                        )
+                        x_values.append(point.x)
+                        y_values.append(point.y)
             self._bounding_rectangle = design3d.core.BoundingRectangle(
                 min(x_values), max(x_values), min(y_values), max(y_values)
             )

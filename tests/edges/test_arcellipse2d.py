@@ -145,9 +145,11 @@ class TestArcEllipse2D(unittest.TestCase):
         )
 
     def test_bounding_rectangle(self):
-        expected_bounds = [-1.5745077023090706, 1.5, -1.5745077023090708, 1.5]
+        # The arc goes through the points of minimal x and y of the ellipse, at -sqrt(a^2 / 2 + b^2 / 2) = -sqrt(2.5),
+        # but not through the points of maximal x and y: its maxima are at its end points
+        expected_bounds = [-math.sqrt(2.5), 1.5, -math.sqrt(2.5), 1.5]
         for i, bound in enumerate(self.arc_ellipse2d.bounding_rectangle.bounds()):
-            self.assertAlmostEqual(bound, expected_bounds[i])
+            self.assertAlmostEqual(bound, expected_bounds[i], places=12)
 
     def test_straight_line_area(self):
         self.assertAlmostEqual(self.arc_ellipse2d.straight_line_area(), 5.71238898038469)
