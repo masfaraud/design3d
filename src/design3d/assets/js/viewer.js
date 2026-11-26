@@ -1,4 +1,5 @@
-// design3d babylonjs viewer: scene tree panel, selection, visibility, opacity, color and camera tools.
+// design3d babylonjs viewer: scene tree panel, selection, visibility, opacity, color, camera tools
+// (orthographic or perspective projection) and view cube.
 // Called by the page template once the babylonjs scene is built:
 //   design3dViewer({scene, camera, canvas, data, meshes, lines, axes});
 // - data: babylon_data of the model, whose optional "tree" gives the hierarchy of its primitives
@@ -298,19 +299,227 @@ function design3dViewer(ctx) {
       if (direction.length() > 0) camera.setPosition(center.add(direction.normalize().scale(camera.radius)));
    }
 
-   // Standard views, the z axis being up
-   var VIEWS = {
-      "Iso": new BABYLON.Vector3(1, -1, 1),
-      "Front": new BABYLON.Vector3(0, -1, 0),
-      "Back": new BABYLON.Vector3(0, 1, 0),
-      "Left": new BABYLON.Vector3(-1, 0, 0),
-      "Right": new BABYLON.Vector3(1, 0, 0),
-      "Top": new BABYLON.Vector3(0, -1e-3, 1),
-      "Bottom": new BABYLON.Vector3(0, -1e-3, -1)
-   };
+   // ---------------------------------------------------------------- views and projection
+   var TAU = 2 * Math.PI;
+   var viewAnimation = null;
 
-   function setView(direction) {
+   function stopViewAnimation() {
+      if (viewAnimation) scene.onBeforeRenderObservable.remove(viewAnimation);
+      viewAnimation = null;
+   }
+
+   // Turn the camera to look at its target along -direction (z up), animated unless animate is false
+   function setView(direction, animate) {
+      stopViewAnimation();
+      // Same view with beta in [0, pi]: the camera has no beta limits, so it may have been turned over the poles
+      var alpha0 = camera.alpha, beta0 = ((camera.beta % TAU) + TAU) % TAU;
+      if (beta0 > Math.PI) { beta0 = TAU - beta0; alpha0 += Math.PI; }
       camera.setPosition(camera.target.add(direction.normalize().scale(camera.radius)));
+      if (animate === false) return;
+      var beta1 = camera.beta;
+      // Shortest rotation around the z axis
+      var alpha1 = alpha0 + ((((camera.alpha - alpha0) % TAU) + TAU + Math.PI) % TAU - Math.PI);
+      camera.alpha = alpha0;
+      camera.beta = beta0;
+      var start = performance.now();
+      viewAnimation = scene.onBeforeRenderObservable.add(function () {
+         var t = Math.min((performance.now() - start) / 300, 1), s = t * t * (3 - 2 * t);
+         camera.alpha = alpha0 + (alpha1 - alpha0) * s;
+         camera.beta = beta0 + (beta1 - beta0) * s;
+         if (t >= 1) stopViewAnimation();
+      });
+   }
+
+   // Orthographic projection by default. Its half height is the one of the perspective view at the target, so
+   // zooming changes the camera radius in both modes, and switching projection keeps the scale of the model.
+   var perspectiveClip = {minZ: camera.minZ, maxZ: camera.maxZ};
+   function updateOrthographic() {
+      if (camera.mode !== BABYLON.Camera.ORTHOGRAPHIC_CAMERA) return;
+      var halfHeight = camera.radius * Math.tan(camera.fov / 2);
+      var halfWidth = halfHeight * ctx.engine.getAspectRatio(camera);
+      camera.orthoTop = halfHeight;
+      camera.orthoBottom = -halfHeight;
+      camera.orthoLeft = -halfWidth;
+      camera.orthoRight = halfWidth;
+      // No near plane cutting the model when zooming in: in orthographic projection the camera may be inside it
+      camera.minZ = -10 * data.max_length;
+      camera.maxZ = camera.radius + 10 * data.max_length;
+   }
+   scene.onBeforeRenderObservable.add(updateOrthographic);
+
+   function setOrthographic(orthographic) {
+      camera.mode = orthographic ? BABYLON.Camera.ORTHOGRAPHIC_CAMERA : BABYLON.Camera.PERSPECTIVE_CAMERA;
+      if (orthographic) {
+         updateOrthographic();
+      } else {
+         camera.minZ = perspectiveClip.minZ;
+         camera.maxZ = perspectiveClip.maxZ;
+      }
+   }
+
+   function togglePerspective() {
+      setOrthographic(camera.mode !== BABYLON.Camera.ORTHOGRAPHIC_CAMERA);
+      return camera.mode === BABYLON.Camera.PERSPECTIVE_CAMERA;
+   }
+   setOrthographic(true);
+
+   // ---------------------------------------------------------------- view cube
+   // Chamfered cube oriented as the model, in its own small canvas: its 6 faces, 12 edges and 8 corners align the
+   // view on the 26 directions they face. Dragging it orbits the camera.
+   var FACE_LABELS = {"1,0,0": "RIGHT", "-1,0,0": "LEFT", "0,1,0": "BACK", "0,-1,0": "FRONT",
+                      "0,0,1": "TOP", "0,0,-1": "BOTTOM"};
+   var CHAMFER_FLAT = 0.7; // half size of the flat part of the faces, the cube half size being 1
+
+   function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+   function cross(a, b) { return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]; }
+
+   // Polygon of the cube region facing d (components in -1, 0, 1). Each vertex is on the cube along one of the
+   // non zero axes of d and on the chamfer along the others, and at a corner of the flat part along its zero axes.
+   function viewCubeRegion(d) {
+      var F = CHAMFER_FLAT;
+      var nonZero = [0, 1, 2].filter(function (i) { return d[i] !== 0; });
+      var zero = [0, 1, 2].filter(function (i) { return d[i] === 0; });
+      var signs = [[]];
+      zero.forEach(function () {
+         signs = [].concat.apply([], signs.map(function (s) { return [s.concat(-1), s.concat(1)]; }));
+      });
+      var points = [];
+      nonZero.forEach(function (onCube) {
+         signs.forEach(function (s) {
+            var p = [0, 0, 0];
+            nonZero.forEach(function (i) { p[i] = i === onCube ? d[i] : d[i] * F; });
+            zero.forEach(function (i, k) { p[i] = s[k] * F; });
+            points.push(p);
+         });
+      });
+      // Convex polygon: vertices sorted by angle around the direction
+      var length = Math.sqrt(dot(d, d));
+      var normal = d.map(function (v) { return v / length; });
+      var u = cross(normal, Math.abs(normal[2]) < 0.9 ? [0, 0, 1] : [1, 0, 0]), w = cross(normal, u);
+      function angle(p) { return Math.atan2(dot(p, w), dot(p, u)); }
+      points.sort(function (a, b) { return angle(a) - angle(b); });
+      return {points: points, normal: normal};
+   }
+
+   function createViewCube(container) {
+      var cubeCanvas = el("canvas", {id: "d3d-viewcube",
+                                     title: "Click a face, an edge or a corner to align the view, drag to orbit"});
+      container.appendChild(cubeCanvas);
+      var cubeEngine = new BABYLON.Engine(cubeCanvas, true, {stencil: true}, true);
+      var cubeScene = new BABYLON.Scene(cubeEngine);
+      cubeScene.useRightHandedSystem = true;
+      cubeScene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
+      var cubeCamera = new BABYLON.ArcRotateCamera("viewCubeCamera", camera.alpha, camera.beta, 10,
+                                                   BABYLON.Vector3.Zero(), cubeScene);
+      cubeCamera.upVector = new BABYLON.Vector3(0, 0, 1);
+      cubeCamera.mode = BABYLON.Camera.ORTHOGRAPHIC_CAMERA;
+      cubeCamera.orthoTop = cubeCamera.orthoRight = 1.5;
+      cubeCamera.orthoBottom = cubeCamera.orthoLeft = -1.5;
+      var light = new BABYLON.HemisphericLight("viewCubeLight", new BABYLON.Vector3(0.3, -0.5, 1), cubeScene);
+      light.specular = BABYLON.Color3.Black();
+      light.groundColor = new BABYLON.Color3(0.6, 0.6, 0.6);
+
+      var dark = !!data.dark_mode;
+      var faceColor = dark ? "#3a3e45" : "#eef0f3", chamferColor = dark ? "#2c2f35" : "#cfd4dc";
+      var textColor = dark ? "#e6e8eb" : "#1f2328";
+      var hoverColor = BABYLON.Color3.FromHexString(dark ? "#6ea0ff" : "#2f6fde").scale(0.6);
+
+      function labelMaterial(text, name) {
+         var texture = new BABYLON.DynamicTexture(name + "Texture", 256, cubeScene, true);
+         var context = texture.getContext();
+         context.fillStyle = faceColor;
+         context.fillRect(0, 0, 256, 256);
+         context.fillStyle = textColor;
+         context.font = "bold " + (text.length > 5 ? 44 : 54) + "px system-ui, sans-serif";
+         context.textAlign = "center";
+         context.textBaseline = "middle";
+         context.fillText(text, 128, 132);
+         texture.update();
+         var material = new BABYLON.StandardMaterial(name + "Material", cubeScene);
+         material.diffuseTexture = texture;
+         return material;
+      }
+
+      var regions = [];
+      [-1, 0, 1].forEach(function (x) { [-1, 0, 1].forEach(function (y) { [-1, 0, 1].forEach(function (z) {
+         if (!x && !y && !z) return;
+         var d = [x, y, z], key = d.join(","), region = viewCubeRegion(d), label = FACE_LABELS[key];
+         // Text frame of the faces seen from outside: z axis up, or y axis up for the top and bottom faces
+         var up = z ? [0, z, 0] : [0, 0, 1], right = cross([-x, -y, -z], up);
+         var positions = [], normals = [], indices = [], uvs = [];
+         region.points.forEach(function (p) {
+            positions.push(p[0], p[1], p[2]);
+            normals.push(region.normal[0], region.normal[1], region.normal[2]);
+            uvs.push((dot(p, right) / CHAMFER_FLAT + 1) / 2, (dot(p, up) / CHAMFER_FLAT + 1) / 2);
+         });
+         for (var i = 1; i < region.points.length - 1; i++) indices.push(0, i, i + 1);
+         var mesh = new BABYLON.Mesh("viewCube " + key, cubeScene);
+         var vertexData = new BABYLON.VertexData();
+         vertexData.positions = positions;
+         vertexData.normals = normals;
+         vertexData.indices = indices;
+         vertexData.uvs = uvs;
+         vertexData.applyToMesh(mesh);
+         var material = label ? labelMaterial(label, "viewCube " + key)
+                              : new BABYLON.StandardMaterial("viewCube " + key, cubeScene);
+         if (!label) material.diffuseColor = BABYLON.Color3.FromHexString(chamferColor);
+         material.backFaceCulling = false;
+         material.specularColor = BABYLON.Color3.Black();
+         mesh.material = material;
+         mesh.enableEdgesRendering(0.99);
+         mesh.edgesWidth = 1.5;
+         mesh.edgesColor = dark ? new BABYLON.Color4(0.6, 0.63, 0.68, 1) : new BABYLON.Color4(0.45, 0.48, 0.53, 1);
+         mesh.metadata = {direction: new BABYLON.Vector3(x, y, z)};
+         regions.push(mesh);
+      }); }); });
+
+      var hovered = null;
+      function setHovered(mesh) {
+         if (mesh === hovered) return;
+         if (hovered) hovered.material.emissiveColor = BABYLON.Color3.Black();
+         hovered = mesh;
+         if (hovered) hovered.material.emissiveColor = hoverColor;
+      }
+      function pickRegion(e) {
+         var pick = cubeScene.pick(e.offsetX, e.offsetY);
+         return pick && pick.hit ? pick.pickedMesh : null;
+      }
+
+      var drag = null;
+      cubeCanvas.addEventListener("pointerdown", function (e) {
+         if (e.button !== 0) return;
+         drag = {x: e.clientX, y: e.clientY, moved: false};
+         cubeCanvas.setPointerCapture(e.pointerId);
+      });
+      cubeCanvas.addEventListener("pointermove", function (e) {
+         if (!drag) { setHovered(pickRegion(e)); return; }
+         var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+         if (!drag.moved && Math.abs(dx) + Math.abs(dy) < 4) return;
+         drag = {x: e.clientX, y: e.clientY, moved: true};
+         stopViewAnimation();
+         camera.alpha -= 0.01 * dx;
+         camera.beta -= 0.01 * dy;
+         setHovered(null);
+      });
+      cubeCanvas.addEventListener("pointerup", function (e) {
+         if (!drag) return;
+         var moved = drag.moved;
+         drag = null;
+         var mesh = moved ? null : pickRegion(e);
+         if (!mesh) return;
+         var direction = mesh.metadata.direction.clone();
+         // Top and bottom views slightly turned toward the front, so that the y axis is up on the screen
+         if (!direction.x && !direction.y) direction.y = -1e-3;
+         setView(direction);
+      });
+      cubeCanvas.addEventListener("pointerleave", function () { if (!drag) setHovered(null); });
+
+      cubeScene.onBeforeRenderObservable.add(function () {
+         cubeCamera.alpha = camera.alpha;
+         cubeCamera.beta = camera.beta;
+      });
+      cubeEngine.runRenderLoop(function () { cubeScene.render(); });
+      return {canvas: cubeCanvas, engine: cubeEngine, scene: cubeScene, regions: regions};
    }
 
    var edgesShown = true;
@@ -426,7 +635,9 @@ function design3dViewer(ctx) {
    search.addEventListener("input", applyFilter);
 
    // ---------------------------------------------------------------- toolbar
+   var corner = el("div", {id: "d3d-corner"});
    var toolbar = el("div", {id: "d3d-toolbar"});
+   corner.appendChild(toolbar);
    function toolButton(text, title, action, active) {
       var b = el("button", {type: "button", title: title}, text);
       if (active !== undefined) b.classList.toggle("d3d-active", active);
@@ -440,18 +651,17 @@ function design3dViewer(ctx) {
    var treeButton = toolButton("Tree", "Show / hide the scene tree (T)", togglePanel, true);
    toolButton("Fit", "Fit the whole model (F without selection)", function () { focus(root); });
    toolButton("Show all", "Show all nodes (A)", showAll);
-   toolbar.appendChild(el("span", {"class": "d3d-sep"}));
-   Object.keys(VIEWS).forEach(function (name) {
-      toolButton(name, name + " view", function () { setView(VIEWS[name].clone()); });
-   });
+   var perspectiveButton = toolButton("Perspective", "Perspective / orthographic projection (P)",
+                                      togglePerspective, false);
    toolbar.appendChild(el("span", {"class": "d3d-sep"}));
    var edgesButton = toolButton("Edges", "Show / hide the edges (E)", toggleEdges, true);
    var wireframeButton = toolButton("Wireframe", "Wireframe display (W)", toggleWireframe, false);
    toolButton("Axes", "Show / hide the axes", toggleAxes, true);
    var inspectorButton = toolButton("Inspector", "Babylonjs inspector, for debugging", toggleInspector, false);
-   document.body.appendChild(toolbar);
+   document.body.appendChild(corner);
+   var viewCube = createViewCube(corner);
    document.body.appendChild(el("div", {id: "d3d-help"},
-      "Click: select · double click: focus · F focus · H hide · I isolate · A show all · Esc deselect"));
+      "Click: select · double click: focus · F focus · H hide · I isolate · A show all · P perspective · Esc deselect"));
 
    // ---------------------------------------------------------------- picking and keyboard
    function pickedNode(pick) {
@@ -480,6 +690,7 @@ function design3dViewer(ctx) {
       else if (key === "t") treeButton.click();
       else if (key === "e") edgesButton.click();
       else if (key === "w") wireframeButton.click();
+      else if (key === "p") perspectiveButton.click();
       else return;
       e.preventDefault();
    });
@@ -493,5 +704,6 @@ function design3dViewer(ctx) {
    }
 
    return {root: root, nodes: nodes, select: select, setVisible: setVisible, setAlpha: setAlpha,
-           setColor: setColor, isolate: isolate, focus: focus, setView: setView};
+           setColor: setColor, isolate: isolate, focus: focus, setView: setView,
+           setOrthographic: setOrthographic, viewCube: viewCube};
 }
