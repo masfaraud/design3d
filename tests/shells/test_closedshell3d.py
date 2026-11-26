@@ -268,6 +268,32 @@ class TestClosedShell3D(unittest.TestCase):
         # The faces of a shell containing the subtracted shell are all kept.
         self.assertEqual(box.subtract(small_box), [box])
 
+    def test_point_inside_ray_through_edge(self):
+        # L-shaped prism: the notch [1, 2] x [1, 2] is outside the shell but inside its bounding box.
+        contour = design3d.wires.ClosedPolygon2D(
+            [
+                design3d.Point2D(0, 0),
+                design3d.Point2D(2, 0),
+                design3d.Point2D(2, 1),
+                design3d.Point2D(1, 1),
+                design3d.Point2D(1, 2),
+                design3d.Point2D(0, 2),
+            ]
+        )
+        prism = primitives3d.ExtrudedProfile(design3d.OXYZ, contour, [], 1)
+        # The two faces sharing the vertical edge at (1, 1) come first, so that a count stopped at the first
+        # duplicated intersection point is odd.
+        edge_point = design3d.Point3D(1, 1, 0.5)
+        shell = shells.ClosedShell3D(sorted(prism.faces, key=lambda face: not face.point_belongs(edge_point)))
+        point = design3d.Point3D(1.5, 1.5, 0.5)
+        # This ray enters the shell through the vertical edge at (1, 1) and leaves it through the one at (0, 0):
+        # each crossing is found on two faces, the ray is ambiguous for the parity count.
+        ray_through_edges = edges.LineSegment3D(point, design3d.Point3D(-1, -1, 0.5))
+        clean_ray = edges.LineSegment3D(point, design3d.Point3D(3, 3, 0.5))
+        for rays in ([ray_through_edges, clean_ray], [clean_ray, ray_through_edges]):
+            shell.get_ray_casting_line_segment = lambda _point, rays=rays: rays
+            self.assertFalse(shell.point_inside(point))
+
     def test_point_belongs(self):
         closed_shell = SerializableObject.from_json(
             os.path.join(folder, "test_closed_shell_point_belongs2.json")

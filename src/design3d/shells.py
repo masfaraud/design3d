@@ -1214,28 +1214,25 @@ class ClosedShell3D(Shell3D):
             return False
         rays = self.get_ray_casting_line_segment(point3d)
 
-        count = 0
+        ambiguous_rays_votes = []
         for ray in rays:
-            count = 0
             intersections = []
+            ambiguous = False
             for _, point_inters in self.linesegment_intersections(ray):
-                if point_inters[0].is_close(point3d):
-                    return True
                 for inter in point_inters:
+                    if inter.is_close(point3d):
+                        return True
                     if inter.in_list(intersections):
-                        break
-                    intersections.append(inter)
-                    count += 1
-                else:
-                    continue
-                break
-            else:
-                continue
-            break
-        is_inside = True
-        if count % 2 == 0:
-            is_inside = False
-        return is_inside
+                        # The ray crosses the shell at an edge or a vertex, shared by several faces: the parity of
+                        # its crossings is not reliable.
+                        ambiguous = True
+                    else:
+                        intersections.append(inter)
+            if not ambiguous:
+                return len(intersections) % 2 == 1
+            ambiguous_rays_votes.append(len(intersections) % 2 == 1)
+        # All rays are ambiguous: majority vote on their crossings counted once each.
+        return 2 * sum(ambiguous_rays_votes) > len(ambiguous_rays_votes)
 
     def is_inside_shell(self, shell2):
         """
