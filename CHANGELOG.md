@@ -53,6 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ClosedShell3D.subtract_to_closed_shell: subtracting a shell strictly inside the shell returns the shell unchanged
   with a warning, as a void cannot be represented, instead of a shell made of both boundaries. A shell inside the
   subtracted one gives an empty list
+- Boolean operations work on small parts: the area under which a face is degenerate and the offsets used to classify
+  the faces are relative to the size of the faces and shells, instead of absolute values of up to 1e-4 m
 - union_list_of_shells no longer empties the list it is given nor merges the faces of the given shells, and
   ClosedShell3D.merge_faces no longer modifies the list of faces given to the shell nor fails on coincident
   non-planar faces, which it leaves unmerged
@@ -105,6 +107,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Boolean operations of ClosedShell3D (`union`, `subtract`, `subtract_to_closed_shell`, `intersection`) use a
+  default tolerance of 1e-6 instead of 1e-8, as the faces and surfaces: shells closer than 1e-6 are in contact
 - RoundedLineSegments2D: `offset` and `offset_lines` follow the convention of Wire2D, Contour2D and
   ClosedPolygon2D: a positive offset moves to the right of the direction of travel, which enlarges a counterclockwise
   contour. The sign of existing calls must be inverted

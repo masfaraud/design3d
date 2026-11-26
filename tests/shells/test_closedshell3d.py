@@ -354,6 +354,27 @@ class TestClosedShell3D(unittest.TestCase):
         self.assertEqual(len(pocket), 1)
         self.assertEqual(len(pocket[0].faces), 11)
 
+    def test_set_operations_default_tolerance(self):
+        # Faces closer than the default tolerance of 1e-6 are in contact.
+        union = box(0, 0, 0, 2, 2, 2).union(box(2 + 1e-7, 0, 0, 2, 2, 2))
+        self.assertEqual(len(union), 1)
+        self.assertEqual(len(union[0].faces), 10)
+
+    def test_set_operations_scale(self):
+        # Coincident faces at a small and a large scale: the offsets used to classify the faces follow the size of
+        # the shells.
+        for scale in (1e-4, 1e3):
+            box1 = box(0, 0, 0, 2 * scale, 2 * scale, 2 * scale)
+            box2 = box(scale, 0, 0.5 * scale, 2 * scale, 2 * scale, scale)
+            for result, expected_number_faces in [
+                (box1.intersection(box2), 6),
+                (box1.union(box2), 14),
+                (box1.subtract_to_closed_shell(box2), 8),
+            ]:
+                self.assertEqual(len(result), 1)
+                self.assertEqual(len(result[0].faces), expected_number_faces)
+                self.assertEqual(unmatched_edges(result[0]), [])
+
     def test_union_list_of_shells_inputs_unchanged(self):
         boxes = [box(0, 0, 0, 2, 2, 2), box(2, 0, 0, 2, 2, 2), box(0, 0, 0, 0.5, 0.5, 0.5)]
         boxes_faces = [list(block.faces) for block in boxes]

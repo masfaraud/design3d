@@ -1059,7 +1059,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
 
         return shells_list
 
-    def is_disjoint_from(self, shell2, tol=1e-8):
+    def is_disjoint_from(self, shell2, tol=1e-6):
         """
         Verifies and returns a Boolean if two shells are disjointed or not.
 
@@ -1168,7 +1168,7 @@ class ClosedShell3D(Shell3D):
         if not face.bounding_box.is_inside_bbox(self.bounding_box):
             return False
         points = []
-        if face.area() > 1e-8:
+        if face.area() > 1e-8 * max(face.bounding_box.size) ** 2:
             points.append(face.random_point_inside())
 
         for prim in face.outer_contour3d.primitives:
@@ -1254,7 +1254,7 @@ class ClosedShell3D(Shell3D):
                 return False
         return True
 
-    def intersecting_faces_combinations(self, shell2, tol=1e-8):
+    def intersecting_faces_combinations(self, shell2, tol=1e-6):
         """
         Gets intersecting faces combinations.
 
@@ -1438,8 +1438,9 @@ class ClosedShell3D(Shell3D):
             if shell2.face_on_shell(new_face):
                 point3d = new_face.random_point_inside()
                 if new_face.point_belongs(point3d):
-                    normal1 = point3d - 0.00001 * new_face.surface3d.frame.w.unit_vector()
-                    normal2 = point3d + 0.00001 * new_face.surface3d.frame.w.unit_vector()
+                    offset = self._classification_offset(shell2) * new_face.normal_at_point(point3d).unit_vector()
+                    normal1 = point3d - offset
+                    normal2 = point3d + offset
                     if (self.point_inside(normal1) and shell2.point_inside(normal1)) or (
                         shell2.point_inside(normal2) and self.point_inside(normal2)
                     ):
@@ -1485,6 +1486,19 @@ class ClosedShell3D(Shell3D):
         #     return True
         return False
 
+    def _classification_offset(self, shell2):
+        """
+        Distance at which points are taken on both sides of a face to know which shells are on each side.
+
+        It is relative to the size of the shells, and above the tolerance of 1e-6 of point_inside, which would consider
+        closer points as on the shells.
+
+        :param shell2: other shell.
+        :return: the offset distance.
+        """
+        size = max(*self.bounding_box.size, *shell2.bounding_box.size)
+        return max(1e-5 * size, 2e-6)
+
     def is_face_between_shells(self, shell2, face):
         """
         Verify if face is between the two shells.
@@ -1499,20 +1513,24 @@ class ClosedShell3D(Shell3D):
             points = [center_of_mass]
 
         if face.surface2d.inner_contours:
-            normal_0 = face.surface2d.outer_contour.primitives[0].normal_vector(0.0)
+            normal_0 = face.surface2d.outer_contour.primitives[0].normal_vector(0.0).unit_vector()
             middle_point_0 = face.surface2d.outer_contour.primitives[0].middle_point()
-            point1 = middle_point_0 + 0.0001 * normal_0
-            point2 = middle_point_0 - 0.0001 * normal_0
+            # Offset in the parametric domain of the face, relative to its size.
+            xmin, xmax, ymin, ymax = face.surface2d.outer_contour.bounding_rectangle.bounds()
+            offset2d = 1e-3 * max(xmax - xmin, ymax - ymin)
+            point1 = middle_point_0 + offset2d * normal_0
+            point2 = middle_point_0 - offset2d * normal_0
             points = [point1, point2]
         else:
             points.extend([face.surface2d.outer_contour.random_point_inside()])
 
+        offset = self._classification_offset(shell2)
         for point in points:
             point3d = face.surface3d.point2d_to_3d(point)
             if face.point_belongs(point3d):
-                normal_at_point = face.normal_at_point(point3d)
-                normal1 = point3d - 0.00001 * normal_at_point
-                normal2 = point3d + 0.00001 * normal_at_point
+                normal_at_point = face.normal_at_point(point3d).unit_vector()
+                normal1 = point3d - offset * normal_at_point
+                normal2 = point3d + offset * normal_at_point
                 if (self.point_inside(normal1) and shell2.point_inside(normal2)) or (
                     shell2.point_inside(normal1) and self.point_inside(normal2)
                 ):
@@ -1529,7 +1547,7 @@ class ClosedShell3D(Shell3D):
         :param list_coincident_faces: list of coincident faces.
         :return:
         """
-        if new_face.area() < 1e-8:
+        if new_face.area() < 1e-8 * max(*self.bounding_box.size, *shell2.bounding_box.size) ** 2:
             return False
         if new_face not in valid_faces:
             inside_shell2 = shell2.point_inside(new_face.random_point_inside())
@@ -1697,7 +1715,7 @@ class ClosedShell3D(Shell3D):
             return [self, shell2]
         return [ClosedShell3D(faces1 + faces2)]
 
-    def union(self, shell2: "ClosedShell3D", tol: float = 1e-8):
+    def union(self, shell2: "ClosedShell3D", tol: float = 1e-6):
         """
         Given Two closed shells, it returns a new united ClosedShell3D object.
 
@@ -1795,7 +1813,7 @@ class ClosedShell3D(Shell3D):
         self._vertices_points = None
         self._shell_octree_decomposition = None
 
-    def subtract(self, shell2, tol=1e-8):
+    def subtract(self, shell2, tol=1e-6):
         """
         Given Two closed shells, it returns the faces of self outside shell2, as OpenShell3D.
 
@@ -1827,7 +1845,7 @@ class ClosedShell3D(Shell3D):
         faces += new_valid_faces
         return OpenShell3D.from_faces(faces)
 
-    def subtract_to_closed_shell(self, shell2: "ClosedShell3D", tol: float = 1e-8):
+    def subtract_to_closed_shell(self, shell2: "ClosedShell3D", tol: float = 1e-6):
         """
         Subtracts shell2's volume from self.
 
@@ -1884,7 +1902,7 @@ class ClosedShell3D(Shell3D):
             return [shell2]
         return []
 
-    def intersection(self, shell2, tol=1e-8):
+    def intersection(self, shell2, tol=1e-6):
         """
         Given two ClosedShell3D, it returns the new object resulting from the intersection of the two.
 

@@ -1234,7 +1234,8 @@ class Face3D(design3d.core.Primitive3D):
         if list_open_cutting_contours:
             list_faces = self.divide_face_with_open_cutting_contours(list_open_cutting_contours, abs_tol)
         list_faces = self.divide_face_with_closed_cutting_contours(list_closed_cutting_contours, list_faces)
-        list_faces = [face for face in list_faces if not math.isclose(face.area(), 0.0, abs_tol=1e-08)]
+        # Degenerate faces, relative to the area of the divided face (both in its parametric domain).
+        list_faces = [face for face in list_faces if face.area() > 1e-8 * self.area()]
         return list_faces
 
     def divide_face_with_open_cutting_contours(self, list_open_cutting_contours, abs_tol: float = 1e-6):
