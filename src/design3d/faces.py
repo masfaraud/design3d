@@ -1884,6 +1884,8 @@ class PlaneFace3D(Face3D):
         :return: list of intersecting wires.
         """
         surface_intersections = self.surface3d.surface_intersections(conical_face.surface3d)
+        if not surface_intersections:
+            return []
         if isinstance(surface_intersections[0], design3d_curves.Circle3D):
             if self.edge3d_inside(surface_intersections[0]) and conical_face.edge3d_inside(surface_intersections[0]):
                 contour3d = design3d.wires.Contour3D([design3d.edges.FullArc3D.from_curve(surface_intersections[0])])

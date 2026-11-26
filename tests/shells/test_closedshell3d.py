@@ -5,7 +5,7 @@ import unittest
 import numpy
 
 import design3d
-from design3d import edges, faces, primitives3d, shells, surfaces, wires
+from design3d import edges, faces, primitives2d, primitives3d, shells, surfaces, wires
 from design3d.base import SerializableObject
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)))
@@ -298,6 +298,40 @@ class TestClosedShell3D(unittest.TestCase):
         closed_shell2 = closed_shell.rotation(design3d.O3D - 0.95 * design3d.X3D, design3d.Z3D, numpy.pi / 2)
         closed_shell2 = closed_shell2.translation(-0.95 * design3d.X3D + 0.45 * design3d.Z3D + 0.2 * design3d.Y3D)
         self.assertAlmostEqual(closed_shell.volume(), closed_shell2.volume())
+
+    @staticmethod
+    def _stamped_cup(corner_radius: float, draft_angle: float):
+        """
+        Builds the outer shell and the inner tool of a stamped cup 1.5 mm thick, with an open top.
+
+        :return: the outer shell, the inner tool, and the part of the inner tool inside the outer shell.
+        """
+        thickness = 0.0015
+        inner_profile = primitives2d.RoundedRectangle2D(
+            0.3 - 2 * thickness, 0.2 - 2 * thickness, max(corner_radius - thickness, 0.0)
+        )
+        outer = primitives3d.ExtrudedProfile(
+            design3d.OXYZ,
+            primitives2d.RoundedRectangle2D(0.3, 0.2, corner_radius),
+            [],
+            0.1,
+            draft_angle=draft_angle,
+        )
+        inner = primitives3d.ExtrudedProfile(
+            design3d.OXYZ, inner_profile, [], 0.1, draft_angle=draft_angle
+        ).translation(thickness * design3d.Z3D)
+        inner_inside_outer = primitives3d.ExtrudedProfile(
+            design3d.OXYZ, inner_profile, [], 0.1 - thickness, draft_angle=draft_angle
+        ).translation(thickness * design3d.Z3D)
+        return outer, inner, inner_inside_outer
+
+    def test_subtract_drafted_rounded_cup(self):
+        # Drafted walls with rounded corners: planar and conical faces, the cones narrowing upwards
+        outer, inner, _ = self._stamped_cup(0.03, math.radians(8))
+        cup = outer.subtract_to_closed_shell(inner)
+        self.assertEqual(len(cup), 1)
+        # outer bottom, 4 walls and 4 corners; inner bottom, 4 walls and 4 corners; top rim
+        self.assertEqual(len(cup[0].faces), 19)
 
 
 if __name__ == "__main__":

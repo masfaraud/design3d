@@ -4407,6 +4407,20 @@ class ConicalSurface3D(UPeriodicalSurface):
         """Returns u and v bounds."""
         return -math.pi, math.pi, -math.inf, math.inf
 
+    def positive_semi_angle_surface(self):
+        """
+        Gets the same cone described with a positive half-angle.
+
+        A cone with a negative half-angle is the cone with the opposite half-angle and the main axis reversed:
+        radius = ref_radius + z * tan(semi_angle) is unchanged when both z and semi_angle change sign.
+
+        :return: self if its half-angle is positive, the equivalent conical surface otherwise.
+        """
+        if self.semi_angle >= 0:
+            return self
+        frame = design3d.Frame3D(self.frame.origin, self.frame.u, -self.frame.v, -self.frame.w)
+        return self.__class__(frame, -self.semi_angle, self.ref_radius, name=self.name)
+
     @property
     def apex(self):
         """
@@ -4520,12 +4534,9 @@ class ConicalSurface3D(UPeriodicalSurface):
         :return: The STEP representation of the object and the last ID.
         :rtype: tuple[str, list[int]]
         """
-        frame, semi_angle = self.frame, self.semi_angle
-        if semi_angle < 0:
-            # STEP requires a positive semi_angle: the same cone is described with the axis reversed
-            # (radius = tan(semi_angle) * z + ref_radius is unchanged when both z and semi_angle change sign)
-            frame = design3d.Frame3D(frame.origin, frame.u, -frame.v, -frame.w)
-            semi_angle = -semi_angle
+        # STEP requires a positive semi_angle
+        surface = self.positive_semi_angle_surface()
+        frame, semi_angle = surface.frame, surface.semi_angle
         content, frame_id = frame.to_step(current_id)
         current_id = frame_id + 1
         content += (
@@ -4750,6 +4761,8 @@ class ConicalSurface3D(UPeriodicalSurface):
         :param line: other line to verify intersections.
         :return: a list of intersection points, if there exists any.
         """
+        if self.semi_angle < 0:
+            return self.positive_semi_angle_surface().line_intersections(line)
         line_intersections = self._full_line_intersections(line)
         positive_lobe_intersections = []
         for point in line_intersections:
@@ -4835,7 +4848,12 @@ class ConicalSurface3D(UPeriodicalSurface):
         :return: List of intersecting curves.
         """
         center3d_plane = plane3d.point_projection(self.frame.origin)
-        radius = self.frame.origin.point_distance(center3d_plane) * math.tan(self.semi_angle) + self.ref_radius
+        # Signed height: the radius decreases below the reference plane when the half-angle is positive
+        height = (center3d_plane - self.frame.origin).dot(self.frame.w)
+        radius = self.ref_radius + height * math.tan(self.semi_angle)
+        if radius < 0:
+            # The plane only cuts the other nappe of the cone, which is not part of the surface
+            return []
         circle3d = curves.Circle3D(
             design3d.Frame3D(center3d_plane, plane3d.frame.u, plane3d.frame.v, plane3d.frame.w), radius
         )
@@ -4882,7 +4900,8 @@ class ConicalSurface3D(UPeriodicalSurface):
         :return: list of intersecting curves.
         """
         plane_normal = self.frame.w.cross(plane3d.frame.w)
-        plane2 = Plane3D.from_normal(plane3d.frame.origin, plane_normal)
+        # Plane containing the cone axis and orthogonal to plane3d: it cuts plane3d along the symmetry axis of the conic
+        plane2 = Plane3D.from_normal(self.frame.origin, plane_normal)
         plane2_plane3d_intersections = plane3d.plane_intersections(plane2)
         line_intersections = self.line_intersections(plane2_plane3d_intersections[0])
         if 1 > len(line_intersections) or len(line_intersections) > 2:
@@ -4923,6 +4942,8 @@ class ConicalSurface3D(UPeriodicalSurface):
         :param plane3d: other plane, to verify intersections.
         :return:
         """
+        if self.semi_angle < 0:
+            return self.positive_semi_angle_surface().plane_intersections(plane3d)
         if math.isclose(abs(plane3d.frame.w.dot(self.frame.w)), 0, abs_tol=1e-6):
             return self.parallel_plane_intersection(plane3d)
         if math.isclose(abs(plane3d.frame.w.dot(self.frame.w)), 1, abs_tol=1e-6):
