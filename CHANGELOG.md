@@ -22,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   color, focus and isolation, selection from the tree or by clicking in the 3D view, a name filter, standard views,
   edges, wireframe and axes toggles, and keyboard shortcuts. The inspector stays available from the toolbar, and is
   opened at startup with `debug=True`
+- babylonjs viewer: orthographic projection by default, the perspective projection being available from the
+  toolbar (P key), and a chamfered view cube in the top right corner replacing the standard view buttons: its faces,
+  edges and corners align the view on 26 directions with a short animation, and dragging it orbits the camera
 - `babylon_data` of volume models, assemblies and compounds has a `tree` entry describing the hierarchy of the
   primitives
 - ExtrudedProfile: `draft_angle`, `inner_draft_angles` and `symmetric` options. A draft shrinks the section away

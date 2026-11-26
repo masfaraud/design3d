@@ -113,6 +113,14 @@ class TestBabylonPage(unittest.TestCase):
         page = MovingVolumeModel.babylonjs_script(data, title="moving")
         self.assertNotIn("np.", page)
 
+    def test_camera_and_view_cube(self):
+        page = VolumeModel.babylonjs_script(self.model.babylon_data(), title="model")
+        # Orthographic projection by default, with a toggle to perspective, and the view cube in the corner
+        self.assertIn("setOrthographic(true);", page)
+        self.assertIn('toolButton("Perspective"', page)
+        self.assertIn("createViewCube(corner)", page)
+        self.assertIn("#d3d-viewcube", page)
+
     def test_debug_page(self):
         page = VolumeModel.babylonjs_script(self.model.babylon_data(), title="model", debug=True)
         self.assertIn("'debug': 1", page)
