@@ -43,6 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   also cut by open contours. The intersection of two crossing cylinders was missing a face
 - Boolean operations between coaxial cylinders of the same radius no longer fail, and coincident non-planar faces are
   no longer compared through a planar projection, which removed valid faces
+- Boolean operations: an empty result is an empty list for `intersection` and `subtract_to_closed_shell`, instead of
+  a closed shell without faces
 - union_list_of_shells no longer empties the list it is given nor merges the faces of the given shells, and
   ClosedShell3D.merge_faces no longer modifies the list of faces given to the shell nor fails on coincident
   non-planar faces, which it leaves unmerged

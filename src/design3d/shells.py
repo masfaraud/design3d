@@ -1734,10 +1734,12 @@ class ClosedShell3D(Shell3D):
 
         :param shell2: other shell
         :param tol: tolerance
-        :return:
+        :return: a list with the resulting closed shell, or an empty list if nothing is left.
         """
         if self.is_disjoint_from(shell2, tol):
             return [self]
+        if self.is_inside_shell(shell2):
+            return []
         dict_face_intersections1, dict_face_intersections2 = self.intersecting_faces_combinations(shell2, tol)
         intersecting_faces_1, non_intersecting_faces1 = self._separate_intersecting_and_non_intersecting_faces(
             dict_face_intersections1
@@ -1752,8 +1754,9 @@ class ClosedShell3D(Shell3D):
         new_valid_faces += shell2.subtraction_faces(self, intersecting_faces_2, dict_face_intersections2, True)
         faces += new_valid_faces
         faces = self.validate_set_operations_faces(faces)
-        new_shell = ClosedShell3D(faces)
-        return [new_shell]
+        if not faces:
+            return []
+        return [ClosedShell3D(faces)]
 
     def validate_intersection_operation(self, shell2):
         """
@@ -1794,8 +1797,9 @@ class ClosedShell3D(Shell3D):
         faces += self.intersection_faces(shell2, intersecting_faces_1, dict_face_intersections1)
         faces += shell2.intersection_faces(self, intersecting_faces_2, dict_face_intersections2)
         faces = self.validate_set_operations_faces(faces)
-        new_shell = ClosedShell3D(faces)
-        return [new_shell]
+        if not faces:
+            return []
+        return [ClosedShell3D(faces)]
 
     def eliminate_not_valid_closedshell_faces(self):
         """

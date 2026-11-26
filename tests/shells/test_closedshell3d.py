@@ -303,6 +303,15 @@ class TestClosedShell3D(unittest.TestCase):
             self.assertEqual(len(result[0].faces), expected_number_faces)
             self.assertEqual([result[0].point_inside(point) for point in points], expected_inside)
 
+    def test_set_operations_empty_results(self):
+        box1 = box(0, 0, 0, 2, 2, 2)
+        small_box = box(0, 0, 0, 0.5, 0.5, 0.5)
+        # Shells in contact by a face, entirely or partially: no common volume.
+        self.assertEqual(box1.intersection(box(2, 0, 0, 2, 2, 2)), [])
+        self.assertEqual(box1.intersection(box(2, 1, 0, 2, 2, 2)), [])
+        self.assertEqual(box1.subtract_to_closed_shell(box(0, 0, 0, 2, 2, 2)), [])
+        self.assertEqual(small_box.subtract_to_closed_shell(box1), [])
+
     def test_union_list_of_shells_inputs_unchanged(self):
         boxes = [box(0, 0, 0, 2, 2, 2), box(2, 0, 0, 2, 2, 2), box(0, 0, 0, 0.5, 0.5, 0.5)]
         boxes_faces = [list(block.faces) for block in boxes]
