@@ -83,6 +83,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   opened wire moves along the normal of the lines
 - ConicalFace3D.area and CylindricalFace3D.area: the area of the face, instead of the area of its 2D parametric
   surface, which was in radians times meters
+- BSplineFace3D: line segment intersections, used by ray casting in `ClosedShell3D.point_inside`, no longer fail
+  with a `ZeroDivisionError` on planar faces aligned with the axes, such as the sides of a loft between identical
+  sections
 
 ### Changed
 

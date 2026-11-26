@@ -1582,6 +1582,16 @@ class TestBSplineFace3D(unittest.TestCase):
         radial_gaps = cone_radii - np.hypot(centroids[:, 0], centroids[:, 1])
         self.assertLess(radial_gaps.max(), 0.03 * radius1)
 
+    def test_linesegment_intersections_planar_face(self):
+        # A planar B-spline face, as the side of a loft between identical sections: its bounding box is flat
+        points = [design3d.Point3D(x, 0.0, z) for x in (0.0, 0.5, 1.0) for z in (0.0, 0.5, 1.0)]
+        surface = surfaces.BSplineSurface3D.from_points_interpolation(points, 3, 3, 1, 1)
+        face = faces.BSplineFace3D.from_surface_rectangular_cut(surface, 0.0, 1.0, 0.0, 1.0)
+        linesegment = design3d.edges.LineSegment3D(design3d.Point3D(0.3, -1.0, 0.6), design3d.Point3D(0.3, 1.0, 0.6))
+        intersections = face.linesegment_intersections(linesegment)
+        self.assertEqual(len(intersections), 1)
+        self.assertTrue(intersections[0].is_close(design3d.Point3D(0.3, 0.0, 0.6)))
+
 
 if __name__ == "__main__":
     unittest.main()
