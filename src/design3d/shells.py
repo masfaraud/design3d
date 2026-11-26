@@ -27,10 +27,13 @@ def union_list_of_shells(list_shells, abs_tol: float = 1e-6):
     """
     Perform union operations with all shells from a list, until all groups of adjacent shells are merged.
 
+    The list and the shells given are not modified.
+
     :param list_shells: A list of shells.
     :param abs_tol: tolerance.
     :return: A list of merged shells
     """
+    list_shells = list(list_shells)
     shells = []
     union_shells = [list_shells.pop(0)]
     len_previous_shells_list = len(list_shells)
@@ -45,7 +48,9 @@ def union_list_of_shells(list_shells, abs_tol: float = 1e-6):
                 union = union_shell.union(octant_box, abs_tol)
                 if len(union) != 2:
                     union_shells.pop(i)
-                    union[0].merge_faces()
+                    if union[0] is not union_shell and union[0] is not octant_box:
+                        # merge_faces works in place: only on a new shell, not on a given one.
+                        union[0].merge_faces()
                     union_shells.insert(0, union[0])
                     list_shells.pop(j)
                     break
@@ -1054,7 +1059,7 @@ class Shell3D(design3d.core.CompositePrimitive3D):
 
         return shells_list
 
-    def is_disjoint_from(self, shell2, tol=1e-8):
+    def is_disjoint_from(self, shell2, tol=1e-6):
         """
         Verifies and returns a Boolean if two shells are disjointed or not.
 
@@ -1163,7 +1168,7 @@ class ClosedShell3D(Shell3D):
         if not face.bounding_box.is_inside_bbox(self.bounding_box):
             return False
         points = []
-        if face.area() > 1e-8:
+        if face.area() > 1e-8 * max(face.bounding_box.size) ** 2:
             points.append(face.random_point_inside())
 
         for prim in face.outer_contour3d.primitives:
@@ -1214,28 +1219,25 @@ class ClosedShell3D(Shell3D):
             return False
         rays = self.get_ray_casting_line_segment(point3d)
 
-        count = 0
+        ambiguous_rays_votes = []
         for ray in rays:
-            count = 0
             intersections = []
+            ambiguous = False
             for _, point_inters in self.linesegment_intersections(ray):
-                if point_inters[0].is_close(point3d):
-                    return True
                 for inter in point_inters:
+                    if inter.is_close(point3d):
+                        return True
                     if inter.in_list(intersections):
-                        break
-                    intersections.append(inter)
-                    count += 1
-                else:
-                    continue
-                break
-            else:
-                continue
-            break
-        is_inside = True
-        if count % 2 == 0:
-            is_inside = False
-        return is_inside
+                        # The ray crosses the shell at an edge or a vertex, shared by several faces: the parity of
+                        # its crossings is not reliable.
+                        ambiguous = True
+                    else:
+                        intersections.append(inter)
+            if not ambiguous:
+                return len(intersections) % 2 == 1
+            ambiguous_rays_votes.append(len(intersections) % 2 == 1)
+        # All rays are ambiguous: majority vote on their crossings counted once each.
+        return 2 * sum(ambiguous_rays_votes) > len(ambiguous_rays_votes)
 
     def is_inside_shell(self, shell2):
         """
@@ -1252,7 +1254,7 @@ class ClosedShell3D(Shell3D):
                 return False
         return True
 
-    def intersecting_faces_combinations(self, shell2, tol=1e-8):
+    def intersecting_faces_combinations(self, shell2, tol=1e-6):
         """
         Gets intersecting faces combinations.
 
@@ -1436,8 +1438,9 @@ class ClosedShell3D(Shell3D):
             if shell2.face_on_shell(new_face):
                 point3d = new_face.random_point_inside()
                 if new_face.point_belongs(point3d):
-                    normal1 = point3d - 0.00001 * new_face.surface3d.frame.w.unit_vector()
-                    normal2 = point3d + 0.00001 * new_face.surface3d.frame.w.unit_vector()
+                    offset = self._classification_offset(shell2) * new_face.normal_at_point(point3d).unit_vector()
+                    normal1 = point3d - offset
+                    normal2 = point3d + offset
                     if (self.point_inside(normal1) and shell2.point_inside(normal1)) or (
                         shell2.point_inside(normal2) and self.point_inside(normal2)
                     ):
@@ -1483,6 +1486,19 @@ class ClosedShell3D(Shell3D):
         #     return True
         return False
 
+    def _classification_offset(self, shell2):
+        """
+        Distance at which points are taken on both sides of a face to know which shells are on each side.
+
+        It is relative to the size of the shells, and above the tolerance of 1e-6 of point_inside, which would consider
+        closer points as on the shells.
+
+        :param shell2: other shell.
+        :return: the offset distance.
+        """
+        size = max(*self.bounding_box.size, *shell2.bounding_box.size)
+        return max(1e-5 * size, 2e-6)
+
     def is_face_between_shells(self, shell2, face):
         """
         Verify if face is between the two shells.
@@ -1497,20 +1513,24 @@ class ClosedShell3D(Shell3D):
             points = [center_of_mass]
 
         if face.surface2d.inner_contours:
-            normal_0 = face.surface2d.outer_contour.primitives[0].normal_vector(0.0)
+            normal_0 = face.surface2d.outer_contour.primitives[0].normal_vector(0.0).unit_vector()
             middle_point_0 = face.surface2d.outer_contour.primitives[0].middle_point()
-            point1 = middle_point_0 + 0.0001 * normal_0
-            point2 = middle_point_0 - 0.0001 * normal_0
+            # Offset in the parametric domain of the face, relative to its size.
+            xmin, xmax, ymin, ymax = face.surface2d.outer_contour.bounding_rectangle.bounds()
+            offset2d = 1e-3 * max(xmax - xmin, ymax - ymin)
+            point1 = middle_point_0 + offset2d * normal_0
+            point2 = middle_point_0 - offset2d * normal_0
             points = [point1, point2]
         else:
             points.extend([face.surface2d.outer_contour.random_point_inside()])
 
+        offset = self._classification_offset(shell2)
         for point in points:
             point3d = face.surface3d.point2d_to_3d(point)
             if face.point_belongs(point3d):
-                normal_at_point = face.normal_at_point(point3d)
-                normal1 = point3d - 0.00001 * normal_at_point
-                normal2 = point3d + 0.00001 * normal_at_point
+                normal_at_point = face.normal_at_point(point3d).unit_vector()
+                normal1 = point3d - offset * normal_at_point
+                normal2 = point3d + offset * normal_at_point
                 if (self.point_inside(normal1) and shell2.point_inside(normal2)) or (
                     shell2.point_inside(normal1) and self.point_inside(normal2)
                 ):
@@ -1527,7 +1547,7 @@ class ClosedShell3D(Shell3D):
         :param list_coincident_faces: list of coincident faces.
         :return:
         """
-        if new_face.area() < 1e-8:
+        if new_face.area() < 1e-8 * max(*self.bounding_box.size, *shell2.bounding_box.size) ** 2:
             return False
         if new_face not in valid_faces:
             inside_shell2 = shell2.point_inside(new_face.random_point_inside())
@@ -1577,6 +1597,101 @@ class ClosedShell3D(Shell3D):
             non_intersecting_faces.append(face)
         return intersecting_faces, non_intersecting_faces
 
+    @staticmethod
+    def _is_contact_only(dict_face_intersections1, dict_face_intersections2, list_coincident_faces, abs_tol):
+        """
+        Verifies if the boundaries of two shells only touch, without common volume nor common area of faces.
+
+        It is the case when no coincident faces overlap, and when all the intersections of the faces lie on the
+        boundaries of the faces: the shells touch along edges or at vertices.
+
+        :param dict_face_intersections1: intersections of the faces of the first shell.
+        :param dict_face_intersections2: intersections of the faces of the second shell.
+        :param list_coincident_faces: pairs of faces on coincident surfaces.
+        :param abs_tol: tolerance.
+        :return: True if the shells only touch.
+        """
+        for face1, face2 in list_coincident_faces:
+            if face1.face_inside(face2, abs_tol) or face2.face_inside(face1, abs_tol):
+                return False
+        for dict_face_intersections in (dict_face_intersections1, dict_face_intersections2):
+            for face, face_wires in dict_face_intersections.items():
+                contours = [face.outer_contour3d] + face.inner_contours3d
+                for wire in face_wires:
+                    for primitive in wire.primitives:
+                        middle_point = primitive.middle_point()
+                        if not any(contour.point_belongs(middle_point, abs_tol) for contour in contours):
+                            return False
+        return True
+
+    @staticmethod
+    def _imprint_vertices(faces, abs_tol: float = 1e-6):
+        """
+        Splits the edges of faces at the vertices of the other faces lying inside them.
+
+        Two faces adjacent along a part of an edge only (T-junction) then share this part as a whole edge, which
+        makes the shell conforming: each edge is shared by two faces.
+
+        :param faces: faces of a shell.
+        :param abs_tol: tolerance.
+        :return: the faces, rebuilt when some of their edges were split.
+        """
+        vertices = []
+        for face in faces:
+            for contour in [face.outer_contour3d] + face.inner_contours3d:
+                for primitive in contour.primitives:
+                    if not primitive.start.in_list(vertices, abs_tol):
+                        vertices.append(primitive.start)
+        new_faces = []
+        for face in faces:
+            new_contours = []
+            split = False
+            for contour in [face.outer_contour3d] + face.inner_contours3d:
+                primitives = []
+                for primitive in contour.primitives:
+                    bounding_box = primitive.bounding_box
+                    points = [
+                        vertex
+                        for vertex in vertices
+                        if bounding_box.point_inside(vertex, abs_tol)
+                        and not vertex.is_close(primitive.start, abs_tol)
+                        and not vertex.is_close(primitive.end, abs_tol)
+                        and primitive.point_belongs(vertex, abs_tol)
+                    ]
+                    pieces = [primitive]
+                    for point in primitive.sort_points_along_curve(points):
+                        pieces = pieces[:-1] + [piece for piece in pieces[-1].split(point) if piece]
+                    split = split or len(pieces) > 1
+                    primitives.extend(pieces)
+                new_contours.append(design3d.wires.Contour3D(primitives))
+            if split:
+                # A triangle with a split edge is no longer a triangle, as in Face3D.divide_face. The face is kept
+                # unchanged if it cannot be rebuilt from its new contours.
+                face_class = (
+                    design3d.faces.PlaneFace3D if isinstance(face, design3d.faces.Triangle3D) else face.__class__
+                )
+                new_face = face_class.from_contours3d(face.surface3d, new_contours, face.name)
+                if new_face is not None:
+                    face = new_face
+            new_faces.append(face)
+        return new_faces
+
+    def _is_strictly_inside(self, shell2):
+        """
+        Verifies if shell2 is inside self without touching its boundary, that is, if it would be a void in self.
+
+        :param shell2: other shell.
+        :return: True if shell2 is strictly inside self.
+        """
+        if not shell2.is_inside_shell(self):
+            return False
+        return not any(
+            self.point_on_shell(primitive.start)
+            for face in shell2.faces
+            for contour in [face.outer_contour3d] + face.inner_contours3d
+            for primitive in contour.primitives
+        )
+
     def _delete_coincident_faces(self, shell2, list_coincident_faces, abs_tol: float = 1e-6):
         """
         Helper method to delete coincident faces during union operation.
@@ -1600,7 +1715,7 @@ class ClosedShell3D(Shell3D):
             return [self, shell2]
         return [ClosedShell3D(faces1 + faces2)]
 
-    def union(self, shell2: "ClosedShell3D", tol: float = 1e-8):
+    def union(self, shell2: "ClosedShell3D", tol: float = 1e-6):
         """
         Given Two closed shells, it returns a new united ClosedShell3D object.
 
@@ -1616,6 +1731,8 @@ class ClosedShell3D(Shell3D):
         intersecting_faces_2, non_intersecting_faces2 = self._separate_intersecting_and_non_intersecting_faces(
             dict_face_intersections2
         )
+        if self._is_contact_only(dict_face_intersections1, dict_face_intersections2, list_coincident_faces, tol):
+            return [self, shell2]
         non_intersecting_faces1 = self.validate_non_intersecting_faces(shell2, non_intersecting_faces1)
         non_intersecting_faces2 = shell2.validate_non_intersecting_faces(self, non_intersecting_faces2)
         faces = non_intersecting_faces1 + non_intersecting_faces2
@@ -1630,15 +1747,17 @@ class ClosedShell3D(Shell3D):
         if list_coincident_faces:
             new_valid_faces = self.validate_set_operations_faces(new_valid_faces)
         faces += new_valid_faces
-        new_shell = ClosedShell3D(faces)
+        new_shell = ClosedShell3D(self._imprint_vertices(faces, tol))
         return [new_shell]
 
     @staticmethod
     def get_faces_to_be_merged(union_faces):
         """Gets faces that are adjacent, and sharing the same surface, so they can be merged."""
         coincident_planes_faces = []
-        for i, face1 in enumerate(union_faces):
-            for j, face2 in enumerate(union_faces):
+        # PlaneFace3D.merge_faces merges planar faces only.
+        planar_faces = [face for face in union_faces if isinstance(face, design3d.faces.PlaneFace3D)]
+        for i, face1 in enumerate(planar_faces):
+            for j, face2 in enumerate(planar_faces):
                 if j != i and face1.surface3d.is_coincident(face2.surface3d):
                     if face1 not in coincident_planes_faces:
                         coincident_planes_faces.append(face1)
@@ -1665,10 +1784,12 @@ class ClosedShell3D(Shell3D):
 
     def merge_faces(self):
         """
-        Merges all shells' adjacent faces into one.
+        Merges the adjacent planar faces of the shell lying on the same plane, in place.
 
+        The list of faces given to the shell is not modified.
         """
-        union_faces = self.faces
+        union_faces = self.faces[:]
+        number_faces = len(union_faces)
         finished = False
         list_new_faces = []
         count = 0
@@ -1680,49 +1801,76 @@ class ClosedShell3D(Shell3D):
             for face in list_valid_coincident_faces:
                 union_faces.remove(face)
             count += 1
-            if count >= len(self.faces) and not list_valid_coincident_faces:
+            if count >= number_faces and not list_valid_coincident_faces:
                 finished = True
 
         list_new_faces = self.clean_faces(union_faces, list_new_faces)
 
         self.faces = list_new_faces
+        self._bbox = None
+        self._faces_graph = None
+        self._vertices_graph = None
+        self._vertices_points = None
+        self._shell_octree_decomposition = None
 
-    def subtract(self, shell2, tol=1e-8):
+    def subtract(self, shell2, tol=1e-6):
         """
-        Given Two closed shells, it returns a new subtracted OpenShell3D.
+        Given Two closed shells, it returns the faces of self outside shell2, as OpenShell3D.
 
+        If self is entirely outside shell2 or contains it, self is returned unchanged. If self is inside shell2, an
+        empty list is returned.
         """
-        validate_set_operation = self.validate_set_operation(shell2, tol)
-        if validate_set_operation:
-            return validate_set_operation
+        if self.is_disjoint_from(shell2, tol):
+            return [self]
+        if self.is_inside_shell(shell2):
+            return []
+        if shell2.is_inside_shell(self):
+            return [self]
 
-        list_coincident_faces = self.get_coincident_faces(shell2)
+        list_coincident_faces = self.get_coincident_faces(shell2, tol)
 
-        dict_face_intersections1, _ = self.intersecting_faces_combinations(shell2, tol)
+        dict_face_intersections1, dict_face_intersections2 = self.intersecting_faces_combinations(shell2, tol)
+        if self._is_contact_only(dict_face_intersections1, dict_face_intersections2, list_coincident_faces, tol):
+            return [self]
         intersecting_faces_1, non_intersecting_faces1 = self._separate_intersecting_and_non_intersecting_faces(
             dict_face_intersections1
         )
         non_intersecting_faces1 = self.validate_non_intersecting_faces(shell2, non_intersecting_faces1)
         faces = non_intersecting_faces1
         if len(intersecting_faces_1) == 0:
-            return [self, shell2]
+            return [self]
         new_valid_faces = self.union_faces(
             shell2, intersecting_faces_1, dict_face_intersections1, list_coincident_faces
         )
         faces += new_valid_faces
         return OpenShell3D.from_faces(faces)
 
-    def subtract_to_closed_shell(self, shell2: "ClosedShell3D", tol: float = 1e-8):
+    def subtract_to_closed_shell(self, shell2: "ClosedShell3D", tol: float = 1e-6):
         """
         Subtracts shell2's volume from self.
 
+        A shell strictly inside self would leave a void, which a closed shell cannot represent: self is then returned
+        unchanged, with a warning.
+
         :param shell2: other shell
         :param tol: tolerance
-        :return:
+        :return: a list with the resulting closed shell, or an empty list if nothing is left.
         """
         if self.is_disjoint_from(shell2, tol):
             return [self]
+        if self.is_inside_shell(shell2):
+            return []
+        if self._is_strictly_inside(shell2):
+            warnings.warn(
+                "subtract_to_closed_shell: the subtracted shell is strictly inside the shell, the result would be a "
+                "solid with a void, which a closed shell cannot represent. The shell is returned unchanged.",
+                stacklevel=2,
+            )
+            return [self]
+        list_coincident_faces = self.get_coincident_faces(shell2, tol)
         dict_face_intersections1, dict_face_intersections2 = self.intersecting_faces_combinations(shell2, tol)
+        if self._is_contact_only(dict_face_intersections1, dict_face_intersections2, list_coincident_faces, tol):
+            return [self]
         intersecting_faces_1, non_intersecting_faces1 = self._separate_intersecting_and_non_intersecting_faces(
             dict_face_intersections1
         )
@@ -1736,8 +1884,9 @@ class ClosedShell3D(Shell3D):
         new_valid_faces += shell2.subtraction_faces(self, intersecting_faces_2, dict_face_intersections2, True)
         faces += new_valid_faces
         faces = self.validate_set_operations_faces(faces)
-        new_shell = ClosedShell3D(faces)
-        return [new_shell]
+        if not faces:
+            return []
+        return [ClosedShell3D(self._imprint_vertices(faces, tol))]
 
     def validate_intersection_operation(self, shell2):
         """
@@ -1753,7 +1902,7 @@ class ClosedShell3D(Shell3D):
             return [shell2]
         return []
 
-    def intersection(self, shell2, tol=1e-8):
+    def intersection(self, shell2, tol=1e-6):
         """
         Given two ClosedShell3D, it returns the new object resulting from the intersection of the two.
 
@@ -1763,7 +1912,10 @@ class ClosedShell3D(Shell3D):
         validate_set_operation = self.validate_intersection_operation(shell2)
         if validate_set_operation:
             return validate_set_operation
+        list_coincident_faces = self.get_coincident_faces(shell2, tol)
         dict_face_intersections1, dict_face_intersections2 = self.intersecting_faces_combinations(shell2, tol)
+        if self._is_contact_only(dict_face_intersections1, dict_face_intersections2, list_coincident_faces, tol):
+            return []
         intersecting_faces_1, non_intersecting_faces1 = self._separate_intersecting_and_non_intersecting_faces(
             dict_face_intersections1
         )
@@ -1778,8 +1930,9 @@ class ClosedShell3D(Shell3D):
         faces += self.intersection_faces(shell2, intersecting_faces_1, dict_face_intersections1)
         faces += shell2.intersection_faces(self, intersecting_faces_2, dict_face_intersections2)
         faces = self.validate_set_operations_faces(faces)
-        new_shell = ClosedShell3D(faces)
-        return [new_shell]
+        if not faces:
+            return []
+        return [ClosedShell3D(self._imprint_vertices(faces, tol))]
 
     def eliminate_not_valid_closedshell_faces(self):
         """
