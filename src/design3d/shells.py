@@ -1118,40 +1118,84 @@ class ClosedShell3D(Shell3D):
 
     STEP_FUNCTION = "CLOSED_SHELL"
 
+    # Directions of the rays testing if a point is inside a triangulated shell: not aligned with the axes nor with
+    # each other, so that rays seldom pass along faces or through edges
+    _RAY_DIRECTIONS = np.array([[0.5363, 0.7146, 0.4490], [-0.6611, 0.2795, 0.6963], [0.3134, -0.8722, 0.3756]])
+
     def volume(self):
         """
-        Does not consider holes.
+        Computes the volume enclosed by the shell.
 
+        Each face contributes the signed volume of the tetrahedra joining its triangles to a reference point. The
+        faces of a shell are not all oriented outwards, so the sign of each face contribution is given by testing on
+        which side of the face the material is, on the triangulation of the shell. The result does not depend on the
+        shell being convex or star-shaped, and cavities are taken into account.
+
+        :return: the volume of the shell.
         """
-        volume = 0
-        center_x, center_y, center_z = self.bounding_box.center
+        center = self.bounding_box.center
+        reference_point = np.array([center.x, center.y, center.z])
+        faces_triangles = []
         for face in self.faces:
-            display3d = face.triangulation()
-            for triangle_index in display3d.triangles:
-                point1 = display3d.vertices[triangle_index[0]]
-                point2 = display3d.vertices[triangle_index[1]]
-                point3 = display3d.vertices[triangle_index[2]]
-
-                point1_adj = (point1[0] - center_x, point1[1] - center_y, point1[2] - center_z)
-                point2_adj = (point2[0] - center_x, point2[1] - center_y, point2[2] - center_z)
-                point3_adj = (point3[0] - center_x, point3[1] - center_y, point3[2] - center_z)
-
-                volume_tetraedre = (
-                    1
-                    / 6
-                    * abs(
-                        -point3_adj[0] * point2_adj[1] * point1_adj[2]
-                        + point2_adj[0] * point3_adj[1] * point1_adj[2]
-                        + point3_adj[0] * point1_adj[1] * point2_adj[2]
-                        - point1_adj[0] * point3_adj[1] * point2_adj[2]
-                        - point2_adj[0] * point1_adj[1] * point3_adj[2]
-                        + point1_adj[0] * point2_adj[1] * point3_adj[2]
-                    )
-                )
-
-                volume += volume_tetraedre
-
+            mesh = face.triangulation()
+            if mesh:
+                vertices = np.asarray(mesh.vertices, dtype=float) - reference_point
+                faces_triangles.append(vertices[np.asarray(mesh.triangles)])
+        shell_triangles = np.concatenate(faces_triangles)
+        volume = 0.0
+        for triangles in faces_triangles:
+            face_volume = np.einsum("ij,ij->i", triangles[:, 0], np.cross(triangles[:, 1], triangles[:, 2])).sum() / 6
+            if not self._is_triangulation_outward(triangles, shell_triangles):
+                face_volume = -face_volume
+            volume += face_volume
         return abs(volume)
+
+    @classmethod
+    def _is_triangulation_outward(cls, triangles: NDArray[float], shell_triangles: NDArray[float]) -> bool:
+        """
+        Verifies if the triangles of a face triangulation are oriented outwards a closed triangulated shell.
+
+        The centroid of the largest triangle is moved by a small step along its normal: the triangles are oriented
+        outwards if this point is outside the shell, which is decided by the parity of the triangles crossed by rays.
+
+        :param triangles: triangles of the face, as an array of shape (number of triangles, 3, 3).
+        :param shell_triangles: triangles of the whole shell, including the face ones.
+        :return: True if the triangle normals point outwards, False otherwise.
+        """
+        normals = np.cross(triangles[:, 1] - triangles[:, 0], triangles[:, 2] - triangles[:, 0])
+        normal_norms = np.linalg.norm(normals, axis=1)
+        index = int(np.argmax(normal_norms))
+        step = 1e-6 * math.sqrt(normal_norms[index])
+        point = triangles[index].mean(axis=0) + step * normals[index] / normal_norms[index]
+        inside_votes = sum(
+            cls._ray_triangles_crossings(point, direction, shell_triangles) % 2 for direction in cls._RAY_DIRECTIONS
+        )
+        return 2 * inside_votes < len(cls._RAY_DIRECTIONS)
+
+    @staticmethod
+    def _ray_triangles_crossings(origin: NDArray[float], direction: NDArray[float], triangles: NDArray[float]) -> int:
+        """
+        Counts the triangles crossed by a ray (Möller-Trumbore algorithm).
+
+        :param origin: origin of the ray.
+        :param direction: direction of the ray.
+        :param triangles: triangles, as an array of shape (number of triangles, 3, 3).
+        :return: the number of triangles crossed by the ray.
+        """
+        edges1 = triangles[:, 1] - triangles[:, 0]
+        edges2 = triangles[:, 2] - triangles[:, 0]
+        p_vectors = np.cross(direction, edges2)
+        determinants = np.einsum("ij,ij->i", edges1, p_vectors)
+        not_parallel = determinants != 0.0
+        inverse_determinants = np.zeros_like(determinants)
+        inverse_determinants[not_parallel] = 1 / determinants[not_parallel]
+        t_vectors = origin - triangles[:, 0]
+        u_values = np.einsum("ij,ij->i", t_vectors, p_vectors) * inverse_determinants
+        q_vectors = np.cross(t_vectors, edges1)
+        v_values = q_vectors @ direction * inverse_determinants
+        distances = np.einsum("ij,ij->i", edges2, q_vectors) * inverse_determinants
+        crossed = not_parallel & (u_values >= 0) & (v_values >= 0) & (u_values + v_values <= 1) & (distances > 0)
+        return int(np.count_nonzero(crossed))
 
     def is_face_inside(self, face: design3d.faces.Face3D):
         """

@@ -333,6 +333,21 @@ class TestClosedShell3D(unittest.TestCase):
         # outer bottom, 4 walls and 4 corners; inner bottom, 4 walls and 4 corners; top rim
         self.assertEqual(len(cup[0].faces), 19)
 
+    def test_volume_stamped_cup(self):
+        # The cup is not star-shaped from the center of its bounding box, and its inner faces keep the orientation
+        # of the inner tool faces
+        for corner_radius, draft_angle, places in [
+            (0.0, 0.0, 10),
+            (0.0, math.radians(8), 10),
+            (0.03, 0.0, 5),
+            (0.03, math.radians(8), 5),
+        ]:
+            with self.subTest(corner_radius=corner_radius, draft_angle=draft_angle):
+                outer, inner, inner_inside_outer = self._stamped_cup(corner_radius, draft_angle)
+                cup = outer.subtract_to_closed_shell(inner)[0]
+                # Rounded corners are triangulated: the volume is then approximate
+                self.assertAlmostEqual(cup.volume(), outer.volume() - inner_inside_outer.volume(), places=places)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -86,6 +86,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   generator give their parabola when their frame origin is off the cone axis, and planes perpendicular to the axis
   below the reference plane give the right circle. Subtracting drafted extrusions with rounded corners, such as a
   stamped cup, no longer fails with an `IndexError`
+- ClosedShell3D.volume: the volume of shells that are not star-shaped from the center of their bounding box, such as a
+  cup made by subtracting shells, is right. Each face is oriented by testing on which side the material is, by ray
+  casting on the triangulation of the shell, instead of summing absolute tetrahedra volumes
 
 ### Changed
 
