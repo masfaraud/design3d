@@ -45,6 +45,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   no longer compared through a planar projection, which removed valid faces
 - Boolean operations: an empty result is an empty list for `intersection` and `subtract_to_closed_shell`, instead of
   a closed shell without faces
+- ClosedShell3D.subtract_to_closed_shell: subtracting a shell strictly inside the shell returns the shell unchanged
+  with a warning, as a void cannot be represented, instead of a shell made of both boundaries. A shell inside the
+  subtracted one gives an empty list
 - union_list_of_shells no longer empties the list it is given nor merges the faces of the given shells, and
   ClosedShell3D.merge_faces no longer modifies the list of faces given to the shell nor fails on coincident
   non-planar faces, which it leaves unmerged

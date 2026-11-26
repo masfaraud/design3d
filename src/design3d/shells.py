@@ -1579,6 +1579,22 @@ class ClosedShell3D(Shell3D):
             non_intersecting_faces.append(face)
         return intersecting_faces, non_intersecting_faces
 
+    def _is_strictly_inside(self, shell2):
+        """
+        Verifies if shell2 is inside self without touching its boundary, that is, if it would be a void in self.
+
+        :param shell2: other shell.
+        :return: True if shell2 is strictly inside self.
+        """
+        if not shell2.is_inside_shell(self):
+            return False
+        return not any(
+            self.point_on_shell(primitive.start)
+            for face in shell2.faces
+            for contour in [face.outer_contour3d] + face.inner_contours3d
+            for primitive in contour.primitives
+        )
+
     def _delete_coincident_faces(self, shell2, list_coincident_faces, abs_tol: float = 1e-6):
         """
         Helper method to delete coincident faces during union operation.
@@ -1732,6 +1748,9 @@ class ClosedShell3D(Shell3D):
         """
         Subtracts shell2's volume from self.
 
+        A shell strictly inside self would leave a void, which a closed shell cannot represent: self is then returned
+        unchanged, with a warning.
+
         :param shell2: other shell
         :param tol: tolerance
         :return: a list with the resulting closed shell, or an empty list if nothing is left.
@@ -1740,6 +1759,13 @@ class ClosedShell3D(Shell3D):
             return [self]
         if self.is_inside_shell(shell2):
             return []
+        if self._is_strictly_inside(shell2):
+            warnings.warn(
+                "subtract_to_closed_shell: the subtracted shell is strictly inside the shell, the result would be a "
+                "solid with a void, which a closed shell cannot represent. The shell is returned unchanged.",
+                stacklevel=2,
+            )
+            return [self]
         dict_face_intersections1, dict_face_intersections2 = self.intersecting_faces_combinations(shell2, tol)
         intersecting_faces_1, non_intersecting_faces1 = self._separate_intersecting_and_non_intersecting_faces(
             dict_face_intersections1

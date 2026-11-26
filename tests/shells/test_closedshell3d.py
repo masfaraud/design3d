@@ -312,6 +312,16 @@ class TestClosedShell3D(unittest.TestCase):
         self.assertEqual(box1.subtract_to_closed_shell(box(0, 0, 0, 2, 2, 2)), [])
         self.assertEqual(small_box.subtract_to_closed_shell(box1), [])
 
+    def test_subtract_to_closed_shell_inner_shell(self):
+        box1 = box(0, 0, 0, 2, 2, 2)
+        # The result would be a solid with a void, which a closed shell cannot represent.
+        with self.assertWarns(UserWarning):
+            self.assertEqual(box1.subtract_to_closed_shell(box(0, 0, 0, 0.5, 0.5, 0.5)), [box1])
+        # A pocket flush with a face of the shell is not a void.
+        pocket = box1.subtract_to_closed_shell(box(0, 0, 0.75, 1, 1, 0.5))
+        self.assertEqual(len(pocket), 1)
+        self.assertEqual(len(pocket[0].faces), 11)
+
     def test_union_list_of_shells_inputs_unchanged(self):
         boxes = [box(0, 0, 0, 2, 2, 2), box(2, 0, 0, 2, 2, 2), box(0, 0, 0, 0.5, 0.5, 0.5)]
         boxes_faces = [list(block.faces) for block in boxes]
