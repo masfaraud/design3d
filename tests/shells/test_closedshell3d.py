@@ -18,6 +18,22 @@ def box(x, y, z, size_x, size_y, size_z):
     )
 
 
+def unmatched_edges(shell):
+    """Edges of the faces of a shell not shared with exactly one other face: empty for a conforming closed shell."""
+    face_edges = [
+        (i, primitive)
+        for i, face in enumerate(shell.faces)
+        for contour in [face.outer_contour3d] + face.inner_contours3d
+        for primitive in contour.primitives
+    ]
+    unmatched = []
+    for i, primitive in face_edges:
+        matches = [j for j, other in face_edges if j != i and primitive.direction_independent_is_close(other)]
+        if len(matches) != 1:
+            unmatched.append(primitive)
+    return unmatched
+
+
 class TestClosedShell3D(unittest.TestCase):
     def test_union_adjacent_blocks(self):
         frame1 = design3d.Frame3D(design3d.Point3D(0, 0, 0), design3d.X3D, design3d.Y3D, design3d.Z3D)
@@ -302,6 +318,22 @@ class TestClosedShell3D(unittest.TestCase):
             self.assertEqual(len(result), 1)
             self.assertEqual(len(result[0].faces), expected_number_faces)
             self.assertEqual([result[0].point_inside(point) for point in points], expected_inside)
+
+    def test_union_partially_coincident_faces(self):
+        # The faces x = 1 of the boxes overlap on y in [0, 1]: the top and bottom faces of the boxes are coplanar and
+        # adjacent along a part of their edges only, whose ends must be vertices of both faces.
+        union = box(0, 0, 0, 2, 2, 2).union(box(2, 1, 0, 2, 2, 2))
+        self.assertEqual(len(union), 1)
+        self.assertEqual(len(union[0].faces), 12)
+        self.assertEqual(unmatched_edges(union[0]), [])
+
+    def test_set_operations_shells_touching_along_an_edge(self):
+        box1 = box(0, 0, 0, 2, 2, 2)
+        box2 = box(2, 2, 0, 2, 2, 2)
+        self.assertEqual(box1.union(box2), [box1, box2])
+        self.assertEqual(box1.intersection(box2), [])
+        self.assertEqual(box1.subtract_to_closed_shell(box2), [box1])
+        self.assertEqual(box1.subtract(box2), [box1])
 
     def test_set_operations_empty_results(self):
         box1 = box(0, 0, 0, 2, 2, 2)

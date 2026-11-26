@@ -1579,6 +1579,85 @@ class ClosedShell3D(Shell3D):
             non_intersecting_faces.append(face)
         return intersecting_faces, non_intersecting_faces
 
+    @staticmethod
+    def _is_contact_only(dict_face_intersections1, dict_face_intersections2, list_coincident_faces, abs_tol):
+        """
+        Verifies if the boundaries of two shells only touch, without common volume nor common area of faces.
+
+        It is the case when no coincident faces overlap, and when all the intersections of the faces lie on the
+        boundaries of the faces: the shells touch along edges or at vertices.
+
+        :param dict_face_intersections1: intersections of the faces of the first shell.
+        :param dict_face_intersections2: intersections of the faces of the second shell.
+        :param list_coincident_faces: pairs of faces on coincident surfaces.
+        :param abs_tol: tolerance.
+        :return: True if the shells only touch.
+        """
+        for face1, face2 in list_coincident_faces:
+            if face1.face_inside(face2, abs_tol) or face2.face_inside(face1, abs_tol):
+                return False
+        for dict_face_intersections in (dict_face_intersections1, dict_face_intersections2):
+            for face, face_wires in dict_face_intersections.items():
+                contours = [face.outer_contour3d] + face.inner_contours3d
+                for wire in face_wires:
+                    for primitive in wire.primitives:
+                        middle_point = primitive.middle_point()
+                        if not any(contour.point_belongs(middle_point, abs_tol) for contour in contours):
+                            return False
+        return True
+
+    @staticmethod
+    def _imprint_vertices(faces, abs_tol: float = 1e-6):
+        """
+        Splits the edges of faces at the vertices of the other faces lying inside them.
+
+        Two faces adjacent along a part of an edge only (T-junction) then share this part as a whole edge, which
+        makes the shell conforming: each edge is shared by two faces.
+
+        :param faces: faces of a shell.
+        :param abs_tol: tolerance.
+        :return: the faces, rebuilt when some of their edges were split.
+        """
+        vertices = []
+        for face in faces:
+            for contour in [face.outer_contour3d] + face.inner_contours3d:
+                for primitive in contour.primitives:
+                    if not primitive.start.in_list(vertices, abs_tol):
+                        vertices.append(primitive.start)
+        new_faces = []
+        for face in faces:
+            new_contours = []
+            split = False
+            for contour in [face.outer_contour3d] + face.inner_contours3d:
+                primitives = []
+                for primitive in contour.primitives:
+                    bounding_box = primitive.bounding_box
+                    points = [
+                        vertex
+                        for vertex in vertices
+                        if bounding_box.point_inside(vertex, abs_tol)
+                        and not vertex.is_close(primitive.start, abs_tol)
+                        and not vertex.is_close(primitive.end, abs_tol)
+                        and primitive.point_belongs(vertex, abs_tol)
+                    ]
+                    pieces = [primitive]
+                    for point in primitive.sort_points_along_curve(points):
+                        pieces = pieces[:-1] + [piece for piece in pieces[-1].split(point) if piece]
+                    split = split or len(pieces) > 1
+                    primitives.extend(pieces)
+                new_contours.append(design3d.wires.Contour3D(primitives))
+            if split:
+                # A triangle with a split edge is no longer a triangle, as in Face3D.divide_face. The face is kept
+                # unchanged if it cannot be rebuilt from its new contours.
+                face_class = (
+                    design3d.faces.PlaneFace3D if isinstance(face, design3d.faces.Triangle3D) else face.__class__
+                )
+                new_face = face_class.from_contours3d(face.surface3d, new_contours, face.name)
+                if new_face is not None:
+                    face = new_face
+            new_faces.append(face)
+        return new_faces
+
     def _is_strictly_inside(self, shell2):
         """
         Verifies if shell2 is inside self without touching its boundary, that is, if it would be a void in self.
@@ -1634,6 +1713,8 @@ class ClosedShell3D(Shell3D):
         intersecting_faces_2, non_intersecting_faces2 = self._separate_intersecting_and_non_intersecting_faces(
             dict_face_intersections2
         )
+        if self._is_contact_only(dict_face_intersections1, dict_face_intersections2, list_coincident_faces, tol):
+            return [self, shell2]
         non_intersecting_faces1 = self.validate_non_intersecting_faces(shell2, non_intersecting_faces1)
         non_intersecting_faces2 = shell2.validate_non_intersecting_faces(self, non_intersecting_faces2)
         faces = non_intersecting_faces1 + non_intersecting_faces2
@@ -1648,7 +1729,7 @@ class ClosedShell3D(Shell3D):
         if list_coincident_faces:
             new_valid_faces = self.validate_set_operations_faces(new_valid_faces)
         faces += new_valid_faces
-        new_shell = ClosedShell3D(faces)
+        new_shell = ClosedShell3D(self._imprint_vertices(faces, tol))
         return [new_shell]
 
     @staticmethod
@@ -1730,7 +1811,9 @@ class ClosedShell3D(Shell3D):
 
         list_coincident_faces = self.get_coincident_faces(shell2, tol)
 
-        dict_face_intersections1, _ = self.intersecting_faces_combinations(shell2, tol)
+        dict_face_intersections1, dict_face_intersections2 = self.intersecting_faces_combinations(shell2, tol)
+        if self._is_contact_only(dict_face_intersections1, dict_face_intersections2, list_coincident_faces, tol):
+            return [self]
         intersecting_faces_1, non_intersecting_faces1 = self._separate_intersecting_and_non_intersecting_faces(
             dict_face_intersections1
         )
@@ -1766,7 +1849,10 @@ class ClosedShell3D(Shell3D):
                 stacklevel=2,
             )
             return [self]
+        list_coincident_faces = self.get_coincident_faces(shell2, tol)
         dict_face_intersections1, dict_face_intersections2 = self.intersecting_faces_combinations(shell2, tol)
+        if self._is_contact_only(dict_face_intersections1, dict_face_intersections2, list_coincident_faces, tol):
+            return [self]
         intersecting_faces_1, non_intersecting_faces1 = self._separate_intersecting_and_non_intersecting_faces(
             dict_face_intersections1
         )
@@ -1782,7 +1868,7 @@ class ClosedShell3D(Shell3D):
         faces = self.validate_set_operations_faces(faces)
         if not faces:
             return []
-        return [ClosedShell3D(faces)]
+        return [ClosedShell3D(self._imprint_vertices(faces, tol))]
 
     def validate_intersection_operation(self, shell2):
         """
@@ -1808,7 +1894,10 @@ class ClosedShell3D(Shell3D):
         validate_set_operation = self.validate_intersection_operation(shell2)
         if validate_set_operation:
             return validate_set_operation
+        list_coincident_faces = self.get_coincident_faces(shell2, tol)
         dict_face_intersections1, dict_face_intersections2 = self.intersecting_faces_combinations(shell2, tol)
+        if self._is_contact_only(dict_face_intersections1, dict_face_intersections2, list_coincident_faces, tol):
+            return []
         intersecting_faces_1, non_intersecting_faces1 = self._separate_intersecting_and_non_intersecting_faces(
             dict_face_intersections1
         )
@@ -1825,7 +1914,7 @@ class ClosedShell3D(Shell3D):
         faces = self.validate_set_operations_faces(faces)
         if not faces:
             return []
-        return [ClosedShell3D(faces)]
+        return [ClosedShell3D(self._imprint_vertices(faces, tol))]
 
     def eliminate_not_valid_closedshell_faces(self):
         """
