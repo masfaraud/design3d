@@ -646,6 +646,8 @@ class Face3D(design3d.core.Primitive3D):
                 face2.bounding_box
             ):
                 return False
+            if not isinstance(self.surface3d, surfaces.Plane3D):
+                return self._coincident_face_inside(face2, abs_tol)
             self_contour2d = self.outer_contour3d.to_2d(
                 self.surface3d.frame.origin, self.surface3d.frame.u, self.surface3d.frame.v
             )
@@ -666,6 +668,31 @@ class Face3D(design3d.core.Primitive3D):
             if self_contour2d.is_superposing(face2_contour2d):
                 return True
         return False
+
+    def _coincident_face_inside(self, face2, abs_tol: float = 1e-6):
+        """
+        Verifies if a face on a coincident non-planar surface is inside this face, by sampling points in 3D.
+
+        The contours of the faces cannot be compared in a plane, as in face_inside: two coaxial cylindrical faces
+        would project on the same circle. The method is approximate: face2 is inside if an inner point and the
+        points of its outer contour belong to this face, and if no hole of this face is strictly inside face2.
+
+        :param face2: a face whose surface is coincident with the surface of this face.
+        :param abs_tol: tolerance.
+        :return: True if face2 is inside this face.
+        """
+        points = [face2.random_point_inside()]
+        for primitive in face2.outer_contour3d.primitives:
+            points.extend([primitive.start, primitive.middle_point()])
+        if not all(self.point_belongs(point, abs_tol) for point in points):
+            return False
+        for inner_contour in self.inner_contours3d:
+            point = inner_contour.primitives[0].middle_point()
+            if face2.point_belongs(point, abs_tol) and not any(
+                contour.point_belongs(point, abs_tol) for contour in [face2.outer_contour3d] + face2.inner_contours3d
+            ):
+                return False
+        return True
 
     def edge_intersections(self, edge):
         """Gets the intersections of an edge and a 3D face."""
@@ -1343,12 +1370,30 @@ class Face3D(design3d.core.Primitive3D):
         :return: a list of new faces with its inner contours.
         """
         new_list_faces = []
-        for new_face in list_faces:
+        for i_face, new_face in enumerate(list_faces):
             if new_face.surface2d.outer_contour.is_inside(new_contour):
                 inner_contours1 = []
                 inner_contours2 = []
-                if not new_face.surface2d.inner_contours:
-                    new_face.surface2d.inner_contours = [new_contour]
+                if not any(
+                    inner_contour.primitive_over_contour(prim)
+                    for inner_contour in new_face.surface2d.inner_contours
+                    for prim in new_contour.primitives
+                ):
+                    # The new contour is a hole in the face, and the outer contour of a new face holding the inner
+                    # contours it surrounds. The face is replaced rather than modified, as it caches its contours.
+                    holes_inside, holes_outside = [], []
+                    for inner_contour in new_face.surface2d.inner_contours:
+                        if new_contour.is_inside(inner_contour):
+                            holes_inside.append(inner_contour)
+                        else:
+                            holes_outside.append(inner_contour)
+                    list_faces[i_face] = new_face.__class__(
+                        new_face.surface3d,
+                        surfaces.Surface2D(new_face.surface2d.outer_contour, holes_outside + [new_contour]),
+                    )
+                    new_list_faces.append(
+                        new_face.__class__(new_face.surface3d, surfaces.Surface2D(new_contour, holes_inside))
+                    )
                     break
                 new_contour_not_sharing_primitives = True
                 for i, inner_contour in enumerate(new_face.surface2d.inner_contours):
@@ -1624,6 +1669,45 @@ class Face3D(design3d.core.Primitive3D):
             return minimum_distance, best_distance_point
         return minimum_distance
 
+    def boundary_edges_inside(self, face, abs_tol: float = 1e-6) -> list[design3d.wires.Wire3D]:
+        """
+        Gets the parts of the boundary of a coincident face lying strictly inside this face.
+
+        The seams of the other face, edges going twice through its outer contour, are not part of its geometric
+        boundary and are ignored. The edges are split where they cross the boundary of this face.
+
+        :param face: a face whose surface is coincident with the surface of this face.
+        :param abs_tol: tolerance.
+        :return: a list of wires with one edge each, cutting this face.
+        """
+        self_boundary = [
+            prim for contour in [self.outer_contour3d] + self.inner_contours3d for prim in contour.primitives
+        ]
+        wires = []
+        for contour in [face.outer_contour3d] + face.inner_contours3d:
+            for i, primitive in enumerate(contour.primitives):
+                if any(
+                    j != i and primitive.direction_independent_is_close(other, abs_tol)
+                    for j, other in enumerate(contour.primitives)
+                ):
+                    continue
+                split_points = []
+                for edge in self_boundary:
+                    for point in primitive.intersections(edge, abs_tol):
+                        if not point.in_list(split_points + [primitive.start, primitive.end], abs_tol):
+                            split_points.append(point)
+                pieces = [primitive]
+                for point in primitive.sort_points_along_curve(split_points):
+                    pieces = pieces[:-1] + [piece for piece in pieces[-1].split(point) if piece]
+                for piece in pieces:
+                    middle_point = piece.middle_point()
+                    if not self.edge3d_inside(piece, abs_tol) or any(
+                        edge.point_belongs(middle_point, abs_tol) for edge in self_boundary
+                    ):
+                        continue
+                    wires.append(design3d.wires.Wire3D([piece]))
+        return wires
+
     def get_coincident_face_intersections(self, face):
         """
         Gets intersections for two faces which have coincident faces.
@@ -1631,6 +1715,10 @@ class Face3D(design3d.core.Primitive3D):
         :param face: other face.
         :return: two lists of intersections. one list containing wires intersecting face1, the other those for face2.
         """
+        if self.surface3d.x_periodicity or self.surface3d.y_periodicity:
+            # On a periodic surface, the boundaries of two coincident faces may not cross: two coaxial cylindrical
+            # faces only meet at their seams, which are not part of their geometric boundaries.
+            return self.boundary_edges_inside(face), face.boundary_edges_inside(self)
         points_intersections = self.outer_contour3d.wire_intersections(face.outer_contour3d)
         if not points_intersections:
             return [], []

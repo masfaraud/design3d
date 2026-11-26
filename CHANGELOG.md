@@ -39,6 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   inside the subtracted one returns an empty list instead of the subtracted shell
 - ClosedShell3D.point_inside: a ray crossing the shell at an edge or a vertex no longer decides the result with a
   truncated count of crossings. Such rays are skipped in favor of an unambiguous one
+- Boolean operations: dividing a face by a closed cutting contour keeps the face inside the contour when the face is
+  also cut by open contours. The intersection of two crossing cylinders was missing a face
+- Boolean operations between coaxial cylinders of the same radius no longer fail, and coincident non-planar faces are
+  no longer compared through a planar projection, which removed valid faces
 - babylonjs: pages generated with `use_cdn=False` no longer fail on the `$` characters of the embedded javascript
   libraries
 - MovingVolumeModel: babylonjs pages are no longer blank with numpy 2, which wrote the scene size as `np.float64(...)`

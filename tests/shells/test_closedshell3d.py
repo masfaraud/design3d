@@ -268,6 +268,34 @@ class TestClosedShell3D(unittest.TestCase):
         # The faces of a shell containing the subtracted shell are all kept.
         self.assertEqual(box.subtract(small_box), [box])
 
+    def test_intersection_crossing_cylinders(self):
+        cylinder_z = primitives3d.Cylinder(design3d.OXYZ, 0.5, 4)
+        cylinder_x = primitives3d.Cylinder(
+            design3d.Frame3D(design3d.O3D, design3d.Y3D, design3d.Z3D, design3d.X3D), 0.3, 4
+        )
+        # The intersection curves cut, on the lateral face of cylinder_z, a patch crossing its seam (two faces) and a
+        # patch inside it (one face, closed cutting contour). The latter used to be lost when dividing the face.
+        intersection = cylinder_z.intersection(cylinder_x)[0]
+        self.assertEqual(len(intersection.faces), 4)
+        self.assertEqual(sum(isinstance(face, faces.CylindricalFace3D) for face in intersection.faces), 4)
+        for point, expected in [((0.45, 0, 0), True), ((-0.45, 0, 0), True), ((0, 0, 0.35), False), ((1, 0, 0), False)]:
+            self.assertEqual(intersection.point_inside(design3d.Point3D(*point)), expected)
+
+    def test_set_operations_coaxial_cylinders(self):
+        cylinder1 = primitives3d.Cylinder(design3d.OXYZ, 0.5, 4)  # z in [-2, 2]
+        cylinder2 = primitives3d.Cylinder(
+            design3d.Frame3D(design3d.Point3D(0, 0, 2.5), design3d.X3D, design3d.Y3D, design3d.Z3D), 0.5, 2
+        )  # z in [1.5, 3.5]
+        points = [design3d.Point3D(0.2, 0.1, z) for z in (-1, 1.75, 3)]
+        for result, expected_number_faces, expected_inside in [
+            (cylinder1.union(cylinder2), 5, [True, True, True]),
+            (cylinder1.subtract_to_closed_shell(cylinder2), 3, [True, False, False]),
+            (cylinder1.intersection(cylinder2), 3, [False, True, False]),
+        ]:
+            self.assertEqual(len(result), 1)
+            self.assertEqual(len(result[0].faces), expected_number_faces)
+            self.assertEqual([result[0].point_inside(point) for point in points], expected_inside)
+
     def test_point_inside_ray_through_edge(self):
         # L-shaped prism: the notch [1, 2] x [1, 2] is outside the shell but inside its bounding box.
         contour = design3d.wires.ClosedPolygon2D(
