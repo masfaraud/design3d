@@ -27,10 +27,13 @@ def union_list_of_shells(list_shells, abs_tol: float = 1e-6):
     """
     Perform union operations with all shells from a list, until all groups of adjacent shells are merged.
 
+    The list and the shells given are not modified.
+
     :param list_shells: A list of shells.
     :param abs_tol: tolerance.
     :return: A list of merged shells
     """
+    list_shells = list(list_shells)
     shells = []
     union_shells = [list_shells.pop(0)]
     len_previous_shells_list = len(list_shells)
@@ -45,7 +48,9 @@ def union_list_of_shells(list_shells, abs_tol: float = 1e-6):
                 union = union_shell.union(octant_box, abs_tol)
                 if len(union) != 2:
                     union_shells.pop(i)
-                    union[0].merge_faces()
+                    if union[0] is not union_shell and union[0] is not octant_box:
+                        # merge_faces works in place: only on a new shell, not on a given one.
+                        union[0].merge_faces()
                     union_shells.insert(0, union[0])
                     list_shells.pop(j)
                     break
@@ -1634,8 +1639,10 @@ class ClosedShell3D(Shell3D):
     def get_faces_to_be_merged(union_faces):
         """Gets faces that are adjacent, and sharing the same surface, so they can be merged."""
         coincident_planes_faces = []
-        for i, face1 in enumerate(union_faces):
-            for j, face2 in enumerate(union_faces):
+        # PlaneFace3D.merge_faces merges planar faces only.
+        planar_faces = [face for face in union_faces if isinstance(face, design3d.faces.PlaneFace3D)]
+        for i, face1 in enumerate(planar_faces):
+            for j, face2 in enumerate(planar_faces):
                 if j != i and face1.surface3d.is_coincident(face2.surface3d):
                     if face1 not in coincident_planes_faces:
                         coincident_planes_faces.append(face1)
@@ -1662,10 +1669,12 @@ class ClosedShell3D(Shell3D):
 
     def merge_faces(self):
         """
-        Merges all shells' adjacent faces into one.
+        Merges the adjacent planar faces of the shell lying on the same plane, in place.
 
+        The list of faces given to the shell is not modified.
         """
-        union_faces = self.faces
+        union_faces = self.faces[:]
+        number_faces = len(union_faces)
         finished = False
         list_new_faces = []
         count = 0
@@ -1677,12 +1686,17 @@ class ClosedShell3D(Shell3D):
             for face in list_valid_coincident_faces:
                 union_faces.remove(face)
             count += 1
-            if count >= len(self.faces) and not list_valid_coincident_faces:
+            if count >= number_faces and not list_valid_coincident_faces:
                 finished = True
 
         list_new_faces = self.clean_faces(union_faces, list_new_faces)
 
         self.faces = list_new_faces
+        self._bbox = None
+        self._faces_graph = None
+        self._vertices_graph = None
+        self._vertices_points = None
+        self._shell_octree_decomposition = None
 
     def subtract(self, shell2, tol=1e-8):
         """

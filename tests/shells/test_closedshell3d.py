@@ -11,6 +11,13 @@ from design3d.base import SerializableObject
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)))
 
 
+def box(x, y, z, size_x, size_y, size_z):
+    """Block centered on (x, y, z), with edges parallel to the axes."""
+    return primitives3d.Block(
+        design3d.Frame3D(design3d.Point3D(x, y, z), size_x * design3d.X3D, size_y * design3d.Y3D, size_z * design3d.Z3D)
+    )
+
+
 class TestClosedShell3D(unittest.TestCase):
     def test_union_adjacent_blocks(self):
         frame1 = design3d.Frame3D(design3d.Point3D(0, 0, 0), design3d.X3D, design3d.Y3D, design3d.Z3D)
@@ -295,6 +302,32 @@ class TestClosedShell3D(unittest.TestCase):
             self.assertEqual(len(result), 1)
             self.assertEqual(len(result[0].faces), expected_number_faces)
             self.assertEqual([result[0].point_inside(point) for point in points], expected_inside)
+
+    def test_union_list_of_shells_inputs_unchanged(self):
+        boxes = [box(0, 0, 0, 2, 2, 2), box(2, 0, 0, 2, 2, 2), box(0, 0, 0, 0.5, 0.5, 0.5)]
+        boxes_faces = [list(block.faces) for block in boxes]
+        union = shells.union_list_of_shells(boxes)
+        self.assertEqual(len(union), 1)
+        self.assertEqual(len(union[0].faces), 6)
+        self.assertEqual(len(boxes), 3)
+        self.assertEqual([block.faces for block in boxes], boxes_faces)
+
+    def test_merge_faces(self):
+        union_faces = box(0, 0, 0, 2, 2, 2).union(box(2, 0, 0, 2, 2, 2))[0].faces
+        shell = shells.ClosedShell3D(union_faces)
+        number_faces = len(union_faces)
+        shell.merge_faces()
+        self.assertEqual(len(shell.faces), 6)
+        # The list of faces given to the shell is not modified.
+        self.assertEqual(len(union_faces), number_faces)
+        # Only planar faces are merged.
+        cylinder1 = primitives3d.Cylinder(design3d.OXYZ, 0.5, 4)
+        cylinder2 = primitives3d.Cylinder(
+            design3d.Frame3D(design3d.Point3D(0, 0, 2.5), design3d.X3D, design3d.Y3D, design3d.Z3D), 0.5, 2
+        )
+        union = cylinder1.union(cylinder2)[0]
+        union.merge_faces()
+        self.assertEqual(len(union.faces), 5)
 
     def test_point_inside_ray_through_edge(self):
         # L-shaped prism: the notch [1, 2] x [1, 2] is outside the shell but inside its bounding box.
