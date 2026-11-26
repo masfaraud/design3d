@@ -253,6 +253,21 @@ class TestClosedShell3D(unittest.TestCase):
         )
         self.assertFalse(box1.intersection(box4))
 
+    def test_subtract_shortcuts(self):
+        box = primitives3d.Block(design3d.Frame3D(design3d.O3D, 2 * design3d.X3D, 2 * design3d.Y3D, 2 * design3d.Z3D))
+        small_box = primitives3d.Block(
+            design3d.Frame3D(design3d.O3D, 0.5 * design3d.X3D, 0.5 * design3d.Y3D, 0.5 * design3d.Z3D)
+        )
+        far_box = primitives3d.Block(
+            design3d.Frame3D(design3d.Point3D(5, 0, 0), design3d.X3D, design3d.Y3D, design3d.Z3D)
+        )
+        # Disjoint shells: the subtracted shell must not be part of the result.
+        self.assertEqual(box.subtract(far_box), [box])
+        # A shell inside the subtracted shell vanishes.
+        self.assertEqual(small_box.subtract(box), [])
+        # The faces of a shell containing the subtracted shell are all kept.
+        self.assertEqual(box.subtract(small_box), [box])
+
     def test_point_belongs(self):
         closed_shell = SerializableObject.from_json(
             os.path.join(folder, "test_closed_shell_point_belongs2.json")

@@ -35,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- ClosedShell3D.subtract: subtracting a disjoint shell returns the shell alone instead of both shells, and a shell
+  inside the subtracted one returns an empty list instead of the subtracted shell
 - babylonjs: pages generated with `use_cdn=False` no longer fail on the `$` characters of the embedded javascript
   libraries
 - MovingVolumeModel: babylonjs pages are no longer blank with numpy 2, which wrote the scene size as `np.float64(...)`

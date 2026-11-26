@@ -1689,14 +1689,19 @@ class ClosedShell3D(Shell3D):
 
     def subtract(self, shell2, tol=1e-8):
         """
-        Given Two closed shells, it returns a new subtracted OpenShell3D.
+        Given Two closed shells, it returns the faces of self outside shell2, as OpenShell3D.
 
+        If self is entirely outside shell2 or contains it, self is returned unchanged. If self is inside shell2, an
+        empty list is returned.
         """
-        validate_set_operation = self.validate_set_operation(shell2, tol)
-        if validate_set_operation:
-            return validate_set_operation
+        if self.is_disjoint_from(shell2, tol):
+            return [self]
+        if self.is_inside_shell(shell2):
+            return []
+        if shell2.is_inside_shell(self):
+            return [self]
 
-        list_coincident_faces = self.get_coincident_faces(shell2)
+        list_coincident_faces = self.get_coincident_faces(shell2, tol)
 
         dict_face_intersections1, _ = self.intersecting_faces_combinations(shell2, tol)
         intersecting_faces_1, non_intersecting_faces1 = self._separate_intersecting_and_non_intersecting_faces(
@@ -1705,7 +1710,7 @@ class ClosedShell3D(Shell3D):
         non_intersecting_faces1 = self.validate_non_intersecting_faces(shell2, non_intersecting_faces1)
         faces = non_intersecting_faces1
         if len(intersecting_faces_1) == 0:
-            return [self, shell2]
+            return [self]
         new_valid_faces = self.union_faces(
             shell2, intersecting_faces_1, dict_face_intersections1, list_coincident_faces
         )
