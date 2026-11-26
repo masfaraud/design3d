@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """
-Test case representing a casing. Use extrusion features.
+Test case representing a stamped casing. Use extrusion features.
+
+The walls flare with a draft angle, as a stamped sheet: the outer contour and the hole flare together, so that the
+walls keep their thickness. The belt lies on the flared walls.
 """
+
+import math
 
 import design3d as d3d
 import design3d.wires
@@ -9,6 +14,7 @@ from design3d import curves, edges, primitives2d, primitives3d
 
 THICKNESS = 0.005
 HEIGHT = 0.080
+DRAFT_ANGLE = math.radians(5)
 SCREW_HOLES_DIAMETER = 0.006
 SCREW_HOLES_CLEARANCE = 0.003
 N_SCREWS = 25
@@ -26,12 +32,23 @@ inner_contour = primitives2d.ClosedRoundedLineSegments2D(
 
 outer_contour = inner_contour.offset(THICKNESS)
 
-
-sides = primitives3d.ExtrudedProfile(d3d.OXYZ, outer_contour, [inner_contour], HEIGHT - 2 * THICKNESS, name="sides")
+# The outer contour flares (negative draft) and the hole widens (positive draft) by the same amount.
+sides = primitives3d.ExtrudedProfile(
+    d3d.OXYZ,
+    outer_contour,
+    [inner_contour],
+    HEIGHT - 2 * THICKNESS,
+    draft_angle=-DRAFT_ANGLE,
+    inner_draft_angles=[DRAFT_ANGLE],
+    name="sides",
+)
 
 bottom = primitives3d.ExtrudedProfile(d3d.OXYZ, outer_contour, [], -THICKNESS, name="bottom")
 
-screw_holes_rl = inner_contour.offset(THICKNESS + SCREW_HOLES_CLEARANCE + 0.5 * SCREW_HOLES_DIAMETER)
+# The inner contour at the top of the flared walls, on which the belt lies.
+top_inner_contour = inner_contour.offset((HEIGHT - 2 * THICKNESS) * math.tan(DRAFT_ANGLE))
+
+screw_holes_rl = top_inner_contour.offset(THICKNESS + SCREW_HOLES_CLEARANCE + 0.5 * SCREW_HOLES_DIAMETER)
 screw_holes = []
 length = screw_holes_rl.length()
 for i in range(N_SCREWS):
@@ -40,11 +57,11 @@ for i in range(N_SCREWS):
     circle = curves.Circle2D(design3d.Frame2D(p, design3d.X2D, design3d.Y2D), SCREW_HOLES_DIAMETER * 0.5)
     screw_holes.append(design3d.wires.Contour2D([edges.FullArc2D.from_curve(circle)]))
 
-belt_outer_contour = inner_contour.offset(2 * SCREW_HOLES_CLEARANCE + SCREW_HOLES_DIAMETER + THICKNESS)
+belt_outer_contour = top_inner_contour.offset(2 * SCREW_HOLES_CLEARANCE + SCREW_HOLES_DIAMETER + THICKNESS)
 belt = primitives3d.ExtrudedProfile(
     design3d.Frame3D(d3d.Point3D(0, 0, 1) * (HEIGHT - 2 * THICKNESS), d3d.X3D, d3d.Y3D, d3d.Z3D),
     belt_outer_contour,
-    [inner_contour] + screw_holes,
+    [top_inner_contour] + screw_holes,
     THICKNESS,
     name="belt",
 )

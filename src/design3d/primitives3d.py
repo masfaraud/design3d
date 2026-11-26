@@ -470,7 +470,23 @@ class ExtrudedProfile(shells.ClosedShell3D):
     """
     Extrude a profile given by outer and inner contours.
 
+    The profile is drawn in the plane (origin, u, v) of the frame, called the sketch plane, and extruded along w.
+
     TODO: In the future change to a frame and a surface2D and an extrusion vector.
+
+    :param frame: the frame of the sketch plane.
+    :param outer_contour2d: the outer contour of the profile.
+    :param inner_contours2d: the contours of the holes of the profile.
+    :param extrusion_length: the length of the extrusion, along the frame w vector.
+    :param draft_angle: (optional) the draft angle, in radians. A positive angle shrinks the section away from the
+        sketch plane, as for a molded part: the outer contour moves inwards and the holes widen. A negative angle
+        flares it. Line segments give planar faces and arcs give conical faces.
+    :param inner_draft_angles: (optional) the draft angles of the holes, one per inner contour, in radians. A positive
+        angle widens the hole away from the sketch plane. By default, the holes take the draft angle, which gives the
+        draft of a molded part. Giving the holes the opposite of the draft angle gives walls of constant thickness,
+        as for a stamped part.
+    :param symmetric: (optional) if True, the extrusion spans half its length on each side of the sketch plane.
+        With a draft angle, the sketch plane is the neutral plane, and each half shrinks away from it.
     """
 
     _non_serializable_attributes = ["faces", "inner_contours3d", "outer_contour3d"]
@@ -485,6 +501,10 @@ class ExtrudedProfile(shells.ClosedShell3D):
         alpha: float = 1.0,
         reference_path: str = design3d.PATH_ROOT,
         name: str = "",
+        *,
+        draft_angle: float = 0.0,
+        inner_draft_angles: list[float] = None,
+        symmetric: bool = False,
     ):
         self.frame = frame
 
@@ -493,6 +513,13 @@ class ExtrudedProfile(shells.ClosedShell3D):
         self.extrusion_length = extrusion_length
         self.inner_contours2d = inner_contours2d
         self.extrusion_vector = self.frame.w * extrusion_length
+        self.draft_angle = draft_angle
+        if inner_draft_angles is not None and len(inner_draft_angles) != len(inner_contours2d):
+            raise ValueError(
+                f"{len(inner_draft_angles)} inner draft angles are given for {len(inner_contours2d)} inner contours."
+            )
+        self.inner_draft_angles = inner_draft_angles
+        self.symmetric = symmetric
         self.inner_contours3d = []
         self.color = color
 
@@ -524,11 +551,32 @@ class ExtrudedProfile(shells.ClosedShell3D):
                 "outer_contour2d": self.outer_contour2d.to_dict(),
                 "inner_contours2d": [c.to_dict() for c in self.inner_contours2d],
                 "extrusion_length": self.extrusion_length,
+                "draft_angle": self.draft_angle,
+                "inner_draft_angles": self.inner_draft_angles,
+                "symmetric": self.symmetric,
                 "reference_path": self.reference_path,
             }
         )
 
         return dict_
+
+    def _init_kwargs(self, **changes):
+        """Returns the arguments to rebuild the extruded profile, with some of them changed."""
+        kwargs = {
+            "frame": self.frame,
+            "outer_contour2d": self.outer_contour2d,
+            "inner_contours2d": self.inner_contours2d,
+            "extrusion_length": self.extrusion_length,
+            "color": self.color,
+            "alpha": self.alpha,
+            "reference_path": self.reference_path,
+            "name": self.name,
+            "draft_angle": self.draft_angle,
+            "inner_draft_angles": self.inner_draft_angles,
+            "symmetric": self.symmetric,
+        }
+        kwargs.update(changes)
+        return kwargs
 
     def copy(self, deep=True, memo=None):
         """
@@ -536,14 +584,118 @@ class ExtrudedProfile(shells.ClosedShell3D):
 
         """
         return self.__class__(
-            frame=self.frame.copy(),
-            outer_contour2d=self.outer_contour2d.copy(),
-            inner_contours2d=[c.copy() for c in self.inner_contours2d],
-            extrusion_length=self.extrusion_length,
-            color=self.color,
-            alpha=self.alpha,
-            reference_path=self.reference_path,
-            name=self.name,
+            **self._init_kwargs(
+                frame=self.frame.copy(),
+                outer_contour2d=self.outer_contour2d.copy(),
+                inner_contours2d=[c.copy() for c in self.inner_contours2d],
+            )
+        )
+
+    def _parts(self):
+        """
+        Returns the parts of the extrusion, as (start height, end height) along w from the sketch plane.
+
+        A symmetric extrusion has two parts starting from the sketch plane, so that a draft shrinks both of them away
+        from it.
+        """
+        if self.symmetric:
+            half_length = 0.5 * self.extrusion_length
+            return [(0.0, -half_length), (0.0, half_length)]
+        return [(0.0, self.extrusion_length)]
+
+    @staticmethod
+    def _is_trigo(contour: design3d.wires.Contour2D) -> bool:
+        """Returns True if the contour is counterclockwise."""
+        points = []
+        for primitive in contour.primitives:
+            length = primitive.length()
+            points.extend(primitive.point_at_abscissa(i * length / 3) for i in range(3))
+        return design3d.wires.ClosedPolygon2D(points).is_trigo
+
+    def _offset_primitives(self, contour: design3d.wires.Contour2D, distance: float, is_outer: bool):
+        """
+        Returns the primitives of a profile contour offset for the draft, in the order of the contour primitives.
+
+        :param contour: a contour of the profile.
+        :param distance: the offset distance. A positive distance shrinks the outer contour and widens the holes.
+        :param is_outer: True for the outer contour, False for a hole.
+        :return: the offset primitives, the i-th one being the offset of the i-th primitive of the contour.
+        """
+        if distance == 0.0:
+            return contour.primitives
+        # A positive Contour2D offset enlarges a counterclockwise contour.
+        offset = distance if self._is_trigo(contour) else -distance
+        if is_outer:
+            offset = -offset
+        for primitive in contour.primitives:
+            # Radius of the offset arc, as in Arc2D.infinite_primitive.
+            if isinstance(primitive, design3d.edges.Arc2D) and (
+                primitive.circle.radius + (offset if primitive.is_trigo else -offset) <= 0.0
+            ):
+                raise ValueError(
+                    f"The draft is too large: an arc of the profile vanishes in the section offset by {distance}."
+                )
+        primitives = design3d.wires.Contour2D(contour.primitives).offset(offset).primitives
+        if len(primitives) != len(contour.primitives):
+            raise ValueError(
+                f"The draft is too large: some edges of the profile vanish in the section offset by {distance}."
+            )
+        # Wire2D.offset starts with the offset of the second primitive.
+        return primitives[-1:] + primitives[:-1]
+
+    def _inner_draft_angles(self) -> list[float]:
+        """Returns the draft angle of each hole."""
+        if self.inner_draft_angles is None:
+            return [self.draft_angle] * len(self.inner_contours2d)
+        return self.inner_draft_angles
+
+    def _has_draft(self) -> bool:
+        """Returns True if the outer contour or a hole has a draft."""
+        return self.draft_angle != 0.0 or any(angle != 0.0 for angle in self._inner_draft_angles())
+
+    def _section_contours(self, height: float):
+        """Returns the outer and inner contours of the section at a height from the sketch plane, for the draft."""
+        outer_contour = design3d.wires.Contour2D(
+            self._offset_primitives(self.outer_contour2d, height * math.tan(self.draft_angle), True)
+        )
+        inner_contours = [
+            design3d.wires.Contour2D(self._offset_primitives(contour, height * math.tan(angle), False))
+            for contour, angle in zip(self.inner_contours2d, self._inner_draft_angles())
+        ]
+        return outer_contour, inner_contours
+
+    def _draft_lateral_face(self, primitive_1, height_1: float, primitive_2, height_2: float):
+        """
+        Returns the lateral face between a profile primitive and its offset, placed at two heights.
+
+        :param primitive_1: a 2D primitive.
+        :param height_1: the height of primitive_1 along w.
+        :param primitive_2: the offset of primitive_1.
+        :param height_2: the height of primitive_2 along w.
+        :return: the lateral faces: a planar face for a line segment, conical faces for an arc.
+        """
+        edge_1 = primitive_1.to_3d(self.frame.origin + height_1 * self.frame.w, self.frame.u, self.frame.v)
+        edge_2 = primitive_2.to_3d(self.frame.origin + height_2 * self.frame.w, self.frame.u, self.frame.v)
+        if isinstance(primitive_1, design3d.edges.LineSegment2D):
+            contour = design3d.wires.Contour3D(
+                [
+                    edge_1,
+                    design3d.edges.LineSegment3D(edge_1.end, edge_2.end),
+                    edge_2.reverse(),
+                    design3d.edges.LineSegment3D(edge_2.start, edge_1.start),
+                ]
+            )
+            plane = surfaces.Plane3D.from_3_points(edge_1.start, edge_1.end, edge_2.end)
+            return [design3d.faces.PlaneFace3D.from_contours3d(plane, [contour])]
+        if isinstance(primitive_1, design3d.edges.Arc2D):
+            # The conical face is swept by the line joining the arc starts, around the axis of the arc.
+            axis = edge_1.circle.normal
+            if not edge_1.start.rotation(edge_1.circle.center, axis, edge_1.angle).is_close(edge_1.end):
+                axis = -axis
+            generatrix = design3d.edges.LineSegment3D(edge_1.start, edge_2.start)
+            return generatrix.revolution(edge_1.circle.center, axis, edge_1.angle)
+        raise NotImplementedError(
+            f"Draft extrusion of a {primitive_1.__class__.__name__}: only line segments and arcs are handled."
         )
 
     def shell_faces(self):
@@ -551,36 +703,72 @@ class ExtrudedProfile(shells.ClosedShell3D):
         Computes the shell faces from init data.
 
         """
-        lower_plane = surfaces.Plane3D.from_plane_vectors(self.frame.origin, self.frame.u, self.frame.v)
-        lower_face = design3d.faces.PlaneFace3D(
-            lower_plane, surfaces.Surface2D(self.outer_contour2d, self.inner_contours2d)
-        )
+        parts = self._parts()
+        if not self._has_draft():
+            start_height = -0.5 * self.extrusion_length if self.symmetric else 0.0
+            lower_origin = self.frame.origin + start_height * self.frame.w
+            lower_plane = surfaces.Plane3D.from_plane_vectors(lower_origin, self.frame.u, self.frame.v)
+            lower_face = design3d.faces.PlaneFace3D(
+                lower_plane, surfaces.Surface2D(self.outer_contour2d, self.inner_contours2d)
+            )
 
-        upper_face = lower_face.translation(self.extrusion_vector)
+            upper_face = lower_face.translation(self.extrusion_vector)
+            lateral_faces = []
+            for contour in [self.outer_contour2d] + self.inner_contours2d:
+                for primitive in contour.to_3d(lower_origin, self.frame.u, self.frame.v).primitives:
+                    lateral_faces.extend(primitive.extrusion(self.extrusion_vector))
+
+            return [lower_face, upper_face] + lateral_faces
+
+        end_faces = []
+        if not self.symmetric:
+            lower_plane = surfaces.Plane3D.from_plane_vectors(self.frame.origin, self.frame.u, self.frame.v)
+            end_faces.append(
+                design3d.faces.PlaneFace3D(lower_plane, surfaces.Surface2D(self.outer_contour2d, self.inner_contours2d))
+            )
         lateral_faces = []
-        for primitive in self.outer_contour3d.primitives:
-            lateral_faces.extend(primitive.extrusion(self.extrusion_vector))
-
-        for inner_contour in self.inner_contours3d:
-            for primitive in inner_contour.primitives:
-                lateral_faces.extend(primitive.extrusion(self.extrusion_vector))
-
-        return [lower_face, upper_face] + lateral_faces
+        profile_contours = [self.outer_contour2d] + self.inner_contours2d
+        for start_height, end_height in parts:
+            outer_contour, inner_contours = self._section_contours(abs(end_height - start_height))
+            end_plane = surfaces.Plane3D.from_plane_vectors(
+                self.frame.origin + end_height * self.frame.w, self.frame.u, self.frame.v
+            )
+            end_faces.append(design3d.faces.PlaneFace3D(end_plane, surfaces.Surface2D(outer_contour, inner_contours)))
+            for profile_contour, section_contour in zip(profile_contours, [outer_contour] + inner_contours):
+                for primitive, offset_primitive in zip(profile_contour.primitives, section_contour.primitives):
+                    lateral_faces.extend(
+                        self._draft_lateral_face(primitive, start_height, offset_primitive, end_height)
+                    )
+        return end_faces + lateral_faces
 
     def area(self):
-        """Returns the area of the extruded 2D surface."""
+        """Returns the area of the extruded 2D surface, in the sketch plane."""
         areas = self.outer_contour2d.area()
         areas -= sum(contour.area() for contour in self.inner_contours2d)
         return areas
+
+    def _section_area(self, height: float) -> float:
+        """Returns the area of the section at a height from the sketch plane, for the draft."""
+        outer_contour, inner_contours = self._section_contours(height)
+        return outer_contour.area() - sum(contour.area() for contour in inner_contours)
 
     def volume(self):
         """
         Gets the Volume of an extruded profile volume.
 
-        :return:
+        With a draft, each contour of a section is offset by a distance proportional to the height, so the area of
+        the section is a quadratic function of the height and Simpson's rule gives the exact volume of each part.
+
+        :return: the volume.
         """
-        z = self.frame.w
-        return self.area() * self.extrusion_vector.dot(z)
+        if not self._has_draft():
+            return self.area() * self.extrusion_length
+        volume = 0.0
+        for start_height, end_height in self._parts():
+            length = abs(end_height - start_height)
+            volume += length / 6 * (self.area() + 4 * self._section_area(0.5 * length) + self._section_area(length))
+        # As for a straight extrusion, the volume has the sign of the extrusion length.
+        return math.copysign(volume, self.extrusion_length)
 
     def frame_mapping(self, frame: design3d.Frame3D, side: str):
         """
@@ -588,16 +776,7 @@ class ExtrudedProfile(shells.ClosedShell3D):
 
         :param side: = 'old' or 'new'.
         """
-        return ExtrudedProfile(
-            frame=self.frame.frame_mapping(frame, side),
-            outer_contour2d=self.outer_contour2d,
-            inner_contours2d=self.inner_contours2d,
-            extrusion_length=self.extrusion_length,
-            reference_path=self.reference_path,
-            color=self.color,
-            alpha=self.alpha,
-            name=self.name,
-        )
+        return self.__class__(**self._init_kwargs(frame=self.frame.frame_mapping(frame, side)))
 
     def rotation(self, center: design3d.Point3D, axis: design3d.Vector3D, angle: float):
         """
@@ -608,16 +787,7 @@ class ExtrudedProfile(shells.ClosedShell3D):
         :param angle: angle rotation.
         :return: a new rotated ExtrudedProfile.
         """
-        return self.__class__(
-            frame=self.frame.rotation(center, axis, angle),
-            outer_contour2d=self.outer_contour2d,
-            inner_contours2d=self.inner_contours2d,
-            extrusion_length=self.extrusion_length,
-            color=self.color,
-            alpha=self.alpha,
-            reference_path=self.reference_path,
-            name=self.name,
-        )
+        return self.__class__(**self._init_kwargs(frame=self.frame.rotation(center, axis, angle)))
 
     def translation(self, offset: design3d.Vector3D):
         """
@@ -626,16 +796,7 @@ class ExtrudedProfile(shells.ClosedShell3D):
         :param offset: translation vector
         :return: A new translated ExtrudedProfile
         """
-        return self.__class__(
-            frame=self.frame.translation(offset),
-            outer_contour2d=self.outer_contour2d,
-            inner_contours2d=self.inner_contours2d,
-            extrusion_length=self.extrusion_length,
-            color=self.color,
-            alpha=self.alpha,
-            reference_path=self.reference_path,
-            name=self.name,
-        )
+        return self.__class__(**self._init_kwargs(frame=self.frame.translation(offset)))
 
 
 class RevolvedProfile(shells.ClosedShell3D):
