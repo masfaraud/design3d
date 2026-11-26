@@ -2605,6 +2605,14 @@ class CylindricalFace3D(PeriodicalFaceMixin, Face3D):
         """Returns a copy of the CylindricalFace3D."""
         return CylindricalFace3D(self.surface3d.copy(deep, memo), self.surface2d.copy(), self.name)
 
+    def area(self):
+        """
+        Computes the area of the face.
+
+        The surface element is radius * du * dv, u being the angle around the axis and v the height.
+        """
+        return self.surface3d.radius * self.surface2d.area()
+
     def triangulation_lines(self, angle_resolution=5):
         """
         Specifies the number of subdivision when using triangulation by lines. (Old triangulation).
@@ -2938,6 +2946,21 @@ class ConicalFace3D(PeriodicalFaceMixin, Face3D):
     def __init__(self, surface3d: surfaces.ConicalSurface3D, surface2d: surfaces.Surface2D, name: str = ""):
         Face3D.__init__(self, surface3d=surface3d, surface2d=surface2d, name=name)
         self._bbox = None
+
+    def area(self):
+        """
+        Computes the area of the face.
+
+        The surface element is abs(ref_radius + v * tan(semi_angle)) / cos(semi_angle) * du * dv, u being the angle
+        around the axis and v the height. It is linear in v on the face, which lies on a single nappe of the cone,
+        so its integral is its value at the center of mass of the 2D surface times the area of the 2D surface.
+        """
+        surface = self.surface3d
+        area2d = self.surface2d.area()
+        if area2d == 0.0:
+            return 0.0
+        v_center = self.surface2d.center_of_mass().y
+        return area2d * abs(surface.ref_radius + v_center * math.tan(surface.semi_angle)) / math.cos(surface.semi_angle)
 
     def triangulation_lines(self, angle_resolution=5):
         """

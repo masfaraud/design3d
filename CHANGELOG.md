@@ -81,6 +81,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - RoundedLineSegments2D.offset_lines: a single line is offset, instead of being left in place, adjacent sides
   parallel to each other and the closing line of a closed contour no longer make it fail, and a free end of an
   opened wire moves along the normal of the lines
+- ConicalFace3D.area and CylindricalFace3D.area: the area of the face, instead of the area of its 2D parametric
+  surface, which was in radians times meters
 
 ### Changed
 

@@ -239,6 +239,11 @@ class TestCylindricalFace3D(unittest.TestCase):
         ).primitives
         self.assertTrue(face1.face_inside(face2))
 
+    def test_area(self):
+        surface = surfaces.CylindricalSurface3D(design3d.OXYZ, 0.2)
+        face = faces.CylindricalFace3D.from_surface_rectangular_cut(surface, 0.0, math.pi, 0.0, 0.5)
+        self.assertAlmostEqual(face.area(), 0.2 * math.pi * 0.5)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -2,6 +2,8 @@ import math
 import os
 import unittest
 
+import numpy
+
 import design3d
 from design3d import curves, edges, faces, surfaces, wires
 from design3d.base import SerializableObject
@@ -16,6 +18,13 @@ conical_surface3 = surfaces.ConicalSurface3D(frame, 1.0471975511966)
 
 
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "objects_conical_tests")
+
+
+def mesh_area(face):
+    mesh = face.triangulation()
+    triangles = numpy.asarray(mesh.vertices)[numpy.asarray(mesh.triangles)]
+    normals = numpy.cross(triangles[:, 1] - triangles[:, 0], triangles[:, 2] - triangles[:, 0])
+    return 0.5 * numpy.linalg.norm(normals, axis=1).sum()
 
 
 class TestConicalFace3D(unittest.TestCase):
@@ -73,7 +82,7 @@ class TestConicalFace3D(unittest.TestCase):
             buggy_conical_surface, [buggy_contours3d1, buggy_contours3d2]
         )
         self.assertFalse(len(conical_face.surface2d.inner_contours))
-        self.assertAlmostEqual(conical_face.area(), 0.003769911184307754, 4)
+        self.assertAlmostEqual(conical_face.area(), 1.226235690931708e-05, 12)
 
         buggy_conical_surface = SerializableObject.from_json(os.path.join(folder, "conical_surface3d_1.json"))
         buggy_contours3d1 = SerializableObject.from_json(os.path.join(folder, "face_contour1.json"))
@@ -83,7 +92,7 @@ class TestConicalFace3D(unittest.TestCase):
             buggy_conical_surface, [buggy_contours3d1, buggy_contours3d2]
         )
         self.assertFalse(len(conical_face.surface2d.inner_contours))
-        self.assertAlmostEqual(conical_face.area(), 0.0016000193084354127, 4)
+        self.assertAlmostEqual(conical_face.area(), 1.3104079899928459e-05, 12)
 
         buggy_conical_surface = SerializableObject.from_json(os.path.join(folder, "conical_surface3d_2.json"))
         buggy_contours3d1 = SerializableObject.from_json(os.path.join(folder, "face_contour3_.json"))
@@ -93,7 +102,7 @@ class TestConicalFace3D(unittest.TestCase):
             buggy_conical_surface, [buggy_contours3d1, buggy_contours3d2]
         )
         self.assertFalse(len(conical_face.surface2d.inner_contours))
-        self.assertAlmostEqual(conical_face.area(), 0.055154411016251716, 4)
+        self.assertAlmostEqual(conical_face.area(), 0.00042014858223656345, 10)
 
         buggy_conical_surface = surfaces.ConicalSurface3D.from_json(
             os.path.join(folder, "conical_surface_with_singularity.json")
@@ -101,7 +110,7 @@ class TestConicalFace3D(unittest.TestCase):
         buggy_contours3d = wires.Contour3D.from_json(os.path.join(folder, "conical_contour_with_singularity.json"))
         conical_face = faces.ConicalFace3D.from_contours3d(buggy_conical_surface, [buggy_contours3d])
         self.assertEqual(len(conical_face.surface2d.outer_contour.primitives), 5)
-        self.assertAlmostEqual(conical_face.area(), 0.0009613769926732048 * design3d.TWO_PI, 4)
+        self.assertAlmostEqual(conical_face.area(), 9.38262249004779e-06, 12)
 
         buggy_conical_surface = SerializableObject.from_json(
             os.path.join(folder, "conicalsurface_openned_contours.json")
@@ -117,7 +126,7 @@ class TestConicalFace3D(unittest.TestCase):
             buggy_conical_surface, [buggy_contours3d1, buggy_contours3d2]
         )
         self.assertFalse(conical_face.surface2d.inner_contours)
-        self.assertAlmostEqual(conical_face.area(), 0.021682359796019755, 3)
+        self.assertAlmostEqual(conical_face.area(), 6.0852156386453815e-05, 11)
 
     def test_from_base_and_vertex(self):
         circle = curves.Circle3D(
@@ -174,6 +183,38 @@ class TestConicalFace3D(unittest.TestCase):
     #     face, point = SerializableObject.from_json(os.path.join(folder,'test_conicalface_normal_at_point.json')).primitives
     #     normal = face.normal_at_point(point)
     #     self.assertTrue(normal.is_close(design3d.Vector3D(0.4736709994871299, 0.7250074373721028, -0.4999999999999999)))
+
+    def test_area(self):
+        # Quarter of a cone frustum, as a rounded corner of a drafted extrusion: the radius goes from 0.03 to
+        # 0.03 + 0.1 * tan(semi_angle) along the height 0.1, the slant height being 0.1 / cos(semi_angle)
+        for semi_angle in [math.radians(8), -math.radians(8)]:
+            surface = surfaces.ConicalSurface3D(design3d.OXYZ, semi_angle, 0.03)
+            face = faces.ConicalFace3D.from_surface_rectangular_cut(surface, 0.0, 0.5 * math.pi, 0.0, 0.1)
+            mean_radius = 0.03 + 0.05 * math.tan(semi_angle)
+            self.assertAlmostEqual(face.area(), 0.5 * math.pi * mean_radius * 0.1 / math.cos(semi_angle))
+
+        # Face with a hole: compared with its triangulation
+        surface = surfaces.ConicalSurface3D(design3d.OXYZ, math.radians(30), 0.2)
+        hole = wires.Contour2D.from_points(
+            [
+                design3d.Point2D(0.5, 0.1),
+                design3d.Point2D(0.5, 0.2),
+                design3d.Point2D(1.0, 0.4),
+                design3d.Point2D(1.0, 0.1),
+            ]
+        )
+        face = faces.ConicalFace3D(
+            surface,
+            surfaces.Surface2D(
+                faces.ConicalFace3D.from_surface_rectangular_cut(surface, 0.0, 2.0, 0.0, 0.5).surface2d.outer_contour,
+                [hole.invert()],
+            ),
+        )
+        self.assertAlmostEqual(face.area(), mesh_area(face), delta=0.01 * face.area())
+
+        # Degenerated face, with a flat 2D surface
+        face = faces.ConicalFace3D.from_surface_rectangular_cut(surface, 0.0, 1.0, 0.2, 0.2)
+        self.assertEqual(face.area(), 0.0)
 
 
 if __name__ == "__main__":
