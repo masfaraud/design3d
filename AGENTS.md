@@ -32,6 +32,13 @@ expected value was produced by a buggy behavior, explain it in the commented dif
   changes to the unreleased section, under the matching heading (`Added`, `Changed`, `Deprecated`, `Removed`,
   `Fixed`, `Security`).
 
+## Pull requests
+
+- Open pull requests against `master` (`gh pr create --base master`), from a branch created from an up-to-date
+  `origin/master`, even when the work was started from another branch or worktree.
+- Do not target another feature branch, and do not stack a pull request on an unmerged one: a follow-up found
+  while working on a pull request goes in its own pull request against `master`.
+
 ## Coverage
 
 - Never lower the coverage thresholds (`MIN_PROJECT_COVERAGE` and `MIN_FILE_COVERAGE` in `check_coverage.py`).
