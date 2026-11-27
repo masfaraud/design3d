@@ -11,6 +11,29 @@ from design3d.base import SerializableObject
 folder = os.path.join(os.path.dirname(os.path.realpath(__file__)))
 
 
+def box(x, y, z, size_x, size_y, size_z):
+    """Block centered on (x, y, z), with edges parallel to the axes."""
+    return primitives3d.Block(
+        design3d.Frame3D(design3d.Point3D(x, y, z), size_x * design3d.X3D, size_y * design3d.Y3D, size_z * design3d.Z3D)
+    )
+
+
+def unmatched_edges(shell):
+    """Edges of the faces of a shell not shared with exactly one other face: empty for a conforming closed shell."""
+    face_edges = [
+        (i, primitive)
+        for i, face in enumerate(shell.faces)
+        for contour in [face.outer_contour3d] + face.inner_contours3d
+        for primitive in contour.primitives
+    ]
+    unmatched = []
+    for i, primitive in face_edges:
+        matches = [j for j, other in face_edges if j != i and primitive.direction_independent_is_close(other)]
+        if len(matches) != 1:
+            unmatched.append(primitive)
+    return unmatched
+
+
 class TestClosedShell3D(unittest.TestCase):
     def test_union_adjacent_blocks(self):
         frame1 = design3d.Frame3D(design3d.Point3D(0, 0, 0), design3d.X3D, design3d.Y3D, design3d.Z3D)
@@ -252,6 +275,157 @@ class TestClosedShell3D(unittest.TestCase):
             alpha=0.6,
         )
         self.assertFalse(box1.intersection(box4))
+
+    def test_subtract_shortcuts(self):
+        box = primitives3d.Block(design3d.Frame3D(design3d.O3D, 2 * design3d.X3D, 2 * design3d.Y3D, 2 * design3d.Z3D))
+        small_box = primitives3d.Block(
+            design3d.Frame3D(design3d.O3D, 0.5 * design3d.X3D, 0.5 * design3d.Y3D, 0.5 * design3d.Z3D)
+        )
+        far_box = primitives3d.Block(
+            design3d.Frame3D(design3d.Point3D(5, 0, 0), design3d.X3D, design3d.Y3D, design3d.Z3D)
+        )
+        # Disjoint shells: the subtracted shell must not be part of the result.
+        self.assertEqual(box.subtract(far_box), [box])
+        # A shell inside the subtracted shell vanishes.
+        self.assertEqual(small_box.subtract(box), [])
+        # The faces of a shell containing the subtracted shell are all kept.
+        self.assertEqual(box.subtract(small_box), [box])
+
+    def test_intersection_crossing_cylinders(self):
+        cylinder_z = primitives3d.Cylinder(design3d.OXYZ, 0.5, 4)
+        cylinder_x = primitives3d.Cylinder(
+            design3d.Frame3D(design3d.O3D, design3d.Y3D, design3d.Z3D, design3d.X3D), 0.3, 4
+        )
+        # The intersection curves cut, on the lateral face of cylinder_z, a patch crossing its seam (two faces) and a
+        # patch inside it (one face, closed cutting contour). The latter used to be lost when dividing the face.
+        intersection = cylinder_z.intersection(cylinder_x)[0]
+        self.assertEqual(len(intersection.faces), 4)
+        self.assertEqual(sum(isinstance(face, faces.CylindricalFace3D) for face in intersection.faces), 4)
+        for point, expected in [((0.45, 0, 0), True), ((-0.45, 0, 0), True), ((0, 0, 0.35), False), ((1, 0, 0), False)]:
+            self.assertEqual(intersection.point_inside(design3d.Point3D(*point)), expected)
+
+    def test_set_operations_coaxial_cylinders(self):
+        cylinder1 = primitives3d.Cylinder(design3d.OXYZ, 0.5, 4)  # z in [-2, 2]
+        cylinder2 = primitives3d.Cylinder(
+            design3d.Frame3D(design3d.Point3D(0, 0, 2.5), design3d.X3D, design3d.Y3D, design3d.Z3D), 0.5, 2
+        )  # z in [1.5, 3.5]
+        points = [design3d.Point3D(0.2, 0.1, z) for z in (-1, 1.75, 3)]
+        for result, expected_number_faces, expected_inside in [
+            (cylinder1.union(cylinder2), 5, [True, True, True]),
+            (cylinder1.subtract_to_closed_shell(cylinder2), 3, [True, False, False]),
+            (cylinder1.intersection(cylinder2), 3, [False, True, False]),
+        ]:
+            self.assertEqual(len(result), 1)
+            self.assertEqual(len(result[0].faces), expected_number_faces)
+            self.assertEqual([result[0].point_inside(point) for point in points], expected_inside)
+
+    def test_union_partially_coincident_faces(self):
+        # The faces x = 1 of the boxes overlap on y in [0, 1]: the top and bottom faces of the boxes are coplanar and
+        # adjacent along a part of their edges only, whose ends must be vertices of both faces.
+        union = box(0, 0, 0, 2, 2, 2).union(box(2, 1, 0, 2, 2, 2))
+        self.assertEqual(len(union), 1)
+        self.assertEqual(len(union[0].faces), 12)
+        self.assertEqual(unmatched_edges(union[0]), [])
+
+    def test_set_operations_shells_touching_along_an_edge(self):
+        box1 = box(0, 0, 0, 2, 2, 2)
+        box2 = box(2, 2, 0, 2, 2, 2)
+        self.assertEqual(box1.union(box2), [box1, box2])
+        self.assertEqual(box1.intersection(box2), [])
+        self.assertEqual(box1.subtract_to_closed_shell(box2), [box1])
+        self.assertEqual(box1.subtract(box2), [box1])
+
+    def test_set_operations_empty_results(self):
+        box1 = box(0, 0, 0, 2, 2, 2)
+        small_box = box(0, 0, 0, 0.5, 0.5, 0.5)
+        # Shells in contact by a face, entirely or partially: no common volume.
+        self.assertEqual(box1.intersection(box(2, 0, 0, 2, 2, 2)), [])
+        self.assertEqual(box1.intersection(box(2, 1, 0, 2, 2, 2)), [])
+        self.assertEqual(box1.subtract_to_closed_shell(box(0, 0, 0, 2, 2, 2)), [])
+        self.assertEqual(small_box.subtract_to_closed_shell(box1), [])
+
+    def test_subtract_to_closed_shell_inner_shell(self):
+        box1 = box(0, 0, 0, 2, 2, 2)
+        # The result would be a solid with a void, which a closed shell cannot represent.
+        with self.assertWarns(UserWarning):
+            self.assertEqual(box1.subtract_to_closed_shell(box(0, 0, 0, 0.5, 0.5, 0.5)), [box1])
+        # A pocket flush with a face of the shell is not a void.
+        pocket = box1.subtract_to_closed_shell(box(0, 0, 0.75, 1, 1, 0.5))
+        self.assertEqual(len(pocket), 1)
+        self.assertEqual(len(pocket[0].faces), 11)
+
+    def test_set_operations_default_tolerance(self):
+        # Faces closer than the default tolerance of 1e-6 are in contact.
+        union = box(0, 0, 0, 2, 2, 2).union(box(2 + 1e-7, 0, 0, 2, 2, 2))
+        self.assertEqual(len(union), 1)
+        self.assertEqual(len(union[0].faces), 10)
+
+    def test_set_operations_scale(self):
+        # Coincident faces at a small and a large scale: the offsets used to classify the faces follow the size of
+        # the shells.
+        for scale in (1e-4, 1e3):
+            box1 = box(0, 0, 0, 2 * scale, 2 * scale, 2 * scale)
+            box2 = box(scale, 0, 0.5 * scale, 2 * scale, 2 * scale, scale)
+            for result, expected_number_faces in [
+                (box1.intersection(box2), 6),
+                (box1.union(box2), 14),
+                (box1.subtract_to_closed_shell(box2), 8),
+            ]:
+                self.assertEqual(len(result), 1)
+                self.assertEqual(len(result[0].faces), expected_number_faces)
+                self.assertEqual(unmatched_edges(result[0]), [])
+
+    def test_union_list_of_shells_inputs_unchanged(self):
+        boxes = [box(0, 0, 0, 2, 2, 2), box(2, 0, 0, 2, 2, 2), box(0, 0, 0, 0.5, 0.5, 0.5)]
+        boxes_faces = [list(block.faces) for block in boxes]
+        union = shells.union_list_of_shells(boxes)
+        self.assertEqual(len(union), 1)
+        self.assertEqual(len(union[0].faces), 6)
+        self.assertEqual(len(boxes), 3)
+        self.assertEqual([block.faces for block in boxes], boxes_faces)
+
+    def test_merge_faces(self):
+        union_faces = box(0, 0, 0, 2, 2, 2).union(box(2, 0, 0, 2, 2, 2))[0].faces
+        shell = shells.ClosedShell3D(union_faces)
+        number_faces = len(union_faces)
+        shell.merge_faces()
+        self.assertEqual(len(shell.faces), 6)
+        # The list of faces given to the shell is not modified.
+        self.assertEqual(len(union_faces), number_faces)
+        # Only planar faces are merged.
+        cylinder1 = primitives3d.Cylinder(design3d.OXYZ, 0.5, 4)
+        cylinder2 = primitives3d.Cylinder(
+            design3d.Frame3D(design3d.Point3D(0, 0, 2.5), design3d.X3D, design3d.Y3D, design3d.Z3D), 0.5, 2
+        )
+        union = cylinder1.union(cylinder2)[0]
+        union.merge_faces()
+        self.assertEqual(len(union.faces), 5)
+
+    def test_point_inside_ray_through_edge(self):
+        # L-shaped prism: the notch [1, 2] x [1, 2] is outside the shell but inside its bounding box.
+        contour = design3d.wires.ClosedPolygon2D(
+            [
+                design3d.Point2D(0, 0),
+                design3d.Point2D(2, 0),
+                design3d.Point2D(2, 1),
+                design3d.Point2D(1, 1),
+                design3d.Point2D(1, 2),
+                design3d.Point2D(0, 2),
+            ]
+        )
+        prism = primitives3d.ExtrudedProfile(design3d.OXYZ, contour, [], 1)
+        # The two faces sharing the vertical edge at (1, 1) come first, so that a count stopped at the first
+        # duplicated intersection point is odd.
+        edge_point = design3d.Point3D(1, 1, 0.5)
+        shell = shells.ClosedShell3D(sorted(prism.faces, key=lambda face: not face.point_belongs(edge_point)))
+        point = design3d.Point3D(1.5, 1.5, 0.5)
+        # This ray enters the shell through the vertical edge at (1, 1) and leaves it through the one at (0, 0):
+        # each crossing is found on two faces, the ray is ambiguous for the parity count.
+        ray_through_edges = edges.LineSegment3D(point, design3d.Point3D(-1, -1, 0.5))
+        clean_ray = edges.LineSegment3D(point, design3d.Point3D(3, 3, 0.5))
+        for rays in ([ray_through_edges, clean_ray], [clean_ray, ray_through_edges]):
+            shell.get_ray_casting_line_segment = lambda _point, rays=rays: rays
+            self.assertFalse(shell.point_inside(point))
 
     def test_point_belongs(self):
         closed_shell = SerializableObject.from_json(

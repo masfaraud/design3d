@@ -35,6 +35,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- ClosedShell3D.subtract: subtracting a disjoint shell returns the shell alone instead of both shells, and a shell
+  inside the subtracted one returns an empty list instead of the subtracted shell
+- ClosedShell3D.point_inside: a ray crossing the shell at an edge or a vertex no longer decides the result with a
+  truncated count of crossings. Such rays are skipped in favor of an unambiguous one
+- Boolean operations: dividing a face by a closed cutting contour keeps the face inside the contour when the face is
+  also cut by open contours. The intersection of two crossing cylinders was missing a face
+- Boolean operations between coaxial cylinders of the same radius no longer fail, and coincident non-planar faces are
+  no longer compared through a planar projection, which removed valid faces
+- Boolean operations: when coplanar faces of the result are adjacent along a part of an edge only, the edges are
+  split at the vertices of the neighbor faces, so that the result is a conforming closed shell
+- Boolean operations: shells touching only along an edge or at a vertex are left apart by `union` (instead of a
+  non-manifold shell), and give an empty `intersection` and an unchanged shell by `subtract` and
+  `subtract_to_closed_shell`
+- Boolean operations: an empty result is an empty list for `intersection` and `subtract_to_closed_shell`, instead of
+  a closed shell without faces
+- ClosedShell3D.subtract_to_closed_shell: subtracting a shell strictly inside the shell returns the shell unchanged
+  with a warning, as a void cannot be represented, instead of a shell made of both boundaries. A shell inside the
+  subtracted one gives an empty list
+- Boolean operations work on small parts: the area under which a face is degenerate and the offsets used to classify
+  the faces are relative to the size of the faces and shells, instead of absolute values of up to 1e-4 m
+- union_list_of_shells no longer empties the list it is given nor merges the faces of the given shells, and
+  ClosedShell3D.merge_faces no longer modifies the list of faces given to the shell nor fails on coincident
+  non-planar faces, which it leaves unmerged
 - babylonjs: pages generated with `use_cdn=False` no longer fail on the `$` characters of the embedded javascript
   libraries
 - MovingVolumeModel: babylonjs pages are no longer blank with numpy 2, which wrote the scene size as `np.float64(...)`
@@ -89,6 +112,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Boolean operations of ClosedShell3D (`union`, `subtract`, `subtract_to_closed_shell`, `intersection`) use a
+  default tolerance of 1e-6 instead of 1e-8, as the faces and surfaces: shells closer than 1e-6 are in contact
 - RoundedLineSegments2D: `offset` and `offset_lines` follow the convention of Wire2D, Contour2D and
   ClosedPolygon2D: a positive offset moves to the right of the direction of travel, which enlarges a counterclockwise
   contour. The sign of existing calls must be inverted
