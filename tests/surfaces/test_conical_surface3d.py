@@ -638,6 +638,51 @@ class TestConicalSurface3D(unittest.TestCase):
             )
         )
 
+    def test_positive_semi_angle_surface(self):
+        self.assertIs(self.conical_surface3.positive_semi_angle_surface(), self.conical_surface3)
+        drafted_cone = surfaces.ConicalSurface3D(OXYZ, -math.radians(8), 0.03)
+        equivalent_cone = drafted_cone.positive_semi_angle_surface()
+        self.assertAlmostEqual(equivalent_cone.semi_angle, math.radians(8))
+        self.assertTrue(equivalent_cone.apex.is_close(drafted_cone.apex))
+        for point2d in [Point2D(0.0, 0.0), Point2D(1.0, 0.05), Point2D(-2.0, -0.1)]:
+            self.assertTrue(equivalent_cone.point_belongs(drafted_cone.point2d_to_3d(point2d)))
+
+    def test_perpendicular_plane_intersection_below_origin(self):
+        plane = surfaces.Plane3D(OXYZ.translation(-0.25 * Z3D))
+        circle = self.conical_surface3.perpendicular_plane_intersection(plane)[0]
+        self.assertTrue(circle.center.is_close(Point3D(0.0, 0.0, -0.25)))
+        self.assertAlmostEqual(circle.radius, 0.25)
+        # Below the apex, the plane only cuts the other nappe of the cone
+        plane = surfaces.Plane3D(OXYZ.translation(-1.0 * Z3D))
+        self.assertFalse(self.conical_surface3.perpendicular_plane_intersection(plane))
+
+    def test_negative_semi_angle_intersections(self):
+        # Cone narrowing upwards, as the corners of a drafted extrusion
+        drafted_cone = surfaces.ConicalSurface3D(OXYZ, -math.radians(8), 0.03)
+        line = curves.Line3D(Point3D(-1.0, 0.0, 0.1), Point3D(1.0, 0.0, 0.1))
+        intersections = drafted_cone.line_intersections(line)
+        self.assertEqual(len(intersections), 2)
+        for intersection in intersections:
+            self.assertTrue(drafted_cone.point_belongs(intersection))
+            self.assertAlmostEqual(abs(intersection.x), 0.03 - 0.1 * math.tan(math.radians(8)))
+
+        plane = surfaces.Plane3D(OXYZ.translation(0.1 * Z3D))
+        circle = drafted_cone.plane_intersections(plane)[0]
+        self.assertAlmostEqual(circle.radius, 0.03 - 0.1 * math.tan(math.radians(8)))
+
+    def test_parabola_plane_origin_off_axis(self):
+        # A plane parallel to a generator of the cone, whose frame origin is not in the symmetry plane of the conic
+        for semi_angle in [math.radians(8), -math.radians(8)]:
+            cone = surfaces.ConicalSurface3D(OXYZ, semi_angle, 0.03)
+            normal = design3d.Vector3D(math.cos(semi_angle), 0.0, math.sin(semi_angle))
+            plane = surfaces.Plane3D.from_normal(Point3D(0.0285, 0.05, 0.0), normal)
+            intersections = cone.plane_intersections(plane)
+            self.assertEqual(len(intersections), 1)
+            self.assertEqual(intersections[0].__class__.__name__, "Parabola3D")
+            for point in intersections[0].get_points():
+                self.assertTrue(cone.point_belongs(point))
+                self.assertTrue(plane.point_belongs(point))
+
     def test_is_singularity_point(self):
         point_true = design3d.Point3D(0.0, 0.0, -0.5)
         point_false = design3d.Point3D(0.0, 0.0, -0.49)

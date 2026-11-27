@@ -104,6 +104,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - RoundedLineSegments2D.offset_lines: a single line is offset, instead of being left in place, adjacent sides
   parallel to each other and the closing line of a closed contour no longer make it fail, and a free end of an
   opened wire moves along the normal of the lines
+- ConicalSurface3D: line and plane intersections of cones narrowing along their axis (negative `semi_angle`, as the
+  rounded corners of drafted extrusions) are computed on the cone instead of its other nappe. Planes parallel to a
+  generator give their parabola when their frame origin is off the cone axis, and planes perpendicular to the axis
+  below the reference plane give the right circle. Subtracting drafted extrusions with rounded corners, such as a
+  stamped cup, no longer fails with an `IndexError`
+- ClosedShell3D.volume: the volume of shells that are not star-shaped from the center of their bounding box, such as a
+  cup made by subtracting shells, is right. Each face is oriented by testing on which side the material is, by ray
+  casting on the triangulation of the shell, instead of summing absolute tetrahedra volumes
 
 ### Changed
 
