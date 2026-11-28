@@ -4,10 +4,13 @@ Front-wheel drive drivetrain: gearbox with its differential, and two driveshafts
 The drivetrain frame has its origin on the front axle, at the wheel center height, in the car plane of symmetry.
 """
 
+import math
+
 import design3d as d3d
+from design3d.primitives2d import CirclesConvexHull2D
 from design3d.primitives3d import Cylinder, ExtrudedProfile
 
-from .base import Part, SubAssembly, circles_hull, frame, frame_along
+from .base import Part, SubAssembly, frame, frame_along
 
 STEEL = (0.35, 0.35, 0.37)
 
@@ -28,9 +31,10 @@ class Gearbox(Part):
 
     def geometry(self):
         diff_x, diff_z = self.differential_position
-        profile = circles_hull([(0, 0, 0.15), (diff_x, diff_z, 0.11)])
+        profile = CirclesConvexHull2D([d3d.O2D, d3d.Point2D(diff_x, diff_z)], [0.15, 0.11])
         housing_frame = d3d.Frame3D(d3d.O3D, d3d.X3D, d3d.Z3D, -d3d.Y3D)
-        return ExtrudedProfile(housing_frame, profile, [], self.length, name=self.name)
+        # Cast housing, demolded away from the engine mounting face
+        return ExtrudedProfile(housing_frame, profile, [], self.length, draft_angle=math.radians(3), name=self.name)
 
 
 class CVJoint(Part):

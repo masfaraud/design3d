@@ -107,22 +107,26 @@ class Muffler(Part):
 class Exhaust(SubAssembly):
     """Exhaust line from the engine front face to a transverse muffler behind the rear axle."""
 
-    def __init__(self, engine_outlet: tuple, muffler_x: float, floor_height: float, name: str = "Exhaust"):
+    def __init__(
+        self, engine_outlet: tuple, muffler_x: float, floor_height: float, ground_clearance: float, name="Exhaust"
+    ):
         super().__init__(name)
         x0, y0, z0 = engine_outlet
         under_floor = floor_height - 0.07
-        self.muffler_position = (muffler_x, 0.0, under_floor + 0.05)
+        self.muffler = Muffler(0.18, 0.6)
+        # Behind the rear axle, the muffler is raised above the ground clearance
+        muffler_z = max(under_floor + 0.05, ground_clearance + 0.5 * self.muffler.diameter + 0.01)
+        self.muffler_position = (muffler_x, 0.0, muffler_z)
         points = [
             (x0, y0, z0),
             (x0 - 0.11, y0, z0 - 0.1),
             (x0 - 0.09, y0, under_floor),
             (x0 + 0.6, 0.0, under_floor),
-            (muffler_x - 0.4, 0.0, under_floor),
-            (muffler_x - 0.1, 0.0, under_floor + 0.05),
-            (muffler_x, 0.0, under_floor + 0.05),
+            (muffler_x - 0.45, 0.0, under_floor),
+            (muffler_x - 0.15, 0.0, muffler_z),
+            (muffler_x, 0.0, muffler_z),
         ]
         self.pipe = ExhaustPipe(points)
-        self.muffler = Muffler(0.18, 0.6)
 
     def children(self):
         return [(self.pipe, d3d.OXYZ), (self.muffler, frame(*self.muffler_position))]

@@ -10,10 +10,11 @@ import math
 import design3d as d3d
 from design3d.curves import Circle2D
 from design3d.edges import BSplineCurve3D
+from design3d.primitives2d import CirclesConvexHull2D
 from design3d.primitives3d import Block, Cylinder, ExtrudedProfile, HollowCylinder, OpenRoundedLineSegments3D, Sweep
 from design3d.wires import Contour2D, Wire3D
 
-from .base import Part, SubAssembly, circles_hull, frame, frame_along
+from .base import Part, SubAssembly, frame, frame_along
 
 STEEL = (0.3, 0.3, 0.32)
 SPRING_COLOR = (0.9, 0.75, 0.1)
@@ -130,8 +131,10 @@ class LowerArm(Part):
     def geometry(self):
         y_ball = -self.side * 0.11
         y_pivots = -self.side * self.inner_offset
-        profile = circles_hull([(0, y_ball, 0.03), (-0.08, y_pivots, 0.025), (0.28, y_pivots, 0.035)])
-        return ExtrudedProfile(frame(z=-0.13), profile, [], 0.02, name=self.name)
+        profile = CirclesConvexHull2D(
+            [d3d.Point2D(0, y_ball), d3d.Point2D(-0.08, y_pivots), d3d.Point2D(0.28, y_pivots)], [0.03, 0.025, 0.035]
+        )
+        return ExtrudedProfile(frame(z=-0.12), profile, [], 0.02, symmetric=True, name=self.name)
 
 
 class MacPhersonCorner(SubAssembly):

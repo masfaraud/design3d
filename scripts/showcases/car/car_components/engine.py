@@ -9,15 +9,19 @@ import math
 
 import design3d as d3d
 from design3d.curves import Circle2D
+from design3d.primitives2d import CirclesConvexHull2D, RoundedRectangle2D
 from design3d.primitives3d import Cylinder, ExtrudedProfile
-from design3d.wires import ClosedPolygon2D, Contour2D
+from design3d.wires import Contour2D
 
-from .base import Box, Part, SubAssembly, circles_hull, frame
+from .base import Box, Part, SubAssembly, frame
 
 ALUMINIUM = (0.7, 0.72, 0.75)
 STEEL = (0.4, 0.4, 0.42)
 # Frame whose (u, v) plane is the (Y, Z) plane and extrusion axis is X
 CRANK_PLANE_FRAME = d3d.OYZX
+# Draft of the forged parts, on each side of their parting plane, and of the cast parts
+FORGING_DRAFT = math.radians(5)
+CASTING_DRAFT = math.radians(2)
 
 
 def x_rotated_frame(x: float, angle: float) -> d3d.Frame3D:
@@ -49,20 +53,40 @@ class EngineBlock(Part):
         return self.bore + 0.07
 
     def geometry(self):
-        half_length, half_width = 0.5 * self.length, 0.5 * self.width
-        outer = ClosedPolygon2D(
-            [
-                d3d.Point2D(-half_length, -half_width),
-                d3d.Point2D(half_length, -half_width),
-                d3d.Point2D(half_length, half_width),
-                d3d.Point2D(-half_length, half_width),
-            ]
-        )
+        outer = RoundedRectangle2D(self.length, self.width, 0.012)
         bores = [
             Contour2D.from_circle(Circle2D.from_center_and_radius(d3d.Point2D(x, 0), 0.5 * self.bore))
             for x in self.cylinder_positions
         ]
-        return ExtrudedProfile(frame(z=self.bottom), outer, bores, self.deck_height - self.bottom, name=self.name)
+        # Cast block, demolded upwards, with machined (straight) bores
+        return ExtrudedProfile(
+            frame(z=self.bottom),
+            outer,
+            bores,
+            self.deck_height - self.bottom,
+            draft_angle=CASTING_DRAFT,
+            inner_draft_angles=[0.0] * len(bores),
+            name=self.name,
+        )
+
+
+class OilSump(Part):
+    """Stamped oil sump below the block, its walls drafted to be drawn from a flat sheet."""
+
+    color = (0.25, 0.25, 0.27)
+
+    def __init__(self, length: float, width: float, top: float, depth: float, name: str = "Oil sump"):
+        super().__init__(name)
+        self.length = length
+        self.width = width
+        self.top = top
+        self.depth = depth
+
+    def geometry(self):
+        # Sketch on the block mounting face, extruded downwards
+        sump_frame = d3d.Frame3D(d3d.Point3D(0, 0, self.top), d3d.X3D, -d3d.Y3D, -d3d.Z3D)
+        profile = RoundedRectangle2D(self.length, self.width, 0.03)
+        return ExtrudedProfile(sump_frame, profile, [], self.depth, draft_angle=math.radians(8), name=self.name)
 
 
 class Journal(Part):
@@ -84,22 +108,22 @@ class CrankWeb(Part):
 
     color = STEEL
 
-    def __init__(self, crank_radius: float, thickness: float, counterweight_radius: float, pin_diameter, name="Web"):
+    def __init__(self, crank_radius: float, thickness: float, counterweight_radius: float, pin_boss_radius, name="Web"):
         super().__init__(name)
         self.crank_radius = crank_radius
         self.thickness = thickness
         self.counterweight_radius = counterweight_radius
-        self.pin_diameter = pin_diameter
+        self.pin_boss_radius = pin_boss_radius
 
     def geometry(self):
-        profile = circles_hull(
-            [
-                (0, -0.3 * self.counterweight_radius, self.counterweight_radius),
-                (0, self.crank_radius, self.pin_diameter),
-            ]
+        profile = CirclesConvexHull2D(
+            [d3d.Point2D(0, -0.3 * self.counterweight_radius), d3d.Point2D(0, self.crank_radius)],
+            [self.counterweight_radius, self.pin_boss_radius],
         )
-        web_frame = CRANK_PLANE_FRAME.translation(-0.5 * self.thickness * d3d.X3D)
-        return ExtrudedProfile(web_frame, profile, [], self.thickness, name=self.name)
+        # Forged web: the parting plane is its middle plane
+        return ExtrudedProfile(
+            CRANK_PLANE_FRAME, profile, [], self.thickness, draft_angle=FORGING_DRAFT, symmetric=True, name=self.name
+        )
 
 
 class Crankshaft(SubAssembly):
@@ -136,16 +160,42 @@ class ConnectingRod(Part):
 
     color = (0.55, 0.55, 0.58)
 
-    def __init__(self, length: float, big_end_diameter: float, small_end_diameter: float, name="Connecting rod"):
+    def __init__(
+        self,
+        length: float,
+        big_end_bore: float,
+        small_end_bore: float,
+        thickness: float = 0.02,
+        wall: float = 0.009,
+        name="Connecting rod",
+    ):
         super().__init__(name)
         self.length = length
-        self.big_end_diameter = big_end_diameter
-        self.small_end_diameter = small_end_diameter
+        self.big_end_bore = big_end_bore
+        self.small_end_bore = small_end_bore
+        self.thickness = thickness
+        self.wall = wall
 
     def geometry(self):
-        profile = circles_hull([(0, 0, 0.5 * self.big_end_diameter), (0, self.length, 0.5 * self.small_end_diameter)])
-        rod_frame = CRANK_PLANE_FRAME.translation(-0.01 * d3d.X3D)
-        return ExtrudedProfile(rod_frame, profile, [], 0.02, name=self.name)
+        big_end, small_end = d3d.Point2D(0, 0), d3d.Point2D(0, self.length)
+        profile = CirclesConvexHull2D(
+            [big_end, small_end], [0.5 * self.big_end_bore + self.wall, 0.5 * self.small_end_bore + self.wall]
+        )
+        bores = [
+            Contour2D.from_circle(Circle2D.from_center_and_radius(big_end, 0.5 * self.big_end_bore)),
+            Contour2D.from_circle(Circle2D.from_center_and_radius(small_end, 0.5 * self.small_end_bore)),
+        ]
+        # Forged rod with machined (straight) bores
+        return ExtrudedProfile(
+            CRANK_PLANE_FRAME,
+            profile,
+            bores,
+            self.thickness,
+            draft_angle=FORGING_DRAFT,
+            inner_draft_angles=[0.0, 0.0],
+            symmetric=True,
+            name=self.name,
+        )
 
 
 class Piston(Part):
@@ -209,14 +259,9 @@ class Engine(SubAssembly):
             color=(0.1, 0.1, 0.1),
             name="Cam cover",
         )
-        self.oil_sump = Box(
-            (-half_length, -half_width - 0.03, -0.08),
-            (half_length, half_width + 0.03, -0.19),
-            color=ALUMINIUM,
-            name="Oil sump",
-        )
+        self.oil_sump = OilSump(self.block.length, self.block.width + 0.06, top=-0.08, depth=0.11)
         self.crankshaft = Crankshaft(self.cylinder_positions, self.throw_angles, stroke, cylinder_spacing)
-        self.connecting_rod = ConnectingRod(connecting_rod_length, 0.05, 0.028)
+        self.connecting_rod = ConnectingRod(connecting_rod_length, self.crankshaft.crank_pin.diameter, 0.02)
         self.piston = Piston(bore - 0.001, compression_height)
 
     @property

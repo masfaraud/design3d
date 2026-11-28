@@ -14,9 +14,10 @@ from dataclasses import dataclass, field
 
 from car_components.base import Box, SubAssembly, frame, mirrored_frame
 from car_components.biw import BodyInWhite
+from car_components.checks import Constraint, ReferenceCheck, check_constraints
 from car_components.drivetrain import Drivetrain
 from car_components.engine import Engine
-from car_components.ergonomics import ErgonomicConstraint, Occupant, check_constraints
+from car_components.ergonomics import Occupant
 from car_components.interior import Exhaust, Seat
 from car_components.steering import Steering
 from car_components.suspension import FrontSuspension, RearSuspension
@@ -80,6 +81,18 @@ class ErgonomicsParameters:
     min_driver_knee_clearance: float = 0.08
     min_rear_knee_clearance: float = 0.05
     occupant: Occupant = field(default_factory=Occupant)
+
+
+@dataclass
+class ReferenceCar:
+    """Published figures of the reference car (third generation Peugeot 308, 1.2 PureTech 130), to check the model."""
+
+    length: float = 4.367
+    # Without the mirrors
+    width: float = 1.852
+    height: float = 1.441
+    ground_clearance: float = 0.14
+    displacement: float = 1.199e-3
 
 
 @dataclass
@@ -161,11 +174,12 @@ class Car(SubAssembly):
             (engine_front, engine.crank_y, self.wheel_center_height + engine.crank_z + 0.1),
             muffler_x=body.wheelbase + 0.45,
             floor_height=self.body_in_white.floor_height,
+            ground_clearance=body.ground_clearance,
         )
         self.ergonomic_constraints = self.compute_ergonomic_constraints()
         check_constraints(self.ergonomic_constraints)
 
-    def compute_ergonomic_constraints(self) -> list[ErgonomicConstraint]:
+    def compute_ergonomic_constraints(self) -> list[Constraint]:
         """Measures the package on the placed seats and steering wheel."""
         ergonomics = self.parameters.ergonomics
         occupant = ergonomics.occupant
@@ -186,13 +200,36 @@ class Car(SubAssembly):
 
         reach_min, reach_max = ergonomics.steering_wheel_reach
         return [
-            ErgonomicConstraint("Steering wheel reach", h_x - wheel_x, reach_min, reach_max),
-            ErgonomicConstraint(
+            Constraint("Steering wheel reach", h_x - wheel_x, reach_min, reach_max),
+            Constraint(
                 "Driver knee to steering wheel", rim_bottom_z - driver_knee_z, ergonomics.min_driver_knee_clearance
             ),
-            ErgonomicConstraint(
+            Constraint(
                 "Rear knee to front backrest", rear_knee_x - backrest_rear_x, ergonomics.min_rear_knee_clearance
             ),
+        ]
+
+    def reference_checks(self, reference: ReferenceCar) -> list:
+        """Measures the geometry of the model and compares it with the reference car."""
+        body = self.parameters.body
+        engine = self.engine
+        bounding_box = self.to_design3d().bounding_box
+        # Bounding boxes of the placed subassemblies, in the car frame
+        placed = list(zip([child for child, _ in self.placed_children], self.to_design3d().primitives))
+        wheels = (self.front_wheel, self.rear_wheel)
+        wheel_boxes = [primitive.bounding_box for child, primitive in placed if child in wheels]
+        lowest_body_point = min(primitive.bounding_box.zmin for child, primitive in placed if child not in wheels)
+        tyres_half_width = max(max(-box.ymin, box.ymax) for box in wheel_boxes)
+        displacement = engine.number_cylinders * 0.25 * math.pi * engine.bore**2 * engine.stroke
+        return [
+            ReferenceCheck("Overall length", bounding_box.xmax - bounding_box.xmin, reference.length),
+            ReferenceCheck("Overall width", bounding_box.ymax - bounding_box.ymin, reference.width),
+            ReferenceCheck("Overall height", bounding_box.zmax - bounding_box.zmin, reference.height),
+            ReferenceCheck("Displacement", displacement, reference.displacement, unit="cm³", scale=1e6),
+            Constraint(
+                "Ground clearance (lowest point out of the wheels)", lowest_body_point, reference.ground_clearance
+            ),
+            Constraint("Tyres inside the body width", 0.5 * body.width - tyres_half_width, 0.0),
         ]
 
     def children(self):
@@ -227,6 +264,9 @@ print(car.tree())
 print("Ergonomics:")
 for constraint in car.ergonomic_constraints:
     print(f"  {constraint}")
+print("Checks against the reference car:")
+for check in car.reference_checks(ReferenceCar()):
+    print(f"  {check}")
 
 ground = PlaneFace3D.from_surface_rectangular_cut(Plane3D(d3d.OXYZ), -1.5, 4.5, -1.5, 1.5)
 ground.name = "Ground"

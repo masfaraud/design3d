@@ -34,7 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   draft
 - Car showcase (scripts/showcases/car): a parametric car built as a recursive tree of subassemblies (body, engine,
   drivetrain, suspensions, wheels...) instantiated from architecture parameters, with ergonomic constraints
-  (steering wheel reach, knee clearances) checked on the placed seats and steering wheel
+  (steering wheel reach, knee clearances) checked on the placed seats and steering wheel, and the measured
+  dimensions, ground clearance and displacement compared with the reference car
 
 ### Fixed
 

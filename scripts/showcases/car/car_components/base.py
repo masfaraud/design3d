@@ -14,7 +14,6 @@ from functools import cached_property
 import design3d as d3d
 from design3d.core import Assembly
 from design3d.primitives3d import Block, Cylinder
-from design3d.wires import ClosedPolygon2D
 
 
 class Component:
@@ -164,17 +163,3 @@ class Tube(Part):
         axis_frame = frame_along(self.point1, self.point2)
         center_frame = axis_frame.translation(0.5 * self.length * axis_frame.w)
         return Cylinder(center_frame, 0.5 * self.diameter, self.length, name=self.name)
-
-
-def circles_hull(circles: list[tuple[float, float, float]], number_points: int = 24) -> ClosedPolygon2D:
-    """
-    2D profile enveloping circles, such as a crank web or a connecting rod.
-
-    :param circles: (x, y, radius) of each circle
-    """
-    points = []
-    for x, y, radius in circles:
-        for i in range(number_points):
-            angle = 2 * math.pi * i / number_points
-            points.append(d3d.Point2D(x + radius * math.cos(angle), y + radius * math.sin(angle)))
-    return ClosedPolygon2D.points_convex_hull(points)
